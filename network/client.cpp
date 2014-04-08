@@ -6,9 +6,12 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 
+#include "packet.h"
+
 #define SERVER_ADDRESS "127.0.0.1"
 #define SERVER_PORT 5555
 #define BUFSIZE 512
+
 
 int main()
 {
@@ -24,6 +27,7 @@ int main()
 	memset(&serverAddress, 0, sizeof(serverAddress));
 	
 	// Setting this client's address and port, and bind them (may not be necessary)
+	// WE SHOULD UNCOMMENT THIS LATER
 	/*
 	myAddress.sin_family = AF_INET;
 	myAddress.sin_addr.s_addr=htonl(INADDR_ANY);
@@ -39,13 +43,43 @@ int main()
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_addr.s_addr = inet_addr(SERVER_ADDRESS);
 	serverAddress.sin_port = htons(SERVER_PORT);
-
+	
+	// Send init event
+	struct packet initPacket;
+	initPacket.eventId = 1;
+	
+	if (sendto(sockfd, &initPacket, sizeof(initPacket), 0, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) 
+	{
+		perror("sendto failed");
+		return 1;
+	}
+	
+	printf("Init request sent\n");
+	
 	char msg[BUFSIZE];
+	
+	// Receive a message
+	// TODO: this should be on a different thread, but since we know the server will 
+	//       echo our message, this is ok.
+	// This is bad, because what if the server doesn't reply?
+	if (recvfrom(sockfd, msg, BUFSIZE, 0, (struct sockaddr *)&serverAddress,&len) < 0)
+	{
+		perror("recvfrom failed");
+		return 1;
+	}
+	struct packet *p = (struct packet *)msg;
+	if (p->eventId == 2)
+	{
+		// Init response
+		struct initResponsePacket *irp = (struct initResponsePacket *)p;
+		printf("Server gave me ID: %d\n", irp->givenPlayerId);
+	}
 	
 	while (1)
 	{
-		// Waiting for user input
 		memset(msg, 0, BUFSIZE);
+		
+		// Waiting for user input
 		fgets (msg, BUFSIZE, stdin);
 
 		// Send a message
@@ -68,7 +102,8 @@ int main()
 			perror("recvfrom failed");
 			return 1;
 		}
-		printf("Received: %s\n", msg);
+		
+		printf("%s\n", msg);
 	}
 	
 }
