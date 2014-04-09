@@ -46,7 +46,7 @@ int main()
 	
 	// Send init event
 	struct packet initPacket;
-	initPacket.eventId = 1;
+	initPacket.eventId = 3;
 	
 	if (sendto(sockfd, &initPacket, sizeof(initPacket), 0, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) 
 	{
@@ -74,7 +74,7 @@ int main()
 		struct initResponsePacket *irp = (struct initResponsePacket *)p;
 		printf("Server gave me ID: %d\n", irp->givenPlayerId);
 	}
-
+	
 	while (1)
 	{
 		memset(msg, 0, BUFSIZE);
