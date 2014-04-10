@@ -1,0 +1,81 @@
+#ifndef _VECTOR3_H_
+#define _VECTOR3_H_
+
+#include <string>
+//#include "Matrix4.h"
+#include "Vector4.h"
+#include <math.h>
+using namespace std;
+//class Matrix4;
+//class Vector4;
+class Vector3 {
+	//protected:
+		//float x, y, z;
+
+	public:
+		float x, y, z;
+		// {x=0.0; y=0.0; z=0.0;}
+		Vector3();
+		// {x=x0; y=y0; z=z0;}
+		Vector3(float, float, float);
+		
+		// {x=x0; y=y0; z=z0;}
+		void set(float, float, float);
+		void setX(float);
+		void setY(float);
+		void setZ(float);
+
+		// index=0 -> x; index=1 -> y; index>=2 -> z
+		float get(int);
+		// get X value
+		float getX();
+		// get Y value
+		float getY();
+		// get Z value
+		float getZ();
+		// overload [], i=0 -> x; i=1 -> y; i>=2 -> z
+		float operator[](const int i);
+
+		// {x+=a.x; y+=a.y; z+=a.z;}
+		void add(Vector3&);
+		// {x=a.x+b.x; y=a.y+b.y; z=a.z+b.z;}
+		void add(Vector3 &a, Vector3 &b);
+		// overload +
+		Vector3 operator+(const Vector3 &other) const;
+		//Matrix4::Matrix4();
+		//void multiply(Matrix4&);
+		// {x-=a.x; y-=a.y; z-=a.z;}
+		void subtract(Vector3 &a);
+		// {x=a.x-b.x; y=a.y-b.y; z=a.z-b.z;}
+		void subtract(Vector3 &a, Vector3 &b);
+		// overload -
+		Vector3 operator-(const Vector3 &other) const;
+		void divide(float a);
+		// {x=-x; y=-y; z=-z;}
+		void negate();
+		// {x=-a.x; y=-a.y; z=-a.z;}
+		void negate(Vector3 &a);
+		
+		// {x*=s; y*=s; z*=s;}
+		void scale(float s);
+		// {x=s*a.x; y=s*a.y; z=s*a.z;}
+		void scale(float s, Vector3 &a);
+
+		// {return x*a.x+y*a.y+z*a.z;}
+		float dot(Vector3 &a);
+		// {x=a.y*b.z-a.z*b.y; y=a.z*b.x-a.x*b.z; z=a.x*b.y-a.y*b.x;}
+		void cross(Vector3*);
+		void cross(Vector3 &a, Vector3 &b);
+		float angle(Vector3*);
+		// {return sqrt(x*x+y*y+z*z);}
+		float magnitude();
+		// {scale(1.0/magnitude());}
+		void normalize();
+		float dist(Vector3 &a, Vector3 &b);
+		// print components
+		void print();
+		// string representation of components
+		string toString();
+};
+
+#endif
