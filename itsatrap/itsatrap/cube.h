@@ -9,9 +9,9 @@ class Cube
 	public:
     Matrix4 matrix;                 // model matrix
     double angle;                   // rotation angle [degrees]
-	double walk_x_factor;		// how fast you wana walk
-	double walk_z_factor;
-
+	double walk_lateral_factor;		// how fast you wana walk
+	double walk_linear_factor;
+	
 	public:
     Cube();   // Constructor
     Matrix4& getMatrix();
@@ -26,20 +26,11 @@ class Window	  // output window related routines
 {
   public:
     static int width, height; 	            // window size
-	static int mouse_X, mouse_Y;				// mouse position
-
-	static float angle_x_change, angle_y_change;
-
-	static float angle_x_change_factor, angle_y_change_factor;
-	// might need y total (90 degrees up or down)
-	// might need turn factor
-
 
     static void idleCallback(void);
     static void reshapeCallback(int, int);
     static void displayCallback(void);
 	static void processNormalKeys(unsigned char, int, int);
-	static void processMouseMove(int, int);
 };
 
 #endif
