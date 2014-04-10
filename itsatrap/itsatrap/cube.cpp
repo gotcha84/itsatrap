@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <iostream>
 #include <GL/glut.h>
-#include <glm/glm.hpp>
 
 #include "cube.h"
 #include "Matrix4.h"
@@ -20,8 +19,8 @@ int Window::height = 512;   // set window height in pixels here
 // Callback method called when system is idle.
 void Window::idleCallback(void)
 {
-	cube.spin(spin_angle); // rotate cube; if it spins too fast try 0.001
-	displayCallback(); // call display routine to re-draw cube
+  cube.spin(spin_angle); // rotate cube; if it spins too fast try 0.001
+  displayCallback(); // call display routine to re-draw cube
 }
 
 //----------------------------------------------------------------------------
@@ -94,6 +93,16 @@ void Window::displayCallback(void)
     glVertex3f(-5.0, -5.0,  5.0);
   glEnd();
   
+
+  if (Window::angle_x_change != 0.0f) {
+    cam.CameraXMovement();
+    Window::angle_x_change = 0.0f;
+  }
+  if (Window::angle_y_change != 0.0f) {
+    cam.CameraYMovement();
+    Window::angle_y_change = 0.0f;
+  }
+
   glFlush();  
   glutSwapBuffers();
 }
@@ -110,46 +119,46 @@ Matrix4& Cube::getMatrix()
 
 void Cube::setMatrix(Matrix4 &m)
 {
-	matrix = Matrix4(m);
+  matrix = Matrix4(m);
 }
 
 double Cube::getAngle()
 {
-	return angle;
+  return angle;
 }
 
 void Cube::setAngle(double a)
 {
-	angle = a;
+  angle = a;
 }
 
 void Cube::spin(double deg)
 {
   if (cube.angle > 360.0 || cube.angle < -360.0) cube.angle = 0.0;
-	cube.getMatrix().rotateY(deg);
+  cube.getMatrix().rotateY(deg);
 }
 
 int main(int argc, char *argv[])
 {
 
-	cube.walk_lateral_factor = 1.0f;
-	cube.walk_linear_factor = 1.0f;
+  cube.walk_x_factor = 1.0f;
+  cube.walk_z_factor = 1.0f;
 
   float specular[]  = {1.0, 1.0, 1.0, 1.0};
   float shininess[] = {100.0};
-  float position[]  = {0.0, 10.0, 1.0, 0.0};	// lightsource position
+  float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
 
-  glutInit(&argc, argv);      	      	      // initialize GLUT
+  glutInit(&argc, argv);                      // initialize GLUT
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
   glutInitWindowSize(Window::width, Window::height);      // set initial window size
-  glutCreateWindow("OpenGL Cube for CSE167");    	      // open window and set window title
+  glutCreateWindow("OpenGL Cube for CSE167");           // open window and set window title
 
-  glEnable(GL_DEPTH_TEST);            	      // enable depth buffering
-  glClear(GL_DEPTH_BUFFER_BIT);       	      // clear depth buffer
-  glClearColor(0.0, 0.0, 0.0, 0.0);   	      // set clear color to black
+  glEnable(GL_DEPTH_TEST);                    // enable depth buffering
+  glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
+  glClearColor(0.0, 0.0, 0.0, 0.0);           // set clear color to black
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // set polygon drawing mode to fill front and back of each polygon
   glDisable(GL_CULL_FACE);     // disable backface culling to render both sides of polygons
-  glShadeModel(GL_SMOOTH);             	      // set shading to smooth
+  glShadeModel(GL_SMOOTH);                    // set shading to smooth
   glMatrixMode(GL_PROJECTION); 
   
   // Generate material properties:
@@ -168,22 +177,29 @@ int main(int argc, char *argv[])
   glutReshapeFunc(Window::reshapeCallback);
   glutIdleFunc(Window::idleCallback);
 
-	// to avoid cube turning white on scaling down
-	glEnable(GL_NORMALIZE);
+  // to avoid cube turning white on scaling down
+  glEnable(GL_NORMALIZE);
 
-	// Process keyboard input
-	glutKeyboardFunc(Window::processNormalKeys);
+  // Process keyboard input
+  glutKeyboardFunc(Window::processNormalKeys);
+
+  glutPassiveMotionFunc(Window::processMouseMove);
+  
+  // load obj files
+
+  // hide mouse cursor
+  //glutSetCursor(GLUT_CURSOR_NONE);
     
   // Initialize cube matrix:
   cube.getMatrix().identity();
-	
-	cout << "initialized\t\t";
-	Vector3 pos = Vector3(
-		cube.getMatrix().m[3][0], 
-		cube.getMatrix().m[3][1], 
-		cube.getMatrix().m[3][2]
-	);
-	pos.print();
+  
+  cout << "initialized\t\t";
+  Vector3 pos = Vector3(
+    cube.getMatrix().m[3][0], 
+    cube.getMatrix().m[3][1], 
+    cube.getMatrix().m[3][2]
+  );
+  pos.print();
     
   glutMainLoop();
   return 0;
@@ -191,65 +207,83 @@ int main(int argc, char *argv[])
 
 void Window::processNormalKeys(unsigned char key, int x, int y)
 {
-	switch (key) 
-	{
-		// go forward
-		case 'w':
-			cout << "you pressed w\n";
-			/*
-			Vec3 oldCameraCenter = cameraCenter;
-			Vec3 oldCameraLookAt = cameraLookAt;
-			Vec3 oldCameraUp = cameraUp;
+  Vec3 oldCameraCenter = cameraCenter;
+  Vec3 oldCameraLookAt = cameraLookAt;
+  Vec3 oldCameraUp = cameraUp;
+  Vec3 proposedCameraDiff = cameraLookAt - cameraDiff;
+  proposedCameraDiff.normalize();
+  // make y rotation matrix
+  proposedxCameraDiff = // rotate vector by 90degrees clockwise
 
-			Vec3 cameraDiff = cameraCenter+(cube.walk_linear_factor*(cameraLookAt-cameraCenter));
-		
-			// returns the new position we want
-			Vec3 newPos = physics.collisionDetected(newPos);
+  switch (key) 
+  {
+    // go forward
+    case 'w':
+      
+      
 
-			camera.updateModelViewMatrix(
+      Vec3 proposedCameraDiff = cube.walk_z_factor*(proposedCameraDiff);
 
-			Vec3 newCameraCenter = oldLookAtCenter-oldCameraLookat
+      cam.Movement('w', proposedCameraDiff);
+    
+      /*
+      // returns the new position we want
+      Vec3 newCameraCenter = physics.collisionDetected(oldCameraCenter, proposedCameraDiff);
+      
+      Vec3 actualCameraDiff = newCameraCenter - oldCameraCenter;
+      Vec3 newCameraLookAt = oldCameraLookAt + actualCameraDiff;
 
-			camera.updateModelViewMatrix();
-			if (e.getX()+(d_vec.getX()*walk_x_factor) < 0) {
-				tmpx = -1*floor((-1.0*(e.getX()+(d_vec.getX()*walk_x_factor)))+0.5);
-			}
-			else {
-				tmpx = floor(e.getX()+(d_vec.getX()*walk_x_factor)+0.5);
-			}
+      camera.updateModelViewMatrix(newCameraCenter, newCameraLookAt, oldCameraUp);
+      */
+      break;
 
-			if (e.getZ()+(d_vec.getZ()*walk_z_factor) < 0) {
-				tmpz = -1*floor((-1.0*(e.getZ()+(d_vec.getZ()*walk_z_factor)))+0.5);
-			}
-			else {
-				tmpz = floor(e.getZ()+(d_vec.getZ()*walk_z_factor)+0.5);
-			}
-			shape.updateCameraMatrix(d_vec.getX()*walk_x_factor,0,d_vec.getZ()*walk_z_factor);
-			*/
-			break;
+    // go backwards
+    case 's':
+      Vec3 proposedCameraDiff = -1*cube.walk_z_factor*(proposedCameraDiff);
+    
+      cam.Movement('s', proposedCameraDiff);
 
-		// go backwards
-		case 's':
-			cout << "you pressed s\n";
-			break;
+    // strafe left
+    case 'a':
+      Vec3 proposedCameraDiff = -1*cube.walk_z_factor*(proposedxCameraDiff);
 
-		// strafe left
-		case 'a':
-			cout << "you pressed a\n";
-			break;
+      cam.Movement('a', proposedCameraDiff);
+    
+      break;
+    // strafe right
+    case 'd':
+      Vec3 proposedCameraDiff = cube.walk_z_factor*(proposedxCameraDiff);
+    
+      cam.Movement('d', proposedCameraDiff);
+    
+      break;
+      
+      // TODO: running  
 
-		// strafe right
-		case 'd':
-			cout << "you pressed d\n";
-			break;
+  }
 
-	}
+  Vector3 pos = Vector3(
+    cube.getMatrix().m[3][0], 
+    cube.getMatrix().m[3][1], 
+    cube.getMatrix().m[3][2]
+  );
 
-	Vector3 pos = Vector3(
-		cube.getMatrix().m[3][0], 
-		cube.getMatrix().m[3][1], 
-		cube.getMatrix().m[3][2]
-	);
+  pos.print();
+}
 
-	pos.print();
+void Window::processMouseMove(int x, int y) {
+  if (mouse_X != x) {
+    angle_x_change = float(mouse_X-x)/angle_x_change_factor;
+  }
+
+  if (mouse_Y != y) {
+    angle_y_change = float(mouse_Y-y)/angle_y_change_factor;
+  }
+        
+  if (x != Window::width/2 || y != Window::height/2) {
+    glutWarpPointer(Window::width/2, Window::height/2);
+  }
+
+  mouse_X = x;
+  mouse_Y = y;
 }
