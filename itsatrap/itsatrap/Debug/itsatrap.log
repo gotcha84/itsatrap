@@ -1,4 +1,4 @@
-﻿Build started 4/9/2014 11:24:49 PM.
+﻿Build started 4/9/2014 11:31:56 PM.
      1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\itsatrap\itsatrap.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\itsatrap.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -14,6 +14,7 @@
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\itsatrap.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\/glut/lib/ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\itsatrap.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\itsatrap.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\itsatrap.lib" /MACHINE:X86 Debug\itsatrap.exe.embed.manifest.res
          Debug\Camera.obj
          Debug\cube.obj
+         LINK : C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\itsatrap.exe not found or not built by the last incremental link; performing full link
        Manifest:
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\itsatrap.exe.embed.manifest" /manifest Debug\itsatrap.exe.intermediate.manifest
          All outputs are up-to-date.
@@ -27,4 +28,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.02
+Time Elapsed 00:00:01.03
