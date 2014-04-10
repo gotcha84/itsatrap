@@ -1,19 +1,19 @@
 #include <math.h>
-#include <iostream> // to print to stdout
 #include <sstream> // to convert float to string
 #include <iomanip> // to round floats
-#include <string>
-#include <Gl/glut.h>
 
 #include "Camera.h"
-static bool read = false;
+
 using namespace std;
+
+static bool read = false;
+
 Camera::Camera() {
-	c.identity();
+	//c.identity();
 }
 
 void Camera::inverse() {
-	
+	/*
 	// calculate determinant
 	double det = c(0,0)*c(1,1)*c(2,2)*c(3,3)+c(0,0)*c(1,2)*c(2,3)*c(3,1)+c(0,0)*c(1,3)*c(2,1)*c(3,2)
 		+c(0,1)*c(1,0)*c(2,3)*c(3,2)+c(0,1)*c(1,2)*c(2,0)*c(3,3)+c(0,1)*c(1,3)*c(2,2)*c(3,0)
@@ -49,9 +49,10 @@ void Camera::inverse() {
 			c.m[i][j] = b[i][j]/det;
 		}
 	}
- 
+	*/
 }
 
+/*
 void Camera::set(Vector3 &e, Vector3 &d, Vector3 &up) {
 
 
@@ -68,11 +69,13 @@ void Camera::set(Vector3 &e, Vector3 &d, Vector3 &up) {
 	yc.cross(zc, xc);
 	c = Matrix4(xc, yc, zc, e, 0.0, 0.0, 0.0, 1.0);
 }
+*/
 
 void Camera::identity() {
-	c.identity();
+	//c.identity();
 }
 
+/*
 GLfloat* Camera::getGLMatrix() {
 	if (read == false) {
 		read = true;
@@ -94,4 +97,5 @@ GLfloat* Camera::getGLMatrix() {
 
 	//cout << retval[0];
 	return retval;
-	}
+}
+*/
