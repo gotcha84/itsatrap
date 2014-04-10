@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <GL/glut.h>
+#include <glm/glm.hpp>
 
 #include "cube.h"
 #include "Matrix4.h"
@@ -20,7 +21,7 @@ int Window::height = 512;   // set window height in pixels here
 void Window::idleCallback(void)
 {
 	cube.spin(spin_angle); // rotate cube; if it spins too fast try 0.001
-  displayCallback(); // call display routine to re-draw cube
+	displayCallback(); // call display routine to re-draw cube
 }
 
 //----------------------------------------------------------------------------
