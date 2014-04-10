@@ -222,7 +222,7 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 		//Vec3 proposedCameraDiff = cube.walk_z_factor*(proposedCameraDiff);
 		//cam.Movement('w', proposedCameraDiff);
 
-	cout << "w" << endl;
+		cout << "w" << endl;
 	
 		/*
 		// returns the new position we want
