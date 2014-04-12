@@ -1,0 +1,20 @@
+﻿Build started 4/9/2014 11:41:45 PM.
+     1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\itsatrap\itsatrap.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching "Debug\itsatrap.unsuccessfulbuild".
+       ClCompile:
+         All outputs are up-to-date.
+       ManifestResourceCompile:
+         All outputs are up-to-date.
+       Link:
+         All outputs are up-to-date.
+       Manifest:
+         All outputs are up-to-date.
+       FinalizeBuildStatus:
+         Deleting file "Debug\itsatrap.unsuccessfulbuild".
+         Touching "Debug\itsatrap.lastbuildstate".
+     1>Done Building Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\itsatrap\itsatrap.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.06
