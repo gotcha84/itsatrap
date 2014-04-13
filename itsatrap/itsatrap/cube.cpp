@@ -200,9 +200,8 @@ int main(int argc, char *argv[])
 	// to avoid cube turning white on scaling down
 	glEnable(GL_NORMALIZE);
 
-	// Process keyboard input
+	// Process input
 	glutKeyboardFunc(Window::processNormalKeys);
-
 	glutPassiveMotionFunc(Window::processMouseMove);
 	
 	// load obj files
