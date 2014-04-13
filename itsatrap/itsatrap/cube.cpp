@@ -231,6 +231,7 @@ int main(int argc, char *argv[])
 	trans->addChild(sphere);
 
 	glutMainLoop();
+
 	return 0;
 }
 
