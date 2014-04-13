@@ -2,8 +2,11 @@
 #ifndef CUBE_H
 #define CUBE_H
 
+#include "SceneGraph.h"
+
 #include <GL/glut.h>
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +46,7 @@ class Window	  // output window related routines
     static void idleCallback(void);
     static void reshapeCallback(int, int);
     static void displayCallback(void);
+	static void displaySceneGraph(void);
 	static void processNormalKeys(unsigned char, int, int);
 	static void processMouseMove(int, int);
 };

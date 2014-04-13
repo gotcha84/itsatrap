@@ -9,12 +9,23 @@ static double red = 0.0, green = 2.0, blue = 0.0;
 int Window::width  = 512;   // set window width in pixels here
 int Window::height = 512;   // set window height in pixels here
 
+MatrixTransform *root;
+MatrixTransform *trans;
+float x = 0;
+float inc = 0.001;
+
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
 void Window::idleCallback(void)
 {
-	cube.spin(spin_angle); // rotate cube; if it spins too fast try 0.001
-	displayCallback(); // call display routine to re-draw cube
+	//cube.spin(spin_angle); // rotate cube; if it spins too fast try 0.001
+	
+	if (x > 10 || x < -10) {
+		inc = -1*inc;
+	}
+	x+=inc;
+	trans->setMatrix(glm::translate(glm::vec3(0,x,0)));
+	displaySceneGraph(); // call display routine to re-draw cube
 }
 
 //----------------------------------------------------------------------------
@@ -102,6 +113,17 @@ void Window::displayCallback(void)
 	glutSwapBuffers();
 }
 
+void Window::displaySceneGraph(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
+	glMatrixMode(GL_MODELVIEW);
+
+	root->draw();
+
+	glFlush();  
+	glutSwapBuffers();
+}
+
 Cube::Cube()
 {
 	angle = 0.0;
@@ -171,6 +193,7 @@ int main(int argc, char *argv[])
 	
 	// Install callback functions:
 	glutDisplayFunc(Window::displayCallback);
+	//glutDisplayFunc(Window::displaySceneGraph);
 	glutReshapeFunc(Window::reshapeCallback);
 	glutIdleFunc(Window::idleCallback);
 
@@ -200,6 +223,14 @@ int main(int argc, char *argv[])
 	pos.print();
 	*/
 	
+	root = new MatrixTransform();
+
+	trans = new MatrixTransform();
+	root->addChild(trans);
+
+	Sphere *sphere = new Sphere();
+	trans->addChild(sphere);
+
 	glutMainLoop();
 	return 0;
 }
