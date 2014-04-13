@@ -80,10 +80,21 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="cube.cpp" />
+    <ClCompile Include="Geode.cpp" />
+    <ClCompile Include="Group.cpp" />
+    <ClCompile Include="MatrixTransform.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="cube.h" />
+    <ClInclude Include="Geode.h" />
+    <ClInclude Include="Group.h" />
+    <ClInclude Include="MatrixTransform.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="SceneGraph.h" />
+    <ClInclude Include="Sphere.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

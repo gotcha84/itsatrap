@@ -192,8 +192,8 @@ int main(int argc, char *argv[])
 	glEnable(GL_LIGHT0);
 	
 	// Install callback functions:
-	glutDisplayFunc(Window::displayCallback);
-	//glutDisplayFunc(Window::displaySceneGraph);
+	//glutDisplayFunc(Window::displayCallback);
+	glutDisplayFunc(Window::displaySceneGraph);
 	glutReshapeFunc(Window::reshapeCallback);
 	glutIdleFunc(Window::idleCallback);
 
