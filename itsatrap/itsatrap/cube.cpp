@@ -12,7 +12,7 @@ int Window::height = 512;   // set window height in pixels here
 MatrixTransform *root;
 MatrixTransform *trans;
 float x = 0;
-float inc = 0.001;
+float inc = 0.01;
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
