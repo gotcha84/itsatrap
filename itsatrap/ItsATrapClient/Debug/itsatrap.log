@@ -1,0 +1,35 @@
+﻿Build started 4/13/2014 5:48:36 PM.
+     1>Project "C:\Users\Enrico\itsatrap\itsatrap\itsatrap\itsatrap\itsatrap.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching "Debug\itsatrap.unsuccessfulbuild".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IC:\Users\Enrico\itsatrap\itsatrap\itsatrap\/glm/ /IC:\Users\Enrico\itsatrap\itsatrap\itsatrap\/glut/include/ /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Server.cpp
+         Server.cpp
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\itsatrap\server.cpp(90): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : see declaration of 'sprintf'
+       ManifestResourceCompile:
+         All outputs are up-to-date.
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Enrico\itsatrap\itsatrap\itsatrap\Debug\itsatrap.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\Users\Enrico\itsatrap\itsatrap\itsatrap\/glut/lib/ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\itsatrap.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Enrico\itsatrap\itsatrap\itsatrap\Debug\itsatrap.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Enrico\itsatrap\itsatrap\itsatrap\Debug\itsatrap.lib" /MACHINE:X86 Debug\itsatrap.exe.embed.manifest.res
+         Debug\Camera.obj
+         Debug\Client.obj
+         Debug\cube.obj
+         Debug\Geode.obj
+         Debug\Group.obj
+         Debug\MatrixTransform.obj
+         Debug\Node.obj
+         Debug\Server.obj
+         Debug\Sphere.obj
+     1>Server.obj : error LNK2005: "int __cdecl initialize(void)" (?initialize@@YAHXZ) already defined in Client.obj
+     1>Server.obj : error LNK2005: "int __cdecl recieveMsg(char *)" (?recieveMsg@@YAHPAD@Z) already defined in Client.obj
+     1>Server.obj : error LNK2005: "int __cdecl sendMsg(char *)" (?sendMsg@@YAHPAD@Z) already defined in Client.obj
+     1>Server.obj : error LNK2005: "char * c_msg" (?c_msg@@3PADA) already defined in Client.obj
+     1>Server.obj : error LNK2005: "struct sockaddr_in myAddress" (?myAddress@@3Usockaddr_in@@A) already defined in Client.obj
+     1>Server.obj : error LNK2005: "struct WSAData wsaData" (?wsaData@@3UWSAData@@A) already defined in Client.obj
+     1>Server.obj : error LNK2005: "int i_sockfd" (?i_sockfd@@3HA) already defined in Client.obj
+     1>C:\Users\Enrico\itsatrap\itsatrap\itsatrap\Debug\itsatrap.exe : fatal error LNK1169: one or more multiply defined symbols found
+     1>Done Building Project "C:\Users\Enrico\itsatrap\itsatrap\itsatrap\itsatrap\itsatrap.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:01.16
