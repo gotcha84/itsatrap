@@ -1,9 +1,12 @@
-﻿Build started 4/13/2014 6:44:58 PM.
+﻿Build started 4/14/2014 1:10:00 AM.
      1>Project "C:\Users\Enrico\itsatrap\itsatrap\itsatrap\ItsATrapServer\ItsATrapServer.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Touching "Debug\ItsATrapServer.unsuccessfulbuild".
+         Creating "Debug\ItsATrapServer.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         All outputs are up-to-date.
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IC:\Users\Enrico\itsatrap\itsatrap\itsatrap\/Common /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Server.cpp
+         Server.cpp
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\itsatrapserver\server.cpp(164): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : see declaration of 'sprintf'
        ManifestResourceCompile:
          All outputs are up-to-date.
        Link:
@@ -22,4 +25,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.43
+Time Elapsed 00:00:01.20

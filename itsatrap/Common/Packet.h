@@ -19,7 +19,7 @@ struct moveEvent
 {
 	int eventId;
 	int playerId;
-	enum {UP, DOWN} direction;
-}
+	int direction;
+};
 
 #endif

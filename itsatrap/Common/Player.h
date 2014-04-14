@@ -1,12 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <netinet/in.h>
-
 class Player {
   public:
-    int playerId;
-    sockaddr_in clientAddress;
+    int				playerId, yPosition;
+    sockaddr_in		clientAddress;
 
     Player() {};
 

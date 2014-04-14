@@ -1,15 +1,10 @@
-﻿Build started 4/13/2014 6:41:29 PM.
+﻿Build started 4/14/2014 1:12:05 AM.
      1>Project "C:\Users\Enrico\itsatrap\itsatrap\itsatrap\ItsATrapClient\ItsATrapClient.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Touching "Debug\ItsATrapClient.unsuccessfulbuild".
+         Creating "Debug\ItsATrapClient.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IC:\Users\Enrico\itsatrap\itsatrap\itsatrap\/glm/ /IC:\Users\Enrico\itsatrap\itsatrap\itsatrap\/glut/include/ /IC:\Users\Enrico\itsatrap\itsatrap\itsatrap\/Common /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt cube.cpp
-         cube.cpp
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\itsatrapclient\cube.cpp(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\itsatrapclient\cube.cpp(16): warning C4305: 'initializing' : truncation from 'double' to 'float'
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\itsatrapclient\cube.cpp(57): warning C4244: 'argument' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\itsatrapclient\cube.cpp(57): warning C4244: 'argument' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\itsatrapclient\cube.cpp(57): warning C4244: 'argument' : conversion from 'double' to 'GLfloat', possible loss of data
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IC:\Users\Enrico\itsatrap\itsatrap\itsatrap\/glm/ /IC:\Users\Enrico\itsatrap\itsatrap\itsatrap\/glut/include/ /IC:\Users\Enrico\itsatrap\itsatrap\itsatrap\/Common /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Client.cpp
+         Client.cpp
        ManifestResourceCompile:
          All outputs are up-to-date.
        Link:
@@ -35,4 +30,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.40
+Time Elapsed 00:00:02.75

@@ -166,6 +166,7 @@ int main(int argc, char *argv[])
 		printf("initializeClient failed. Exiting program.");
 		return 1;
 	}
+	startReceiverThread();
 
 	cube.walk_x_factor = 1.0f;
 	cube.walk_z_factor = 1.0f;
@@ -260,7 +261,7 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 		//Vec3 proposedCameraDiff = cube.walk_z_factor*(proposedCameraDiff);
 		//cam.Movement('w', proposedCameraDiff);
 
-		cout << "w" << endl;
+		sendMoveEvent(1);
 	
 		/*
 		// returns the new position we want
@@ -277,7 +278,9 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 	case 's':
 		//Vec3 proposedCameraDiff = -1*cube.walk_z_factor*(proposedCameraDiff);
 		//cam.Movement('s', proposedCameraDiff);
-		cout << "s" << endl;
+
+		sendMoveEvent(2);
+
 		break;
 	// strafe left
 	case 'a':

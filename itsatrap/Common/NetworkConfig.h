@@ -4,5 +4,7 @@
 #define SERVER_ADDRESS "127.0.0.1"
 #define SERVER_PORT 5555
 #define BUFSIZE 512
+#define MAX_PLAYERS 5
+#define PACKET_BUFFER_SIZE 64
 
 #endif
