@@ -1,14 +1,28 @@
 #include "cube.h"
-#include "Client.h";
 
 using namespace std;
 
 static Cube cube;
 static double spin_angle = 0.001;
-static double red = 0.0, green = 2.0, blue = 0.0;
+static GLfloat red = 0.0, green = 2.0, blue = 0.0;
 
-int Window::width  = 512;   // set window width in pixels here
-int Window::height = 512;   // set window height in pixels here
+int Window::m_width  = 512;   // set window width in pixels here
+int Window::m_height = 512;   // set window height in pixels here
+
+int Window::m_xMouse = 0;
+int Window::m_yMouse = 0;
+
+float Window::m_xAngleChange = 0.0f;
+float Window::m_yAngleChange = 0.0f;
+
+float Window::m_xAngleChangeFactor = 0.0f;
+float Window::m_yAngleChangeFactor = 0.0f;
+
+//int, m_yMouse;				// mouse position
+//
+//static float m_xAngleChange, m_yAngleChange;
+//
+//static float m_xAngleChangeFactor, m_yAngleChangeFactor;
 
 MatrixTransform *root;
 MatrixTransform *trans;
@@ -33,8 +47,8 @@ void Window::idleCallback(void)
 // Callback method called when window is resized.
 void Window::reshapeCallback(int w, int h)
 {
-	width = w;
-	height = h;
+	m_width = w;
+	m_height = h;
 	glViewport(0, 0, w, h);  // set new viewport size
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -48,9 +62,10 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
 {
+	cube.m_player.updateModelViewMatrix();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	glMatrixMode(GL_MODELVIEW);
-	//glLoadMatrixd(cube.getMatrix().getPointer());
+	glLoadMatrixf(glm::value_ptr(cube.m_player.m_modelviewMatrix));
 
 	// Draw sides of cube in object coordinate system:
 	glBegin(GL_QUADS);
@@ -99,16 +114,27 @@ void Window::displayCallback(void)
 	glVertex3f(-5.0, -5.0,  5.0);
 	glEnd();
 	
-	/*
-	if (Window::angle_x_change != 0.0f) {
-	//cam.CameraXMovement();
-	Window::angle_x_change = 0.0f;
+	
+	if (Window::m_xAngleChange != 0.0f) {
+		if (Window::m_xAngleChange < 0) {
+			cube.m_player.m_cam.handleXRotation('l');
+		}
+		else {
+			cube.m_player.m_cam.handleXRotation('r');
+		}
+		Window::m_xAngleChange = 0.0f;
 	}
-	if (Window::angle_y_change != 0.0f) {
-	//cam.CameraYMovement();
-	Window::angle_y_change = 0.0f;
+	// TODO test
+	if (Window::m_yAngleChange != 0.0f) {
+		if (Window::m_yAngleChange < 0) {
+			cube.m_player.m_cam.handleYRotation('d');
+		}
+		else {
+			cube.m_player.m_cam.handleYRotation('u');
+		}
+		Window::m_yAngleChange = 0.0f;
 	}
-	*/
+	
 
 	glFlush();  
 	glutSwapBuffers();
@@ -116,10 +142,35 @@ void Window::displayCallback(void)
 
 void Window::displaySceneGraph(void)
 {
+	// updates stuff
+	cube.m_player.updateModelViewMatrix(); // andre added this line
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(glm::value_ptr(cube.m_player.m_modelviewMatrix)); // andre added this line
 
 	root->draw();
+
+	// andre added below if sattements
+	if (Window::m_xAngleChange != 0.0f) {
+		if (Window::m_xAngleChange < 0) {
+			cube.m_player.m_cam.handleXRotation('l');
+		}
+		else {
+			cube.m_player.m_cam.handleXRotation('r');
+		}
+		Window::m_xAngleChange = 0.0f;
+	}
+	// TODO test
+	if (Window::m_yAngleChange != 0.0f) {
+		if (Window::m_yAngleChange < 0) {
+			cube.m_player.m_cam.handleYRotation('d');
+		}
+		else {
+			cube.m_player.m_cam.handleYRotation('u');
+		}
+		Window::m_yAngleChange = 0.0f;
+	}
+
 
 	glFlush();  
 	glutSwapBuffers();
@@ -127,6 +178,7 @@ void Window::displaySceneGraph(void)
 
 Cube::Cube()
 {
+	m_player = Player();
 	angle = 0.0;
 }
 
@@ -158,18 +210,11 @@ void Cube::spin(double deg)
 	//cube.getMatrix().rotateY(deg);
 }
 
-
 int main(int argc, char *argv[])
 {
-	if (initializeClient() != 0)
-	{
-		printf("initializeClient failed. Exiting program.");
-		return 1;
-	}
-	startReceiverThread();
 
-	cube.walk_x_factor = 1.0f;
-	cube.walk_z_factor = 1.0f;
+	cube.m_player.m_xWalkFactor = 1.0f;
+	cube.m_player.m_zWalkFactor = 1.0f;
 
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
@@ -177,7 +222,7 @@ int main(int argc, char *argv[])
 
 	glutInit(&argc, argv);                      // initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
-	glutInitWindowSize(Window::width, Window::height);      // set initial window size
+	glutInitWindowSize(Window::m_width, Window::m_height);      // set initial window size
 	glutCreateWindow("OpenGL Cube for CSE167");           // open window and set window title
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
@@ -220,6 +265,10 @@ int main(int argc, char *argv[])
 	// Initialize cube matrix:
 	//cube.getMatrix().identity();
 	
+	glMatrixMode(GL_PROJECTION);
+	gluPerspective(90, float(Window::m_width)/float(Window::m_height), 0.1, 10000);
+
+
 	cout << "initialized" << endl;
 	/*
 	Vector3 pos = Vector3(
@@ -245,59 +294,14 @@ int main(int argc, char *argv[])
 
 void Window::processNormalKeys(unsigned char key, int x, int y)
 {
-	/*
-	Vec3 oldCameraCenter = cameraCenter;
-	Vec3 oldCameraLookAt = cameraLookAt;
-	Vec3 oldCameraUp = cameraUp;
-	Vec3 proposedCameraDiff = cameraLookAt - cameraDiff;
-	proposedCameraDiff.normalize();
-	// make y rotation matrix
-	proposedxCameraDiff = // rotate vector by 90degrees clockwise
-	*/
-
-	switch (key) {
-	// go forward
-	case 'w':
-		//Vec3 proposedCameraDiff = cube.walk_z_factor*(proposedCameraDiff);
-		//cam.Movement('w', proposedCameraDiff);
-
-		sendMoveEvent(1);
-	
-		/*
-		// returns the new position we want
-		Vec3 newCameraCenter = physics.collisionDetected(oldCameraCenter, proposedCameraDiff);
-		
-		Vec3 actualCameraDiff = newCameraCenter - oldCameraCenter;
-		Vec3 newCameraLookAt = oldCameraLookAt + actualCameraDiff;
-
-		camera.updateModelViewMatrix(newCameraCenter, newCameraLookAt, oldCameraUp);
-		*/
-		break;
-
-	// go backwards
-	case 's':
-		//Vec3 proposedCameraDiff = -1*cube.walk_z_factor*(proposedCameraDiff);
-		//cam.Movement('s', proposedCameraDiff);
-
-		sendMoveEvent(2);
-
-		break;
-	// strafe left
-	case 'a':
-		//Vec3 proposedCameraDiff = -1*cube.walk_z_factor*(proposedxCameraDiff);
-		//cam.Movement('a', proposedCameraDiff);
-		cout << "a" << endl;
-		break;
-	// strafe right
-	case 'd':
-		//Vec3 proposedCameraDiff = cube.walk_z_factor*(proposedxCameraDiff);
-		//cam.Movement('d', proposedCameraDiff);
-		cout << "d" << endl;
-		break;
-		
-		// TODO: running  
-
+	if (key == 'w' || key == 'a' || key == 's' || key == 'd') {
+		cube.m_player.handleMovement(key);
 	}
+	
+
+
+		
+	// TODO: running
 
 	/*
 	Vector3 pos = Vector3(
@@ -311,20 +315,22 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 }
 
 void Window::processMouseMove(int x, int y) {
-	/*
-	if (mouse_X != x) {
-	angle_x_change = float(mouse_X-x)/angle_x_change_factor;
+	
+	if (m_xMouse != x) {
+	m_xAngleChange = float(m_xMouse-x)/m_xAngleChangeFactor;
 	}
 
-	if (mouse_Y != y) {
-	angle_y_change = float(mouse_Y-y)/angle_y_change_factor;
+	if (m_yMouse != y) {
+	m_yAngleChange = float(m_yMouse-y)/m_yAngleChangeFactor;
 	}
-		
-	if (x != Window::width/2 || y != Window::height/2) {
-	glutWarpPointer(Window::width/2, Window::height/2);
+	
+
+	// keeps mouse centered
+	if (x != m_width/2 || y != m_height/2) {
+	glutWarpPointer(m_width/2, m_height/2);
 	}
 
-	mouse_X = x;
-	mouse_Y = y;
-	*/
+	m_xMouse = x;
+	m_yMouse = y;
+	
 }
