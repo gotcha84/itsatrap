@@ -60,5 +60,5 @@ void MyPlayer::handleMovement(unsigned char key) {
 void MyPlayer::updateModelViewMatrix() {
 	// TODO; use model matrix in this calculation
 
-	m_modelviewMatrix = m_cam.m_cameraMatrix;
+	m_modelviewMatrix = glm::inverse(m_cam.m_cameraMatrix);
 }

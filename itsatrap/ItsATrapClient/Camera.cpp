@@ -13,10 +13,10 @@ Camera::Camera() {
 	m_xRotationAngle = 1.0f;
 	m_yRotationAngle = 1.0f;
 	m_camX = glm::vec3(1.0f, 0, 0);
-	m_camZ = glm::vec3(0, 0, 1.0f);
+	m_camZ = glm::vec3(0, 0, -1.0f);
 
 	m_cameraCenter = glm::vec3(0, 0, 10.0f);
-	m_cameraLookAt = glm::vec3(0, 0, -10.0f);
+	m_cameraLookAt = glm::vec3(0, 0, 9.0f);
 	m_cameraUp = glm::vec3(0, 1.0f, 0);
 }
 
@@ -34,6 +34,9 @@ void Camera::handleXRotation(char direction) {
 		m_camZ = glm::rotateY(m_camZ, 1.0f*m_xRotationAngle);
 		m_camX = glm::rotateY(m_camX, 1.0f*m_xRotationAngle);
 	}
+
+	cout << "m_camX: " << glm::to_string(m_camX) << endl; 
+	cout << "m_camZ: " << glm::to_string(m_camZ) << endl << endl; 
 
 	m_cameraLookAt = m_cameraCenter + m_camZ;
 	makeCameraMatrix();
