@@ -27,7 +27,7 @@ float Window::m_yAngleChangeFactor = 0.0f;
 MatrixTransform *root;
 MatrixTransform *trans;
 float x = 0;
-float inc = 0.01;
+float inc = 0.0;
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
@@ -62,10 +62,10 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
 {
-	cube.m_player.updateModelViewMatrix();
+	cube.m_myPlayer.updateModelViewMatrix();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(cube.m_player.m_modelviewMatrix));
+	glLoadMatrixf(glm::value_ptr(cube.m_myPlayer.m_modelviewMatrix));
 
 	// Draw sides of cube in object coordinate system:
 	glBegin(GL_QUADS);
@@ -117,20 +117,20 @@ void Window::displayCallback(void)
 	
 	if (Window::m_xAngleChange != 0.0f) {
 		if (Window::m_xAngleChange < 0) {
-			cube.m_player.m_cam.handleXRotation('l');
+			cube.m_myPlayer.m_cam.handleXRotation('l');
 		}
 		else {
-			cube.m_player.m_cam.handleXRotation('r');
+			cube.m_myPlayer.m_cam.handleXRotation('r');
 		}
 		Window::m_xAngleChange = 0.0f;
 	}
 	// TODO test
 	if (Window::m_yAngleChange != 0.0f) {
 		if (Window::m_yAngleChange < 0) {
-			cube.m_player.m_cam.handleYRotation('d');
+			cube.m_myPlayer.m_cam.handleYRotation('d');
 		}
 		else {
-			cube.m_player.m_cam.handleYRotation('u');
+			cube.m_myPlayer.m_cam.handleYRotation('u');
 		}
 		Window::m_yAngleChange = 0.0f;
 	}
@@ -143,30 +143,30 @@ void Window::displayCallback(void)
 void Window::displaySceneGraph(void)
 {
 	// updates stuff
-	cube.m_player.updateModelViewMatrix(); // andre added this line
+	cube.m_myPlayer.updateModelViewMatrix(); // andre added this line
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(cube.m_player.m_modelviewMatrix)); // andre added this line
+	glLoadMatrixf(glm::value_ptr(cube.m_myPlayer.m_modelviewMatrix)); // andre added this line
 
-	root->draw();
+	root->draw(cube.m_myPlayer.m_modelviewMatrix);
 
 	// andre added below if sattements
 	if (Window::m_xAngleChange != 0.0f) {
 		if (Window::m_xAngleChange < 0) {
-			cube.m_player.m_cam.handleXRotation('l');
+			cube.m_myPlayer.m_cam.handleXRotation('l');
 		}
 		else {
-			cube.m_player.m_cam.handleXRotation('r');
+			cube.m_myPlayer.m_cam.handleXRotation('r');
 		}
 		Window::m_xAngleChange = 0.0f;
 	}
 	// TODO test
 	if (Window::m_yAngleChange != 0.0f) {
 		if (Window::m_yAngleChange < 0) {
-			cube.m_player.m_cam.handleYRotation('d');
+			cube.m_myPlayer.m_cam.handleYRotation('d');
 		}
 		else {
-			cube.m_player.m_cam.handleYRotation('u');
+			cube.m_myPlayer.m_cam.handleYRotation('u');
 		}
 		Window::m_yAngleChange = 0.0f;
 	}
@@ -178,7 +178,7 @@ void Window::displaySceneGraph(void)
 
 Cube::Cube()
 {
-	m_player = Player();
+	m_myPlayer = MyPlayer();
 	angle = 0.0;
 }
 
@@ -213,8 +213,8 @@ void Cube::spin(double deg)
 int main(int argc, char *argv[])
 {
 
-	cube.m_player.m_xWalkFactor = 1.0f;
-	cube.m_player.m_zWalkFactor = 1.0f;
+	cube.m_myPlayer.m_xWalkFactor = 1.0f;
+	cube.m_myPlayer.m_zWalkFactor = 1.0f;
 
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
 void Window::processNormalKeys(unsigned char key, int x, int y)
 {
 	if (key == 'w' || key == 'a' || key == 's' || key == 'd') {
-		cube.m_player.handleMovement(key);
+		cube.m_myPlayer.handleMovement(key);
 	}
 	
 
@@ -326,9 +326,9 @@ void Window::processMouseMove(int x, int y) {
 	
 
 	// keeps mouse centered
-	if (x != m_width/2 || y != m_height/2) {
+	/*if (x != m_width/2 || y != m_height/2) {
 	glutWarpPointer(m_width/2, m_height/2);
-	}
+	}*/
 
 	m_xMouse = x;
 	m_yMouse = y;

@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "Player.h"
+#include "MyPlayer.h"
 
 class Cube
 {
@@ -26,7 +26,7 @@ class Cube
     //Matrix4 matrix;                 // model matrix
     double angle;                   // rotation angle [degrees]
 	
-	Player m_player;
+	MyPlayer m_myPlayer;
 
     Cube();   // Constructor
     //Matrix4& getMatrix();
