@@ -206,7 +206,6 @@ void Window::processMouseMove(int x, int y) {
 	m_yAngleChange = float(m_yMouse-y)/m_yAngleChangeFactor;
 	}
 	
-
 	// keeps mouse centered
 	/*if (x != m_width/2 || y != m_height/2) {
 	glutWarpPointer(m_width/2, m_height/2);
