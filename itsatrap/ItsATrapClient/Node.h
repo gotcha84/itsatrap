@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _NODE_H_
-#define _NODE_H_
+#ifndef NODE_H
+#define NODE_H
 
 #include <glm/glm.hpp>
 

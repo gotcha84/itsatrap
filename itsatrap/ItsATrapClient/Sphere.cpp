@@ -1,10 +1,13 @@
-#include "Sphere.h"
+#include "Geode.h"
 
-void Sphere::render(glm::mat4 modelview) {
-	glPushMatrix();
-		glLoadMatrixf(glm::value_ptr(modelview));
+class Sphere : public Geode {
+	public:
+		void Sphere::draw(glm::mat4 parent) {
+			glPushMatrix();
+				glLoadMatrixf(glm::value_ptr(parent));
 
-		glColor3f(1,0,0);
-		glutSolidSphere(1, 10, 10);
-	glPushMatrix();
-}
+				glColor3f(1,0,0);
+				glutSolidSphere(1, 10, 10);
+			glPushMatrix();
+		}
+};

@@ -1,10 +1,12 @@
 #pragma once
-#ifndef _SCENEGRAPH_H_
-#define _SCENEGRAPH_H_
+#ifndef SCENEGRAPH_H
+#define SCENEGRAPH_H
 
 #include "MatrixTransform.h"
 
-#include "Sphere.h"
+//#include "Sphere.h"
+#include "Sphere.cpp"
+
 // todo - add more shapes
 
 #endif

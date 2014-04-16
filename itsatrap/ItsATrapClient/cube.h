@@ -5,20 +5,16 @@
 //#include "GLee.h"
 #include <GL/glut.h>
 #include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <glm/ext.hpp>
 
 
 #include "SceneGraph.h"
-
-#include <glm/ext.hpp>
+#include "MyPlayer.h"
 
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-
-#include "MyPlayer.h"
 
 class Cube
 {
@@ -40,16 +36,14 @@ class Cube
 class Window	  // output window related routines
 {
   public:
+	MyPlayer m_myPlayer;
+
     static int m_width, m_height; 	            // window size
-	
 	static int m_xMouse, m_yMouse;				// mouse position
-
 	static float m_xAngleChange, m_yAngleChange;
-
 	static float m_xAngleChangeFactor, m_yAngleChangeFactor;
 	// might need y total (90 degrees up or down)
 	// might need turn factor
-
 
     static void idleCallback(void);
     static void reshapeCallback(int, int);

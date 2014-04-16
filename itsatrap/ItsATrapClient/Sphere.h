@@ -1,12 +1,12 @@
 #pragma once
-#ifndef _SPHERE_H_
-#define _SPHERE_H_
+#ifndef SPHERE_H
+#define SPHERE_H
 
 #include "Geode.h"
 
 class Sphere : public Geode {
 	public:
-		void render(glm::mat4 modelview);
+		virtual void draw(glm::mat4 parent);
 };
 
 #endif

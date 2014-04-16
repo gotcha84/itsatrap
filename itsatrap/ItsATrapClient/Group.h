@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GROUP_H_
-#define _GROUP_H_
+#ifndef GROUP_H
+#define GROUP_H
 
 #include "Node.h"
 
