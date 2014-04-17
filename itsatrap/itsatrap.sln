@@ -11,14 +11,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{0B43FF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Networking", "Networking", "{ADE97A08-2604-4CAD-AD6E-68641BFB29BE}"
 	ProjectSection(SolutionItems) = preProject
-		Common\NetworkConfig.h = Common\NetworkConfig.h
-		Common\Packet.h = Common\Packet.h
-		Common\Player.h = Common\Player.h
+		Common\Networking\NetworkConfig.h = Common\Networking\NetworkConfig.h
+		Common\Networking\Packet.h = Common\Networking\Packet.h
+		Common\Networking\Player.h = Common\Networking\Player.h
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{0944EB56-AAF2-42AE-A28D-DFECEAF388C9}"
 	ProjectSection(SolutionItems) = preProject
-		Stopwatch.h = Stopwatch.h
+		Common\Utilities\Stopwatch.h = Common\Utilities\Stopwatch.h
 	EndProjectSection
 EndProject
 Global
