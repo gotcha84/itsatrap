@@ -137,10 +137,20 @@ DWORD WINAPI processBufferThread(LPVOID param)
 
 	while (1)
 	{	
+		unsigned long elapsed = 0;
 		stopwatch.start();
 
 		processBuffer();
-		Sleep(MAX_PROCESS_TIME - stopwatch.getElapsedMilliseconds());
+		elapsed = MAX_PROCESS_TIME - stopwatch.getElapsedMilliseconds();
+		if (elapsed >= 0)
+		{
+			Sleep(elapsed);
+		} 
+		else
+		{
+			// TODO (ktngo): Be Careful! What happens if processing time exceeds alloted amount?
+			Sleep(MAX_PROCESS_TIME);
+		}
 
 		stopwatch.reset();
 	}
