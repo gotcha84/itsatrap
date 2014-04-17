@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GEODE_H_
-#define _GEODE_H_
+#ifndef GEODE_H
+#define GEODE_H
 
 #include "Node.h"
 
@@ -9,18 +9,12 @@
 
 class Geode : public Node {
 	public:
-		glm::mat4 m_trans;
+		glm::vec3 color;
 
 		Geode();
-		Geode(glm::mat4 m);
 		~Geode();
-
-		void setMatrix(glm::mat4 m);
-		glm::mat4 getMatrix();
 		
-		void draw(glm::mat4 parent);
-
-		virtual void render(glm::mat4 modelview) = 0;
+		void draw(glm::mat4 parent) = 0;
 };
 
 #endif

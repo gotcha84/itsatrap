@@ -1,5 +1,5 @@
-#ifndef _MYPLAYER_H_
-#define _MYPLAYER_H_
+#ifndef MYPLAYER_H
+#define MYPLAYER_H
 
 #include <GL/glut.h>
 #include <glm/glm.hpp>

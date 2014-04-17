@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _MATRIXTRANSFORM_H_
-#define _MATRIXTRANSFORM_H_
+#ifndef MATRIXTRANSFORM_H
+#define MATRIXTRANSFORM_H
 
 #include "Group.h"
 

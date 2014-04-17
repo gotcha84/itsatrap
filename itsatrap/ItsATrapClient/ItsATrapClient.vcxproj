@@ -82,25 +82,29 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="cube.cpp" />
+    <ClCompile Include="ClientInstance.cpp" />
+    <ClCompile Include="Cone.cpp" />
+    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Geode.cpp" />
     <ClCompile Include="Group.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="MatrixTransform.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MyPlayer.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Client.h" />
-    <ClInclude Include="cube.h" />
+    <ClInclude Include="ClientInstance.h" />
     <ClInclude Include="Geode.h" />
     <ClInclude Include="Group.h" />
     <ClInclude Include="MatrixTransform.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="MyPlayer.h" />
     <ClInclude Include="SceneGraph.h" />
-    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
