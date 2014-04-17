@@ -10,34 +10,28 @@
 #include <stdlib.h>
 #include <iostream>
 
+#include "ClientInstance.h"
 #include "SceneGraph.h"
 #include "MyPlayer.h"
 
-class Window	  // output window related routines
-{
-  public:
-	MyPlayer m_myPlayer;
-	static MatrixTransform *root;
-	MatrixTransform *trans;
+class Window { // output window related routines
+	public:
+		static int m_width, m_height; // window size
+		static float spin_angle;
+		static GLfloat red, green, blue;
 
-    int m_width, m_height; 	            // window size
-	int m_xMouse, m_yMouse;				// mouse position
-	float m_xAngleChange, m_yAngleChange;
-	float m_xAngleChangeFactor, m_yAngleChangeFactor;
-	int x;
-	int inc;
-	// might need y total (90 degrees up or down)
-	// might need turn factor
+		Window();
+		~Window();
 
-	Window();
-	~Window();
+		// might need y total (90 degrees up or down)
+		// might need turn factor
 
-    static void idleCallback(void);
-    static void reshapeCallback(int, int);
-    static void displayCallback(void);
-	static void displaySceneGraph(void);
-	static void processNormalKeys(unsigned char, int, int);
-	static void processMouseMove(int, int);
+		static void idleCallback();
+		static void reshapeCallback(int, int);
+		static void displayCallback();
+		static void displaySceneGraph();
+		static void processNormalKeys(unsigned char, int, int);
+		static void processMouseMove(int, int);
 };
 
 #endif

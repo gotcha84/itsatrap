@@ -9,6 +9,8 @@
 
 class Geode : public Node {
 	public:
+		glm::vec3 color;
+
 		Geode();
 		~Geode();
 		

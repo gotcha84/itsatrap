@@ -1,43 +1,27 @@
+#include "ClientInstance.h"
 #include "Window.h"
 
-static double spin_angle = 0.001;
-static GLfloat red = 0.0, green = 2.0, blue = 0.0;
+extern ClientInstance client;
 
 Window::Window() {
 	m_width  = 512;   // set window width in pixels here
 	m_height = 512;   // set window height in pixels here
 
-	m_xMouse = 0;
-	m_yMouse = 0;
+	spin_angle = 0.001f;
 
-	m_xAngleChange = 0.0f;
-	m_yAngleChange = 0.0f;
-
-	m_xAngleChangeFactor = 0.0f;
-	m_yAngleChangeFactor = 0.0f;
-
-	x = 0;
-	inc = 0.0;
-
-	trans = new MatrixTransform();
+	red = 0.0;
+	green = 2.0;
+	blue = 0.0;
 }
 
 Window::~Window() {
-	delete trans;
-	trans = nullptr;
+
 }
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
 void Window::idleCallback(void)
 {
-	//cube.spin(spin_angle); // rotate cube; if it spins too fast try 0.001
-	
-	if (x > 10 || x < -10) {
-		inc = -1*inc;
-	}
-	x+=inc;
-	trans->setMatrix(glm::translate(glm::vec3(0,x,0)));
 	displaySceneGraph(); // call display routine to re-draw cube
 }
 
@@ -60,10 +44,10 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
 {
-	m_myPlayer.updateModelViewMatrix();
+	client.m_myPlayer.updateModelViewMatrix();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(m_myPlayer.m_modelviewMatrix));
+	glLoadMatrixf(glm::value_ptr(client.m_myPlayer.m_modelviewMatrix));
 
 	// Draw sides of cube in object coordinate system:
 	glBegin(GL_QUADS);
@@ -113,24 +97,24 @@ void Window::displayCallback(void)
 	glEnd();
 	
 	
-	if (Window::m_xAngleChange != 0.0f) {
-		if (Window::m_xAngleChange < 0) {
-			m_myPlayer.m_cam.handleXRotation('l');
+	if (client.m_xAngleChange != 0.0f) {
+		if (client.m_xAngleChange < 0) {
+			client.m_myPlayer.m_cam.handleXRotation('l');
 		}
 		else {
-			m_myPlayer.m_cam.handleXRotation('r');
+			client.m_myPlayer.m_cam.handleXRotation('r');
 		}
-		Window::m_xAngleChange = 0.0f;
+		client.m_xAngleChange = 0.0f;
 	}
 	// TODO test
-	if (Window::m_yAngleChange != 0.0f) {
-		if (Window::m_yAngleChange < 0) {
-			m_myPlayer.m_cam.handleYRotation('d');
+	if (client.m_yAngleChange != 0.0f) {
+		if (client.m_yAngleChange < 0) {
+			client.m_myPlayer.m_cam.handleYRotation('d');
 		}
 		else {
-			m_myPlayer.m_cam.handleYRotation('u');
+			client.m_myPlayer.m_cam.handleYRotation('u');
 		}
-		Window::m_yAngleChange = 0.0f;
+		client.m_yAngleChange = 0.0f;
 	}
 	
 
@@ -141,32 +125,32 @@ void Window::displayCallback(void)
 void Window::displaySceneGraph(void)
 {
 	// updates stuff
-	m_myPlayer.updateModelViewMatrix(); // andre added this line
+	client.m_myPlayer.updateModelViewMatrix(); // andre added this line
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(m_myPlayer.m_modelviewMatrix)); // andre added this line
+	glLoadMatrixf(glm::value_ptr(client.m_myPlayer.m_modelviewMatrix)); // andre added this line
 
-	root->draw(m_myPlayer.m_modelviewMatrix);
+	client.root->draw(client.m_myPlayer.m_modelviewMatrix);
 
 	// andre added below if sattements
-	if (Window::m_xAngleChange != 0.0f) {
-		if (Window::m_xAngleChange < 0) {
-			m_myPlayer.m_cam.handleXRotation('l');
+	if (client.m_xAngleChange != 0.0f) {
+		if (client.m_xAngleChange < 0) {
+			client.m_myPlayer.m_cam.handleXRotation('l');
 		}
 		else {
-			m_myPlayer.m_cam.handleXRotation('r');
+			client.m_myPlayer.m_cam.handleXRotation('r');
 		}
-		Window::m_xAngleChange = 0.0f;
+		client.m_xAngleChange = 0.0f;
 	}
 	// TODO test
-	if (Window::m_yAngleChange != 0.0f) {
-		if (Window::m_yAngleChange < 0) {
-			m_myPlayer.m_cam.handleYRotation('d');
+	if (client.m_yAngleChange != 0.0f) {
+		if (client.m_yAngleChange < 0) {
+			client.m_myPlayer.m_cam.handleYRotation('d');
 		}
 		else {
-			m_myPlayer.m_cam.handleYRotation('u');
+			client.m_myPlayer.m_cam.handleYRotation('u');
 		}
-		Window::m_yAngleChange = 0.0f;
+		client.m_yAngleChange = 0.0f;
 	}
 
 
@@ -177,7 +161,7 @@ void Window::displaySceneGraph(void)
 void Window::processNormalKeys(unsigned char key, int x, int y)
 {
 	if (key == 'w' || key == 'a' || key == 's' || key == 'd') {
-		m_myPlayer.handleMovement(key);
+		client.m_myPlayer.handleMovement(key);
 	}
 	
 
@@ -198,12 +182,12 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 
 void Window::processMouseMove(int x, int y) {
 	
-	if (m_xMouse != x) {
-	m_xAngleChange = float(m_xMouse-x)/m_xAngleChangeFactor;
+	if (client.m_xMouse != x) {
+	client.m_xAngleChange = float(client.m_xMouse-x)/client.m_xAngleChangeFactor;
 	}
 
-	if (m_yMouse != y) {
-	m_yAngleChange = float(m_yMouse-y)/m_yAngleChangeFactor;
+	if (client.m_yMouse != y) {
+	client.m_yAngleChange = float(client.m_yMouse-y)/client.m_yAngleChangeFactor;
 	}
 	
 	// keeps mouse centered
@@ -211,7 +195,7 @@ void Window::processMouseMove(int x, int y) {
 	glutWarpPointer(m_width/2, m_height/2);
 	}*/
 
-	m_xMouse = x;
-	m_yMouse = y;
+	client.m_xMouse = x;
+	client.m_yMouse = y;
 	
 }

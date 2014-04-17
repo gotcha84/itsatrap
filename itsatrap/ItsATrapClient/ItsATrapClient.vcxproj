@@ -82,6 +82,9 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ClientInstance.cpp" />
+    <ClCompile Include="Cone.cpp" />
+    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Geode.cpp" />
     <ClCompile Include="Group.cpp" />
     <ClCompile Include="main.cpp" />
@@ -94,6 +97,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="ClientInstance.h" />
     <ClInclude Include="Geode.h" />
     <ClInclude Include="Group.h" />
     <ClInclude Include="MatrixTransform.h" />

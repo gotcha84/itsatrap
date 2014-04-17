@@ -6,7 +6,7 @@ class Sphere : public Geode {
 			glPushMatrix();
 				glLoadMatrixf(glm::value_ptr(parent));
 
-				glColor3f(1,0,0);
+				glColor3f(color.x, color.y, color.z);
 				glutSolidSphere(1, 10, 10);
 			glPushMatrix();
 		}

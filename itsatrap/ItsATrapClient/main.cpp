@@ -6,14 +6,24 @@
 #include <stdlib.h>
 #include <iostream>
 
+#include "ClientInstance.h"
 #include "Window.h"
+
+ClientInstance client = ClientInstance();
+
+int Window::m_width  = 512;   // set window width in pixels here
+int Window::m_height = 512;   // set window height in pixels here
+
+float Window::spin_angle = 0.001f;
+
+GLfloat Window::red = 0.0;
+GLfloat Window::green = 2.0;
+GLfloat Window::blue = 0.0;
 
 int main(int argc, char *argv[])
 {
-	Window *window = new Window();
-
-	window->m_myPlayer.m_xWalkFactor = 1.0f;
-	window->m_myPlayer.m_zWalkFactor = 1.0f;
+	client.m_myPlayer.m_xWalkFactor = 1.0f;
+	client.m_myPlayer.m_zWalkFactor = 1.0f;
 
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
@@ -21,7 +31,7 @@ int main(int argc, char *argv[])
 
 	glutInit(&argc, argv);                      // initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
-	glutInitWindowSize(window->m_width, window->m_height);      // set initial window size
+	glutInitWindowSize(Window::m_width, Window::m_height);      // set initial window size
 	glutCreateWindow("OpenGL Cube for CSE167");           // open window and set window title
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
@@ -64,8 +74,8 @@ int main(int argc, char *argv[])
 	// Initialize cube matrix:
 	//cube.getMatrix().identity();
 	
-	glMatrixMode(GL_PROJECTION);
-	gluPerspective(90, float(window->m_width)/float(window->m_height), 0.1, 10000);
+	//glMatrixMode(GL_PROJECTION);
+	gluPerspective(90, float(Window::m_width)/float(Window::m_height), 0.1, 10000);
 
 
 	cout << "initialized" << endl;
@@ -78,14 +88,22 @@ int main(int argc, char *argv[])
 	pos.print();
 	*/
 	
-	window->root = new MatrixTransform();
+	// ground nodes
+	MatrixTransform ground = MatrixTransform();
+	client.root->addChild(&ground);
+	Cube groundShape = Cube();
+	ground.addChild(&groundShape);
 
-	window->trans = new MatrixTransform();
-	window->root->addChild(window->trans);
+	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
+	groundShape.color = glm::vec3(0,1,0);
 
-	Sphere *sphere = new Sphere();
-	window->trans->addChild(sphere);
+	// cube nodes
+	MatrixTransform obj1 = MatrixTransform();
+	client.root->addChild(&obj1);
+	Cube obj1Shape = Cube();
+	obj1.addChild(&obj1Shape);
 
+	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));
 	glutMainLoop();
 
 	return 0;

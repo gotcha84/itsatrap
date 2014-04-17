@@ -2,11 +2,16 @@
 #ifndef SCENEGRAPH_H
 #define SCENEGRAPH_H
 
+// base node class
+#include "Node.h"
+
+// node types
 #include "MatrixTransform.h"
+#include "Geode.h"
 
-//#include "Sphere.h"
+// specific geodes
+#include "Cube.cpp"
 #include "Sphere.cpp"
-
-// todo - add more shapes
+#include "Cone.cpp"
 
 #endif
