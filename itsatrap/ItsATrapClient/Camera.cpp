@@ -23,38 +23,55 @@ Camera::Camera() {
 
 void Camera::handleXRotation(char direction) {
 	// left
-	if (direction == 'l') {
-		m_camZ = glm::rotateY(m_camZ, -1.0f*m_xRotationAngle);
+	cout << "XXX" << endl;
+	glm::vec3 tmp_camZ = glm::vec3(m_camZ.x, 0.0f, m_camZ.z);
+	if (direction == 'r') {
+		tmp_camZ = glm::rotateY(tmp_camZ, -1.0f*m_xRotationAngle);
 		m_camX = glm::rotateY(m_camX, -1.0f*m_xRotationAngle);
 
 	}
 
 	// right
-	if (direction == 'r') {
-		m_camZ = glm::rotateY(m_camZ, 1.0f*m_xRotationAngle);
+	if (direction == 'l') {
+		tmp_camZ = glm::rotateY(tmp_camZ, 1.0f*m_xRotationAngle);
 		m_camX = glm::rotateY(m_camX, 1.0f*m_xRotationAngle);
 	}
-
-	cout << "m_camX: " << glm::to_string(m_camX) << endl; 
-	cout << "m_camZ: " << glm::to_string(m_camZ) << endl << endl; 
+	
+	m_camZ = glm::vec3(tmp_camZ.x, m_camZ.y, tmp_camZ.z);
 
 	m_cameraLookAt = m_cameraCenter + m_camZ;
+	cout << "m_camX: " << glm::to_string(m_camX) << endl; 
+	cout << "m_camZ: " << glm::to_string(m_camZ) << endl;
+	cout << "camera_up: " << glm::to_string(m_cameraUp) << endl; 
+	cout << "camera_lookat: " << glm::to_string(m_cameraLookAt) << endl; 
+	cout << "camera_center: " << glm::to_string(m_cameraCenter) << endl << endl; 
+
+
 	makeCameraMatrix();
 }
 
 void Camera::handleYRotation(char direction) {
-	// TODO modify upvector too?
+	// TODO modify upvector too for confuse ray
 	// up
+	cout << "YYY " << endl;
 	if (direction == 'u') {
-		m_camZ = glm::rotateX(m_camZ, -1.0f*m_yRotationAngle);
+		m_camZ = glm::rotateX(m_camZ, 1.0f*m_yRotationAngle);
+		//m_cameraUp = glm::rotateX(m_cameraUp, 1.0f*m_yRotationAngle);
 	}
 
 	// down
 	if (direction == 'd') {
-		m_camZ = glm::rotateX(m_camZ, m_yRotationAngle);
+		m_camZ = glm::rotateX(m_camZ, -1.0f*m_yRotationAngle);
+		//m_cameraUp = glm::rotateX(m_cameraUp, -1.0f*m_yRotationAngle);
 	}
 
 	m_cameraLookAt = m_cameraCenter + m_camZ;
+	cout << "m_camX: " << glm::to_string(m_camX) << endl; 
+	cout << "m_camZ: " << glm::to_string(m_camZ) << endl;
+	cout << "camera_up: " << glm::to_string(m_cameraUp) << endl; 
+	cout << "camera_lookat: " << glm::to_string(m_cameraLookAt) << endl; 
+	cout << "camera_center: " << glm::to_string(m_cameraCenter) << endl << endl; 
+	
 	makeCameraMatrix();
 }
 

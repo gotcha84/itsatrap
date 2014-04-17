@@ -29,6 +29,8 @@ class MyPlayer {
 		MyPlayer();
 		void handleMovement(unsigned char);
 		void updateModelViewMatrix();
+		void setProjectionMatrix();
+		void setViewportMatrix();
 };
 
 #endif
