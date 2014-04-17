@@ -4,17 +4,18 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "packet.h"
-#include "NetworkConfig.h"
-#include "Player.h"
+#include "Networking\Packet.h"
+#include "Networking\NetworkConfig.h"
+#include "Networking\Player.h"
+#include "Utilities\Stopwatch.h"
 
 // Function Prototypes
-int initialize();
-void processMsg(char *, struct sockaddr_in *);
-int receiveMsg(char *, struct sockaddr_in *);
-int sendMsg(char *, int, struct sockaddr_in *);
-DWORD WINAPI processBufferThread(LPVOID);
-void processBuffer();
+int		initialize();
+void	queueMsg(char *, struct sockaddr_in *);
+void	processBuffer();
+int		receiveMsg(char *, struct sockaddr_in *);
+int		sendMsg(char *, int, struct sockaddr_in *);
+DWORD	WINAPI processBufferThread(LPVOID);
 
 struct bufferEntry {
 	int playerId;
@@ -30,16 +31,26 @@ static Player				players[MAX_PLAYERS];
 static int					playerCount;
 static struct bufferEntry	packetBuffer[PACKET_BUFFER_SIZE];
 static int					packetBufferCount;
+//Stopwatch			stopwatch;
 
-int main(int argc, char ** argv) {
-
+int main(int argc, char ** argv) 
+{
 	initialize();
 	printf("[SERVER]: Server is running.\n");
 
-	while(1) {
+
+	while (1)
+	{
+		//stopwatch.startTimer();
+		Sleep(1000);
+		//printf("Sleep time: %ul", stopwatch.getElapsedMilliseconds());
+	}
+
+	while (1) 
+	{
 		struct sockaddr_in source;
-		receiveMsg(c_msg, &source);	
-		processMsg(c_msg, &source);
+		receiveMsg(c_msg, &source);
+		queueMsg(c_msg, &source);
 	}
 
 	return 0;
@@ -47,13 +58,13 @@ int main(int argc, char ** argv) {
 
 
 // Inital setup for the server
-int initialize() {
-
+int initialize() 
+{
 	// Load WinSock
-	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) 
-	{ 
-		fprintf(stderr, "WSAStartup() failed"); 
-		exit(1); 
+	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0)
+	{
+		fprintf(stderr, "WSAStartup() failed");
+		exit(1);
 	}
 
 	// Init variables
@@ -81,8 +92,9 @@ int initialize() {
 	return 0;
 }
 
-// Server processes a given message
-void processMsg(char * msg, struct sockaddr_in *source) {
+// Server queues a given message into the ubffer
+void queueMsg(char * msg, struct sockaddr_in *source) 
+{
 	// TODO (ktngo): Bad practice. Move away from using structs
 	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
@@ -90,7 +102,7 @@ void processMsg(char * msg, struct sockaddr_in *source) {
 
 	// Some events can be processed immediately (like init request)
 	// Some events must be stored into the buffer, process it later
-	if (p -> eventId == 1) 
+	if (p->eventId == 1)
 	{
 		if (playerCount < MAX_PLAYERS)
 		{
@@ -100,17 +112,17 @@ void processMsg(char * msg, struct sockaddr_in *source) {
 			player.playerId = playerCount;
 			player.yPosition = 0;
 			players[playerCount] = player;
-				
+
 			// Creating response message
 			struct initResponsePacket response;
 			response.eventId = 2;
 			response.givenPlayerId = playerCount;
-				
+
 			// Send Message
-			sendMsg((char *) &response, sizeof(response), source);
+			sendMsg((char *)&response, sizeof(response), source);
 			// TODO: what if client failed to receive this?
 			printf("[SERVER]: Init Response sent. Given ID = %d\n", response.givenPlayerId);
-				
+
 			playerCount++;
 		}
 		else
@@ -130,10 +142,12 @@ void processMsg(char * msg, struct sockaddr_in *source) {
 DWORD WINAPI processBufferThread(LPVOID param)
 {
 	printf("[SERVER]: Process buffer thread started\n");
+
 	while (1)
-	{
+	{	
+		//stopwatch.startTimer();
 		processBuffer();
-		Sleep(1000);
+		//Sleep(MAX_PROCESS_TIME - stopwatch.getElapsedMilliseconds());
 	}
 }
 
@@ -152,11 +166,11 @@ void processBuffer()
 			{
 				// Update player state
 				struct moveEvent *e = (struct moveEvent *)p;
-				if (e->direction == 1) 
+				if (e->direction == 1)
 					players[e->playerId].yPosition += 1;
 				else
 					players[e->playerId].yPosition -= 1;
-			
+
 
 				// Send new state
 				char tmp[BUFSIZE];
@@ -166,7 +180,6 @@ void processBuffer()
 
 				break;
 			}
-		
 			default:
 				printf("[SERVER]: Unknown event at buffer %d\n", i);
 				break;
@@ -179,10 +192,12 @@ void processBuffer()
 }
 
 // Server receives a message
-int receiveMsg(char * msg, struct sockaddr_in *source) {
+int receiveMsg(char * msg, struct sockaddr_in *source) 
+{
 	int len = sizeof(struct sockaddr_in);
 
-	if (recvfrom(i_sockfd, msg, BUFSIZE, 0, (struct sockaddr *)source, &len) < 0) {
+	if (recvfrom(i_sockfd, msg, BUFSIZE, 0, (struct sockaddr *)source, &len) < 0) 
+	{
 		int error = WSAGetLastError();
 		printf("[SERVER]: server.cpp - recvfrom failed with error code %d\n", error);
 		return 1;
@@ -192,8 +207,10 @@ int receiveMsg(char * msg, struct sockaddr_in *source) {
 }
 
 // Server sends a message to the current client
-int sendMsg(char * msg, int len, struct sockaddr_in *destination) {
-	if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *)destination, sizeof(struct sockaddr_in)) < 0) {
+int sendMsg(char * msg, int len, struct sockaddr_in *destination) 
+{
+	if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *)destination, sizeof(struct sockaddr_in)) < 0) 
+	{
 		int error = WSAGetLastError();
 		printf("[SERVER]: server.cpp - sendto failed with error code %d\n", error);
 		return 1;

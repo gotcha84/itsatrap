@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <Windows.h>
 
-#include "Packet.h"
-#include "NetworkConfig.h"
+#include "Networking\Packet.h"
+#include "Networking\NetworkConfig.h"
 
 // Function Prototypes
 int receiveMsg(char *);
