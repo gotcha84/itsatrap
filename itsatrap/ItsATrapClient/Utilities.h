@@ -15,7 +15,11 @@ class Utilities {
 	public:
 
 		GLfloat* matrixToGLMatrix(glm::mat4);
-		
+
+		// not needed if we make heightmap more specific
+		static int closestInt(float);
 };
+
+
 
 #endif

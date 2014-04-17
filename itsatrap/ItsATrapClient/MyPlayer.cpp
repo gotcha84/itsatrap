@@ -9,6 +9,7 @@ using namespace std;
 
 MyPlayer::MyPlayer() {
 	m_cam = Camera();
+	m_physics = Physics();
 	setProjectionMatrix();
 	setViewportMatrix();
 	//c.identity();
@@ -50,8 +51,14 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	glm::vec3 moved = newPos - m_cam.m_cameraCenter;
 
-	m_cam.m_cameraCenter = newPos;
-	
+	m_physics.m_position = newPos;
+
+	m_physics.applyGravity();
+
+	moved = m_physics.m_position - m_cam.m_cameraCenter;
+
+	m_cam.m_cameraCenter = m_physics.m_position;
+
 	m_cam.m_cameraLookAt+=moved;
 
 	m_cam.makeCameraMatrix();

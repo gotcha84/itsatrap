@@ -20,3 +20,8 @@ GLfloat* Utilities::matrixToGLMatrix(glm::mat4 matrix) {
 
 	return retval;
 }
+
+int Utilities::closestInt(float num) {
+	return int(floor(num+0.5));
+}
+
