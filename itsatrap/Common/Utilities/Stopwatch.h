@@ -14,8 +14,9 @@ class Stopwatch
 
 	public:
 		Stopwatch();
-		void startTimer();
-		void stopTimer();
+		void start();
+		void stop();
+		void reset();
 		unsigned long getElapsedMilliseconds();
 };
 
