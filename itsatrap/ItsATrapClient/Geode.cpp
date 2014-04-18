@@ -1,9 +1,13 @@
 #include "Geode.h"
 
-Geode::Geode() {
-	color = glm::vec3(1,0,0);
-}
+namespace sg {
 
-Geode::~Geode() {
+	Geode::Geode() {
+		color = glm::vec3(1,0,0);
+	}
+
+	Geode::~Geode() {
+
+	}
 
 }
