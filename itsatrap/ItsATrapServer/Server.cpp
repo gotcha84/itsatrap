@@ -145,7 +145,7 @@ void processBuffer()
 	{
 		struct packet *p = (struct packet *) packetBuffer[i].msg;
 		printf("[SERVER]: Now processing packet at buffer %d with eventId: %d\n", i, p->eventId);
-
+		
 		switch (p->eventId)
 		{
 			case 3: // Move event

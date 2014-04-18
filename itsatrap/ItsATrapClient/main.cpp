@@ -8,6 +8,7 @@
 
 #include "ClientInstance.h"
 #include "Window.h"
+#include "World.h"
 
 ClientInstance client = ClientInstance();
 
@@ -77,7 +78,6 @@ int main(int argc, char *argv[])
 	//glMatrixMode(GL_PROJECTION);
 	gluPerspective(90, float(Window::m_width)/float(Window::m_height), 0.1, 10000);
 
-
 	cout << "initialized" << endl;
 	/*
 	Vector3 pos = Vector3(
@@ -89,6 +89,10 @@ int main(int argc, char *argv[])
 	*/
 	
 	// ground nodes
+	//World world = World();
+	//world.loadWorldData();
+	//world.initializeHeightMap();
+
 	MatrixTransform ground = MatrixTransform();
 	client.root->addChild(&ground);
 	Cube groundShape = Cube();

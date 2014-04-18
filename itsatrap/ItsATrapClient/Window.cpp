@@ -44,82 +44,6 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
 {
-	client.m_myPlayer.updateModelViewMatrix();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(client.m_myPlayer.m_modelviewMatrix));
-
-	// Draw sides of cube in object coordinate system:
-	glBegin(GL_QUADS);
-	glColor3f(red, green, blue);
-
-	// Draw front face:
-	glNormal3f(0.0, 0.0, 1.0);   
-	glVertex3f(-5.0,  5.0,  5.0);
-	glVertex3f( 5.0,  5.0,  5.0);
-	glVertex3f( 5.0, -5.0,  5.0);
-	glVertex3f(-5.0, -5.0,  5.0);
-	
-	// Draw left side:
-	glNormal3f(-1.0, 0.0, 0.0);
-	glVertex3f(-5.0,  5.0,  5.0);
-	glVertex3f(-5.0,  5.0, -5.0);
-	glVertex3f(-5.0, -5.0, -5.0);
-	glVertex3f(-5.0, -5.0,  5.0);
-	
-	// Draw right side:
-	glNormal3f(1.0, 0.0, 0.0);
-	glVertex3f( 5.0,  5.0,  5.0);
-	glVertex3f( 5.0,  5.0, -5.0);
-	glVertex3f( 5.0, -5.0, -5.0);
-	glVertex3f( 5.0, -5.0,  5.0);
-	
-	// Draw back face:
-	glNormal3f(0.0, 0.0, -1.0);
-	glVertex3f(-5.0,  5.0, -5.0);
-	glVertex3f( 5.0,  5.0, -5.0);
-	glVertex3f( 5.0, -5.0, -5.0);
-	glVertex3f(-5.0, -5.0, -5.0);
-	
-	// Draw top side:
-	glNormal3f(0.0, 1.0, 0.0);
-	glVertex3f(-5.0,  5.0,  5.0);
-	glVertex3f( 5.0,  5.0,  5.0);
-	glVertex3f( 5.0,  5.0, -5.0);
-	glVertex3f(-5.0,  5.0, -5.0);
-	
-	// Draw bottom side:
-	glNormal3f(0.0, -1.0, 0.0);
-	glVertex3f(-5.0, -5.0, -5.0);
-	glVertex3f( 5.0, -5.0, -5.0);
-	glVertex3f( 5.0, -5.0,  5.0);
-	glVertex3f(-5.0, -5.0,  5.0);
-	glEnd();
-	
-	
-	if (client.m_xAngleChange != 0.0f) {
-		if (client.m_xAngleChange < 0) {
-			client.m_myPlayer.m_cam.handleXRotation('l');
-		}
-		else {
-			client.m_myPlayer.m_cam.handleXRotation('r');
-		}
-		client.m_xAngleChange = 0.0f;
-	}
-	// TODO test
-	if (client.m_yAngleChange != 0.0f) {
-		if (client.m_yAngleChange < 0) {
-			client.m_myPlayer.m_cam.handleYRotation('d');
-		}
-		else {
-			client.m_myPlayer.m_cam.handleYRotation('u');
-		}
-		client.m_yAngleChange = 0.0f;
-	}
-	
-
-	glFlush();  
-	glutSwapBuffers();
 }
 
 void Window::displaySceneGraph(void)
@@ -129,6 +53,9 @@ void Window::displaySceneGraph(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(glm::value_ptr(client.m_myPlayer.m_modelviewMatrix)); // andre added this line
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(glm::value_ptr(client.m_myPlayer.m_projectionMatrix));
+	glMatrixMode(GL_MODELVIEW);
 
 	client.root->draw(client.m_myPlayer.m_modelviewMatrix);
 
@@ -145,10 +72,10 @@ void Window::displaySceneGraph(void)
 	// TODO test
 	if (client.m_yAngleChange != 0.0f) {
 		if (client.m_yAngleChange < 0) {
-			client.m_myPlayer.m_cam.handleYRotation('d');
+			client.m_myPlayer.m_cam.handleYRotation('u');
 		}
 		else {
-			client.m_myPlayer.m_cam.handleYRotation('u');
+			client.m_myPlayer.m_cam.handleYRotation('d');
 		}
 		client.m_yAngleChange = 0.0f;
 	}
@@ -182,6 +109,10 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 
 void Window::processMouseMove(int x, int y) {
 	
+	/*cout << "client factor: " << client.m_xAngleChangeFactor << endl;
+	cout << "client factor: " << client.m_yAngleChangeFactor << endl;
+	cout << "clientX: " << client.m_xMouse << endl;
+	cout << "clientY: " << client.m_yMouse << endl;*/
 	if (client.m_xMouse != x) {
 	client.m_xAngleChange = float(client.m_xMouse-x)/client.m_xAngleChangeFactor;
 	}
@@ -191,9 +122,16 @@ void Window::processMouseMove(int x, int y) {
 	}
 	
 	// keeps mouse centered
-	/*if (x != m_width/2 || y != m_height/2) {
+	if (x != m_width/2 || y != m_height/2) {
 	glutWarpPointer(m_width/2, m_height/2);
-	}*/
+	// TODO: actually fix this
+	/*cout << "xchange: " << client.m_xAngleChange << endl;
+	cout << "ychange: " << client.m_yAngleChange << endl;
+	client.m_xAngleChange = -1.0f * client.m_xAngleChange;
+	client.m_yAngleChange = -1.0f * client.m_yAngleChange;
+	cout << "xchange: " << client.m_xAngleChange << endl;
+	cout << "ychange: " << client.m_yAngleChange << endl;*/
+	}
 
 	client.m_xMouse = x;
 	client.m_yMouse = y;

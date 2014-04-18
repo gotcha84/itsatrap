@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "Camera.h"
+#include "Physics.h"
 #include <string>
 
 using namespace std;
@@ -17,6 +18,7 @@ class MyPlayer {
 	public:
 
 		Camera m_cam;
+		Physics m_physics;
 
 		glm::mat4 m_viewportMatrix;
 		glm::mat4 m_projectionMatrix;
@@ -29,6 +31,8 @@ class MyPlayer {
 		MyPlayer();
 		void handleMovement(unsigned char);
 		void updateModelViewMatrix();
+		void setProjectionMatrix();
+		void setViewportMatrix();
 };
 
 #endif

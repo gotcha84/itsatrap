@@ -80,6 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientInstance.cpp" />
@@ -91,10 +92,15 @@
     <ClCompile Include="MatrixTransform.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MyPlayer.cpp" />
+    <ClCompile Include="objreader.cpp" />
+    <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AABB.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientInstance.h" />
@@ -103,8 +109,12 @@
     <ClInclude Include="MatrixTransform.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="MyPlayer.h" />
+    <ClInclude Include="objreader.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="SceneGraph.h" />
+    <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
