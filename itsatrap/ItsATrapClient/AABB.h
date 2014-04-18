@@ -17,6 +17,7 @@ class AABB {
 	float m_maxZ;
 
 	AABB(float, float, float, float, float, float);
+	~AABB();
 
 	bool collidesWith(AABB);
 };

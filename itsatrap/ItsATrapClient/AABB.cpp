@@ -13,6 +13,9 @@ AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float max
 	m_maxZ = maxZ;
 }
 
+AABB::~AABB() {
+
+}
 
 bool AABB::collidesWith(AABB other) {
 	return (other.m_maxX >= m_minX && other.m_minX <= m_maxX
