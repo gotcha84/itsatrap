@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <iostream>
+using namespace std;
 
 #include "packet.h"
 #include "NetworkConfig.h"
@@ -187,6 +189,18 @@ int receiveMsg(char * msg, struct sockaddr_in *source) {
 		printf("[SERVER]: server.cpp - recvfrom failed with error code %d\n", error);
 		return 1;
 	}
+
+	//=========================== test =========================//
+	cout << "====================================================" << endl;
+	cout << "i_sockfd: " << i_sockfd << endl;
+	cout << "source: " << source << endl;
+	cout << "(struct sockaddr *)source: " << ((struct sockaddr *)source) << endl;
+	cout << "((struct sockaddr *)source).sa_family: " << ((struct sockaddr *)source)->sa_family << endl;
+	cout << "((struct sockaddr *)source).sa_data: " << ((struct sockaddr *)source)->sa_data << endl;
+	cout << "&len: " << &len << endl;
+	cout << "inet_ntoa(source.sin.addr): " << inet_ntoa( ((struct sockaddr_in *)source)->sin_addr ) << endl;
+	cout << "====================================================" << endl;
+	//=========================end test ========================//
 
 	return 0;
 }
