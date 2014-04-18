@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <Windows.h>
+#include <iostream>
+using namespace std;
 
 #include "Networking\Packet.h"
 #include "Networking\NetworkConfig.h"
@@ -36,6 +38,12 @@ int initializeClient() {
 	// Creating UDP socket
 	i_sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
+	if (i_sockfd == INVALID_SOCKET)
+	{
+		printf("socket() failed, Err: %d\n", WSAGetLastError());
+		return FALSE;
+	}
+
 	// TODO (ktngo): Remove when using multiple different computers
 	// Setting this client's address and port, and bind them
 	// WE SHOULD UNCOMMENT THIS LATER
@@ -58,6 +66,20 @@ int initializeClient() {
 	serverAddress.sin_addr.s_addr = inet_addr(SERVER_ADDRESS);
 	serverAddress.sin_port = htons(SERVER_PORT);
 	
+	//=========================== test =========================//
+	cout << "====================================================" << endl;
+	cout << "SERVER_ADDRESS: " << SERVER_ADDRESS << endl;
+	cout << "inet_addr: " << inet_addr(SERVER_ADDRESS) << endl;
+	cout << "inet_ntoa: " << inet_ntoa( serverAddress.sin_addr ) << endl;
+	cout << "serverAddress.sin_addr.s_addr: " << serverAddress.sin_addr.s_addr << endl;
+	cout << "SERVER_PORT: " << SERVER_PORT << endl;
+	cout << "htons(SERVER_PORT): " << htons(SERVER_PORT) << endl;
+	cout << "serverAddress.sin_port: " << serverAddress.sin_port << endl;
+	cout << "====================================================" << endl;
+	//=========================end test ========================//
+
+
+
 	// Send init event
 	struct packet initPacket;
 	initPacket.eventId = 1;
@@ -96,6 +118,12 @@ void startReceiverThread()
 	CreateThread(NULL, 0, receiverThread, NULL, 0, &tmp);
 }
 
+
+
+// receiverThread for the W press in the ball drop image.
+// TODO: this while loop will create an infinit loop
+// after i switch ip to broadcast (255.255.255.255) and
+// the error msg of 10022. still trying to resolve.
 DWORD WINAPI receiverThread(LPVOID param)
 {
 	printf("[CLIENT]: Receiver thread started\n");
@@ -105,6 +133,7 @@ DWORD WINAPI receiverThread(LPVOID param)
 		receiveMsg(buf);
 		printf("[CLIENT]: received: %s\n", buf);
 	}
+	//return 1;
 }
 
 // Client receives messages from the server
@@ -120,12 +149,22 @@ int receiveMsg(char * msg) {
 }
 
 // Client sends message to the server
+// TODO: resolved permission Error 10013.
 int sendMsg(char * msg, int len) {
-	if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0) {
+
+
+	if (setsockopt( i_sockfd, SOL_SOCKET, SO_BROADCAST, msg, sizeof(msg)) == -1 )
+	{
 		int error = WSAGetLastError();
-		printf("[CLIENT]: client.cpp - sendto failed with error code %d\n", error);
+		printf("[CLIENT]: client.cpp - sendto failed with error code %ds\n", error);
 		return 1;
 	}
 
+	// Previous code. commented - backup
+	/*if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0) {
+		int error = WSAGetLastError();
+		printf("[CLIENT]: client.cpp - sendto failed with error code %d\n", error);
+		return 1;
+	}*/
 	return 0;
 }
