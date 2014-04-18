@@ -2,7 +2,7 @@
 #define CLIENT_H
 
 int initializeClient();
-void sendMoveEvent(int);
 void startReceiverThread();
+void sendStateUpdate(int id, float x, float y, float z);
 
 #endif CLIENT_H

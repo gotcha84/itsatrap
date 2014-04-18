@@ -1,6 +1,8 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include "StateEntry.h"
+
 // Superclass of all packets
 struct packet {
 	int eventId;	
@@ -14,12 +16,12 @@ struct initResponsePacket
 	int givenPlayerId;
 };
 
-// Move events
-struct moveEvent
+// State updates
+struct singleStateUpdatePacket
 {
 	int eventId;
 	int playerId;
-	int direction;
+	StateEntry update;
 };
 
 #endif

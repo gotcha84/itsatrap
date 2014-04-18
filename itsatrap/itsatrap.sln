@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Networking", "Networking", 
 		Common\NetworkConfig.h = Common\NetworkConfig.h
 		Common\Packet.h = Common\Packet.h
 		Common\Player.h = Common\Player.h
+		Common\StateEntry.h = Common\StateEntry.h
+		Common\WorldState.h = Common\WorldState.h
 	EndProjectSection
 EndProject
 Global

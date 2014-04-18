@@ -6,7 +6,10 @@
 #include <Windows.h>
 
 #include "Packet.h"
+#include "Client.h"
 #include "NetworkConfig.h"
+#include "WorldState.h"
+#include "StateEntry.h"
 
 // Function Prototypes
 int receiveMsg(char *);
@@ -61,7 +64,7 @@ int initializeClient() {
 	struct packet initPacket;
 	initPacket.eventId = 1;
 	sendMsg((char *) &initPacket, sizeof(initPacket));
-	printf("Init request sent\n");
+	printf("[CLIENT]: Init request sent\n");
 	
 	// Receives Server response
 	receiveMsg(c_msg); // TODO: what if server doesn't respond?
@@ -75,18 +78,10 @@ int initializeClient() {
 		playerId = irp->givenPlayerId;
 	}
 
+	startReceiverThread();
+
 	return 0;
-
-}
-
-// For now, direction up = 1, down = 2.
-void sendMoveEvent(int direction)
-{
-	struct moveEvent packet;
-	packet.eventId = 3;
-	packet.playerId = playerId;
-	packet.direction = direction;
-	sendMsg((char *)&packet, sizeof(packet));
+	
 }
 
 void startReceiverThread()
@@ -101,10 +96,42 @@ DWORD WINAPI receiverThread(LPVOID param)
 	while (1)
 	{
 		char buf[BUFSIZE];
-		receiveMsg(buf);
-		printf("[CLIENT]: received: %s\n", buf);
+		if (receiveMsg(buf) == 0)
+		{
+			printf("[CLIENT]: received: %s\n", buf);
+
+			struct packet *p = (struct packet *) buf;
+
+			if (p->eventId == 4)
+			{
+				// World update
+				int numUpdates = ((int *)p)[1];
+				printf("numUpdates: %d\n", numUpdates);
+
+				for (int i = 0; i < numUpdates; i++)
+				{
+					StateEntry *entry = (StateEntry *)(buf + 2*sizeof(int) + i*sizeof(StateEntry));
+					printf("Object %d, x:%.1f, y:%.1f, z:%.1f\n", entry->objectId, entry->x, entry->y, entry->z);
+				}
+			}
+		}
 	}
 }
+
+// Sending state updates
+void sendStateUpdate(int id, float x, float y, float z)
+{
+	struct singleStateUpdatePacket p;
+	p.eventId = 3;
+	p.playerId = playerId;
+	p.update.objectId = playerId; // TEMPORARY!!!!!!!
+	p.update.x = x;
+	p.update.y = y;
+	p.update.z = z;
+
+	sendMsg((char *)&p, sizeof(p));
+}
+
 
 // Client receives messages from the server
 int receiveMsg(char * msg) {

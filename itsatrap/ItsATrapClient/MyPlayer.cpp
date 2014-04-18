@@ -3,6 +3,7 @@
 #include <iomanip> // to round floats
 
 #include "MyPlayer.h"
+#include "Client.h"
 
 using namespace std;
 
@@ -18,8 +19,8 @@ MyPlayer::MyPlayer() {
 void MyPlayer::handleMovement(unsigned char key) {
 
 	glm::vec3 proposedNewPos;
-	cout << "center: " << glm::to_string(m_cam.m_cameraCenter) << endl;
-	cout << "lookat: " << glm::to_string(m_cam.m_cameraLookAt) << endl;
+	//cout << "center: " << glm::to_string(m_cam.m_cameraCenter) << endl;
+	//cout << "lookat: " << glm::to_string(m_cam.m_cameraLookAt) << endl;
 	//cout << glm::to_string(m_cam.m_cameraMatrix) << endl;
 	cout << endl;
 	// calculate proposals
@@ -28,6 +29,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 	switch (key) {
 		case 'w':
 			proposedNewPos = m_cam.m_cameraCenter + m_zWalkFactor*tmp_camZ;
+			sendStateUpdate(0, 3, 3, 3);
 			break;
 
 		case 's':

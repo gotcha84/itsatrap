@@ -3,10 +3,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <iostream>
 
 #include "packet.h"
 #include "NetworkConfig.h"
 #include "Player.h"
+#include "WorldState.h"
+#include "StateEntry.h"
+
+using namespace std;
 
 // Function Prototypes
 int initialize();
@@ -15,6 +20,7 @@ int receiveMsg(char *, struct sockaddr_in *);
 int sendMsg(char *, int, struct sockaddr_in *);
 DWORD WINAPI processBufferThread(LPVOID);
 void processBuffer();
+void broadcastWorldState();
 
 struct bufferEntry {
 	int playerId;
@@ -30,6 +36,7 @@ static Player				players[MAX_PLAYERS];
 static int					playerCount;
 static struct bufferEntry	packetBuffer[PACKET_BUFFER_SIZE];
 static int					packetBufferCount;
+static WorldState			worldState;
 
 int main(int argc, char ** argv) {
 
@@ -38,8 +45,8 @@ int main(int argc, char ** argv) {
 
 	while(1) {
 		struct sockaddr_in source;
-		receiveMsg(c_msg, &source);	
-		processMsg(c_msg, &source);
+		if (receiveMsg(c_msg, &source) == 0)	
+			processMsg(c_msg, &source);
 	}
 
 	return 0;
@@ -134,6 +141,37 @@ DWORD WINAPI processBufferThread(LPVOID param)
 	{
 		processBuffer();
 		Sleep(1000);
+
+		cout << " ===== CURRENT STATE OF THE WORLD =====" << endl;
+		for (int i = 0; i < worldState.entries.size(); i++)
+		{
+			StateEntry entry = worldState.entries[i];
+			printf("Object id:%d x:%.1f y:%.1f z:%.1f\n", entry.objectId, entry.x, entry.y, entry.z);
+			
+		}
+		if (worldState.entries.size() > 0)
+			broadcastWorldState();
+	}
+}
+
+void broadcastWorldState()
+{
+	int size = 2*sizeof(int) + sizeof(struct StateEntry) * worldState.entries.size();
+	char *buf = (char *) malloc(size);
+
+	((int *)buf)[0] = 4;
+	((int *)buf)[1] = worldState.entries.size();
+
+	printf("size:%d\n", ((int *)buf)[1]);
+
+	for (int i = 0; i < worldState.entries.size(); i++)
+	{
+		memcpy(buf + 2*sizeof(int) + i * sizeof(struct StateEntry), &worldState.entries[i], sizeof(struct StateEntry));
+	}
+
+	for (int i = 0; i < playerCount; i++)
+	{
+		sendMsg(buf, size, &players[i].clientAddress);
 	}
 }
 
@@ -148,21 +186,32 @@ void processBuffer()
 		
 		switch (p->eventId)
 		{
-			case 3: // Move event
+			case 3: // State updates
 			{
 				// Update player state
-				struct moveEvent *e = (struct moveEvent *)p;
-				if (e->direction == 1) 
-					players[e->playerId].yPosition += 1;
-				else
-					players[e->playerId].yPosition -= 1;
-			
+				struct singleStateUpdatePacket *updatePacket = (struct singleStateUpdatePacket *)p;
 
+				bool found = false;
+				for (int i = 0; i < worldState.entries.size(); i++)
+				{
+					if (worldState.entries[i].objectId == updatePacket->update.objectId)
+					{
+						found = true;
+						worldState.entries[i].x = updatePacket->update.x;
+						worldState.entries[i].y = updatePacket->update.y;
+						worldState.entries[i].z = updatePacket->update.z;
+					}
+				}
+
+				if (!found)
+					worldState.addEntry(updatePacket->update);
+
+				
 				// Send new state
-				char tmp[BUFSIZE];
-				memset(tmp, 0, BUFSIZE);
-				sprintf(tmp, "You are now at position %d", players[e->playerId].yPosition);
-				sendMsg(tmp, BUFSIZE, &players[e->playerId].clientAddress);
+				//char tmp[BUFSIZE];
+				//memset(tmp, 0, BUFSIZE);
+				//sprintf(tmp, "You are now at position %d", players[e->playerId].yPosition);
+				//sendMsg(tmp, BUFSIZE, &players[e->playerId].clientAddress);
 
 				break;
 			}
