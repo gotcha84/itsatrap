@@ -1,28 +1,32 @@
 #include "Node.h"
 
-Node::Node() {
-	m_parent = nullptr;
-}
+namespace sg {
 
-Node::~Node() {
-
-}
-
-bool Node::hasParent() {
-	if (m_parent != nullptr) {
-		return true;
+	Node::Node() {
+		m_parent = nullptr;
 	}
-	return false;
-}
 
-Node* Node::getParent() {
-	return m_parent;
-}
+	Node::~Node() {
 
-void Node::setParent(Node *p) {
-	m_parent = p;
-}
+	}
 
-void Node::removeParent() {
-	m_parent = nullptr;
+	bool Node::hasParent() {
+		if (m_parent != nullptr) {
+			return true;
+		}
+		return false;
+	}
+
+	Node* Node::getParent() {
+		return m_parent;
+	}
+
+	void Node::setParent(Node *p) {
+		m_parent = p;
+	}
+
+	void Node::removeParent() {
+		m_parent = nullptr;
+	}
+
 }

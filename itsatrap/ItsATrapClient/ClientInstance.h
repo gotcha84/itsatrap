@@ -19,7 +19,7 @@ class ClientInstance {
 		float m_xAngleChange, m_yAngleChange;
 		float m_xAngleChangeFactor, m_yAngleChangeFactor;
 
-		MatrixTransform *root;
+		sg::MatrixTransform *root;
 
 		int x, inc;
 

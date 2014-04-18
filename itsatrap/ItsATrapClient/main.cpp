@@ -93,18 +93,18 @@ int main(int argc, char *argv[])
 	//world.loadWorldData();
 	//world.initializeHeightMap();
 
-	MatrixTransform ground = MatrixTransform();
+	sg::MatrixTransform ground = sg::MatrixTransform();
 	client.root->addChild(&ground);
-	Cube groundShape = Cube();
+	sg::Cube groundShape = sg::Cube();
 	ground.addChild(&groundShape);
 
 	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
 	groundShape.color = glm::vec3(0,1,0);
 
 	// cube nodes
-	MatrixTransform obj1 = MatrixTransform();
+	sg::MatrixTransform obj1 = sg::MatrixTransform();
 	client.root->addChild(&obj1);
-	Cube obj1Shape = Cube();
+	sg::Cube obj1Shape = sg::Cube();
 	obj1.addChild(&obj1Shape);
 
 	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));

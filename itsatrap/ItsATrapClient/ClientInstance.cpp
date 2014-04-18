@@ -15,7 +15,7 @@ ClientInstance::ClientInstance() {
 	x = 0;
 	inc = 0.0;
 
-	root = new MatrixTransform();
+	root = new sg::MatrixTransform();
 }
 
 ClientInstance::~ClientInstance() {
