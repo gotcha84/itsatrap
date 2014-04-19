@@ -67,6 +67,12 @@ int initialize()
 	// Create UDP socket
 	i_sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
+	if (i_sockfd == INVALID_SOCKET)
+	{
+		printf("socket() failed, Err: %d\n", WSAGetLastError());
+		return FALSE;
+	}
+
 	// Set up server address and port
 	myAddress.sin_family = AF_INET;
 	myAddress.sin_addr.s_addr = htonl(INADDR_ANY);
