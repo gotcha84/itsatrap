@@ -80,9 +80,8 @@ int main(int argc, char *argv[])
 	gluPerspective(90, float(Window::m_width)/float(Window::m_height), 0.1, 10000);
 
 	// Initialize networking for client
-	initializeClient();
+	Client::initializeClient();
 
-	cout << "initialized" << endl;
 	/*
 	Vector3 pos = Vector3(
 	cube.getMatrix().m[3][0], 

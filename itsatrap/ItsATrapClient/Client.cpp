@@ -1,30 +1,14 @@
-#include <sys/types.h>
-#include <winsock.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <Windows.h>
-
-#include "Packet.h"
 #include "Client.h"
-#include "NetworkConfig.h"
-#include "WorldState.h"
-#include "StateEntry.h"
 
-// Function Prototypes
-int receiveMsg(char *);
-int sendMsg(char *, int);
-DWORD WINAPI receiverThread(LPVOID);
+// Variables
+struct sockaddr_in	Client::myAddress, Client::serverAddress;
+int					Client::len;
+int 				Client::i_sockfd;
+char 				Client::c_msg[BUFSIZE];
+WSADATA				Client::wsaData;
+int					Client::playerId;
 
-// Static Variables
-static struct sockaddr_in myAddress, serverAddress;
-static int		len;
-static int 		i_sockfd;
-static char 	c_msg[BUFSIZE];
-static WSADATA	wsaData;
-static int playerId;
-
-int initializeClient() {
+int Client::initializeClient() {
 
 	// Load WinSock
 	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) 
@@ -62,15 +46,15 @@ int initializeClient() {
 	
 	// Send init event
 	struct packet initPacket;
-	initPacket.eventId = 1;
-	sendMsg((char *) &initPacket, sizeof(initPacket));
+	initPacket.eventId = INIT_REQUEST_EVENT;
+	Client::sendMsg((char *) &initPacket, sizeof(initPacket));
 	printf("[CLIENT]: Init request sent\n");
 	
 	// Receives Server response
-	receiveMsg(c_msg); // TODO: what if server doesn't respond?
+	Client::receiveMsg(c_msg); // TODO: what if server doesn't respond?
 
 	struct packet *p = (struct packet *)c_msg;
-	if (p->eventId == 2)
+	if (p->eventId == INIT_RESPONSE_EVENT)
 	{
 		// Init response
 		struct initResponsePacket *irp = (struct initResponsePacket *)p;
@@ -78,75 +62,72 @@ int initializeClient() {
 		playerId = irp->givenPlayerId;
 	}
 
-	startReceiverThread();
+	Client::startReceiverThread();
 
 	return 0;
 	
 }
 
-void startReceiverThread()
+void Client::startReceiverThread()
 {
 	DWORD tmp;
-	CreateThread(NULL, 0, receiverThread, NULL, 0, &tmp);
+	CreateThread(NULL, 0, Client::receiverThread, NULL, 0, &tmp);
 }
 
-DWORD WINAPI receiverThread(LPVOID param)
+DWORD WINAPI Client::receiverThread(LPVOID param)
 {
 	printf("[CLIENT]: Receiver thread started\n");
 	while (1)
 	{
 		char buf[BUFSIZE];
-		if (receiveMsg(buf) == 0)
+		if (Client::receiveMsg(buf) == 0)
 		{
-			printf("[CLIENT]: received: %s\n", buf);
-
 			struct packet *p = (struct packet *) buf;
 
-			if (p->eventId == 4)
+			if (p->eventId == WORLD_UPDATE_EVENT)
 			{
 				// World update
-				int numUpdates = ((int *)p)[1];
-				printf("numUpdates: %d\n", numUpdates);
-
-				for (int i = 0; i < numUpdates; i++)
-				{
-					StateEntry *entry = (StateEntry *)(buf + 2*sizeof(int) + i*sizeof(StateEntry));
-					printf("Object %d, x:%.1f, y:%.1f, z:%.1f\n", entry->objectId, entry->x, entry->y, entry->z);
-				}
+				WorldState world(p);
+				world.printWorld();
 			}
 		}
 	}
 }
 
 // Sending state updates
-void sendStateUpdate(int id, float x, float y, float z)
+void Client::sendStateUpdate(int id, float x, float y, float z)
 {
 	struct singleStateUpdatePacket p;
-	p.eventId = 3;
+	p.eventId = SINGLE_STATE_UPDATE_EVENT;
 	p.playerId = playerId;
-	p.update.objectId = playerId; // TEMPORARY!!!!!!!
-	p.update.x = x;
-	p.update.y = y;
-	p.update.z = z;
+	p.entry.objectId = id;
+	p.entry.x = x;
+	p.entry.y = y;
+	p.entry.z = z;
 
-	sendMsg((char *)&p, sizeof(p));
+	Client::sendMsg((char *)&p, sizeof(p));
 }
 
 
 // Client receives messages from the server
-int receiveMsg(char * msg) {
+int Client::receiveMsg(char * msg) {
 
-	if (recvfrom(i_sockfd, msg, BUFSIZE, 0, (struct sockaddr *) &serverAddress, &len) < 0) {
+	int bytesReceived = 0;
+	bytesReceived = recvfrom(i_sockfd, msg, BUFSIZE, 0, (struct sockaddr *) &serverAddress, &len);
+
+	if (bytesReceived < 0) {
 		int error = WSAGetLastError();
 		printf("[CLIENT]: client.cpp - recvfrom failed with error code %d\n", error);
 		return 1;
 	}
 
+	printf("[CLIENT]: received message of size %d\n", bytesReceived);
+
 	return 0;
 }
 
 // Client sends message to the server
-int sendMsg(char * msg, int len) {
+int Client::sendMsg(char * msg, int len) {
 	if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0) {
 		int error = WSAGetLastError();
 		printf("[CLIENT]: client.cpp - sendto failed with error code %d\n", error);

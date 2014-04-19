@@ -3,6 +3,11 @@
 
 #include "StateEntry.h"
 
+#define INIT_REQUEST_EVENT 1
+#define INIT_RESPONSE_EVENT 2
+#define SINGLE_STATE_UPDATE_EVENT 3
+#define WORLD_UPDATE_EVENT 4
+
 // Superclass of all packets
 struct packet {
 	int eventId;	
@@ -21,7 +26,7 @@ struct singleStateUpdatePacket
 {
 	int eventId;
 	int playerId;
-	StateEntry update;
+	struct stateEntry entry;
 };
 
 #endif

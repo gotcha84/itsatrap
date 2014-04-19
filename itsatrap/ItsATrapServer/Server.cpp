@@ -1,66 +1,45 @@
-#include <sys/types.h>
-#include <winsock.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <iostream>
-
-#include "packet.h"
-#include "NetworkConfig.h"
-#include "Player.h"
-#include "WorldState.h"
-#include "StateEntry.h"
+#include "Server.h"
 
 using namespace std;
 
-// Function Prototypes
-int initialize();
-void processMsg(char *, struct sockaddr_in *);
-int receiveMsg(char *, struct sockaddr_in *);
-int sendMsg(char *, int, struct sockaddr_in *);
-DWORD WINAPI processBufferThread(LPVOID);
-void processBuffer();
-void broadcastWorldState();
-
-struct bufferEntry {
-	int playerId;
-	char msg[BUFSIZE];
-};
-
 // Static Vars
-static struct sockaddr_in	myAddress;
-static int 					i_sockfd;
-static char 				c_msg[BUFSIZE];
-static WSADATA				wsaData;
-static Player				players[MAX_PLAYERS];
-static int					playerCount;
-static struct bufferEntry	packetBuffer[PACKET_BUFFER_SIZE];
-static int					packetBufferCount;
-static WorldState			worldState;
+struct sockaddr_in	Server::myAddress;
+int 				Server::i_sockfd;
+char 				Server::c_msg[BUFSIZE];
+WSADATA				Server::wsaData;
+Player				Server::players[MAX_PLAYERS];
+int					Server::playerCount;
+struct bufferEntry	Server::packetBuffer[PACKET_BUFFER_SIZE];
+int					Server::packetBufferCount;
+WorldState			Server::worldState;
 
-int main(int argc, char ** argv) {
 
-	initialize();
+
+
+int Server::startServer()
+{
+	if (Server::initialize() != 0)
+	{
+		printf("[SERVER]: Server initialization failed!\n");
+		return 1;
+	}
 	printf("[SERVER]: Server is running.\n");
 
 	while(1) {
 		struct sockaddr_in source;
-		if (receiveMsg(c_msg, &source) == 0)	
-			processMsg(c_msg, &source);
+		if (Server::receiveMsg(c_msg, &source) == 0)	
+			Server::processMsg(c_msg, &source);
 	}
-
-	return 0;
 }
 
-
 // Inital setup for the server
-int initialize() {
+int Server::initialize() {
 
 	// Load WinSock
 	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) 
 	{ 
 		fprintf(stderr, "WSAStartup() failed"); 
-		exit(1); 
+		return 1; 
 	}
 
 	// Init variables
@@ -89,7 +68,7 @@ int initialize() {
 }
 
 // Server processes a given message
-void processMsg(char * msg, struct sockaddr_in *source) {
+void Server::processMsg(char * msg, struct sockaddr_in *source) {
 	// TODO (ktngo): Bad practice. Move away from using structs
 	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
@@ -97,7 +76,7 @@ void processMsg(char * msg, struct sockaddr_in *source) {
 
 	// Some events can be processed immediately (like init request)
 	// Some events must be stored into the buffer, process it later
-	if (p -> eventId == 1) 
+	if (p -> eventId == INIT_REQUEST_EVENT) 
 	{
 		if (playerCount < MAX_PLAYERS)
 		{
@@ -110,11 +89,11 @@ void processMsg(char * msg, struct sockaddr_in *source) {
 				
 			// Creating response message
 			struct initResponsePacket response;
-			response.eventId = 2;
+			response.eventId = INIT_RESPONSE_EVENT;
 			response.givenPlayerId = playerCount;
 				
 			// Send Message
-			sendMsg((char *) &response, sizeof(response), source);
+			Server::sendMsg((char *) &response, sizeof(response), source);
 			// TODO: what if client failed to receive this?
 			printf("[SERVER]: Init Response sent. Given ID = %d\n", response.givenPlayerId);
 				
@@ -134,48 +113,28 @@ void processMsg(char * msg, struct sockaddr_in *source) {
 	}
 }
 
-DWORD WINAPI processBufferThread(LPVOID param)
+DWORD WINAPI Server::processBufferThread(LPVOID param)
 {
 	printf("[SERVER]: Process buffer thread started\n");
 	while (1)
 	{
 		processBuffer();
 		Sleep(1000);
-
-		cout << " ===== CURRENT STATE OF THE WORLD =====" << endl;
-		for (int i = 0; i < worldState.entries.size(); i++)
-		{
-			StateEntry entry = worldState.entries[i];
-			printf("Object id:%d x:%.1f y:%.1f z:%.1f\n", entry.objectId, entry.x, entry.y, entry.z);
-			
-		}
-		if (worldState.entries.size() > 0)
-			broadcastWorldState();
 	}
 }
 
-void broadcastWorldState()
+void Server::broadcastWorldState()
 {
-	int size = 2*sizeof(int) + sizeof(struct StateEntry) * worldState.entries.size();
-	char *buf = (char *) malloc(size);
-
-	((int *)buf)[0] = 4;
-	((int *)buf)[1] = worldState.entries.size();
-
-	printf("size:%d\n", ((int *)buf)[1]);
-
-	for (int i = 0; i < worldState.entries.size(); i++)
-	{
-		memcpy(buf + 2*sizeof(int) + i * sizeof(struct StateEntry), &worldState.entries[i], sizeof(struct StateEntry));
-	}
+	char *buf;
+	int size = worldState.serialize(&buf);
 
 	for (int i = 0; i < playerCount; i++)
 	{
-		sendMsg(buf, size, &players[i].clientAddress);
+		Server::sendMsg(buf, size, &players[i].clientAddress);
 	}
 }
 
-void processBuffer()
+void Server::processBuffer()
 {
 	// TODO: NEED MUTEX LOCK
 
@@ -190,28 +149,7 @@ void processBuffer()
 			{
 				// Update player state
 				struct singleStateUpdatePacket *updatePacket = (struct singleStateUpdatePacket *)p;
-
-				bool found = false;
-				for (int i = 0; i < worldState.entries.size(); i++)
-				{
-					if (worldState.entries[i].objectId == updatePacket->update.objectId)
-					{
-						found = true;
-						worldState.entries[i].x = updatePacket->update.x;
-						worldState.entries[i].y = updatePacket->update.y;
-						worldState.entries[i].z = updatePacket->update.z;
-					}
-				}
-
-				if (!found)
-					worldState.addEntry(updatePacket->update);
-
-				
-				// Send new state
-				//char tmp[BUFSIZE];
-				//memset(tmp, 0, BUFSIZE);
-				//sprintf(tmp, "You are now at position %d", players[e->playerId].yPosition);
-				//sendMsg(tmp, BUFSIZE, &players[e->playerId].clientAddress);
+				worldState.updateEntry(updatePacket->entry);
 
 				break;
 			}
@@ -224,11 +162,14 @@ void processBuffer()
 
 	packetBufferCount = 0;
 
+	if (worldState.getSize() > 0)
+			broadcastWorldState();
+
 	// TODO: NEED MUTEX UNLOCK
 }
 
 // Server receives a message
-int receiveMsg(char * msg, struct sockaddr_in *source) {
+int Server::receiveMsg(char * msg, struct sockaddr_in *source) {
 	int len = sizeof(struct sockaddr_in);
 
 	if (recvfrom(i_sockfd, msg, BUFSIZE, 0, (struct sockaddr *)source, &len) < 0) {
@@ -241,7 +182,7 @@ int receiveMsg(char * msg, struct sockaddr_in *source) {
 }
 
 // Server sends a message to the current client
-int sendMsg(char * msg, int len, struct sockaddr_in *destination) {
+int Server::sendMsg(char * msg, int len, struct sockaddr_in *destination) {
 	if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *)destination, sizeof(struct sockaddr_in)) < 0) {
 		int error = WSAGetLastError();
 		printf("[SERVER]: server.cpp - sendto failed with error code %d\n", error);

@@ -1,8 +1,7 @@
 #ifndef STATEENTRY_H
 #define STATEENTRY_H
 
-class StateEntry {
-	public:
+struct stateEntry {
     int				objectId;
     float			x, y, z;
 };

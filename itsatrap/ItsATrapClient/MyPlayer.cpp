@@ -29,15 +29,17 @@ void MyPlayer::handleMovement(unsigned char key) {
 	switch (key) {
 		case 'w':
 			proposedNewPos = m_cam.m_cameraCenter + m_zWalkFactor*tmp_camZ;
-			sendStateUpdate(0, 3, 3, 3);
+			Client::sendStateUpdate(11, 22.2, 33.3, 44.4);
 			break;
 
 		case 's':
 			proposedNewPos = m_cam.m_cameraCenter + -1.0f*m_zWalkFactor*tmp_camZ;
+			Client::sendStateUpdate(1, 2, 1, 5);
 			break;
 
 		case 'a':
 			proposedNewPos = m_cam.m_cameraCenter + -1.0f*m_xWalkFactor*m_cam.m_camX;
+			Client::sendStateUpdate(2, 10, 20, 30);
 			break;		
 
 		case 'd':

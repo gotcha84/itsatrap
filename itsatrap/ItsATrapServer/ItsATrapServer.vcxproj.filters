@@ -27,5 +27,13 @@
     <ClCompile Include="Server.cpp">
       <Filter>Source Files\Networking</Filter>
     </ClCompile>
+    <ClCompile Include="ItsATrapServerMain.cpp">
+      <Filter>Source Files\Networking</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Server.h">
+      <Filter>Header Files\Networking</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
