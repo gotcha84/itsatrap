@@ -8,8 +8,8 @@
 #include <iostream>
 using namespace std;
 
-#include "Packet.h"
-#include "NetworkConfig.h"
+#include "Networking\Packet.h"
+#include "Networking\NetworkConfig.h"
 
 // Function Prototypes
 int receiveMsg(char *);
