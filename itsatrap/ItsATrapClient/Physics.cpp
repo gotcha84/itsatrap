@@ -1,5 +1,3 @@
-#include <math.h>
-
 #include "Physics.h"
 
 using namespace std;

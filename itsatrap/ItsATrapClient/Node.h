@@ -8,6 +8,7 @@ namespace sg {
 
 	class Node {
 		public:
+			int m_objectID;
 			Node *m_parent;
 
 			Node();
@@ -18,7 +19,9 @@ namespace sg {
 			void setParent(Node* p);
 			void removeParent();
 
-			virtual void draw(glm::mat4 parent) = 0;
+			int getID();
+
+			virtual void draw(glm::mat4 parent, glm::mat4 camera) = 0;
 	};
 
 }

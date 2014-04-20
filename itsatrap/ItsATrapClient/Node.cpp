@@ -4,6 +4,7 @@ namespace sg {
 
 	Node::Node() {
 		m_parent = nullptr;
+		m_objectID = 0;
 	}
 
 	Node::~Node() {
@@ -27,6 +28,10 @@ namespace sg {
 
 	void Node::removeParent() {
 		m_parent = nullptr;
+	}
+
+	int Node::getID() {
+		return m_objectID;
 	}
 
 }

@@ -13,13 +13,11 @@ class ClientInstance {
 		ClientInstance();
 		~ClientInstance();
 
-		MyPlayer m_myPlayer;
+		sg::Player *root;
 
 		int m_xMouse, m_yMouse; // mouse position
 		float m_xAngleChange, m_yAngleChange;
 		float m_xAngleChangeFactor, m_yAngleChangeFactor;
-
-		sg::MatrixTransform *root;
 
 		int x, inc;
 

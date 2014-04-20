@@ -4,17 +4,18 @@
 #include "World.h"
 #include "SceneGraph.h"
 #include "Utilities.h"
-#include <vector>
 
 #include <GL/glut.h>
 #include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
+#include <glm/ext.hpp>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <glm/ext.hpp>
-using namespace std;
+#include <vector>
+#include <math.h>
 
+using namespace std;
 
 // TODO: add more if needed
 //enum PhysicsStates {

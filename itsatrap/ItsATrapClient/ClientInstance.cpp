@@ -1,8 +1,6 @@
 #include "ClientInstance.h"
 
 ClientInstance::ClientInstance() {
-	m_myPlayer = MyPlayer();
-
 	m_xMouse = 0;
 	m_yMouse = 0;
 
@@ -15,7 +13,7 @@ ClientInstance::ClientInstance() {
 	x = 0;
 	inc = 0.0;
 
-	root = new sg::MatrixTransform();
+	root = new sg::Player();
 }
 
 ClientInstance::~ClientInstance() {

@@ -15,8 +15,8 @@ namespace sg {
 
 			Geode();
 			~Geode();
-		
-			void draw(glm::mat4 parent) = 0;
+
+			void draw(glm::mat4 parent, glm::mat4 camera) = 0;
 	};
 
 }

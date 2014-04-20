@@ -22,17 +22,11 @@ namespace sg {
 		return m_trans;
 	}
 
-	void MatrixTransform::draw() {
-		for (int i=0; i<m_nChild; i++) {
-			m_child[i]->draw(m_trans);
-		}
-	}
-
-	void MatrixTransform::draw(glm::mat4 parent) {
-		glm::mat4 product = parent * m_trans;
+	void MatrixTransform::draw(glm::mat4 parent, glm::mat4 camera) {
+		glm::mat4 new_model = parent * m_trans;;
 
 		for (int i=0; i<m_nChild; i++) {
-			m_child[i]->draw(product);
+			m_child[i]->draw(new_model, camera);
 		}
 	}
 

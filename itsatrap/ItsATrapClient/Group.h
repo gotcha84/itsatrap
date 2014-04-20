@@ -22,7 +22,7 @@ namespace sg {
 			bool removeChild(int c);
 			bool removeChild(Node *c);
 
-			virtual void draw(glm::mat4 parent) = 0;
+			virtual void draw(glm::mat4 parent, glm::mat4 camera) = 0;
 	};
 
 }

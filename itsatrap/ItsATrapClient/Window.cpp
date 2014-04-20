@@ -1,5 +1,5 @@
-#include "ClientInstance.h"
 #include "Window.h"
+#include "ClientInstance.h"
 
 extern ClientInstance client;
 
@@ -42,43 +42,36 @@ void Window::reshapeCallback(int w, int h)
 //----------------------------------------------------------------------------
 // Callback method called when window readraw is necessary or
 // when glutPostRedisplay() was called.
-void Window::displayCallback(void)
-{
-}
-
 void Window::displaySceneGraph(void)
 {
-	// updates stuff
-	client.m_myPlayer.updateModelViewMatrix(); // andre added this line
+	// updates player view
+	client.root->getPlayer()->updateModelViewMatrix(); // andre added this line
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(client.m_myPlayer.m_modelviewMatrix)); // andre added this line
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(glm::value_ptr(client.m_myPlayer.m_projectionMatrix));
-	glMatrixMode(GL_MODELVIEW);
-
-	client.root->draw(client.m_myPlayer.m_modelviewMatrix);
-
+	client.root->draw();
+	
 	// andre added below if sattements
 	if (client.m_xAngleChange != 0.0f) {
 		if (client.m_xAngleChange < 0) {
-			client.m_myPlayer.m_cam.handleXRotation('l');
+			client.root->getPlayer()->m_cam.handleXRotation('l');
 		}
 		else {
-			client.m_myPlayer.m_cam.handleXRotation('r');
+			client.root->getPlayer()->m_cam.handleXRotation('r');
 		}
 		client.m_xAngleChange = 0.0f;
 	}
 	// TODO test
+	/*
 	if (client.m_yAngleChange != 0.0f) {
 		if (client.m_yAngleChange < 0) {
-			client.m_myPlayer.m_cam.handleYRotation('u');
+			client.root->getPlayer()->m_cam.handleYRotation('u');
 		}
 		else {
-			client.m_myPlayer.m_cam.handleYRotation('d');
+			client.root->getPlayer()->m_cam.handleYRotation('d');
 		}
 		client.m_yAngleChange = 0.0f;
 	}
+	*/
 
 
 	glFlush();  
@@ -88,7 +81,7 @@ void Window::displaySceneGraph(void)
 void Window::processNormalKeys(unsigned char key, int x, int y)
 {
 	if (key == 'w' || key == 'a' || key == 's' || key == 'd') {
-		client.m_myPlayer.handleMovement(key);
+		client.root->getPlayer()->handleMovement(key);
 	}
 	
 

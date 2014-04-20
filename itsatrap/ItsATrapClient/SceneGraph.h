@@ -8,8 +8,9 @@
 // node types
 #include "MatrixTransform.h"
 #include "Geode.h"
+#include "PlayerNode.h"
 
-// specific geodes
+// geodes
 #include "Cube.cpp"
 #include "Sphere.cpp"
 #include "Cone.cpp"

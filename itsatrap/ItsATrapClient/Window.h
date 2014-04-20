@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "ClientInstance.h"
 #include "SceneGraph.h"
+#include "ClientInstance.h"
 #include "MyPlayer.h"
 
 class Window { // output window related routines

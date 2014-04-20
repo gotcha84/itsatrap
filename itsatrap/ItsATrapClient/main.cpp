@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <iostream>
 
+#include "SceneGraph.h"
 #include "ClientInstance.h"
 #include "Window.h"
 #include "World.h"
@@ -23,8 +24,6 @@ GLfloat Window::blue = 0.0;
 
 int main(int argc, char *argv[])
 {
-	client.m_myPlayer.m_xWalkFactor = 1.0f;
-	client.m_myPlayer.m_zWalkFactor = 1.0f;
 
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
@@ -76,7 +75,7 @@ int main(int argc, char *argv[])
 	//cube.getMatrix().identity();
 	
 	//glMatrixMode(GL_PROJECTION);
-	gluPerspective(90, float(Window::m_width)/float(Window::m_height), 0.1, 10000);
+	//gluPerspective(90, float(Window::m_width)/float(Window::m_height), 0.1, 10000);
 
 	cout << "initialized" << endl;
 	/*
@@ -93,6 +92,21 @@ int main(int argc, char *argv[])
 	//world.loadWorldData();
 	//world.initializeHeightMap();
 
+	// player 1
+	sg::Player p1 = sg::Player();
+	p1.moveTo(glm::vec3(0,0,100.0f));
+	p1.lookIn(glm::vec3(0,0,-1.0f));
+
+
+	// 2nd player
+	sg::Player p2 = sg::Player();
+	p2.moveTo(glm::vec3(0,0,0.0f));
+	p2.lookIn(glm::vec3(0,0,-1.0f));
+
+	// set root node
+	client.root = &p1;
+	client.root->addChild(&p2);
+
 	sg::MatrixTransform ground = sg::MatrixTransform();
 	client.root->addChild(&ground);
 	sg::Cube groundShape = sg::Cube();
@@ -103,11 +117,14 @@ int main(int argc, char *argv[])
 
 	// cube nodes
 	sg::MatrixTransform obj1 = sg::MatrixTransform();
-	client.root->addChild(&obj1);
+	//client.root->addChild(&obj1);
 	sg::Cube obj1Shape = sg::Cube();
 	obj1.addChild(&obj1Shape);
 
 	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));
+
+	cout << "center: " << glm::to_string(client.root->getCamera()->m_cameraCenter) << endl;
+
 	glutMainLoop();
 
 	return 0;

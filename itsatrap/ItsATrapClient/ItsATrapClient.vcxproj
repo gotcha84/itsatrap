@@ -94,6 +94,7 @@
     <ClCompile Include="MyPlayer.cpp" />
     <ClCompile Include="objreader.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="PlayerNode.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="MyPlayer.h" />
     <ClInclude Include="objreader.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="PlayerNode.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />

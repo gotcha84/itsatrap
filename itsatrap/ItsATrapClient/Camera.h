@@ -3,20 +3,20 @@
 
 #include <GL/glut.h>
 #include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
+#include <glm/ext.hpp>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <glm/ext.hpp>
-
+#include <sstream> // to convert float to string
 #include <string>
+#include <math.h>
+#include <iomanip> // to round floats
 
 using namespace std;
 
 class Camera {
 	public:
-		//Vector3 e, d, up;
-		//Matrix4 c;
 		glm::vec3 m_cameraCenter;
 		glm::vec3 m_cameraLookAt;
 		glm::vec3 m_cameraUp;
@@ -29,20 +29,21 @@ class Camera {
 		float m_xRotationAngle;
 		float m_yRotationAngle;
 
-
-
 		Camera();
-		//void inverse();
-		//void set(Vector3&, Vector3&, Vector3&);
-		//void identity(); 
-		//GLfloat* getGLMatrix();
+
+		glm::mat4 getCameraMatrix();
 
 		void handleXRotation(char);
 		void handleYRotation(char);
-
-		void makeCameraMatrix();
-
 		void calculateAxis();
+
+		void updateCameraMatrix();
+		
+		void move(glm::vec3 delta);
+		void moveTo(glm::vec3 pos);
+
+		void lookIn(glm::vec3 direction);
+		void lookAt(glm::vec3 point);
 };
 
 #endif
