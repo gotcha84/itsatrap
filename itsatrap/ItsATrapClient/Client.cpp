@@ -10,6 +10,7 @@ using namespace std;
 
 #include "Networking\Packet.h"
 #include "Networking\NetworkConfig.h"
+#include "Networking\Network.h"
 
 // Function Prototypes
 int receiveMsg(char *);
@@ -21,17 +22,12 @@ static struct sockaddr_in myAddress, serverAddress;
 static int		len;
 static int 		i_sockfd;
 static char 	c_msg[BUFSIZE];
-static WSADATA	wsaData;
 static int playerId;
 
 int initializeClient() {
 
 	// Load WinSock
-	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) 
-	{ 
-		fprintf(stderr, "WSAStartup() failed"); 
-		exit(1); 
-	}
+	InitWinsock2();
 
 	len = sizeof(serverAddress);
 
@@ -153,18 +149,20 @@ int receiveMsg(char * msg) {
 int sendMsg(char * msg, int len) {
 
 
-	if (setsockopt( i_sockfd, SOL_SOCKET, SO_BROADCAST, msg, sizeof(msg)) == -1 )
+	/*if (setsockopt( i_sockfd, SOL_SOCKET, SO_BROADCAST, msg, sizeof(msg)) == -1 )
 	{
 		int error = WSAGetLastError();
 		printf("[CLIENT]: client.cpp - sendto failed with error code %ds\n", error);
 		return 1;
-	}
+	}*/
 
 	// Previous code. commented - backup
-	/*if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0) {
+	if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0) {
 		int error = WSAGetLastError();
 		printf("[CLIENT]: client.cpp - sendto failed with error code %d\n", error);
 		return 1;
-	}*/
+	}
 	return 0;
 }
+
+

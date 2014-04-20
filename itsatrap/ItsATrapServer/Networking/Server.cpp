@@ -9,7 +9,9 @@ using namespace std;
 #include "Networking\Packet.h"
 #include "Networking\NetworkConfig.h"
 #include "Networking\Player.h"
+#include "Networking\Network.h"
 #include "Utilities\Stopwatch.h"
+
 
 // Function Prototypes
 int		initialize();
@@ -28,7 +30,7 @@ struct bufferEntry {
 static struct sockaddr_in	myAddress;
 static int 					i_sockfd;
 static char 				c_msg[BUFSIZE];
-static WSADATA				wsaData;
+//static WSADATA				wsaData;
 static Player				players[MAX_PLAYERS];
 static int					playerCount;
 static struct bufferEntry	packetBuffer[PACKET_BUFFER_SIZE];
@@ -54,11 +56,7 @@ int main(int argc, char ** argv)
 int initialize() 
 {
 	// Load WinSock
-	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0)
-	{
-		fprintf(stderr, "WSAStartup() failed");
-		exit(1);
-	}
+	InitWinsock2();
 
 	// Init variables
 	packetBufferCount = 0;
