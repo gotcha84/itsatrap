@@ -1,6 +1,7 @@
 itsatrap/Debug/
 itsatrap/ItsATrapClient/Debug/
 itsatrap/ItsATrapServer/Debug/
+itsatrap/Common/Debug/
 itsatrap/*.sdf
 itsatrap/ipch/
 *.tlog
