@@ -100,7 +100,6 @@ int main(int argc, char *argv[])
 	p1.moveTo(glm::vec3(0,0,100.0f));
 	p1.lookIn(glm::vec3(0,0,-1.0f));
 
-
 	// 2nd player
 	sg::Player p2 = sg::Player();
 	p2.moveTo(glm::vec3(0,0,0.0f));

@@ -115,16 +115,17 @@ void Window::processMouseMove(int x, int y) {
 	}
 	
 	// keeps mouse centered
-	//if (x != m_width/2 || y != m_height/2) {
-	//glutWarpPointer(m_width/2, m_height/2);
-	// TODO: actually fix this
-	/*cout << "xchange: " << client.m_xAngleChange << endl;
-	cout << "ychange: " << client.m_yAngleChange << endl;
-	client.m_xAngleChange = -1.0f * client.m_xAngleChange;
-	client.m_yAngleChange = -1.0f * client.m_yAngleChange;
-	cout << "xchange: " << client.m_xAngleChange << endl;
-	cout << "ychange: " << client.m_yAngleChange << endl;*/
-	//}
+	if (x != m_width/2 || y != m_height/2) {
+		glutWarpPointer(m_width/2, m_height/2);
+		
+		// TODO: actually fix this
+		/*cout << "xchange: " << client.m_xAngleChange << endl;
+		cout << "ychange: " << client.m_yAngleChange << endl;
+		client.m_xAngleChange = -1.0f * client.m_xAngleChange;
+		client.m_yAngleChange = -1.0f * client.m_yAngleChange;
+		cout << "xchange: " << client.m_xAngleChange << endl;
+		cout << "ychange: " << client.m_yAngleChange << endl;*/
+	}
 
 	client.m_xMouse = x;
 	client.m_yMouse = y;

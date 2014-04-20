@@ -74,12 +74,12 @@ void MyPlayer::handleMovement(unsigned char key) {
 			Client::sendStateUpdate(1, 2, 1, 5);
 			break;
 
-		case 'd':
+		case 'a':
 			proposedNewPos = m_cam.m_cameraCenter + -1.0f*m_xWalkFactor*m_cam.m_camX;
 			Client::sendStateUpdate(2, 10, 20, 30);
 			break;		
 
-		case 'a':
+		case 'd':
 			proposedNewPos = m_cam.m_cameraCenter + m_xWalkFactor*m_cam.m_camX;
 			break;
 	}

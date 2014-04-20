@@ -19,14 +19,14 @@
     <Filter Include="Networking">
       <UniqueIdentifier>{b52c816c-9497-4257-bff8-17e818fbd0ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\SceneGraph">
-      <UniqueIdentifier>{f018f9e0-9e2c-4cdd-b8f9-a875dc9919b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\SceneGraph">
       <UniqueIdentifier>{20da5d12-f479-469c-b1ec-7cbdd039433a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\SceneGraph\Shapes">
       <UniqueIdentifier>{fc1b893c-9880-4b07-b8a8-e1b0e760c61a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SceneGraph">
+      <UniqueIdentifier>{f018f9e0-9e2c-4cdd-b8f9-a875dc9919b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,22 +120,22 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Geode.h">
-      <Filter>Header Files\SceneGraph</Filter>
+      <Filter>SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="Group.h">
-      <Filter>Header Files\SceneGraph</Filter>
+      <Filter>SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="MatrixTransform.h">
-      <Filter>Header Files\SceneGraph</Filter>
+      <Filter>SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
-      <Filter>Header Files\SceneGraph</Filter>
+      <Filter>SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="SceneGraph.h">
-      <Filter>Header Files\SceneGraph</Filter>
+      <Filter>SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="PlayerNode.h">
-      <Filter>Header Files\SceneGraph</Filter>
+      <Filter>SceneGraph</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
