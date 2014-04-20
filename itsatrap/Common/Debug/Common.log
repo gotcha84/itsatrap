@@ -1,4 +1,4 @@
-﻿Build started 4/19/2014 7:19:46 PM.
+﻿Build started 4/19/2014 7:30:17 PM.
      1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (rebuild target(s)).
      1>_PrepareForClean:
          Deleting file "Debug\Common.lastbuildstate".
@@ -30,4 +30,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.29
+Time Elapsed 00:00:01.22

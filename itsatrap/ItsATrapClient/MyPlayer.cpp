@@ -66,21 +66,22 @@ void MyPlayer::handleMovement(unsigned char key) {
 	switch (key) {
 		case 'w':
 			proposedNewPos = m_cam.m_cameraCenter + m_zWalkFactor*tmp_camZ;
-			Client::sendStateUpdate(11, 22.2, 33.3, 44.4);
+			Client::sendStateUpdate(1, proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
 			break;
 
 		case 's':
 			proposedNewPos = m_cam.m_cameraCenter + -1.0f*m_zWalkFactor*tmp_camZ;
-			Client::sendStateUpdate(1, 2, 1, 5);
+			Client::sendStateUpdate(1, proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
 			break;
 
 		case 'a':
 			proposedNewPos = m_cam.m_cameraCenter + -1.0f*m_xWalkFactor*m_cam.m_camX;
-			Client::sendStateUpdate(2, 10, 20, 30);
+			Client::sendStateUpdate(1, proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
 			break;		
 
 		case 'd':
 			proposedNewPos = m_cam.m_cameraCenter + m_xWalkFactor*m_cam.m_camX;
+			Client::sendStateUpdate(1, proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
 			break;
 	}
 
@@ -111,8 +112,6 @@ void MyPlayer::handleMovement(unsigned char key) {
 }
 
 void MyPlayer::updateModelViewMatrix() {
-	// TODO; use model matrix in this calculation
-
 	m_modelviewMatrix = glm::inverse(m_cam.m_cameraMatrix) * m_modelMatrix;
 }
 
