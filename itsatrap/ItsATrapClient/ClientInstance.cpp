@@ -9,8 +9,8 @@ ClientInstance::ClientInstance() {
 	m_xAngleChange = 0.0f;
 	m_yAngleChange = 0.0f;
 
-	m_xAngleChangeFactor = 10.0f;
-	m_yAngleChangeFactor = 10.0f;
+	m_xAngleChangeFactor = 20.0f;
+	m_yAngleChangeFactor = 20.0f;
 
 	x = 0;
 	inc = 0.0;

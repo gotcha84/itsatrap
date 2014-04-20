@@ -57,7 +57,9 @@ void Window::displaySceneGraph(void)
 	glLoadMatrixf(glm::value_ptr(client.m_myPlayer.m_projectionMatrix));
 	glMatrixMode(GL_MODELVIEW);
 
-	client.root->draw(client.m_myPlayer.m_modelviewMatrix);
+	//client.root->draw(client.m_myPlayer.m_modelviewMatrix);
+	//void Window::drawShape(int nVerts, float* vertices, float* normals, float *texcoords) {
+	drawShape(World::m_worldNVertices, World::m_worldVertices, World::m_worldNormals, World::m_worldTexcoords, World::m_worldNIndices, World::m_worldIndices);
 
 	// andre added below if sattements
 	if (client.m_xAngleChange != 0.0f) {
@@ -70,7 +72,7 @@ void Window::displaySceneGraph(void)
 		client.m_xAngleChange = 0.0f;
 	}
 	// TODO test
-	if (client.m_yAngleChange != 0.0f) {
+	/*if (client.m_yAngleChange != 0.0f) {
 		if (client.m_yAngleChange < 0) {
 			client.m_myPlayer.m_cam.handleYRotation('u');
 		}
@@ -78,16 +80,29 @@ void Window::displaySceneGraph(void)
 			client.m_myPlayer.m_cam.handleYRotation('d');
 		}
 		client.m_yAngleChange = 0.0f;
+	}*/
+	client.m_myPlayer.m_physics.applyGravity();
+	glm::vec3 moved = client.m_myPlayer.m_physics.m_position - client.m_myPlayer.m_cam.m_cameraCenter;
+	client.m_myPlayer.m_cam.m_cameraLookAt += moved;
+	client.m_myPlayer.m_cam.m_cameraCenter = client.m_myPlayer.m_physics.m_position;
+	client.m_myPlayer.m_cam.makeCameraMatrix();
+
+	/*if (client.m_myPlayer.m_physics.m_currentState == PhysicsStates::Falling) {
+		cout << "I AM FALLING" << endl;
+		client.m_myPlayer.m_physics.applyGravity();
 	}
 
-
+	if (client.m_myPlayer.m_physics.m_currentState != -1) {
+		cout << "curr state: " << client.m_myPlayer.m_physics.m_currentState << endl;
+	}*/
 	glFlush();  
 	glutSwapBuffers();
 }
 
 void Window::processNormalKeys(unsigned char key, int x, int y)
 {
-	if (key == 'w' || key == 'a' || key == 's' || key == 'd') {
+	// TODO: maybe more states
+	if (/*(client.m_myPlayer.m_physics.m_currentState != PhysicsStates::Falling) && */ (key == 'w' || key == 'a' || key == 's' || key == 'd')) {
 		client.m_myPlayer.handleMovement(key);
 	}
 	
@@ -135,5 +150,36 @@ void Window::processMouseMove(int x, int y) {
 
 	client.m_xMouse = x;
 	client.m_yMouse = y;
+	
+}
+
+//void Window::drawShape(int nVerts, vector<float> vertices, vector<float> normals, vector<float> texcoords) {
+void Window::drawShape(int* nVerts, float** vertices, float** normals, float** texcoords, int* nIndices, int** indices) {
+	
+	//cout << "nverts is : " << nVerts << endl;
+	float city_colors[45][3];
+	int p = 0;
+	int k = 0;
+	int l = 0;
+	//cout << nIndices << endl;
+	int max_ele = 10000;
+	// TODO: change 46
+	for (int k = 0; k < 46; k++) {
+		for (int i = 0; i < nIndices[k]/3; i++) {
+			//cout << indices[i] << endl;
+			glColor3f(1, 1, 0);
+		
+			glBegin(GL_TRIANGLES);
+			for (int j = 0; j < 3; j++) {
+				glNormal3f(normals[k][3*indices[k][3*i+j]], normals[k][3*indices[k][3*i+j]+1], normals[k][3*indices[k][3*i+j]+2]);
+				glVertex3f(vertices[k][3*indices[k][3*i+j]], vertices[k][3*indices[k][3*i+j]+1], vertices[k][3*indices[k][3*i+j]+2]);
+
+			}
+			glEnd();
+		}
+	}
+	//cout << max_ele << endl;
+
+
 	
 }

@@ -23,8 +23,6 @@ GLfloat Window::blue = 0.0;
 
 int main(int argc, char *argv[])
 {
-	client.m_myPlayer.m_xWalkFactor = 1.0f;
-	client.m_myPlayer.m_zWalkFactor = 1.0f;
 
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
@@ -89,9 +87,9 @@ int main(int argc, char *argv[])
 	*/
 	
 	// ground nodes
-	//World world = World();
-	//world.loadWorldData();
-	//world.initializeHeightMap();
+	World *world = new World();
+	world->loadWorldData();
+	world->initializeHeightMap();
 
 	MatrixTransform ground = MatrixTransform();
 	client.root->addChild(&ground);

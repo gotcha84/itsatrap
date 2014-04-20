@@ -17,16 +17,19 @@ using namespace std;
 
 
 // TODO: add more if needed
-//enum PhysicsStates {
-//	Jumping = 0,
-//	Colliding = 1,
-//	Moving = 2
-//
-//};
+enum PhysicsStates {
+	None = -1,
+	Jumping = 0,
+	Colliding = 1,
+	Moving = 2,
+	Falling = 3
+};
 
 class Physics {
 	
 	public:
+		
+		PhysicsStates m_currentState;
 		glm::vec3 m_velocity;
 		glm::vec3 m_position;
 	

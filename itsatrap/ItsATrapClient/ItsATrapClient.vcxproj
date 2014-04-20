@@ -92,9 +92,9 @@
     <ClCompile Include="MatrixTransform.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MyPlayer.cpp" />
-    <ClCompile Include="objreader.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="tiny_obj_loader.cc" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="World.cpp" />
@@ -109,9 +109,9 @@
     <ClInclude Include="MatrixTransform.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="MyPlayer.h" />
-    <ClInclude Include="objreader.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="SceneGraph.h" />
+    <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="World.h" />

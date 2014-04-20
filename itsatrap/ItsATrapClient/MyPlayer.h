@@ -26,7 +26,9 @@ class MyPlayer {
 		glm::mat4 m_modelviewMatrix;
 
 		float m_xWalkFactor;		// how fast you wana walk
-		float m_zWalkFactor;	
+		float m_zWalkFactor;
+		float m_xSlowWalkFactor;
+		float m_zSlowWalkFactor;
 
 		MyPlayer();
 		void handleMovement(unsigned char);

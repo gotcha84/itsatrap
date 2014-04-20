@@ -12,34 +12,47 @@ MyPlayer::MyPlayer() {
 	m_physics = Physics();
 	setProjectionMatrix();
 	setViewportMatrix();
+	m_xWalkFactor = 10.0f;
+	m_zWalkFactor = 10.0f;
+	m_xSlowWalkFactor = 1.0f;
+	m_zSlowWalkFactor = 1.0f;
 	//c.identity();
 }
 
 void MyPlayer::handleMovement(unsigned char key) {
 
 	glm::vec3 proposedNewPos;
-	cout << "center: " << glm::to_string(m_cam.m_cameraCenter) << endl;
-	cout << "lookat: " << glm::to_string(m_cam.m_cameraLookAt) << endl;
+
 	//cout << glm::to_string(m_cam.m_cameraMatrix) << endl;
-	cout << endl;
 	// calculate proposals
 	// TODO change all cam centers to player pos
 	glm::vec3 tmp_camZ = glm::vec3(m_cam.m_camZ.x, 0.0f, m_cam.m_camZ.z);
+	float xWalkFactor;
+	float zWalkFactor;
+	if (m_physics.m_currentState == PhysicsStates::Falling) {
+	
+		xWalkFactor = m_xSlowWalkFactor;
+		zWalkFactor = m_zSlowWalkFactor;
+	}
+	else {
+		xWalkFactor = m_xWalkFactor;
+		zWalkFactor = m_zWalkFactor;
+	}
 	switch (key) {
 		case 'w':
-			proposedNewPos = m_cam.m_cameraCenter + m_zWalkFactor*tmp_camZ;
+			proposedNewPos = m_cam.m_cameraCenter + zWalkFactor*tmp_camZ;
 			break;
 
 		case 's':
-			proposedNewPos = m_cam.m_cameraCenter + -1.0f*m_zWalkFactor*tmp_camZ;
+			proposedNewPos = m_cam.m_cameraCenter + -1.0f*zWalkFactor*tmp_camZ;
 			break;
 
 		case 'a':
-			proposedNewPos = m_cam.m_cameraCenter + -1.0f*m_xWalkFactor*m_cam.m_camX;
+			proposedNewPos = m_cam.m_cameraCenter + -1.0f*xWalkFactor*m_cam.m_camX;
 			break;		
 
 		case 'd':
-			proposedNewPos = m_cam.m_cameraCenter + m_xWalkFactor*m_cam.m_camX;
+			proposedNewPos = m_cam.m_cameraCenter + xWalkFactor*m_cam.m_camX;
 			break;		
 	}
 
@@ -50,6 +63,8 @@ void MyPlayer::handleMovement(unsigned char key) {
 	glm::vec3 newPos = proposedNewPos;
 
 	glm::vec3 moved = newPos - m_cam.m_cameraCenter;
+
+	m_physics.m_velocity = moved;
 
 	m_physics.m_position = newPos;
 
@@ -63,8 +78,6 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	m_cam.makeCameraMatrix();
 
-	// should i do it here or in displaycallback?
-	//updateModelViewMatrix();
 }
 
 void MyPlayer::updateModelViewMatrix() {

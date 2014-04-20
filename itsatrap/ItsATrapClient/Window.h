@@ -5,6 +5,7 @@
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <vector>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,6 +33,9 @@ class Window { // output window related routines
 		static void displaySceneGraph();
 		static void processNormalKeys(unsigned char, int, int);
 		static void processMouseMove(int, int);
+
+		//static void drawShape(int, vector<float>, vector<float>, vector<float>);
+		static void drawShape(int*, float**, float**, float**, int*, int**);
 };
 
 #endif

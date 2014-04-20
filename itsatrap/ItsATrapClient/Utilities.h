@@ -8,16 +8,22 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
-
+#include <vector>
+#include <fstream>
 using namespace std;
+
 
 class Utilities {
 	public:
 
-		GLfloat* matrixToGLMatrix(glm::mat4);
+		static GLfloat* matrixToGLMatrix(glm::mat4);
 
 		// not needed if we make heightmap more specific
-		static int closestInt(float);
+		static int roundToInt(float);
+		static void writeIntVectorToFile(vector<int> vec, string filename);
+		static void writeFloatVectorToFile(vector<float> vec, string filename);
+		static void writeIntArrayToFile(int* arr, int size, string filename);
+		static void writeFloatArrayToFile(float* arr, int size, string filename);
 };
 
 
