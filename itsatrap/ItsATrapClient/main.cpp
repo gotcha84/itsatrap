@@ -10,6 +10,7 @@
 #include "ClientInstance.h"
 #include "Window.h"
 #include "World.h"
+#include "Client.h"
 
 ClientInstance client = ClientInstance();
 
@@ -77,7 +78,9 @@ int main(int argc, char *argv[])
 	//glMatrixMode(GL_PROJECTION);
 	//gluPerspective(90, float(Window::m_width)/float(Window::m_height), 0.1, 10000);
 
-	cout << "initialized" << endl;
+	// Initialize networking for client
+	Client::initializeClient();
+
 	/*
 	Vector3 pos = Vector3(
 	cube.getMatrix().m[3][0], 

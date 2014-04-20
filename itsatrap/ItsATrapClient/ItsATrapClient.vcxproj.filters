@@ -16,7 +16,7 @@
     <Filter Include="Source Files\Networking">
       <UniqueIdentifier>{27294754-8839-45ae-adca-5d7f92f7080e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Networking">
+    <Filter Include="Networking">
       <UniqueIdentifier>{b52c816c-9497-4257-bff8-17e818fbd0ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\SceneGraph">
@@ -93,7 +93,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Client.h">
-      <Filter>Header Files\Networking</Filter>
+      <Filter>Networking</Filter>
     </ClInclude>
     <ClInclude Include="MyPlayer.h">
       <Filter>Header Files</Filter>

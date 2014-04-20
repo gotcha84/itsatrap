@@ -1,4 +1,5 @@
 #include "MyPlayer.h"
+#include "Client.h"
 
 MyPlayer::MyPlayer() {
 	m_cam = Camera();
@@ -50,12 +51,14 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	glm::vec3 proposedNewPos;
 	
-	cout << "center: " << glm::to_string(m_cam.m_cameraCenter) << endl;
-	cout << "lookat: " << glm::to_string(m_cam.m_cameraLookAt) << endl;
-	cout << "xx: " << glm::to_string(m_cam.m_camX) << endl;
-	cout << "zz: " << glm::to_string(m_cam.m_camZ) << endl;
-	cout << "zWalkFactor: " << m_zWalkFactor << endl;
-	//cout << glm::to_string(m_cam.m_cameraMatrix) << endl;
+	// cout << "center: " << glm::to_string(m_cam.m_cameraCenter) << endl;
+	// cout << "lookat: " << glm::to_string(m_cam.m_cameraLookAt) << endl;
+	// cout << "xx: " << glm::to_string(m_cam.m_camX) << endl;
+	// cout << "zz: " << glm::to_string(m_cam.m_camZ) << endl;
+	// cout << "zWalkFactor: " << m_zWalkFactor << endl;
+	// cout << "center: " << glm::to_string(m_cam.m_cameraCenter) << endl;
+	// cout << "lookat: " << glm::to_string(m_cam.m_cameraLookAt) << endl;
+	// cout << glm::to_string(m_cam.m_cameraMatrix) << endl;
 	
 	// calculate proposals
 	// TODO change all cam centers to player pos
@@ -63,15 +66,18 @@ void MyPlayer::handleMovement(unsigned char key) {
 	switch (key) {
 		case 'w':
 			proposedNewPos = m_cam.m_cameraCenter + m_zWalkFactor*tmp_camZ;
+			Client::sendStateUpdate(11, 22.2, 33.3, 44.4);
 			break;
 
 		case 's':
 			proposedNewPos = m_cam.m_cameraCenter + -1.0f*m_zWalkFactor*tmp_camZ;
+			Client::sendStateUpdate(1, 2, 1, 5);
 			break;
 
 		case 'd':
 			proposedNewPos = m_cam.m_cameraCenter + -1.0f*m_xWalkFactor*m_cam.m_camX;
-			break;
+			Client::sendStateUpdate(2, 10, 20, 30);
+			break;		
 
 		case 'a':
 			proposedNewPos = m_cam.m_cameraCenter + m_xWalkFactor*m_cam.m_camX;
