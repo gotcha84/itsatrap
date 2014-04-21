@@ -43,6 +43,9 @@ class Physics {
 
 		glm::vec3 falling();
 		void applyGravity();
+
+		glm::vec3 handleCollisionDetection(glm::vec3 goTo);
+
 };
 
 #endif

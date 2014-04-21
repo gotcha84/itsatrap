@@ -86,6 +86,7 @@
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="City.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientInstance.cpp" />
     <ClCompile Include="Cone.cpp" />
@@ -108,6 +109,7 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="City.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientInstance.h" />
     <ClInclude Include="Geode.h" />

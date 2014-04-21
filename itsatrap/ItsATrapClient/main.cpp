@@ -72,7 +72,8 @@ int main(int argc, char *argv[]) {
 
 	// 2nd player
 	sg::Player p2 = sg::Player();
-	p2.moveTo(glm::vec3(0,0,0.0f));
+	//p2.moveTo(glm::vec3(0.0f,0.0,0.0f));
+	p2.moveTo(glm::vec3(75.0f,0.0,0.0f));
 	p2.lookIn(glm::vec3(0,0,-1.0f));
 
 	// set root node
@@ -94,7 +95,7 @@ int main(int argc, char *argv[]) {
 	obj1.addChild(&obj1Shape);
 	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));
 
-	sg::Building city = sg::Building();
+	sg::City city = sg::City();
 	city.loadData("city.obj");
 	client.root->addChild(&city);
 

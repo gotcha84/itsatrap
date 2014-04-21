@@ -14,6 +14,7 @@
 #include "Cube.cpp"
 #include "Sphere.cpp"
 #include "Cone.cpp"
+#include "City.h"
 #include "Building.h"
 
 #endif
