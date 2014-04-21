@@ -4,19 +4,22 @@
 
 #include "Group.h"
 
-class MatrixTransform : public Group {
-	public:
-		glm::fmat4 m_trans;
+namespace sg {
 
-		MatrixTransform();
-		MatrixTransform(glm::mat4 m);
-		~MatrixTransform();
+	class MatrixTransform : public Group {
+		public:
+			glm::fmat4 m_trans;
 
-		void setMatrix(glm::mat4 m);
-		glm::mat4 getMatrix();
+			MatrixTransform();
+			MatrixTransform(glm::mat4 m);
+			~MatrixTransform();
 
-		void draw();
-		virtual void draw(glm::mat4 parent);
-};
+			void setMatrix(glm::mat4 m);
+			glm::mat4 getMatrix();
+
+			virtual void draw(glm::mat4 parent, glm::mat4 camera);
+	};
+
+}
 
 #endif

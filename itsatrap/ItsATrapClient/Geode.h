@@ -7,14 +7,18 @@
 #include <GL/glut.h>
 #include <glm/gtc/type_ptr.hpp>
 
-class Geode : public Node {
-	public:
-		glm::vec3 color;
+namespace sg {
 
-		Geode();
-		~Geode();
-		
-		void draw(glm::mat4 parent) = 0;
-};
+	class Geode : public Node {
+		public:
+			glm::vec3 color;
+
+			Geode();
+			~Geode();
+
+			void draw(glm::mat4 parent, glm::mat4 camera) = 0;
+	};
+
+}
 
 #endif

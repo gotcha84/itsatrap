@@ -1,44 +1,44 @@
+#pragma once
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
-#include "World.h"
-#include "SceneGraph.h"
-#include "Utilities.h"
-#include <vector>
-
 #include <GL/glut.h>
 #include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
+#include <glm/ext.hpp>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <glm/ext.hpp>
-using namespace std;
+#include <vector>
+#include <math.h>
 
+#include "Utilities.h"
+
+using namespace std;
 
 // TODO: add more if needed
 enum PhysicsStates {
-	None = -1,
-	Jumping = 0,
-	Colliding = 1,
-	Moving = 2,
-	Falling = 3
+	None = 0,
+	Jumping = 1,
+	Colliding = 2,
+	Moving = 3,
+	Falling = 4,
+	Count = 5
 };
 
 class Physics {
-	
 	public:
-		
 		PhysicsStates m_currentState;
+
 		glm::vec3 m_velocity;
 		glm::vec3 m_position;
 	
 		float m_gravityConstant; 
 		float m_elasticityConstant;
 
-
-		// TODO: find correct siszes
+		// TODO: find correct sizes
 		Physics();
+		~Physics();
 
 		glm::vec3 falling();
 		void applyGravity();

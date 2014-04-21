@@ -11,15 +11,12 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "ClientInstance.h"
-#include "SceneGraph.h"
 #include "MyPlayer.h"
+#include "SceneGraph.h"
 
-class Window { // output window related routines
+class Window {
 	public:
 		static int m_width, m_height; // window size
-		static float spin_angle;
-		static GLfloat red, green, blue;
 
 		Window();
 		~Window();
@@ -33,9 +30,6 @@ class Window { // output window related routines
 		static void displaySceneGraph();
 		static void processNormalKeys(unsigned char, int, int);
 		static void processMouseMove(int, int);
-
-		//static void drawShape(int, vector<float>, vector<float>, vector<float>);
-		static void drawShape(int*, float**, float**, float**, int*, int**);
 };
 
 #endif

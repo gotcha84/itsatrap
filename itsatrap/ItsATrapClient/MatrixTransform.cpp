@@ -1,35 +1,33 @@
 #include "MatrixTransform.h"
 
-MatrixTransform::MatrixTransform() {
-	m_trans = glm::mat4();
-}
+namespace sg {
 
-MatrixTransform::MatrixTransform(glm::mat4 m) {
-	m_trans = glm::mat4(m);
-}
-
-MatrixTransform::~MatrixTransform() {
-
-}
-
-void MatrixTransform::setMatrix(glm::mat4 m) {
-	m_trans = glm::mat4(m);
-}
-
-glm::mat4 MatrixTransform::getMatrix() {
-	return m_trans;
-}
-
-void MatrixTransform::draw() {
-	for (int i=0; i<m_nChild; i++) {
-		m_child[i]->draw(m_trans);
+	MatrixTransform::MatrixTransform() {
+		m_trans = glm::mat4();
 	}
-}
 
-void MatrixTransform::draw(glm::mat4 parent) {
-	glm::mat4 product = parent * m_trans;
-
-	for (int i=0; i<m_nChild; i++) {
-		m_child[i]->draw(product);
+	MatrixTransform::MatrixTransform(glm::mat4 m) {
+		m_trans = glm::mat4(m);
 	}
+
+	MatrixTransform::~MatrixTransform() {
+
+	}
+
+	void MatrixTransform::setMatrix(glm::mat4 m) {
+		m_trans = glm::mat4(m);
+	}
+
+	glm::mat4 MatrixTransform::getMatrix() {
+		return m_trans;
+	}
+
+	void MatrixTransform::draw(glm::mat4 parent, glm::mat4 camera) {
+		glm::mat4 new_model = parent * m_trans;;
+
+		for (int i=0; i<m_nChild; i++) {
+			m_child[i]->draw(new_model, camera);
+		}
+	}
+
 }

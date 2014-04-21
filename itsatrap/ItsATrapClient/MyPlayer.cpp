@@ -1,36 +1,81 @@
-#include <math.h>
-#include <sstream> // to convert float to string
-#include <iomanip> // to round floats
-
 #include "MyPlayer.h"
-
-using namespace std;
-
+#include "Client.h"
 
 MyPlayer::MyPlayer() {
-	m_cam = Camera();
-	m_physics = Physics();
+	m_cam = new Camera();
+
+	m_modelMatrix = glm::mat4();
+	m_modelviewMatrix = glm::mat4();
+	m_projectionMatrix = glm::mat4();
+	m_viewportMatrix = glm::mat4();
+
 	setProjectionMatrix();
 	setViewportMatrix();
+
 	m_xWalkFactor = 10.0f;
 	m_zWalkFactor = 10.0f;
 	m_xSlowWalkFactor = 1.0f;
 	m_zSlowWalkFactor = 1.0f;
-	//c.identity();
+
+	m_physics = new Physics();
+}
+
+MyPlayer::~MyPlayer() {
+	delete m_cam;
+	m_cam = nullptr;
+
+	delete m_physics;
+	m_physics = nullptr;
+}
+
+Camera *MyPlayer::getCamera() {
+	return m_cam;
+}
+
+Physics *MyPlayer::getPhysics() {
+	return m_physics;
+}
+
+glm::mat4 MyPlayer::getModelMatrix() {
+	return m_modelMatrix;
+}
+
+glm::mat4 MyPlayer::getCameraMatrix() {
+	return m_cam->getCameraMatrix();
+}
+
+glm::mat4 MyPlayer::getModelViewMatrix() {
+	return m_modelviewMatrix;
+}
+
+glm::mat4 MyPlayer::getProjectionMatrix() {
+	return m_projectionMatrix;
+}
+
+glm::mat4 MyPlayer::getViewPortMatrix() {
+	return m_viewportMatrix;
 }
 
 void MyPlayer::handleMovement(unsigned char key) {
-
 	glm::vec3 proposedNewPos;
-
-	//cout << glm::to_string(m_cam.m_cameraMatrix) << endl;
+	
+	// DEBUG STATEMENTS
+	// cout << glm::to_string(m_cam->m_cameraMatrix) << endl;	
+	// cout << "center: " << glm::to_string(m_cam->m_cameraCenter) << endl;
+	// cout << "lookat: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
+	// cout << "xx: " << glm::to_string(m_cam->m_camX) << endl;
+	// cout << "zz: " << glm::to_string(m_cam->m_camZ) << endl;
+	// cout << "zWalkFactor: " << m_zWalkFactor << endl;
+	// cout << "center: " << glm::to_string(m_cam->m_cameraCenter) << endl;
+	// cout << "lookat: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
+	// cout << glm::to_string(m_cam->m_cameraMatrix) << endl;
+	
 	// calculate proposals
 	// TODO change all cam centers to player pos
-	glm::vec3 tmp_camZ = glm::vec3(m_cam.m_camZ.x, 0.0f, m_cam.m_camZ.z);
+	glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
 	float xWalkFactor;
 	float zWalkFactor;
-	if (m_physics.m_currentState == PhysicsStates::Falling) {
-	
+	if (m_physics->m_currentState == PhysicsStates::Falling) {
 		xWalkFactor = m_xSlowWalkFactor;
 		zWalkFactor = m_zSlowWalkFactor;
 	}
@@ -40,50 +85,53 @@ void MyPlayer::handleMovement(unsigned char key) {
 	}
 	switch (key) {
 		case 'w':
-			proposedNewPos = m_cam.m_cameraCenter + zWalkFactor*tmp_camZ;
+			proposedNewPos = m_cam->m_cameraCenter + zWalkFactor*tmp_camZ;
 			break;
 
 		case 's':
-			proposedNewPos = m_cam.m_cameraCenter + -1.0f*zWalkFactor*tmp_camZ;
+			proposedNewPos = m_cam->m_cameraCenter + -1.0f*zWalkFactor*tmp_camZ;
 			break;
 
 		case 'a':
-			proposedNewPos = m_cam.m_cameraCenter + -1.0f*xWalkFactor*m_cam.m_camX;
+			proposedNewPos = m_cam->m_cameraCenter + -1.0f*xWalkFactor*m_cam->m_camX;
 			break;		
 
 		case 'd':
-			proposedNewPos = m_cam.m_cameraCenter + xWalkFactor*m_cam.m_camX;
+			proposedNewPos = m_cam->m_cameraCenter + xWalkFactor*m_cam->m_camX;
 			break;		
-	}
 
+
+	}
+	
+	Client::sendStateUpdate(1, proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
+	
 	// TODO collision detection
 
 	// placeholder for:
 	// glm::vec3 newPos = collisionDetection(proposedNewPos);
+
+	
 	glm::vec3 newPos = proposedNewPos;
+	cout << "NEWPOS!!: " << glm::to_string(newPos) << endl;
+	glm::vec3 moved = newPos - m_cam->m_cameraCenter;
 
-	glm::vec3 moved = newPos - m_cam.m_cameraCenter;
+	m_physics->m_velocity = moved;
 
-	m_physics.m_velocity = moved;
+	m_physics->m_position = newPos;
 
-	m_physics.m_position = newPos;
+	m_physics->applyGravity();
 
-	m_physics.applyGravity();
+	moved = m_physics->m_position - m_cam->m_cameraCenter;
 
-	moved = m_physics.m_position - m_cam.m_cameraCenter;
+	m_cam->m_cameraCenter = m_physics->m_position;
 
-	m_cam.m_cameraCenter = m_physics.m_position;
+	m_cam->m_cameraLookAt+=moved;
 
-	m_cam.m_cameraLookAt+=moved;
-
-	m_cam.makeCameraMatrix();
-
+	m_cam->updateCameraMatrix();
 }
 
 void MyPlayer::updateModelViewMatrix() {
-	// TODO; use model matrix in this calculation
-
-	m_modelviewMatrix = glm::inverse(m_cam.m_cameraMatrix);
+	m_modelviewMatrix = glm::inverse(m_cam->m_cameraMatrix) * m_modelMatrix;
 }
 
 void MyPlayer::setProjectionMatrix() {
@@ -105,7 +153,6 @@ void MyPlayer::setProjectionMatrix() {
 			0, 0, -1, 0);
 
 	m_projectionMatrix = glm::transpose(m_projectionMatrix);
-
 }
 
 void MyPlayer::setViewportMatrix() {
@@ -120,4 +167,20 @@ void MyPlayer::setViewportMatrix() {
 				0, (y-y0)/2, 0, (y+y0)/2,
 				0, 0, 0.5, 0.5,
 				0, 0, 0, 1);*/
+}
+
+void MyPlayer::move(glm::vec3 delta) {
+	m_cam->move(delta);
+}
+
+void MyPlayer::moveTo(glm::vec3 pos) {
+	m_cam->moveTo(pos);
+}
+
+void MyPlayer::lookIn(glm::vec3 direction) {
+	m_cam->lookIn(direction);
+}
+
+void MyPlayer::lookAt(glm::vec3 point) {
+	m_cam->lookAt(point);
 }

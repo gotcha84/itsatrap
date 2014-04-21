@@ -6,32 +6,26 @@
 #include <stdlib.h>
 #include <iostream>
 
+// graphics
 #include "ClientInstance.h"
 #include "Window.h"
-#include "World.h"
+#include "SceneGraph.h"
+
+// networking
+#include "Client.h"
 
 ClientInstance client = ClientInstance();
+Window window = Window();
 
-int Window::m_width  = 512;   // set window width in pixels here
-int Window::m_height = 512;   // set window height in pixels here
-
-float Window::spin_angle = 0.001f;
-
-GLfloat Window::red = 0.0;
-GLfloat Window::green = 2.0;
-GLfloat Window::blue = 0.0;
-
-int main(int argc, char *argv[])
-{
-
+int main(int argc, char *argv[]) {
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
 	float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
 
 	glutInit(&argc, argv);                      // initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
-	glutInitWindowSize(Window::m_width, Window::m_height);      // set initial window size
-	glutCreateWindow("OpenGL Cube for CSE167");           // open window and set window title
+	glutInitWindowSize(window.m_width, window.m_height);      // set initial window size
+	glutCreateWindow("It's a Trap!");           // open window and set window title
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
 	glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
@@ -53,59 +47,59 @@ int main(int argc, char *argv[])
 	glEnable(GL_LIGHT0);
 	
 	// Install callback functions:
-	//glutDisplayFunc(Window::displayCallback);
-	glutDisplayFunc(Window::displaySceneGraph);
-	glutReshapeFunc(Window::reshapeCallback);
-	glutIdleFunc(Window::idleCallback);
+	//glutDisplayFunc(window.displayCallback);
+	glutDisplayFunc(window.displaySceneGraph);
+	glutReshapeFunc(window.reshapeCallback);
+	glutIdleFunc(window.idleCallback);
 
 	// to avoid cube turning white on scaling down
 	glEnable(GL_NORMALIZE);
 
 	// Process input
-	glutKeyboardFunc(Window::processNormalKeys);
-	glutPassiveMotionFunc(Window::processMouseMove);
-	
-	// load obj files
+	glutKeyboardFunc(window.processNormalKeys);
+	glutPassiveMotionFunc(window.processMouseMove);
 
 	// hide mouse cursor
 	//glutSetCursor(GLUT_CURSOR_NONE);
 	
-	// Initialize cube matrix:
-	//cube.getMatrix().identity();
-	
-	//glMatrixMode(GL_PROJECTION);
-	gluPerspective(90, float(Window::m_width)/float(Window::m_height), 0.1, 10000);
+	// Initialize networking for client
+	Client::initializeClient();
 
-	cout << "initialized" << endl;
-	/*
-	Vector3 pos = Vector3(
-	cube.getMatrix().m[3][0], 
-	cube.getMatrix().m[3][1], 
-	cube.getMatrix().m[3][2]
-	);
-	pos.print();
-	*/
-	
+	// player 1
+	sg::Player p1 = sg::Player();
+	p1.moveTo(glm::vec3(0,0,100.0f));
+	p1.lookIn(glm::vec3(0,0,-1.0f));
+
+	// 2nd player
+	sg::Player p2 = sg::Player();
+	p2.moveTo(glm::vec3(0,0,0.0f));
+	p2.lookIn(glm::vec3(0,0,-1.0f));
+
+	// set root node
+	client.root = &p1;
+	client.root->addChild(&p2);
+
 	// ground nodes
-	World *world = new World();
-	world->loadWorldData();
-	world->initializeHeightMap();
-
-	MatrixTransform ground = MatrixTransform();
-	client.root->addChild(&ground);
-	Cube groundShape = Cube();
+	sg::MatrixTransform ground = sg::MatrixTransform();
+	//client.root->addChild(&ground);
+	sg::Cube groundShape = sg::Cube();
 	ground.addChild(&groundShape);
-
 	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
 	groundShape.color = glm::vec3(0,1,0);
 
 	// cube nodes
-	MatrixTransform obj1 = MatrixTransform();
-	client.root->addChild(&obj1);
-	Cube obj1Shape = Cube();
+	sg::MatrixTransform obj1 = sg::MatrixTransform();
+	//client.root->addChild(&obj1);
+	sg::Cube obj1Shape = sg::Cube();
 	obj1.addChild(&obj1Shape);
-
 	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));
+
+	sg::Building city = sg::Building();
+	city.loadData("city.obj");
+	client.root->addChild(&city);
+
+	cout << "player center: " << glm::to_string(client.root->getCamera()->m_cameraCenter) << endl;
+
 	glutMainLoop();
 
 	return 0;

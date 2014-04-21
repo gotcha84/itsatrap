@@ -6,21 +6,25 @@
 
 #include <vector>
 
-class Group : public Node {
-	public:
-		std::vector<Node*> m_child;
-		int m_nChild;
+namespace sg {
 
-		Group();
-		~Group();
+	class Group : public Node {
+		public:
+			std::vector<Node*> m_child;
+			int m_nChild;
 
-		bool hasChild();
-		int getNumChildren();
-		void addChild(Node *n);
-		bool removeChild(int c);
-		bool removeChild(Node *c);
+			Group();
+			~Group();
 
-		virtual void draw(glm::mat4 parent) = 0;
-};
+			bool hasChild();
+			int getNumChildren();
+			void addChild(Node *n);
+			bool removeChild(int c);
+			bool removeChild(Node *c);
+
+			virtual void draw(glm::mat4 parent, glm::mat4 camera) = 0;
+	};
+
+}
 
 #endif

@@ -4,19 +4,26 @@
 
 #include <glm/glm.hpp>
 
-class Node {
-	public:
-		Node *m_parent;
+namespace sg {
 
-		Node();
-		~Node();
+	class Node {
+		public:
+			int m_objectID;
+			Node *m_parent;
 
-		bool hasParent();
-		Node* getParent();
-		void setParent(Node* p);
-		void removeParent();
+			Node();
+			~Node();
 
-		virtual void draw(glm::mat4 parent) = 0;
-};
+			bool hasParent();
+			Node* getParent();
+			void setParent(Node* p);
+			void removeParent();
+
+			int getID();
+
+			virtual void draw(glm::mat4 parent, glm::mat4 camera) = 0;
+	};
+
+}
 
 #endif
