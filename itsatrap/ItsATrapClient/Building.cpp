@@ -3,14 +3,12 @@
 namespace sg {
 
 	Building::Building() {
-		m_heightMapXShift = 278;
-		m_heightMapZShift = 463;
 		initArrays();
 	}
 
 	/*Building::Building(string filename) {
-		m_heightMapXShift = 278;
-		m_heightMapZShift = 463;
+		World::m_heightMapXShift = 278;
+		World::m_heightMapZShift = 463;
 		initArrays();
 		loadData(filename);
 	}*/
@@ -73,8 +71,8 @@ namespace sg {
 		glPopMatrix();
 	}
 
-	/*
-	void Building::initializeHeightMap() {
+	
+	void Building::updateHeightMap() {
 		float minx;
 		float maxx;
 		float minz;
@@ -184,8 +182,8 @@ namespace sg {
 
 				for (int j = minx; j < maxx; j++) {
 					for (int k = minz; k < maxz; k++) {
-						if (maxy > m_heightMap[j+m_heightMapXShift][k+m_heightMapZShift]) {
-							m_heightMap[j+m_heightMapXShift][k+m_heightMapZShift] = maxy;
+						if (maxy > World::m_heightMap[j+World::m_heightMapXShift][k+World::m_heightMapZShift]) {
+							World::m_heightMap[j+World::m_heightMapXShift][k+World::m_heightMapZShift] = maxy;
 						}
 					}
 				}
@@ -195,14 +193,14 @@ namespace sg {
 		// player is 4 feet "tall"
 		for (int i = 0; i < 1019; i++) {
 			for (int j = 0; j < 787; j++) {
-					m_heightMap[i][j]+=4;
-					//cout << m_heightMap[i][j] << endl;
+					World::m_heightMap[i][j]+=4;
+					//cout << World::m_heightMap[i][j] << endl;
 			}
 		}
 
 	
 	}
-	*/
+	
 
 	// TODO: implement initializeHeightMap
 	/*
@@ -319,14 +317,12 @@ namespace sg {
 			m_nIndices[j] = tmpIndicesCount;
 			m_nVertices[j] = tmpVerticesCount;
 		}
-		//cout << "nverts is : " << m_nIndices[0] << endl;
+
 		Utilities::writeIntArrayToFile(m_nVertices, 100, "nverts.txt");
 		Utilities::writeFloatArrayToFile(m_vertices[0], 1000, "verts0.txt");
+		
+		updateHeightMap();
 
-		//Utilities::writeIntArrayToFile(m_Indices, m_nIndices, "new_indices.txt");
-		//Utilities::writeFloatArrayToFile(m_vertices, m_nVertices, "new_vertices.txt");
-		//Utilities::writeFloatArrayToFile(m_normals, normalsCount, "new_normals.txt");
-		//Utilities::writeFloatArrayToFile(m_Texcoords, texturesCount, "new_textures.txt");
 	}
 
 	//void Window::drawShape(int nVerts, vector<float> vertices, vector<float> normals, vector<float> texcoords) {

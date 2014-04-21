@@ -103,6 +103,7 @@
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Building.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
@@ -121,6 +122,7 @@
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Building.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

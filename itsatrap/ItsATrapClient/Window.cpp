@@ -6,6 +6,9 @@ extern ClientInstance client;
 int Window::m_width  = 512; // set window width in pixels here
 int Window::m_height = 512; // set window height in pixels here
 
+int Window::m_heightMapXShift = 278;
+int Window::m_heightMapZShift = 463;
+
 Window::Window() {
 
 }

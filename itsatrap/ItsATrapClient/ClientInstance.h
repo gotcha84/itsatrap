@@ -18,7 +18,7 @@ class ClientInstance {
 		float m_xAngleChange, m_yAngleChange;
 		float m_xAngleChangeFactor, m_yAngleChangeFactor;
 
-		int x, inc;
+		float m_heightMap[1019][787];
 
 		// add model,camera,proj,viewport matrices here? (init in ctor)
 };

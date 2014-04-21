@@ -10,9 +10,6 @@ ClientInstance::ClientInstance() {
 	m_xAngleChangeFactor = 20.0f;
 	m_yAngleChangeFactor = 20.0f;
 
-	x = 0;
-	inc = 0.0;
-
 	root = new sg::Player();
 }
 

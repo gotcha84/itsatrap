@@ -87,6 +87,9 @@
     <ClCompile Include="Building.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="Building.h">
       <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

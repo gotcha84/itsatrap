@@ -14,6 +14,7 @@
 #include "Geode.h"
 #include "Utilities.h"
 #include "tiny_obj_loader.h"
+#include "World.h"
 
 using namespace std;
 
@@ -31,7 +32,6 @@ namespace sg {
 			int* m_nIndices;
 
 			//vector<vector<int>> m_heightMap;
-			//float m_heightMap[1019][787];
 
 			Building();
 
@@ -42,7 +42,7 @@ namespace sg {
 			void draw(glm::mat4 parent, glm::mat4 camera);
 
 			// TODO: figure out what it takes 
-			// void initializeHeightMap();
+			void updateHeightMap();
 			void loadData(string inputfile);
 			void drawShape();
 	};

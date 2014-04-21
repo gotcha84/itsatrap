@@ -13,6 +13,7 @@
 #include <math.h>
 
 #include "Utilities.h"
+#include "World.h"
 
 using namespace std;
 
