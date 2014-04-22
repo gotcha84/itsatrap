@@ -33,6 +33,7 @@ public:
 	__declspec(dllexport) int serialize(char **ptr);
 	__declspec(dllexport) void printWorld();
 	__declspec(dllexport) void updateEntry(struct stateEntry e);
+	__declspec(dllexport) struct stateEntry getEntryAt(int i);
 };
 
 #endif

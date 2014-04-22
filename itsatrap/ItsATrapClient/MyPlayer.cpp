@@ -103,7 +103,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	}
 	
-	Client::sendStateUpdate(1, proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
+	Client::sendStateUpdate(Client::getPlayerId(), proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
 	
 	// TODO collision detection
 

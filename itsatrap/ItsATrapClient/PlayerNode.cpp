@@ -32,7 +32,12 @@ namespace sg {
 		glLoadMatrixf(glm::value_ptr(m_player->m_projectionMatrix));
 
 		for (int i=0; i<m_nChild; i++) {
-			m_child[i]->draw(m_player->m_modelMatrix, m_player->getCameraMatrix());
+			try {
+				m_child[i]->draw(m_player->m_modelMatrix, m_player->getCameraMatrix());
+			}
+			catch (...)
+			{
+			}
 		}
 	}
 

@@ -12,6 +12,7 @@
 #include "NetworkConfig.h"
 #include "WorldState.h"
 #include "StateEntry.h"
+#include "enrico.h"
 
 /*
  * class Client
@@ -42,6 +43,7 @@ public:
 	static int initializeClient();
 	static void startReceiverThread();
 	static void sendStateUpdate(int id, float x, float y, float z);
+	static int getPlayerId();
 };
 
 

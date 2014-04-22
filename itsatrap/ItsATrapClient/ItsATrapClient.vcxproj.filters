@@ -93,6 +93,9 @@
     <ClCompile Include="Building.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
+    <ClCompile Include="enrico.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="City.h">
       <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="enrico.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

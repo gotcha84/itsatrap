@@ -14,6 +14,9 @@
 // networking
 #include "Client.h"
 
+// Test
+#include "enrico.h"
+
 ClientInstance client = ClientInstance();
 Window window = Window();
 
@@ -64,6 +67,7 @@ int main(int argc, char *argv[]) {
 	
 	// Initialize networking for client
 	Client::initializeClient();
+	Client::sendStateUpdate(Client::getPlayerId(), 75, 0, 0);
 
 	// player 1
 	sg::Player p1 = sg::Player();
@@ -88,16 +92,11 @@ int main(int argc, char *argv[]) {
 	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
 	groundShape.color = glm::vec3(0,1,0);
 
-	// cube nodes
-	sg::MatrixTransform obj1 = sg::MatrixTransform();
-	//client.root->addChild(&obj1);
-	sg::Cube obj1Shape = sg::Cube();
-	obj1.addChild(&obj1Shape);
-	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));
+	testAddCube(7, 90, 30, 0);
 
-	sg::City city = sg::City();
-	city.loadData("city.obj");
-	client.root->addChild(&city);
+	//sg::City city = sg::City();
+	//city.loadData("city.obj");
+	//client.root->addChild(&city);
 
 	cout << "player center: " << glm::to_string(client.root->getCamera()->m_cameraCenter) << endl;
 
@@ -105,3 +104,4 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
+

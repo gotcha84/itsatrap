@@ -86,9 +86,10 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 
 			if (p->eventId == WORLD_UPDATE_EVENT)
 			{
-				// World update
+				// World update. 
+				// This variable 'world' is the world given by the server
 				WorldState world(p);
-				world.printWorld();
+				testUpdateWorld(&world);
 			}
 		}
 	}
@@ -135,4 +136,9 @@ int Client::sendMsg(char * msg, int len) {
 	}
 
 	return 0;
+}
+
+int Client::getPlayerId()
+{
+	return playerId;
 }
