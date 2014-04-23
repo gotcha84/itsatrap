@@ -94,9 +94,9 @@ int main(int argc, char *argv[]) {
 
 	testAddCube(7, 90, 30, 0);
 
-	//sg::City city = sg::City();
-	//city.loadData("city.obj");
-	//client.root->addChild(&city);
+	sg::City city = sg::City();
+	city.loadData("city.obj");
+	client.root->addChild(&city);
 
 	cout << "player center: " << glm::to_string(client.root->getCamera()->m_cameraCenter) << endl;
 

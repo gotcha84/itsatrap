@@ -45,7 +45,7 @@ namespace sg {
 		int max_ele = 10000;
 			
 		// bind texture here
-		glBindTexture(GL_TEXTURE_2D, texturePpm);
+		glBindTexture(GL_TEXTURE_2D, textuPpm);
 
 		sg::City* myParent = (sg::City*)getParent();
 		// TODO: change 46

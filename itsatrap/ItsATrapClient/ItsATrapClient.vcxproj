@@ -101,6 +101,7 @@
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PlayerNode.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="tiny_obj_loader.cc" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerNode.h" />
     <ClInclude Include="SceneGraph.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />
