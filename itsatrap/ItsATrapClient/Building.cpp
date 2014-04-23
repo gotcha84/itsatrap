@@ -25,7 +25,7 @@ namespace sg {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
-			glColor3f(color.x, color.y, color.z);
+			//glColor3f(color.x, color.y, color.z);
 			drawShape();
 		glPopMatrix();
 
@@ -41,10 +41,46 @@ namespace sg {
 		int max_ele = 10000;
 		
 		sg::City* myParent = (sg::City*)getParent();
-		// TODO: change 46
+		if (m_id % 6 == 0) {
+			glColor3f(0, 0, 1);
+		}
+		if (m_id % 6 == 1) {
+			glColor3f(0, 1, 0);
+		}
+		if (m_id % 6 == 2) {
+			glColor3f(1, 0, 0);
+		}
+		if (m_id % 6 == 3) {
+			glColor3f(0, 1, 1);
+		}
+		if (m_id % 6 == 4) {
+			glColor3f(1, 0, 1);
+		}
+		if (m_id % 6 == 5) {
+			glColor3f(1, 1, 0);
+		}
+
+		//glColor3f(((m_id%8)%4)%2, (m_id%4)%2, m_id%2);
 		for (int i = 0; i < myParent->m_nIndices[m_id]/3; i++) {
 			//cout << m_indices[i] << endl;
-			glColor3f(1, 1, 0);
+			//cout << ((m_id%2)%2)%2 << endl;
+			/*
+			if (m_id == 2) {
+				glColor3f(0, 1, 0);
+			}
+			else if (m_id == 7) {
+				glColor3f(0, 0, 1);
+			}
+			else if (m_id == 25) {
+				glColor3f(1, 0, 1);
+			}
+
+			else if (m_id == 31) {
+				glColor3f(1, 1, 0);
+			}
+			else {
+				glColor3f(1, 0, 0);
+			}*/
 		
 			glBegin(GL_TRIANGLES);
 			for (int j = 0; j < 3; j++) {
@@ -65,11 +101,11 @@ namespace sg {
 		float minx = FLT_MAX;
 		float miny = FLT_MAX;
 		float minz = FLT_MAX;
-		float maxx = FLT_MIN;
-		float maxy = FLT_MIN;
-		float maxz = FLT_MIN;
-
-		for (int i = 0; i < myParent->m_nVertices[m_id]; i+=3) {
+		float maxx = -1.0f*FLT_MAX;
+		float maxy = -1.0f*FLT_MAX;
+		float maxz = -1.0f*FLT_MAX;
+		
+		for (int i = 0; i < myParent->m_nVertices[m_id]/*-myParent->m_nVertices[m_id]%12*/; i+=3) {
 			if (myParent->m_vertices[m_id][i] < minx) {
 				minx = myParent->m_vertices[m_id][i];
 			}
@@ -85,11 +121,18 @@ namespace sg {
 			if (myParent->m_vertices[m_id][i+1] > maxy) {
 				maxy = myParent->m_vertices[m_id][i+1];
 			}
+			//if (m_id == 7) {
+			//	cout << myParent->m_vertices[m_id][i+2] << endl;
+			//}
 			if (myParent->m_vertices[m_id][i+2] > maxz) {
 				maxz = myParent->m_vertices[m_id][i+2];
+				/*if (m_id == 7) {
+					cout << "i'm working" << endl;
+				}*/
 			}
 		}
-		if (m_id == 2) {
+		/*
+		if (m_id == 7) {
 			cout << "minx: " << minx << endl;
 			cout << "miny: " << miny << endl;
 			cout << "minz: " << minz << endl;
@@ -97,6 +140,7 @@ namespace sg {
 			cout << "maxy: " << maxy << endl;
 			cout << "maxz: " << maxz << endl;
 		}
+		*/
 		m_boundingBox.setAABB(minx, miny, minz, maxx, maxy, maxz);
 	}
 
@@ -106,6 +150,10 @@ namespace sg {
 			return false;
 		}
 		else {
+			/*cout << "m_id: " << m_id << endl;
+			cout << "mins: " << m_boundingBox.m_minX << ", " << m_boundingBox.m_minY << ", " << m_boundingBox.m_minZ << endl;
+			cout << "maxs: " << m_boundingBox.m_maxX << ", " << m_boundingBox.m_maxY << ", " << m_boundingBox.m_maxZ << endl;
+			cout << "goto: " << glm::to_string(goTo) << endl;*/
 			return (m_boundingBox.inside(goTo));
 		}
 	}

@@ -110,6 +110,8 @@ void MyPlayer::handleMovement(unsigned char key) {
 	glm::vec3 oldPos = m_physics->m_position;
 
 	// placeholder for:
+
+	//cout << "goTo: " << glm::to_string(proposedNewPos) << endl;
 	glm::vec3 newPos = m_physics->handleCollisionDetection(proposedNewPos);
 	
 	//glm::vec3 newPos = proposedNewPos;

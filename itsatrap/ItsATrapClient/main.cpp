@@ -85,18 +85,18 @@ int main(int argc, char *argv[]) {
 	client.root->addChild(&p2);
 
 	// ground nodes
-	sg::MatrixTransform ground = sg::MatrixTransform();
-	//client.root->addChild(&ground);
-	sg::Cube groundShape = sg::Cube();
-	ground.addChild(&groundShape);
-	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
-	groundShape.color = glm::vec3(0,1,0);
+	//sg::MatrixTransform ground = sg::MatrixTransform();
+	////client.root->addChild(&ground);
+	//sg::Cube groundShape = sg::Cube();
+	//ground.addChild(&groundShape);
+	//ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
+	//groundShape.color = glm::vec3(0,1,0);
 
-	testAddCube(7, 90, 30, 0);
+	//testAddCube(7, 90, 30, 0);
 
-	//sg::City city = sg::City();
-	//city.loadData("city.obj");
-	//client.root->addChild(&city);
+	sg::City city = sg::City();
+	city.loadData("city.obj");
+	client.root->addChild(&city);
 
 	cout << "player center: " << glm::to_string(client.root->getCamera()->m_cameraCenter) << endl;
 

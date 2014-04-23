@@ -46,7 +46,7 @@ void Physics::applyGravity() {
 		m_currentState = PhysicsStates::Falling;
 	}
 	
-
+	
 	//}
 
 	//cout << "exiting with position: " << glm::to_string(m_position) << endl << endl;

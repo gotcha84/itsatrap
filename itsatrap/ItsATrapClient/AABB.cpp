@@ -49,15 +49,15 @@ bool AABB::inside(glm::vec3 goTo) {
 	//cout << "collisiondetected?:" << tmp << endl; 
 
 
-	/*if (!tmp) {
-		cout << "minx: " << m_minX << endl;
+	//if (!tmp) {
+		/*cout << "minx: " << m_minX << endl;
 		cout << "miny: " << m_minY << endl;
 		cout << "minz: " << m_minZ << endl;
 		cout << "maxx: " << m_maxX << endl;
 		cout << "maxy: " << m_maxY << endl;
 		cout << "maxz: " << m_maxZ << endl;
-		cout << "goto: " << glm::to_string(goTo) << endl;
-	}*/
+		cout << "goto: " << glm::to_string(goTo) << endl;*/
+	//}
 
 	return (goTo.x >= m_minX && goTo.x <= m_maxX 
 		   && goTo.y >= m_minY && goTo.y <= m_maxY

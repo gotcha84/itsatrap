@@ -67,7 +67,9 @@ namespace sg {
 	void City::draw(glm::mat4 parent, glm::mat4 camera) {
 
 		for (int i = 0; i < getNumChildren(); i++) {
-			m_child[i]->draw(parent, camera);
+			//if (i == 2) {
+				m_child[i]->draw(parent, camera);
+			//}
 		}
 		
 		//glm::mat4 cam_inverse = glm::inverse(camera);
@@ -94,9 +96,9 @@ namespace sg {
 		float tmpminx = FLT_MAX;
 		float tmpminy = FLT_MAX;
 		float tmpminz = FLT_MAX;
-		float tmpmaxx = FLT_MIN;
-		float tmpmaxy = FLT_MIN;
-		float tmpmaxz = FLT_MIN;
+		float tmpmaxx = -1.0f*FLT_MAX;
+		float tmpmaxy = -1.0f*FLT_MAX;
+		float tmpmaxz = -1.0f*FLT_MAX;
 
 		//int arr[1][2] = {{0, 1}};
 		int arr[4][2] = {{0, 1}, {0, 3}, {1, 3}, {2, 3}};  
@@ -105,11 +107,12 @@ namespace sg {
 		for (int k = 0; k < 46; k++) {
 			for (int i = 0; i < m_nVertices[k]; i++) {
 				m_vertices[k][i]/=10.0f;
-				/*
+				//m_vertices[k][i]-=1.0f;
+				
 				if (i % 3 == 1) {
-					m_vertices[k][i]+=4.0f;
+					m_vertices[k][i]-=1.0f;
 				}
-				*/
+				
 			}
 		}
 		//}
@@ -168,14 +171,14 @@ namespace sg {
 				else {
 					maxy = floor(tmpmaxy+0.5f);
 				}
-
+				
 				for (int j = minx; j < maxx; j++) {
 					for (int k = minz; k < maxz; k++) {
 						if (maxy > World::m_heightMap[j+World::m_heightMapXShift][k+World::m_heightMapZShift]) {
 							World::m_heightMap[j+World::m_heightMapXShift][k+World::m_heightMapZShift] = maxy;
 						}
 					}
-				}
+				} 
 			}
 		}
 	
@@ -316,7 +319,7 @@ namespace sg {
 		}
 
 		Utilities::writeIntArrayToFile(m_nVertices, 100, "nverts.txt");
-		Utilities::writeFloatArrayToFile(m_vertices[0], 1000, "verts0.txt");
+		Utilities::writeFloatArrayToFile(m_vertices[7], 1000, "verts7.txt");
 		
 		updateHeightMap();
 
