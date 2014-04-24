@@ -17,6 +17,7 @@
 class Window {
 	public:
 		static int m_width, m_height; // window size
+		static int m_heightMapXShift, m_heightMapZShift;
 
 		Window();
 		~Window();

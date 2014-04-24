@@ -84,8 +84,17 @@
     <ClCompile Include="PlayerNode.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="City.cpp">
+      <Filter>Source Files\SceneGraph</Filter>
+    </ClCompile>
     <ClCompile Include="Building.cpp">
-      <Filter>Source Files\SceneGraph\Shapes</Filter>
+      <Filter>Source Files\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="enrico.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +145,15 @@
     </ClInclude>
     <ClInclude Include="Building.h">
       <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="City.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="enrico.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

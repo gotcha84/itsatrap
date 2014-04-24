@@ -13,6 +13,7 @@
 #include <math.h>
 
 #include "Utilities.h"
+#include "World.h"
 
 using namespace std;
 
@@ -42,6 +43,9 @@ class Physics {
 
 		glm::vec3 falling();
 		void applyGravity();
+
+		glm::vec3 handleCollisionDetection(glm::vec3 goTo);
+
 };
 
 #endif

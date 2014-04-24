@@ -12,8 +12,8 @@ MyPlayer::MyPlayer() {
 	setProjectionMatrix();
 	setViewportMatrix();
 
-	m_xWalkFactor = 10.0f;
-	m_zWalkFactor = 10.0f;
+	m_xWalkFactor = 2.0f;
+	m_zWalkFactor = 2.0f;
 	m_xSlowWalkFactor = 1.0f;
 	m_zSlowWalkFactor = 1.0f;
 
@@ -93,45 +93,54 @@ void MyPlayer::handleMovement(unsigned char key) {
 	}
 	switch (key) {
 		case 'w':
-			proposedNewPos = m_cam->m_cameraCenter + zWalkFactor*tmp_camZ;
+			proposedNewPos = m_physics->m_position + zWalkFactor*tmp_camZ;
 			break;
 
 		case 's':
-			proposedNewPos = m_cam->m_cameraCenter + -1.0f*zWalkFactor*tmp_camZ;
+			proposedNewPos = m_physics->m_position + -1.0f*zWalkFactor*tmp_camZ;
 			break;
 
 		case 'a':
-			proposedNewPos = m_cam->m_cameraCenter + -1.0f*xWalkFactor*m_cam->m_camX;
-			break;
+			proposedNewPos = m_physics->m_position + -1.0f*xWalkFactor*m_cam->m_camX;
+			break;		
 
 		case 'd':
-			proposedNewPos = m_cam->m_cameraCenter + xWalkFactor*m_cam->m_camX;
-			break;
+			proposedNewPos = m_physics->m_position + xWalkFactor*m_cam->m_camX;
+			break;		
+
+
 	}
 	
-	//Client::sendStateUpdate(1, proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
+	//Client::sendStateUpdate(Client::getPlayerId(), proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
 	
-	// TODO collision detection
+	// collision detection
+	glm::vec3 oldPos = m_physics->m_position;
 
 	// placeholder for:
-	// glm::vec3 newPos = collisionDetection(proposedNewPos);
 
+	//cout << "goTo: " << glm::to_string(proposedNewPos) << endl;
+	glm::vec3 newPos = m_physics->handleCollisionDetection(proposedNewPos);
 	
-	glm::vec3 newPos = proposedNewPos;
-	//cout << "NEWPOS!!: " << glm::to_string(newPos) << endl;
-	glm::vec3 moved = newPos - m_cam->m_cameraCenter;
+	//glm::vec3 newPos = proposedNewPos;
 
-	m_physics->m_velocity = moved;
+	//glm::vec3 moved = newPos - oldPos;
+	//cout << "moved: " << glm::to_string(moved) << endl;
+	//m_physics->m_velocity = moved;
+
 	m_physics->m_position = newPos;
-	m_physics->applyGravity();
 
-	moved = m_physics->m_position - m_cam->m_cameraCenter;
+	//m_physics->applyGravity();
 
-	m_cam->m_cameraCenter = m_physics->m_position;
+	glm::vec3 moved = m_physics->m_position - oldPos;
+
+	// people are 4 feet tall apparently
+	m_cam->m_cameraCenter = glm::vec3(m_physics->m_position.x, m_physics->m_position.y+4.0f, m_physics->m_position.z);
+
 	m_cam->m_cameraLookAt+=moved;
+	//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 	m_cam->updateCameraMatrix();
 
-	this->setModelMatrix(glm::translate(proposedNewPos));
+	this->setModelMatrix(glm::translate(m_physics->m_position));
 }
 
 void MyPlayer::updateModelViewMatrix() {

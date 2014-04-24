@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdio.h>
 #include <iostream>
+
 #include "StateEntry.h"
 #include "Packet.h"
 
@@ -23,7 +24,6 @@ private:
 	                                         // that are currently living in the world
 	
 public:
-
 	// Functions
 	// NOTE: __declspec(dllexport) is used to export this function
 	
@@ -33,6 +33,7 @@ public:
 	__declspec(dllexport) int serialize(char **ptr);
 	__declspec(dllexport) void printWorld();
 	__declspec(dllexport) void updateEntry(struct stateEntry e);
+	__declspec(dllexport) struct stateEntry getEntryAt(int i);
 };
 
 #endif

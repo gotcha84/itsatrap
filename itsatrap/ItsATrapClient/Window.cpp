@@ -6,6 +6,9 @@ extern ClientInstance client;
 int Window::m_width  = 512; // set window width in pixels here
 int Window::m_height = 512; // set window height in pixels here
 
+int Window::m_heightMapXShift = 278;
+int Window::m_heightMapZShift = 463;
+
 Window::Window() {
 
 }
@@ -69,13 +72,15 @@ void Window::displaySceneGraph(void)
 		client.m_yAngleChange = 0.0f;
 	}*/
 
-	/*
+	// TODO: move to player class?
 	client.root->getPlayer()->getPhysics()->applyGravity();
 	glm::vec3 moved = client.root->getPlayer()->getPhysics()->m_position - client.root->getPlayer()->getCamera()->m_cameraCenter;
+	moved.y += 4.0f;
 	client.root->getPlayer()->getCamera()->m_cameraLookAt += moved;
 	client.root->getPlayer()->getCamera()->m_cameraCenter = client.root->getPlayer()->getPhysics()->m_position;
-	client.root->getPlayer()->getCamera()->updateCameraMatrix();
-	*/
+	client.root->getPlayer()->getCamera()->m_cameraCenter.y += 4.0f;
+	//client.root->getPlayer()->getCamera()->updateCameraMatrix();
+	//cout << "cam is: " << glm::to_string(client.root->getPlayer()->getPhysics()->m_position) << endl;
 
 	glFlush();  
 	glutSwapBuffers();

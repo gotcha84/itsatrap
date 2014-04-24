@@ -14,6 +14,9 @@
 // networking
 #include "Client.h"
 
+// Test
+//#include "enrico.h"
+
 ClientInstance client = ClientInstance();
 Window window = Window();
 
@@ -60,12 +63,11 @@ int main(int argc, char *argv[]) {
 
 	// hide mouse cursor
 	//glutSetCursor(GLUT_CURSOR_NONE);
-	
+
 	// Initialize networking for client
 	//Client::initializeClient();
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(glm::value_ptr(client.root->getPlayer()->getProjectionMatrix()));
+	glm::vec3 starting = client.root->getPosition();
+	//Client::sendStateUpdate(Client::getPlayerId(), starting.x, starting.y, starting.z);
 
 	// player 1
 	sg::Player p1 = *client.root;
@@ -91,7 +93,7 @@ int main(int argc, char *argv[]) {
 	// ground nodes
 	sg::MatrixTransform ground = sg::MatrixTransform();
 	ground.setName("ground");
-	client.root->addChild(&ground);
+	//client.root->addChild(&ground);
 	sg::Cube groundShape = sg::Cube();
 	groundShape.setName("ground");
 	ground.addChild(&groundShape);
@@ -101,16 +103,18 @@ int main(int argc, char *argv[]) {
 	// cube nodes
 	sg::MatrixTransform obj1 = sg::MatrixTransform();
 	obj1.setName("cube");
-	client.root->addChild(&obj1);
+	//client.root->addChild(&obj1);
 	sg::Cube obj1Shape = sg::Cube();
 	obj1Shape.setName("cube");
 	obj1.addChild(&obj1Shape);
 	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));
 
-	sg::Building city = sg::Building();
-	city.setName("city");
+	//testAddCube(7, 90, 30, 0);
+
+	sg::City city = sg::City();
 	city.loadData("city.obj");
-	//client.root->addChild(&city);
+	//city.loadData("Can.obj");
+	client.root->addChild(&city);
 
 	client.printPlayers();
 	client.printSceneGraph();
@@ -119,3 +123,4 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
+

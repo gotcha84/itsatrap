@@ -86,10 +86,12 @@
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="City.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientInstance.cpp" />
     <ClCompile Include="Cone.cpp" />
     <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="enrico.cpp" />
     <ClCompile Include="Geode.cpp" />
     <ClCompile Include="Group.cpp" />
     <ClCompile Include="main.cpp" />
@@ -103,12 +105,15 @@
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Building.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="City.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientInstance.h" />
+    <ClInclude Include="enrico.h" />
     <ClInclude Include="Geode.h" />
     <ClInclude Include="Group.h" />
     <ClInclude Include="MatrixTransform.h" />
@@ -121,6 +126,7 @@
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Building.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

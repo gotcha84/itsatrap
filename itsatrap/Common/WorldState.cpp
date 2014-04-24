@@ -113,3 +113,8 @@ void WorldState::printWorld()
 			entries[i].x, entries[i].y, entries[i].z);
 	}
 }
+
+struct stateEntry WorldState::getEntryAt(int i)
+{
+	return entries[i];
+}
