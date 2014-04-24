@@ -14,6 +14,18 @@ Physics::Physics() {
 	m_elasticityConstant = 0.9f;
 }
 
+Physics::Physics(glm::vec3 pos) {
+
+	cout << "pos: " << glm::to_string(pos) << endl;
+	m_currentState = PhysicsStates::None;
+
+	m_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+	m_position = glm::vec3(pos.x, pos.y-4.0f, pos.z);
+	
+	m_gravityConstant = -0.1f; 
+	m_elasticityConstant = 0.9f;
+}
+
 Physics::~Physics() {
 
 }

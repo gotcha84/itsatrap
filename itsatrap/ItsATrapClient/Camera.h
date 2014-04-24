@@ -31,6 +31,7 @@ class Camera {
 		float m_yRotationAngle;
 
 		Camera();
+		Camera(glm::vec3 pos);
 
 		glm::mat4 getCameraMatrix();
 		glm::vec3 getCameraCenter();

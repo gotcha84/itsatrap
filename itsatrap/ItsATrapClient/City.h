@@ -47,6 +47,8 @@ namespace sg {
 			// TODO: figure out what it takes 
 			void updateHeightMap();
 			void loadData(string inputfile);
+
+			void print();
 			
 	};
 }

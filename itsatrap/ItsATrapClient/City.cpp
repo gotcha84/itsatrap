@@ -340,4 +340,8 @@ namespace sg {
 
 	}
 
+	void City::print() {
+		cout << "(" << this->getObjectID() << " City: " << this->getName() << ")";
+	}
+
 }

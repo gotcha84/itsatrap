@@ -8,6 +8,12 @@ namespace sg {
 		this->setColor(glm::vec3(1,1,1));
 	}
 
+	Player::Player(glm::vec3 pos) {
+		m_player = new MyPlayer(pos);
+		this->setPlayerID(0);
+		this->setColor(glm::vec3(1,1,1));
+	}
+
 	Player::Player(MyPlayer *p) {
 		m_player = p;
 	}

@@ -9,13 +9,11 @@ extern ClientInstance *client; // 'client' is a global var in main.cpp
 void testAddObject(int id, float x, float y, float z, int type)
 {
 	// MEMORY LEAK POSSIBILITY!
-	sg::MatrixTransform *obj1 = new sg::MatrixTransform();
-	client->root->addChild(obj1);
 	if (type == 0) {
-		sg::Player *player = new sg::Player();
+		sg::Player *player = new sg::Player(glm::vec3(x, y, z));
 		player->setPlayerID(id);
 		player->setColor(glm::vec3(1,1,1));
-		player->moveTo(glm::vec3(x, y, z));
+		//player->moveTo(glm::vec3(x, y, z));
 		player->lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
 		client->addPlayer(player);
 
@@ -40,7 +38,9 @@ void testUpdate(int id, float x, float y, float z, int type)
 	}
 
 	if (type == 0) {
-		client->players[id]->setMatrix(glm::translate(glm::vec3(x,y,z)));
+		if (glm::vec3(x,y,z) == client->players[id]->getPosition()) {
+			client->players[id]->moveTo(glm::vec3(x,y,z));
+		}
 	}
 	else if (type == 1) {
 		// ITS A TRAP!!
@@ -53,6 +53,8 @@ void testUpdate(int id, float x, float y, float z, int type)
 // If the object's id doesn't exist, create a new one object with that id
 void testUpdateWorld(WorldState *world)
 {
+	//world->printWorld();
+
 	for (int i = 0; i < world->getSize(); i++)
 	{
 		int id = world->getEntryAt(i).objectId;

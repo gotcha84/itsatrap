@@ -21,6 +21,9 @@ ClientInstance *client;
 Window *window;
 
 int main(int argc, char *argv[]) {
+
+	Sleep(1000);
+
 	// Initialize networking for client
 	Client::initializeClient();
 	client = new ClientInstance(Client::getPlayerId());

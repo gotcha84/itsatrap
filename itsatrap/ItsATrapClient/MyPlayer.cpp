@@ -2,8 +2,6 @@
 #include "Client.h"
 
 MyPlayer::MyPlayer() {
-	m_cam = new Camera();
-
 	m_modelMatrix = glm::mat4();
 	m_modelviewMatrix = glm::mat4();
 	m_projectionMatrix = glm::mat4();
@@ -17,7 +15,26 @@ MyPlayer::MyPlayer() {
 	m_xSlowWalkFactor = 1.0f;
 	m_zSlowWalkFactor = 1.0f;
 
+	m_cam = new Camera();
 	m_physics = new Physics();
+}
+
+MyPlayer::MyPlayer(glm::vec3 pos) {
+	m_modelMatrix = glm::mat4();
+	m_modelviewMatrix = glm::mat4();
+	m_projectionMatrix = glm::mat4();
+	m_viewportMatrix = glm::mat4();
+
+	setProjectionMatrix();
+	setViewportMatrix();
+
+	m_xWalkFactor = 2.0f;
+	m_zWalkFactor = 2.0f;
+	m_xSlowWalkFactor = 1.0f;
+	m_zSlowWalkFactor = 1.0f;
+
+	m_cam = new Camera(pos);
+	m_physics = new Physics(pos);
 }
 
 MyPlayer::~MyPlayer() {
@@ -33,7 +50,7 @@ Camera *MyPlayer::getCamera() {
 }
 
 glm::vec3 MyPlayer::getPosition() {
-	return getCamera()->getCameraCenter();
+	return this->getPhysics()->m_position;
 }
 
 Physics *MyPlayer::getPhysics() {
@@ -117,9 +134,8 @@ void MyPlayer::handleMovement(unsigned char key) {
 	// placeholder for:
 
 	//cout << "goTo: " << glm::to_string(proposedNewPos) << endl;
-	glm::vec3 newPos = m_physics->handleCollisionDetection(proposedNewPos);
-	
-	//glm::vec3 newPos = proposedNewPos;
+	//glm::vec3 newPos = m_physics->handleCollisionDetection(proposedNewPos);
+	glm::vec3 newPos = proposedNewPos;
 
 	//glm::vec3 moved = newPos - oldPos;
 	//cout << "moved: " << glm::to_string(moved) << endl;
@@ -132,14 +148,17 @@ void MyPlayer::handleMovement(unsigned char key) {
 	glm::vec3 moved = m_physics->m_position - oldPos;
 
 	// people are 4 feet tall apparently
-	m_cam->m_cameraCenter = glm::vec3(m_physics->m_position.x, m_physics->m_position.y+4.0f, m_physics->m_position.z);
-
+	m_cam->m_cameraCenter = glm::vec3(m_physics->m_position.x, m_physics->m_position.y/*+4.0f*/, m_physics->m_position.z);
+	//cout << "before: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
+	
 	m_cam->m_cameraLookAt+=moved;
+	//cout << "after: " << glm::to_string(m_cam->m_cameraLookAt) << endl << endl;
 	//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 	m_cam->updateCameraMatrix();
 
 	this->setModelMatrix(glm::translate(m_physics->m_position));
 	Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
+	//cout << glm::to_string(newPos) << endl;
 }
 
 void MyPlayer::updateModelViewMatrix() {

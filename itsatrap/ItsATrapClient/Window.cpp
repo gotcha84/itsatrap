@@ -44,10 +44,6 @@ void Window::reshapeCallback(int w, int h)
 void Window::displaySceneGraph(void)
 {	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
-
-	// updates player view
-	client->root->getPlayer()->updateModelViewMatrix(); // andre added this line
-	client->root->draw();
 	
 	// andre added below if sattements
 	if (client->m_xAngleChange != 0.0f) {
@@ -71,16 +67,29 @@ void Window::displaySceneGraph(void)
 		}
 		client->m_yAngleChange = 0.0f;
 	}*/
-
+	/*
+	cout << "lookat: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraLookAt) << endl;
+	cout << "center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;
+	cout << "lookup: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraUp) << endl << endl;
+	*/
 	// TODO: move to player class?
 	client->root->getPlayer()->getPhysics()->applyGravity();
 	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - client->root->getPlayer()->getCamera()->m_cameraCenter;
-	moved.y += 4.0f;
+	//moved.y += 4.0f;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
 	client->root->getPlayer()->getCamera()->m_cameraCenter = client->root->getPlayer()->getPhysics()->m_position;
 	client->root->getPlayer()->getCamera()->m_cameraCenter.y += 4.0f;
+	client->root->getPlayer()->getCamera()->m_cameraLookAt.y += 4.0f;
 	//client->root->getPlayer()->getCamera()->updateCameraMatrix();
 	//cout << "cam is: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_position) << endl;
+
+	// updates player view
+	client->root->getPlayer()->getCamera()->updateCameraMatrix();
+	client->root->getPlayer()->updateModelViewMatrix(); // andre added this line
+	client->root->draw();
+
+	client->root->getPlayer()->getCamera()->m_cameraCenter.y -= 4.0f;
+	client->root->getPlayer()->getCamera()->m_cameraLookAt.y -= 4.0f;
 
 	glFlush();  
 	glutSwapBuffers();

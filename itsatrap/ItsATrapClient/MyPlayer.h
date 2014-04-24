@@ -37,6 +37,7 @@ class MyPlayer {
 		float m_zSlowWalkFactor;
 
 		MyPlayer();
+		MyPlayer(glm::vec3 pos);
 		~MyPlayer();
 
 		Camera *getCamera();

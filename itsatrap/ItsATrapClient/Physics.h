@@ -39,6 +39,7 @@ class Physics {
 
 		// TODO: find correct sizes
 		Physics();
+		Physics(glm::vec3 pos);
 		~Physics();
 
 		glm::vec3 falling();

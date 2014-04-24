@@ -13,6 +13,7 @@ namespace sg {
 			glm::vec3 m_color;
 
 			Player();
+			Player(glm::vec3 pos);
 			Player(MyPlayer *p);
 			~Player();
 
