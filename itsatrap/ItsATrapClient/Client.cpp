@@ -88,7 +88,7 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			{
 				// World update. 
 				// This variable 'world' is the world given by the server
-				WorldState world(p);
+				DynamicWorld world(p);
 				testUpdateWorld(&world);
 			}
 		}
@@ -141,4 +141,18 @@ int Client::sendMsg(char * msg, int len) {
 int Client::getPlayerId()
 {
 	return playerId;
+}
+
+void Client::sendStaticObject(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
+{
+	struct staticObjectPacket packet;
+	packet.eventId = STATIC_OBJECT_CREATION_EVENT;
+	packet.object.minX = minX;
+	packet.object.minY = minY;
+	packet.object.minZ = minZ;
+	packet.object.maxX = maxX;
+	packet.object.maxY = maxY;
+	packet.object.maxZ = maxZ;
+
+	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
 }

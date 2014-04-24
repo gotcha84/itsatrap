@@ -38,7 +38,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -77,11 +77,14 @@
     <ClInclude Include="NetworkConfig.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="StateEntry.h" />
-    <ClInclude Include="WorldState.h" />
+    <ClInclude Include="DynamicObject.h" />
+    <ClInclude Include="DynamicWorld.h" />
+    <ClInclude Include="StaticObject.h" />
+    <ClInclude Include="StaticWorld.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WorldState.cpp" />
+    <ClCompile Include="DynamicWorld.cpp" />
+    <ClCompile Include="StaticWorld.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

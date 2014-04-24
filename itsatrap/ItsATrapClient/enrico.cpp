@@ -51,16 +51,16 @@ void testUpdate(int id, float x, float y, float z, int type)
 // This function works like this:
 // If the object's id exists, update its location
 // If the object's id doesn't exist, create a new one object with that id
-void testUpdateWorld(WorldState *world)
+void testUpdateWorld(DynamicWorld *world)
 {
 	//world->printWorld();
 
 	for (int i = 0; i < world->getSize(); i++)
 	{
-		int id = world->getEntryAt(i).objectId;
-		float x = world->getEntryAt(i).x;
-		float y = world->getEntryAt(i).y;
-		float z = world->getEntryAt(i).z;
+		int id = world->getObjectAt(i).objectId;
+		float x = world->getObjectAt(i).x;
+		float y = world->getObjectAt(i).y;
+		float z = world->getObjectAt(i).z;
 
 		testUpdate(id, x, y, z, 0);
 		//{

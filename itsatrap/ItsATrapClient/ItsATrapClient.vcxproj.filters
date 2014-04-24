@@ -16,9 +16,6 @@
     <Filter Include="Source Files\Networking">
       <UniqueIdentifier>{27294754-8839-45ae-adca-5d7f92f7080e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Networking">
-      <UniqueIdentifier>{b52c816c-9497-4257-bff8-17e818fbd0ff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\SceneGraph">
       <UniqueIdentifier>{20da5d12-f479-469c-b1ec-7cbdd039433a}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="SceneGraph">
       <UniqueIdentifier>{f018f9e0-9e2c-4cdd-b8f9-a875dc9919b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Networking">
+      <UniqueIdentifier>{b52c816c-9497-4257-bff8-17e818fbd0ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,9 +46,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ClientInstance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AABB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Physics.cpp">
@@ -99,13 +96,16 @@
     <ClCompile Include="Building.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Client.h">
-      <Filter>Networking</Filter>
+      <Filter>Header Files\Networking</Filter>
     </ClInclude>
     <ClInclude Include="MyPlayer.h">
       <Filter>Header Files</Filter>
@@ -114,9 +114,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ClientInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Physics.h">
@@ -159,6 +156,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

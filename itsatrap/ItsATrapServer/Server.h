@@ -12,8 +12,10 @@
 #include "Packet.h"
 #include "NetworkConfig.h"
 #include "Player.h"
-#include "WorldState.h"
-#include "StateEntry.h"
+#include "DynamicWorld.h"
+#include "DynamicObject.h"
+#include "StaticObject.h"
+#include "StaticWorld.h"
 
 using namespace std;
 
@@ -41,16 +43,17 @@ private:
 	static int					playerCount;
 	static struct bufferEntry	packetBuffer[PACKET_BUFFER_SIZE];
 	static int					packetBufferCount;
-	static WorldState			worldState;
+	static DynamicWorld			dynamicWorld;
+	static StaticWorld			staticWorld;
 
 	// Functions
 	static int initialize();
-	static void processMsg(char *, struct sockaddr_in *);
+	static void processIncomingMsg(char *, struct sockaddr_in *);
 	static int receiveMsg(char *, struct sockaddr_in *);
 	static int sendMsg(char *, int, struct sockaddr_in *);
-	static DWORD WINAPI processBufferThread(LPVOID);
+	static DWORD WINAPI bufferProcessorThread(LPVOID);
 	static void processBuffer();
-	static void broadcastWorldState();
+	static void broadcastDynamicWorld();
 
 public:
 

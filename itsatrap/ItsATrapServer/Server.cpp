@@ -11,7 +11,8 @@ Player				Server::players[MAX_PLAYERS];
 int					Server::playerCount;
 struct bufferEntry	Server::packetBuffer[PACKET_BUFFER_SIZE];
 int					Server::packetBufferCount;
-WorldState			Server::worldState;
+DynamicWorld		Server::dynamicWorld;
+StaticWorld			Server::staticWorld;
 
 
 
@@ -28,7 +29,7 @@ int Server::startServer()
 	while(1) {
 		struct sockaddr_in source;
 		if (Server::receiveMsg(c_msg, &source) == 0)	
-			Server::processMsg(c_msg, &source);
+			Server::processIncomingMsg(c_msg, &source);
 	}
 }
 
@@ -62,13 +63,13 @@ int Server::initialize() {
 	}
 
 	DWORD tmp;
-	CreateThread(NULL, 0, processBufferThread, NULL, 0, &tmp);
+	CreateThread(NULL, 0, bufferProcessorThread, NULL, 0, &tmp);
 
 	return 0;
 }
 
 // Server processes a given message
-void Server::processMsg(char * msg, struct sockaddr_in *source) {
+void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	// TODO (ktngo): Bad practice. Move away from using structs
 	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
@@ -104,6 +105,12 @@ void Server::processMsg(char * msg, struct sockaddr_in *source) {
 			printf("[SERVER]: Too many players!\n");
 		}
 	}
+	else if (p->eventId == STATIC_OBJECT_CREATION_EVENT)
+	{
+		struct staticObjectPacket *staticObjPkt = (struct staticObjectPacket *)p;
+		staticWorld.addObject(staticObjPkt->object);
+		staticWorld.printWorld();
+	}
 	else
 	{
 		// TODO: NEED MUTEX LOCK
@@ -113,7 +120,7 @@ void Server::processMsg(char * msg, struct sockaddr_in *source) {
 	}
 }
 
-DWORD WINAPI Server::processBufferThread(LPVOID param)
+DWORD WINAPI Server::bufferProcessorThread(LPVOID param)
 {
 	printf("[SERVER]: Process buffer thread started\n");
 	while (1)
@@ -123,10 +130,10 @@ DWORD WINAPI Server::processBufferThread(LPVOID param)
 	}
 }
 
-void Server::broadcastWorldState()
+void Server::broadcastDynamicWorld()
 {
 	char *buf;
-	int size = worldState.serialize(&buf);
+	int size = dynamicWorld.serialize(&buf);
 
 	for (int i = 0; i < playerCount; i++)
 	{
@@ -149,7 +156,7 @@ void Server::processBuffer()
 			{
 				// Update player state
 				struct singleStateUpdatePacket *updatePacket = (struct singleStateUpdatePacket *)p;
-				worldState.updateEntry(updatePacket->entry);
+				dynamicWorld.updateObject(updatePacket->entry);
 
 				break;
 			}
@@ -162,8 +169,8 @@ void Server::processBuffer()
 
 	packetBufferCount = 0;
 
-	if (worldState.getSize() > 0)
-			broadcastWorldState();
+	if (dynamicWorld.getSize() > 0)
+			broadcastDynamicWorld();
 
 	// TODO: NEED MUTEX UNLOCK
 }
