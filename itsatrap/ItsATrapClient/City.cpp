@@ -319,7 +319,7 @@ namespace sg {
 
 			Building *newChild = new Building(j);
 			addChild(newChild);
-			m_numBuildings+=1;
+			m_numBuildings++;
 			added++;
 		
 
@@ -327,8 +327,10 @@ namespace sg {
 			// TODO delete
 		}
 
-		/*Utilities::writeIntArrayToFile(m_nVertices, 100, "nverts.txt");
-		Utilities::writeFloatArrayToFile(m_vertices[7], 10000, "verts7.txt");*/
+		/*
+		Utilities::writeIntArrayToFile(m_nVertices, 100, "nverts.txt");
+		Utilities::writeFloatArrayToFile(m_vertices[7], 10000, "verts7.txt");
+		*/
 		
 		updateHeightMap();
 
@@ -337,9 +339,5 @@ namespace sg {
 		}
 
 	}
-
-	//void Window::drawShape(int nVerts, vector<float> vertices, vector<float> normals, vector<float> texcoords) {
-
-
 
 }

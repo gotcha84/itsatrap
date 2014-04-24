@@ -1,6 +1,7 @@
 #include "PlayerNode.h"
 
 namespace sg {
+
 	Player::Player() {
 		m_player = new MyPlayer();
 	}
@@ -78,4 +79,5 @@ namespace sg {
 	void Player::print() {
 		cout << "(" << this->getObjectID() << " Player p" << this->getPlayerID() << ": " << this->getName() << ")";
 	}
+
 }

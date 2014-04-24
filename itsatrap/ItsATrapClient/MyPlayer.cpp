@@ -1,5 +1,4 @@
 #include "MyPlayer.h"
-#include "Client.h"
 
 MyPlayer::MyPlayer() {
 	m_cam = new Camera();

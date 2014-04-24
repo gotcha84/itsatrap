@@ -42,7 +42,9 @@ namespace sg {
 		int max_ele = 10000;
 		
 		sg::City* myParent = (sg::City*)getParent();
-		/*if (m_id % 6 == 0) {
+
+		// if city and want colorful buildings!
+		if (m_id % 6 == 0) {
 			glColor3f(0, 0, 1);
 		}
 		if (m_id % 6 == 1) {
@@ -59,7 +61,7 @@ namespace sg {
 		}
 		if (m_id % 6 == 5) {
 			glColor3f(1, 1, 0);
-		}*/
+		}
 
 		//glColor3f(((m_id%8)%4)%2, (m_id%4)%2, m_id%2);
 		for (int i = 0; i < myParent->m_nIndices[m_id]/3; i++) {
@@ -95,8 +97,11 @@ namespace sg {
 		//cout << max_ele << endl;	
 	}
 
-	void Building::calculateBoundingBox() {
+	void Building::print() {
+		cout << "(" << this->getObjectID() << " Building " << m_id << ": " << this->getName() << ")";
+	}
 
+	void Building::calculateBoundingBox() {
 		sg::City* myParent = (sg::City*)getParent();
 
 		float minx = FLT_MAX;
@@ -140,26 +145,22 @@ namespace sg {
 			cout << "maxx: " << maxx << endl;
 			cout << "maxy: " << maxy << endl;
 			cout << "maxz: " << maxz << endl;
-		}
-		*/
+		}*/
+		
 		m_boundingBox.setAABB(minx, miny, minz, maxx, maxy, maxz);
 	}
 
-	// TODO: find better fix for road
-	bool Building::isInside(glm::vec3 goTo) {
+	bool Building::isInside(glm::vec3 point) {		
 		if (m_id == 40) {
 			return false;
 		}
 		else {
-			/*cout << "m_id: " << m_id << endl;
-			cout << "mins: " << m_boundingBox.m_minX << ", " << m_boundingBox.m_minY << ", " << m_boundingBox.m_minZ << endl;
-			cout << "maxs: " << m_boundingBox.m_maxX << ", " << m_boundingBox.m_maxY << ", " << m_boundingBox.m_maxZ << endl;
-			cout << "goto: " << glm::to_string(goTo) << endl;*/
-			return (m_boundingBox.inside(goTo));
+			//cout << "m_id: " << m_id << endl;
+			//cout << "mins: " << m_boundingBox.m_minX << ", " << m_boundingBox.m_minY << ", " << m_boundingBox.m_minZ << endl;
+			//cout << "maxs: " << m_boundingBox.m_maxX << ", " << m_boundingBox.m_maxY << ", " << m_boundingBox.m_maxZ << endl;
+			//cout << "goto: " << glm::to_string(point) << endl;
+			return (m_boundingBox.inside(point));
 		}
 	}
 
-	void Building::print() {
-		cout << "(" << this->getObjectID() << " Building: " << this->getName() << ")";
-	}
 }

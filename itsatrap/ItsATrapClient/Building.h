@@ -11,7 +11,6 @@
 
 #include "Geode.h"
 #include "World.h"
-#include "AABB.h"
 #include "City.h"
 
 using namespace std;
@@ -19,7 +18,6 @@ using namespace std;
 namespace sg {
 	class Building : public Geode {
 		public:
-			AABB m_boundingBox;
 			int m_id;
 
 			Building(int id);
@@ -30,9 +28,9 @@ namespace sg {
 			void drawShape();
 
 			void print();
-
+			
 			void calculateBoundingBox();
-			bool isInside(glm::vec3);
+			bool isInside(glm::vec3 point);
 	};
 }
 

@@ -57,23 +57,31 @@ void Physics::applyGravity() {
 // TODO: make it so you move right into the wall even if presing w would make you go past it, not just not move at all if you would
 // move into the wall
 glm::vec3 Physics::handleCollisionDetection(glm::vec3 goTo) {
-	//cout << client.root->getNumChildren() << endl;
-	sg::City* city = (sg::City*)client.root->m_child[1];
-
-	bool tmp;
-	for (int i = 0; i < city->getNumChildren(); i++) {
-		tmp = ((sg::Building*)city->m_child[i])->isInside(goTo);
-		//cout << "TMP IS: " << tmp << endl;
-		if (tmp) {
-			cout << "i: " << i << ", COLLISION DETECTED" << endl;
-			cout << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minX << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minY << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minZ << endl;
-			cout << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxX << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxY << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxZ << endl;
-			cout << "goTo: " << glm::to_string(goTo) << endl << endl;
-			return m_position;
+	sg::City* city;
+	
+	for (int i=0; i < client.root->getNumChildren(); i++) {
+		city = dynamic_cast<sg::City*>(client.root->m_child[i]);
+		if (city != nullptr) {
+			break;
 		}
-	
 	}
+
+	bool tmp = false;
+	for (int i = 0; i < city->getNumChildren(); i++) {
+		sg::Building *b = dynamic_cast<sg::Building*>(city->m_child[i]);
+		if (b != nullptr) {
+			tmp = b->isInside(goTo);
+		}
+		
+		if (tmp) {
+			//cout << "i: " << i << ", COLLISION DETECTED" << endl;
+			//cout << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minX << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minY << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minZ << endl;
+			//cout << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxX << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxY << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxZ << endl;
+			//cout << "goTo: " << glm::to_string(goTo) << endl << endl;
+			return m_position;
+		}	
+	}
+
 	return goTo;
-	
 }
 
