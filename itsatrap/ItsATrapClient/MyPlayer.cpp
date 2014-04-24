@@ -123,9 +123,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 		case 'd':
 			proposedNewPos = m_physics->m_position + xWalkFactor*m_cam->m_camX;
-			break;		
-
-
+			break;
 	}
 	
 	// collision detection
