@@ -70,19 +70,22 @@ int main(int argc, char *argv[]) {
 	//Client::sendStateUpdate(Client::getPlayerId(), starting.x, starting.y, starting.z);
 
 	// player 1
-	sg::Player p1 = *client.root;
-	p1.moveTo(glm::vec3(80.0f, 4.0f, 100.0f));
-	p1.lookIn(glm::vec3(0.0f, 0.0f, -1.0f));
+	sg::Player *p1 = client.root;
+	p1->setColor(glm::vec3(1,0,0));
+	p1->moveTo(glm::vec3(80.0f, 4.0f, 100.0f));
+	p1->lookIn(glm::vec3(0.0f, 0.0f, -1.0f));
 
 	// player 2
 	sg::Player p2 = sg::Player();
 	p2.setPlayerID(2);
+	p2.setColor(glm::vec3(0,1,0));
 	p2.moveTo(glm::vec3(90.0f, 4.0f, 0.0f));
 	p2.lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
 
 	// player 3
 	sg::Player p3 = sg::Player();
 	p3.setPlayerID(3);
+	p3.setColor(glm::vec3(0,0,1));
 	p3.moveTo(glm::vec3(100.0f, 4.0f, 50.0f));
 	p3.lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
 

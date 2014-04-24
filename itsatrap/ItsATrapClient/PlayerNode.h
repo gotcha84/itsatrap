@@ -10,10 +10,14 @@ namespace sg {
 		public:
 			int m_playerID;
 			MyPlayer *m_player;
+			glm::vec3 m_color;
 
 			Player();
 			Player(MyPlayer *p);
 			~Player();
+
+			void setColor(glm::vec3 color);
+			glm::vec3 getColor();
 
 			MyPlayer *getPlayer();
 			Camera *getCamera();

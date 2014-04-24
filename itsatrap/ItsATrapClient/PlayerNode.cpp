@@ -4,6 +4,8 @@ namespace sg {
 
 	Player::Player() {
 		m_player = new MyPlayer();
+		this->setPlayerID(0);
+		this->setColor(glm::vec3(1,1,1));
 	}
 
 	Player::Player(MyPlayer *p) {
@@ -13,6 +15,14 @@ namespace sg {
 	Player::~Player() {
 		delete m_player;
 		m_player = nullptr;
+	}
+
+	void Player::setColor(glm::vec3 color) {
+		m_color = color;
+	}
+
+	glm::vec3 Player::getColor() {
+		return m_color;
 	}
 
 	MyPlayer *Player::getPlayer() {
@@ -55,7 +65,7 @@ namespace sg {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
-			glColor3f(1,1,1);
+			glColor3f(this->getColor().x, this->getColor().y, this->getColor().z);
 			glutSolidSphere(10, 10, 10);
 		glPopMatrix();
 	}
