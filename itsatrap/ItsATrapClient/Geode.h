@@ -7,6 +7,7 @@
 
 #include "Node.h"
 #include "AABB.h"
+#include "Texture.h"
 
 namespace sg {
 
@@ -14,6 +15,9 @@ namespace sg {
 		public:
 			glm::vec3 color;
 			AABB m_boundingBox;
+			
+			Texture *texture;
+			GLuint texturePPM;
 
 			Geode();
 			~Geode();

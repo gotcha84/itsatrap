@@ -1,6 +1,7 @@
 #include "Building.h"
 
 namespace sg {
+	
 
 	Building::Building(int id) {
 		m_id = id;
@@ -33,14 +34,20 @@ namespace sg {
 	}
 
 	void Building::drawShape() {
-	
+		
+		glEnable(GL_TEXTURE_2D);
+
 		//cout << "nverts is : " << m_nIndices[0] << endl;
 		int p = 0;
 		int k = 0;
 		int l = 0;
+		int t = 0;
 		//cout << m_nm_indices << endl;
 		int max_ele = 10000;
-		
+			
+		// bind texture here
+		glBindTexture(GL_TEXTURE_2D, texturePPM);
+
 		sg::City* myParent = (sg::City*)getParent();
 
 		// if city and want colorful buildings!
@@ -88,8 +95,9 @@ namespace sg {
 			glBegin(GL_TRIANGLES);
 			for (int j = 0; j < 3; j++) {
 				glNormal3f(myParent->m_normals[m_id][3*myParent->m_indices[m_id][3*i+j]], myParent->m_normals[m_id][3*myParent->m_indices[m_id][3*i+j]+1], myParent->m_normals[m_id][3*myParent->m_indices[m_id][3*i+j]+2]);
+				glTexCoord2f(myParent->m_texcoords[m_id][2*myParent->	m_indices[m_id][t]], myParent->m_texcoords[m_id][2*myParent->m_indices[m_id][t]+1]);
 				glVertex3f(myParent->m_vertices[m_id][3*myParent->m_indices[m_id][3*i+j]], myParent->m_vertices[m_id][3*myParent->m_indices[m_id][3*i+j]+1], myParent->m_vertices[m_id][3*myParent->m_indices[m_id][3*i+j]+2]);
-
+				t++;
 			}
 			glEnd();
 		}

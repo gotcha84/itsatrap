@@ -4,10 +4,13 @@ namespace sg {
 
 	Geode::Geode() {
 		color = glm::vec3(1,0,0);
+		texture = new Texture();
+		texturePPM = texture->loadTexture("building1.ppm");
 	}
 
 	Geode::~Geode() {
-
+		delete texture;
+		texture = nullptr;
 	}
 
 	void Geode::print() {
@@ -26,3 +29,4 @@ namespace sg {
 	}
 
 }
+

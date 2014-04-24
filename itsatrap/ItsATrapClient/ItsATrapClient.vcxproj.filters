@@ -90,11 +90,14 @@
     <ClCompile Include="City.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
-    <ClCompile Include="Building.cpp">
-      <Filter>Source Files\SceneGraph</Filter>
-    </ClCompile>
     <ClCompile Include="enrico.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +156,9 @@
       <Filter>SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="enrico.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

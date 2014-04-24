@@ -23,8 +23,8 @@ namespace sg {
 			delete[] m_normals[i];
 			m_normals[i] = nullptr;
 
-			//delete[] m_texcoords[i];
-			//m_texcoords = nullptr;
+			delete[] m_texcoords[i];
+			m_texcoords = nullptr;
 
 			delete[] m_indices[i];
 			m_indices[i] = nullptr;
@@ -36,8 +36,8 @@ namespace sg {
 		m_nVertices = nullptr;
 		delete[] m_normals;
 		m_normals = nullptr;
-		//delete[] m_texcoords;
-		//m_texcoords = nullptr;
+		delete[] m_texcoords;
+		m_texcoords = nullptr;
 		delete[] m_indices;
 		m_indices = nullptr;
 		delete[] m_nIndices;
@@ -54,15 +54,15 @@ namespace sg {
 		m_vertices = new float*[100];
 		m_nVertices = new int[100];
 		m_normals = new float*[100];
-		//m_texcoords = new float*[100];
+		m_texcoords = new float*[100];
 		m_indices = new int*[100];
 		m_nIndices = new int[100];
 
 		for (int i = 0; i < 100; i++) {
-			m_vertices[i] = new float[10000];
-			m_normals[i] = new float[10000];
-			//m_texcoords[i] = new float[10000];
-			m_indices[i] = new int[10000];
+			m_vertices[i] = new float[1000];
+			m_normals[i] = new float[1000];
+			m_texcoords[i] = new float[1000];
+			m_indices[i] = new int[1000];
 		}
 	}
 
@@ -309,11 +309,11 @@ namespace sg {
 			normalsCount += tmpNormalsCount;
 
 			// TODO textures
-			/*for (int i = 0; i < shapes[j].mesh.texcoords.size(); i++) {
-				m_Texcoords[j][i+texturesCount] = shapes[j].mesh.texcoords[i];
+			for (int i = 0; i < shapes[j].mesh.texcoords.size(); i++) {
+				m_texcoords[j][i] = shapes[j].mesh.texcoords[i];
 				tmpTexturesCount++;
 			}
-			texturesCount +=tmpTexturesCount;*/
+			texturesCount +=tmpTexturesCount;
 			m_nIndices[j] = tmpIndicesCount;
 			m_nVertices[j] = tmpVerticesCount;
 
