@@ -4,36 +4,50 @@
 
 using namespace std;
 
-extern ClientInstance client; // 'client' is a global var in main.cpp
+extern ClientInstance *client; // 'client' is a global var in main.cpp
 
-static map<int, sg::MatrixTransform *> objects;
-
-
-void testAddCube(int id, float x, float y, float z)
+void testAddObject(int id, float x, float y, float z, int type)
 {
 	// MEMORY LEAK POSSIBILITY!
 	sg::MatrixTransform *obj1 = new sg::MatrixTransform();
-	client.root->addChild(obj1);
-	sg::Cube *obj1Shape = new sg::Cube();
-	obj1->addChild(obj1Shape);
-	obj1->setMatrix(glm::translate(glm::vec3(x,y,z)) * glm::scale(glm::vec3(10,10,10)));
+	client->root->addChild(obj1);
+	if (type == 0) {
+		sg::Player *player = new sg::Player();
+		player->setPlayerID(id);
+		player->setColor(glm::vec3(1,1,1));
+		player->moveTo(glm::vec3(x, y, z));
+		player->lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
+		client->addPlayer(player);
 
-	objects[id] = obj1;
+		client->players[id] = player;
+		client->objects[id] = player;
+
+		client->printSceneGraph();
+	}
+	else if (type == 1)
+	{
+		// it's a trap!! (remember to add to map)
+	}
 }
 
 // Returns 0 if successful
-int testUpdate(int id, float x, float y, float z)
+void testUpdate(int id, float x, float y, float z, int type)
 {
-	sg::MatrixTransform *obj1 = objects[id];
+	if (client->objects[id] == nullptr) {
+		testAddObject(id, x, y, z, type);
+		cout << "player added with id " << id << endl;
+		cout << glm::to_string(client->root->getPosition()) << endl;
+	}
 
-	if (obj1 == NULL)
-		return 1;
-
-	obj1->setMatrix(glm::translate(glm::vec3(x,y,z)) * glm::scale(glm::vec3(10,10,10)));
-	return 0;
+	if (type == 0) {
+		client->players[id]->setMatrix(glm::translate(glm::vec3(x,y,z)));
+	}
+	else if (type == 1) {
+		// ITS A TRAP!!
+	}
 }
 
-// The argument 'world' contains objects information, such as id, x, y, z.
+// The argument 'world' contains client->objects information, such as id, x, y, z.
 // This function works like this:
 // If the object's id exists, update its location
 // If the object's id doesn't exist, create a new one object with that id
@@ -46,12 +60,12 @@ void testUpdateWorld(WorldState *world)
 		float y = world->getEntryAt(i).y;
 		float z = world->getEntryAt(i).z;
 
-		if (testUpdate(id, x, y, z))
-		{
+		testUpdate(id, x, y, z, 0);
+		//{
 			// If the id is playerId, do not render because we don't want to render our own player.
 			// This is just temporary. playerId should not be used as objectId!
-			if (id != Client::getPlayerId()) 
-				testAddCube(id, x, y, z);
-		}
+			//if (id != Client::getPlayerId()) 
+				//testAddCube(id, x, y, z);
+		//}
 	}
 }

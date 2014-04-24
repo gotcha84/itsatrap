@@ -1,7 +1,7 @@
 #include "Physics.h"
 #include "ClientInstance.h"
 
-extern ClientInstance client;
+extern ClientInstance *client;
 
 Physics::Physics() {
 
@@ -59,8 +59,8 @@ void Physics::applyGravity() {
 glm::vec3 Physics::handleCollisionDetection(glm::vec3 goTo) {
 	sg::City* city;
 	
-	for (int i=0; i < client.root->getNumChildren(); i++) {
-		city = dynamic_cast<sg::City*>(client.root->m_child[i]);
+	for (int i=0; i < client->root->getNumChildren(); i++) {
+		city = dynamic_cast<sg::City*>(client->root->m_child[i]);
 		if (city != nullptr) {
 			break;
 		}

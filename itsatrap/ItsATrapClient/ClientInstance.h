@@ -13,6 +13,7 @@
 class ClientInstance {
 	public:
 		unordered_map<int,sg::Player*> players;
+		unordered_map<int, sg::Node*> objects;
 		sg::Player *root;
 
 		int m_xMouse, m_yMouse; // mouse position
@@ -20,6 +21,7 @@ class ClientInstance {
 		float m_xAngleChangeFactor, m_yAngleChangeFactor;
 
 		ClientInstance();
+		ClientInstance(int id);
 		~ClientInstance();
 
 		bool addPlayer(sg::Player *p);

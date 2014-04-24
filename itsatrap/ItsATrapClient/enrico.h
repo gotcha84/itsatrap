@@ -16,8 +16,8 @@
 #include "Client.h"
 #include "WorldState.h"
 
-void testAddCube(int id, float x, float y, float z);
-int testUpdate(int id, float x, float y, float z);
+void testAddObject(int id, float x, float y, float z, int type);
+void testUpdate(int id, float x, float y, float z, int type);
 void testUpdateWorld(WorldState *world);
 
 #endif

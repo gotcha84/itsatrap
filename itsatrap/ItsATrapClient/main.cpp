@@ -15,19 +15,27 @@
 #include "Client.h"
 
 // Test
-//#include "enrico.h"
+#include "enrico.h"
 
-ClientInstance client = ClientInstance();
-Window window = Window();
+ClientInstance *client;
+Window *window;
 
 int main(int argc, char *argv[]) {
+	// Initialize networking for client
+	Client::initializeClient();
+	client = new ClientInstance(Client::getPlayerId());
+	window = new Window();
+	glm::vec3 starting = client->root->getPosition();
+	
+	Client::sendStateUpdate(Client::getPlayerId(), starting.x, starting.y, starting.z);
+
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
 	float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
 
 	glutInit(&argc, argv);                      // initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
-	glutInitWindowSize(window.m_width, window.m_height);      // set initial window size
+	glutInitWindowSize(window->m_width, window->m_height);      // set initial window size
 	glutCreateWindow("It's a Trap!");           // open window and set window title
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
@@ -49,54 +57,49 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_LIGHT0);
 	
 	// Install callback functions:
-	//glutDisplayFunc(window.displayCallback);
-	glutDisplayFunc(window.displaySceneGraph);
-	glutReshapeFunc(window.reshapeCallback);
-	glutIdleFunc(window.idleCallback);
+	//glutDisplayFunc(window->displayCallback);
+	glutDisplayFunc(window->displaySceneGraph);
+	glutReshapeFunc(window->reshapeCallback);
+	glutIdleFunc(window->idleCallback);
 
 	// to avoid cube turning white on scaling down
 	glEnable(GL_NORMALIZE);
 
 	// Process input
-	glutKeyboardFunc(window.processNormalKeys);
-	glutPassiveMotionFunc(window.processMouseMove);
+	glutKeyboardFunc(window->processNormalKeys);
+	glutPassiveMotionFunc(window->processMouseMove);
 
 	// hide mouse cursor
 	//glutSetCursor(GLUT_CURSOR_NONE);
 
-	// Initialize networking for client
-	//Client::initializeClient();
-	glm::vec3 starting = client.root->getPosition();
-	//Client::sendStateUpdate(Client::getPlayerId(), starting.x, starting.y, starting.z);
-
 	// player 1
-	sg::Player *p1 = client.root;
-	p1->setColor(glm::vec3(1,0,0));
-	p1->moveTo(glm::vec3(80.0f, 4.0f, 100.0f));
-	p1->lookIn(glm::vec3(0.0f, 0.0f, -1.0f));
+	//sg::Player *p1 = client->root;
+	client->root->setColor(glm::vec3(1,0,0));
+	client->root->moveTo(glm::vec3(80.0f, 4.0f, 100.0f));
+	client->root->lookIn(glm::vec3(0.0f, 0.0f, -1.0f));
 
-	// player 2
-	sg::Player p2 = sg::Player();
-	p2.setPlayerID(2);
-	p2.setColor(glm::vec3(0,1,0));
-	p2.moveTo(glm::vec3(90.0f, 4.0f, 0.0f));
-	p2.lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
+	//// player 2
+	//sg::Player p2 = sg::Player();
+	//p2.setPlayerID(2);
+	//p2.setColor(glm::vec3(0,1,0));
+	//p2.moveTo(glm::vec3(90.0f, 4.0f, 0.0f));
+	//p2.lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
 
-	// player 3
-	sg::Player p3 = sg::Player();
-	p3.setPlayerID(3);
-	p3.setColor(glm::vec3(0,0,1));
-	p3.moveTo(glm::vec3(100.0f, 4.0f, 50.0f));
-	p3.lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
+	//// player 3
+	//sg::Player p3 = sg::Player();
+	//p3.setPlayerID(3);
+	//p3.setColor(glm::vec3(0,0,1));
+	//p3.moveTo(glm::vec3(100.0f, 4.0f, 50.0f));
+	//p3.lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
 
 	// add players	
-	client.addPlayer(&p2);
-	client.addPlayer(&p3);
+	//client->addPlayer(&p2);
+	//client->addPlayer(&p3);
 
 	// ground nodes
 	sg::MatrixTransform ground = sg::MatrixTransform();
 	ground.setName("ground");
-	//client.root->addChild(&ground);
+	//client->root->addChild(&ground);
 	sg::Cube groundShape = sg::Cube();
 	groundShape.setName("ground");
 	ground.addChild(&groundShape);
@@ -106,23 +109,28 @@ int main(int argc, char *argv[]) {
 	// cube nodes
 	sg::MatrixTransform obj1 = sg::MatrixTransform();
 	obj1.setName("cube");
-	//client.root->addChild(&obj1);
+	//client->root->addChild(&obj1);
 	sg::Cube obj1Shape = sg::Cube();
 	obj1Shape.setName("cube");
 	obj1.addChild(&obj1Shape);
 	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));
 
-	//testAddCube(7, 90, 30, 0);
-
 	sg::City city = sg::City();
 	city.loadData("city.obj");
 	//city.loadData("Can.obj");
-	client.root->addChild(&city);
+	client->root->addChild(&city);
 
-	client.printPlayers();
-	client.printSceneGraph();
+	//testAddCube(7, 90, 30, 0);
+
+	client->printPlayers();
+	client->printSceneGraph();
 
 	glutMainLoop();
+
+	delete client;
+	client = nullptr;
+	delete window;
+	window = nullptr;
 
 	return 0;
 }

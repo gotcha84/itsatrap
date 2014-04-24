@@ -119,7 +119,7 @@ DWORD WINAPI Server::processBufferThread(LPVOID param)
 	while (1)
 	{
 		processBuffer();
-		Sleep(1000);
+		Sleep(33);
 	}
 }
 
@@ -189,7 +189,7 @@ int Server::sendMsg(char * msg, int len, struct sockaddr_in *destination) {
 		return 1;
 	}
 
-	printf("[SERVER]: Sent a packet of length %d\n", len);
+	//printf("[SERVER]: Sent a packet of length %d\n", len);
 
 	return 0;
 }

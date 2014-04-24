@@ -111,8 +111,6 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	}
 	
-	//Client::sendStateUpdate(Client::getPlayerId(), proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
-	
 	// collision detection
 	glm::vec3 oldPos = m_physics->m_position;
 
@@ -141,6 +139,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 	m_cam->updateCameraMatrix();
 
 	this->setModelMatrix(glm::translate(m_physics->m_position));
+	Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
 }
 
 void MyPlayer::updateModelViewMatrix() {
