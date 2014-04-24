@@ -22,8 +22,8 @@ namespace sg {
 
 			void draw(glm::mat4 parent, glm::mat4 cam) = 0;
 
-			//virtual void calculateBoundingBox();
-			//virtual bool isInside(glm::vec3 point);
+			virtual void calculateBoundingBox();
+			virtual bool isInside(glm::vec3 point);
 	};
 
 }

@@ -29,8 +29,8 @@ namespace sg {
 
 			void print();
 			
-			void calculateBoundingBox();
-			bool isInside(glm::vec3 point);
+			virtual void calculateBoundingBox();
+			virtual bool isInside(glm::vec3 point);
 	};
 }
 

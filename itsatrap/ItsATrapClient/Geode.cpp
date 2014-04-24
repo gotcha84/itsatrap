@@ -15,14 +15,14 @@ namespace sg {
 	}
 
 	// TODO : implement base class
-	//void Geode::calculateBoundingBox() {
+	void Geode::calculateBoundingBox() {
 
-	//}
+	}
 
-	// TODO: implement base class
-	//bool Geode::isInside(glm::vec3 goTo) {
-	//	cout << "geode isInside" << endl;
-	//	return false;
-	//}
+	// TODO : implement base class
+	bool Geode::isInside(glm::vec3 goTo) {
+		cout << "geode isInside" << endl;
+		return false;
+	}
 
 }
