@@ -41,7 +41,7 @@ namespace sg {
 		int max_ele = 10000;
 		
 		sg::City* myParent = (sg::City*)getParent();
-		if (m_id % 6 == 0) {
+		/*if (m_id % 6 == 0) {
 			glColor3f(0, 0, 1);
 		}
 		if (m_id % 6 == 1) {
@@ -58,7 +58,7 @@ namespace sg {
 		}
 		if (m_id % 6 == 5) {
 			glColor3f(1, 1, 0);
-		}
+		}*/
 
 		//glColor3f(((m_id%8)%4)%2, (m_id%4)%2, m_id%2);
 		for (int i = 0; i < myParent->m_nIndices[m_id]/3; i++) {

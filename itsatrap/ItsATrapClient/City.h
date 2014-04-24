@@ -24,6 +24,8 @@ namespace sg {
 		public: 
 			int m_heightMapXShift;
 			int m_heightMapZShift;
+			int m_numBuildings; // technically = to m_child.size() for now
+			int m_maxArraySize;
 
 			int* m_nVertices;
 			float** m_vertices;
@@ -31,7 +33,7 @@ namespace sg {
 			float** m_texcoords;
 			int** m_indices;
 			int* m_nIndices;
-
+			
 			//vector<vector<int>> m_heightMap;
 
 			City();

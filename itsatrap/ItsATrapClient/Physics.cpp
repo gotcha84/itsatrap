@@ -30,7 +30,7 @@ void Physics::applyGravity() {
 
 	// TODO: possibly check more cases
 	//if (m_currentState != PhysicsStates::Falling) {
-	
+	/*
 	
 	// TODO - uncomment once height map working with building node
 	if (World::m_heightMap[xIndex+World::m_heightMapXShift][zIndex+World::m_heightMapZShift] > m_position.y + m_gravityConstant) {
@@ -46,7 +46,7 @@ void Physics::applyGravity() {
 		m_currentState = PhysicsStates::Falling;
 	}
 	
-	
+	*/
 	//}
 
 	//cout << "exiting with position: " << glm::to_string(m_position) << endl << endl;

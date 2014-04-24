@@ -3,6 +3,8 @@
 namespace sg {
 
 	City::City() {
+		m_numBuildings = 0;
+		m_maxArraySize = 10000;
 		initArrays();
 	}
 
@@ -57,10 +59,10 @@ namespace sg {
 		m_nIndices = new int[100];
 
 		for (int i = 0; i < 100; i++) {
-			m_vertices[i] = new float[1000];
-			m_normals[i] = new float[1000];
-			//m_texcoords[i] = new float[1000];
-			m_indices[i] = new int[1000];
+			m_vertices[i] = new float[10000];
+			m_normals[i] = new float[10000];
+			//m_texcoords[i] = new float[10000];
+			m_indices[i] = new int[10000];
 		}
 	}
 
@@ -104,9 +106,10 @@ namespace sg {
 		int arr[4][2] = {{0, 1}, {0, 3}, {1, 3}, {2, 3}};  
 		//int arr[5][2] = {{0, 1}, {0, 2}, {0, 3}, {1, 3}, {2, 3}};   
 		//if (!init_heightMap) {
-		for (int k = 0; k < 46; k++) {
+		for (int k = 0; k < m_numBuildings; k++) {
 			for (int i = 0; i < m_nVertices[k]; i++) {
-				m_vertices[k][i]/=10.0f;
+				m_vertices[k][i]*=10.0f;
+				//m_vertices[k][i]/=10.0f;
 				//m_vertices[k][i]-=1.0f;
 				
 				if (i % 3 == 1) {
@@ -118,7 +121,7 @@ namespace sg {
 		//}
 
 		// TODO: fix min/max (only takes 2 args)
-		for (int l = 0; l < 46; l++) {
+		for (int l = 0; l < m_numBuildings; l++) {
 			//for (int i = 0; i < m_nVertices[l]-m_nVertices[l]%9; i+=9) { 
 			for (int i = 0; i < m_nVertices[l]-m_nVertices[l]%12; i+=12) { 
 
@@ -258,9 +261,12 @@ namespace sg {
 	*/
 
 	void City::loadData(string inputfile) {
+
 		std::vector<tinyobj::shape_t> shapes;
   
 		std::string err = tinyobj::LoadObj(shapes, inputfile.c_str());
+		
+		cout << err << endl;
   
 		int indicesCount = 0;
 		int verticesCount = 0;
@@ -272,15 +278,18 @@ namespace sg {
 		int tmpVerticesCount = 0;
 		int tmpTexturesCount = 0;
 		int tmpNormalsCount = 0;
+
+		int added = 0;
+
 		//cout << shapes.size() << endl;
-		for (int j = 0; j < 46; j++) {
+		for (int j = 0; j < shapes.size(); j++) {
 			tmpIndicesCount = 0;
 			tmpVerticesCount = 0;
 			tmpTexturesCount = 0;
 			tmpNormalsCount = 0;
 			for (int i = 0; i < shapes[j].mesh.indices.size(); i++) {
 				m_indices[j][i] = shapes[j].mesh.indices[i];
-				//cout << m_Indices[i+indicesCount] << endl;
+				//cout << m_indices[i+indicesCount] << endl;
 			
 				tmpIndicesCount++;
 			}
@@ -311,19 +320,20 @@ namespace sg {
 
 			Building *newChild = new Building(j);
 			addChild(newChild);
-
+			m_numBuildings+=1;
+			added++;
 		
 
 			//delete newChild;
 			// TODO delete
 		}
 
-		Utilities::writeIntArrayToFile(m_nVertices, 100, "nverts.txt");
-		Utilities::writeFloatArrayToFile(m_vertices[7], 1000, "verts7.txt");
+		/*Utilities::writeIntArrayToFile(m_nVertices, 100, "nverts.txt");
+		Utilities::writeFloatArrayToFile(m_vertices[7], 10000, "verts7.txt");*/
 		
 		updateHeightMap();
 
-		for (int i = 0; i < 46; i++) {
+		for (int i = 0; i < added; i++) {
 			((sg::Building*)m_child[i])->calculateBoundingBox();
 		}
 
