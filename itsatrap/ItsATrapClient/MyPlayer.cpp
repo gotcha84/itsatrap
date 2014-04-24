@@ -1,4 +1,5 @@
 #include "MyPlayer.h"
+#include "Client.h"
 
 MyPlayer::MyPlayer() {
 	m_cam = new Camera();
@@ -110,7 +111,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	}
 	
-	//Client::sendStateUpdate(Client::getPlayerId(), proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
+	Client::sendStateUpdate(Client::getPlayerId(), proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
 	
 	// collision detection
 	glm::vec3 oldPos = m_physics->m_position;
