@@ -9,10 +9,10 @@ Camera::Camera() {
 	m_camX = glm::vec3(1.0f, 0, 0);
 	m_camZ = glm::vec3(0, 0, -1.0f);
 
-	m_cameraCenter = glm::vec3(75.0f, 4.0f, 0.0f);
-	m_cameraLookAt = glm::vec3(75.0f, 4.0f, -1.0f);
-	//m_cameraCenter = glm::vec3(0.0f, 0.0f, 10.0f);
-	//m_cameraLookAt = glm::vec3(0.0f, 0.0f, 9.0f);
+	//m_cameraCenter = glm::vec3(75.0f, 4.0f, 0.0f);
+	//m_cameraLookAt = glm::vec3(75.0f, 4.0f, -1.0f);
+	m_cameraCenter = glm::vec3(0.0f, 0.0f, 0.0f);
+	m_cameraLookAt = glm::vec3(0.0f, 0.0f, -1.0f);
 	m_cameraUp = glm::vec3(0, 1.0f, 0);
 
 	updateCameraMatrix();
@@ -20,6 +20,18 @@ Camera::Camera() {
 
 glm::mat4 Camera::getCameraMatrix() {
 	return m_cameraMatrix;
+}
+
+glm::vec3 Camera::getCameraCenter() {
+	return m_cameraCenter;
+}
+
+glm::vec3 Camera::getCameraLookAt() {
+	return m_cameraLookAt;
+}
+
+glm::vec3 Camera::getCameraUp() {
+	return m_cameraUp;
 }
 
 void Camera::handleXRotation(char direction) {
@@ -97,19 +109,21 @@ void Camera::move(glm::vec3 delta) {
 
 void Camera::moveTo(glm::vec3 pos) {
 	m_cameraCenter = pos;
-	m_cameraLookAt = glm::normalize(m_cameraLookAt - m_cameraCenter);
+	m_cameraLookAt = m_cameraCenter + glm::normalize(m_cameraLookAt - m_cameraCenter);
 	calculateAxis();
 	updateCameraMatrix();
+
+	//cout << glm::to_string(m_cameraCenter) << endl;
 }
 
 void Camera::lookIn(glm::vec3 direction) {
-	m_cameraLookAt = m_cameraCenter + direction;
+	m_cameraLookAt = m_cameraCenter + glm::normalize(direction);
 	calculateAxis();
 	updateCameraMatrix();
 }
 
 void Camera::lookAt(glm::vec3 point) {
-	m_cameraLookAt = glm::normalize(point - m_cameraCenter);
+	m_cameraLookAt = m_cameraCenter + glm::normalize(point - m_cameraCenter);
 	calculateAxis();
 	updateCameraMatrix();
 }

@@ -33,6 +33,9 @@ class Camera {
 		Camera();
 
 		glm::mat4 getCameraMatrix();
+		glm::vec3 getCameraCenter();
+		glm::vec3 getCameraLookAt();
+		glm::vec3 getCameraUp();
 
 		void handleXRotation(char);
 		void handleYRotation(char);

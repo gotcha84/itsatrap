@@ -22,12 +22,15 @@ namespace sg {
 		return m_trans;
 	}
 
-	void MatrixTransform::draw(glm::mat4 parent, glm::mat4 camera) {
-		glm::mat4 new_model = parent * m_trans;;
+	void MatrixTransform::draw(glm::mat4 parent, glm::mat4 cam) {
+		glm::mat4 new_model = parent * this->getMatrix();
 
 		for (int i=0; i<m_nChild; i++) {
-			m_child[i]->draw(new_model, camera);
+			m_child[i]->draw(new_model, cam);
 		}
 	}
 
+	void MatrixTransform::print() {
+		cout << "(" << this->getObjectID() << " MT: " << this->getName() << ")";
+	}
 }

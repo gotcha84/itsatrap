@@ -10,7 +10,7 @@ namespace sg {
 
 	class Group : public Node {
 		public:
-			std::vector<Node*> m_child;
+			vector<Node*> m_child;
 			int m_nChild;
 
 			Group();
@@ -18,11 +18,15 @@ namespace sg {
 
 			bool hasChild();
 			int getNumChildren();
+			vector<Node*> getChildren();
+			Node *getChild(int c);
 			void addChild(Node *n);
 			bool removeChild(int c);
 			bool removeChild(Node *c);
 
-			virtual void draw(glm::mat4 parent, glm::mat4 camera) = 0;
+			void print();
+
+			virtual void draw(glm::mat4 parent, glm::mat4 cam) = 0;
 	};
 
 }

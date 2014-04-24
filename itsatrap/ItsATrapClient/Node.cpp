@@ -4,11 +4,26 @@ namespace sg {
 
 	Node::Node() {
 		m_parent = nullptr;
-		m_objectID = 0;
+		m_objectID = -1;
+		m_name = "";
+	}
+
+	Node::Node(string name) {
+		m_parent = nullptr;
+		m_objectID = -1;
+		m_name = name;
 	}
 
 	Node::~Node() {
 
+	}
+
+	void Node::setName(string name) {
+		m_name = name;
+	}
+
+	string Node::getName() {
+		return m_name;
 	}
 
 	bool Node::hasParent() {
@@ -30,8 +45,17 @@ namespace sg {
 		m_parent = nullptr;
 	}
 
-	int Node::getID() {
+	int Node::getObjectID() {
 		return m_objectID;
 	}
 
+	void Node::setObjectID(int id) {
+		m_objectID = id;
+	}
+
+	
+	void Node::print() {
+		cout << "(" << this->getObjectID() << " Node: " << this->getName() << ")";
+	}
+	
 }

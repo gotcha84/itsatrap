@@ -1,10 +1,4 @@
-#include <math.h>
-#include <sstream> // to convert float to string
-#include <iomanip> // to round floats
-
 #include "Utilities.h"
-
-using namespace std;
 
 // unused since glLoadMatrixf(glm::value_ptr(modelview)); modelview is a mat4 works apparently according to anurag
 GLfloat* Utilities::matrixToGLMatrix(glm::mat4 matrix) {
@@ -56,3 +50,34 @@ void Utilities::writeFloatArrayToFile(float* arr, int size, string filename) {
 	}
 
 }
+
+/*
+int Utilities::getMaxDepth(sg::Node *node) {
+	sg::Group *group = dynamic_cast<sg::Group*>(node);
+
+	if (group == nullptr) {
+		// if current node is a geode, reached bottom of this subtree
+		return 0;
+	}
+	else
+	{
+		// compute the depth of each subtree
+		vector<int> subtreeDepth(group->getNumChildren(), 0);
+		for (int i=0; i<group->getNumChildren(); i++) {
+			subtreeDepth[i] = getMaxDepth(group->getChild(i));
+		}
+
+		int maxIndex = 0;
+		int maxValue = 0;
+
+		for (int i=0; i<subtreeDepth.size(); i++) {
+			if (subtreeDepth[i] > maxValue) {
+				maxIndex = i;
+				maxValue = subtreeDepth[i];
+			}
+		}
+
+		return maxValue + 1;
+	}
+}
+*/

@@ -10,4 +10,7 @@ namespace sg {
 
 	}
 
+	void Geode::print() {
+		cout << "(" << this->getObjectID() << " Geode: " << this->getName() << ")";
+	}
 }

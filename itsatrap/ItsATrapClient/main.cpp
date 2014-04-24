@@ -33,7 +33,6 @@ int main(int argc, char *argv[]) {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // set polygon drawing mode to fill front and back of each polygon
 	glDisable(GL_CULL_FACE);     // disable backface culling to render both sides of polygons
 	glShadeModel(GL_SMOOTH);                    // set shading to smooth
-	glMatrixMode(GL_PROJECTION); 
 	
 	// Generate material properties:
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -63,42 +62,58 @@ int main(int argc, char *argv[]) {
 	//glutSetCursor(GLUT_CURSOR_NONE);
 	
 	// Initialize networking for client
-	Client::initializeClient();
+	//Client::initializeClient();
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(glm::value_ptr(client.root->getPlayer()->getProjectionMatrix()));
 
 	// player 1
-	sg::Player p1 = sg::Player();
-	p1.moveTo(glm::vec3(0,0,100.0f));
-	p1.lookIn(glm::vec3(0,0,-1.0f));
+	sg::Player p1 = *client.root;
+	p1.moveTo(glm::vec3(0.0f, 4.0f, 100.0f));
+	p1.lookIn(glm::vec3(0.0f, 0.0f, -1.0f));
 
-	// 2nd player
+	// player 2
 	sg::Player p2 = sg::Player();
-	p2.moveTo(glm::vec3(0,0,0.0f));
-	p2.lookIn(glm::vec3(0,0,-1.0f));
+	p2.setPlayerID(2);
+	p2.moveTo(glm::vec3(0.0f, 4.0f, 0.0f));
+	p2.lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
 
-	// set root node
-	client.root = &p1;
-	client.root->addChild(&p2);
+	// player 3
+	sg::Player p3 = sg::Player();
+	p3.setPlayerID(3);
+	p3.moveTo(glm::vec3(0.0f, 4.0f, 50.0f));
+	p3.lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
+
+	// add players	
+	client.addPlayer(&p2);
+	client.addPlayer(&p3);
 
 	// ground nodes
 	sg::MatrixTransform ground = sg::MatrixTransform();
-	//client.root->addChild(&ground);
+	ground.setName("ground");
+	client.root->addChild(&ground);
 	sg::Cube groundShape = sg::Cube();
+	groundShape.setName("ground");
 	ground.addChild(&groundShape);
 	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
 	groundShape.color = glm::vec3(0,1,0);
 
 	// cube nodes
 	sg::MatrixTransform obj1 = sg::MatrixTransform();
-	//client.root->addChild(&obj1);
+	obj1.setName("cube");
+	client.root->addChild(&obj1);
 	sg::Cube obj1Shape = sg::Cube();
+	obj1Shape.setName("cube");
 	obj1.addChild(&obj1Shape);
 	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));
 
 	sg::Building city = sg::Building();
+	city.setName("city");
 	city.loadData("city.obj");
-	client.root->addChild(&city);
+	//client.root->addChild(&city);
 
-	cout << "player center: " << glm::to_string(client.root->getCamera()->m_cameraCenter) << endl;
+	client.printPlayers();
+	client.printSceneGraph();
 
 	glutMainLoop();
 

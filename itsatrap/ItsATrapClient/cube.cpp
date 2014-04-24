@@ -4,9 +4,8 @@ namespace sg {
 
 	class Cube : public Geode {
 		public:
-			void Cube::draw(glm::mat4 parent, glm::mat4 camera) {
-				glm::mat4 cam_inverse = glm::inverse(camera);
-				glm::mat4 mv = cam_inverse * parent;
+			void draw(glm::mat4 parent, glm::mat4 cam) {
+				glm::mat4 mv = glm::inverse(cam) * parent;
 
 				glPushMatrix();
 					glMatrixMode(GL_MODELVIEW);
@@ -15,6 +14,10 @@ namespace sg {
 					glColor3f(color.x, color.y, color.z);
 					glutSolidCube(1);
 				glPopMatrix();
+			}
+
+			void print() {
+				cout << "(" << this->getObjectID() << " Cube: " << this->getName() << ")";
 			}
 	};
 

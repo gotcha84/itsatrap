@@ -60,10 +60,10 @@ namespace sg {
 		}
 	}
 
-	void Building::draw(glm::mat4 parent, glm::mat4 camera) {
-		glm::mat4 cam_inverse = glm::inverse(camera);
-		glm::mat4 mv = cam_inverse * parent;
+	void Building::draw(glm::mat4 parent, glm::mat4 cam) {
 		//cout << "nverts is : " << m_nIndices[0] << endl;
+		glm::mat4 mv = glm::inverse(cam) * parent;
+
 		glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
@@ -356,5 +356,7 @@ namespace sg {
 		//cout << max_ele << endl;	
 	}
 
-
+	void Building::print() {
+		cout << "(" << this->getObjectID() << " Building: " << this->getName() << ")";
+	}
 }

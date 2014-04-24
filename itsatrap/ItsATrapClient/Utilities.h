@@ -10,8 +10,13 @@
 #include <string>
 #include <vector>
 #include <fstream>
-using namespace std;
+#include <math.h>
+#include <sstream> // to convert float to string
+#include <iomanip> // to round floats
 
+//#include "SceneGraph.h"
+
+using namespace std;
 
 class Utilities {
 	public:
@@ -24,6 +29,8 @@ class Utilities {
 		static void writeFloatVectorToFile(vector<float> vec, string filename);
 		static void writeIntArrayToFile(int* arr, int size, string filename);
 		static void writeFloatArrayToFile(float* arr, int size, string filename);
+
+		//static int getMaxDepth(sg::Node *node);
 };
 
 

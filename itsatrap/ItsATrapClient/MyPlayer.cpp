@@ -32,8 +32,16 @@ Camera *MyPlayer::getCamera() {
 	return m_cam;
 }
 
+glm::vec3 MyPlayer::getPosition() {
+	return getCamera()->getCameraCenter();
+}
+
 Physics *MyPlayer::getPhysics() {
 	return m_physics;
+}
+
+glm::mat4 MyPlayer::getTransMatrix() {
+	return m_transMatrix;
 }
 
 glm::mat4 MyPlayer::getModelMatrix() {
@@ -94,16 +102,14 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 		case 'a':
 			proposedNewPos = m_cam->m_cameraCenter + -1.0f*xWalkFactor*m_cam->m_camX;
-			break;		
+			break;
 
 		case 'd':
 			proposedNewPos = m_cam->m_cameraCenter + xWalkFactor*m_cam->m_camX;
-			break;		
-
-
+			break;
 	}
 	
-	Client::sendStateUpdate(1, proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
+	//Client::sendStateUpdate(1, proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
 	
 	// TODO collision detection
 
@@ -112,26 +118,32 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	
 	glm::vec3 newPos = proposedNewPos;
-	cout << "NEWPOS!!: " << glm::to_string(newPos) << endl;
+	//cout << "NEWPOS!!: " << glm::to_string(newPos) << endl;
 	glm::vec3 moved = newPos - m_cam->m_cameraCenter;
 
 	m_physics->m_velocity = moved;
-
 	m_physics->m_position = newPos;
-
 	m_physics->applyGravity();
 
 	moved = m_physics->m_position - m_cam->m_cameraCenter;
 
 	m_cam->m_cameraCenter = m_physics->m_position;
-
 	m_cam->m_cameraLookAt+=moved;
-
 	m_cam->updateCameraMatrix();
+
+	this->setModelMatrix(glm::translate(proposedNewPos));
 }
 
 void MyPlayer::updateModelViewMatrix() {
-	m_modelviewMatrix = glm::inverse(m_cam->m_cameraMatrix) * m_modelMatrix;
+	m_modelviewMatrix = glm::inverse(this->getCameraMatrix()) * this->getModelMatrix();
+}
+
+void MyPlayer::setTransMatrix(glm::mat4 m) {
+	m_transMatrix = m;
+}
+
+void MyPlayer::setModelMatrix(glm::mat4 m) {
+	m_modelMatrix = m;
 }
 
 void MyPlayer::setProjectionMatrix() {
@@ -147,7 +159,8 @@ void MyPlayer::setProjectionMatrix() {
 	float nearv = 0.1;
 	float farv = 10000.0;
 
-	m_projectionMatrix = glm::mat4(1.0/(aspect), 0, 0, 0,
+	m_projectionMatrix = glm::mat4(
+			1.0/(aspect), 0, 0, 0,
 			0, 1.0, 0, 0,
 			0, 0, (nearv+farv)/(nearv-farv), 2*nearv*farv/(nearv-farv),
 			0, 0, -1, 0);
@@ -171,10 +184,14 @@ void MyPlayer::setViewportMatrix() {
 
 void MyPlayer::move(glm::vec3 delta) {
 	m_cam->move(delta);
+
+	this->setModelMatrix(glm::translate(this->getModelMatrix(), delta));
 }
 
 void MyPlayer::moveTo(glm::vec3 pos) {
 	m_cam->moveTo(pos);
+
+	this->setModelMatrix(glm::translate(pos));
 }
 
 void MyPlayer::lookIn(glm::vec3 direction) {

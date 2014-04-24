@@ -39,12 +39,14 @@ namespace sg {
 			//Building(string filename);
 			~Building();
 			void initArrays();
-			void draw(glm::mat4 parent, glm::mat4 camera);
+			void draw(glm::mat4 parent, glm::mat4 cam);
 
 			// TODO: figure out what it takes 
 			// void initializeHeightMap();
 			void loadData(string inputfile);
 			void drawShape();
+
+			void print();
 	};
 }
 

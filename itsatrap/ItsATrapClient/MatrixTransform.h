@@ -17,7 +17,9 @@ namespace sg {
 			void setMatrix(glm::mat4 m);
 			glm::mat4 getMatrix();
 
-			virtual void draw(glm::mat4 parent, glm::mat4 camera);
+			void print();
+
+			virtual void draw(glm::mat4 parent, glm::mat4 cam);
 	};
 
 }

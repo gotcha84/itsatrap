@@ -19,6 +19,14 @@ namespace sg {
 		return m_nChild;
 	}
 
+	Node *Group::getChild(int c) {
+		return m_child[c];
+	}
+
+	vector<Node*> Group::getChildren() {
+		return m_child;
+	}
+
 	void Group::addChild(Node *n) {
 		m_child.push_back(n);
 		m_nChild++;
@@ -52,4 +60,7 @@ namespace sg {
 		return false;
 	}
 
+	void Group::print() {
+		cout << "(" << this->getObjectID() << " Group: " << this->getName() << ")";
+	}
 }

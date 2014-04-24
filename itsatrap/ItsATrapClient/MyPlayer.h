@@ -24,6 +24,8 @@ class MyPlayer {
 		Camera *m_cam;
 		Physics *m_physics;
 
+		glm::mat4 m_transMatrix;
+
 		glm::mat4 m_modelMatrix;
 		glm::mat4 m_modelviewMatrix;
 		glm::mat4 m_projectionMatrix;
@@ -38,7 +40,9 @@ class MyPlayer {
 		~MyPlayer();
 
 		Camera *getCamera();
+		glm::vec3 getPosition();
 		Physics *getPhysics();
+		glm::mat4 getTransMatrix();
 		glm::mat4 getModelMatrix();
 		glm::mat4 getCameraMatrix();
 		glm::mat4 getModelViewMatrix();
@@ -47,6 +51,9 @@ class MyPlayer {
 
 		void handleMovement(unsigned char key);
 		void updateModelViewMatrix();
+		
+		void setTransMatrix(glm::mat4 m);
+		void setModelMatrix(glm::mat4 m);
 		void setProjectionMatrix();
 		void setViewportMatrix();
 

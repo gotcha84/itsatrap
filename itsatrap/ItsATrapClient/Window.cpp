@@ -40,18 +40,19 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displaySceneGraph(void)
 {	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
+
 	// updates player view
 	client.root->getPlayer()->updateModelViewMatrix(); // andre added this line
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	client.root->draw();
 	
 	// andre added below if sattements
 	if (client.m_xAngleChange != 0.0f) {
 		if (client.m_xAngleChange < 0) {
-			client.root->getPlayer()->getCamera()->handleXRotation('l');
+			client.root->getCamera()->handleXRotation('l');
 		}
 		else {
-			client.root->getPlayer()->getCamera()->handleXRotation('r');
+			client.root->getCamera()->handleXRotation('r');
 		}
 		client.m_xAngleChange = 0.0f;
 	}
@@ -68,11 +69,13 @@ void Window::displaySceneGraph(void)
 		client.m_yAngleChange = 0.0f;
 	}*/
 
+	/*
 	client.root->getPlayer()->getPhysics()->applyGravity();
 	glm::vec3 moved = client.root->getPlayer()->getPhysics()->m_position - client.root->getPlayer()->getCamera()->m_cameraCenter;
 	client.root->getPlayer()->getCamera()->m_cameraLookAt += moved;
 	client.root->getPlayer()->getCamera()->m_cameraCenter = client.root->getPlayer()->getPhysics()->m_position;
 	client.root->getPlayer()->getCamera()->updateCameraMatrix();
+	*/
 
 	glFlush();  
 	glutSwapBuffers();
@@ -80,10 +83,16 @@ void Window::displaySceneGraph(void)
 
 void Window::processNormalKeys(unsigned char key, int x, int y)
 {
-
 	// TODO: maybe more states
 	if (/*(client.m_myPlayer.m_physics.m_currentState != PhysicsStates::Falling) && */ (key == 'w' || key == 'a' || key == 's' || key == 'd')) {
 		client.root->getPlayer()->handleMovement(key);
+	}
+
+	switch (key) {
+		case 9: // TAB
+			client.toggleCurrentPlayer();
+			client.printSceneGraph();
+			break;
 	}
 	
 	// TODO: running
