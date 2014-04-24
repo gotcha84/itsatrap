@@ -111,7 +111,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	}
 	
-	Client::sendStateUpdate(Client::getPlayerId(), proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
+	//Client::sendStateUpdate(Client::getPlayerId(), proposedNewPos.x, proposedNewPos.y, proposedNewPos.z);
 	
 	// collision detection
 	glm::vec3 oldPos = m_physics->m_position;
