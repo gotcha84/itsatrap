@@ -13,9 +13,6 @@ struct bufferEntry	Server::packetBuffer[PACKET_BUFFER_SIZE];
 int					Server::packetBufferCount;
 WorldState			Server::worldState;
 
-
-
-
 int Server::startServer()
 {
 	if (Server::initialize() != 0)

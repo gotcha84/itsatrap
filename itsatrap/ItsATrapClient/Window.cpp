@@ -75,9 +75,11 @@ void Window::displaySceneGraph(void)
 	// TODO: move to player class?
 	client->root->getPlayer()->getPhysics()->applyGravity();
 	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - client->root->getPlayer()->getCamera()->m_cameraCenter;
-	//moved.y += 4.0f;
+	
+	//client->root->getPlayer()->getCamera()->m_cameraCenter = client->root->getPlayer()->getPhysics()->m_position;
+	client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
-	client->root->getPlayer()->getCamera()->m_cameraCenter = client->root->getPlayer()->getPhysics()->m_position;
+	
 	client->root->getPlayer()->getCamera()->m_cameraCenter.y += 4.0f;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt.y += 4.0f;
 	//client->root->getPlayer()->getCamera()->updateCameraMatrix();
@@ -90,7 +92,7 @@ void Window::displaySceneGraph(void)
 
 	client->root->getPlayer()->getCamera()->m_cameraCenter.y -= 4.0f;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt.y -= 4.0f;
-
+	
 	glFlush();  
 	glutSwapBuffers();
 }

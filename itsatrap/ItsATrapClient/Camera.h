@@ -18,6 +18,9 @@ using namespace std;
 
 class Camera {
 	public:
+		glm::vec3 m_playerHeight;
+		glm::vec3 m_playerCenter;
+
 		glm::vec3 m_cameraCenter;
 		glm::vec3 m_cameraLookAt;
 		glm::vec3 m_cameraUp;

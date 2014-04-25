@@ -143,20 +143,25 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	//m_physics->applyGravity();
 
-	glm::vec3 moved = m_physics->m_position - oldPos;
+	glm::vec3 moved = newPos - oldPos;
 
 	// people are 4 feet tall apparently
-	m_cam->m_cameraCenter = glm::vec3(m_physics->m_position.x, m_physics->m_position.y/*+4.0f*/, m_physics->m_position.z);
+	m_cam->m_cameraCenter+=moved; // glm::vec3(m_physics->m_position.x, m_physics->m_position.y/*+4.0f*/, m_physics->m_position.z);
 	//cout << "before: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
 	
+	// anurag
 	m_cam->m_cameraLookAt+=moved;
+
 	//cout << "after: " << glm::to_string(m_cam->m_cameraLookAt) << endl << endl;
 	//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 	m_cam->updateCameraMatrix();
 
 	this->setModelMatrix(glm::translate(m_physics->m_position));
 	Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
-	//cout << glm::to_string(newPos) << endl;
+	
+	cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
+	cout << "look at: " << glm::to_string(this->getCamera()->getCameraLookAt()) << endl;
+	cout << "up: " << glm::to_string(this->getCamera()->getCameraUp()) << endl;
 }
 
 void MyPlayer::updateModelViewMatrix() {

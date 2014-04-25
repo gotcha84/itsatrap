@@ -77,9 +77,9 @@ int main(int argc, char *argv[]) {
 
 	// player 1
 	//sg::Player *p1 = client->root;
-	client->root->setColor(glm::vec3(1,0,0));
-	client->root->moveTo(glm::vec3(80.0f, 0.0f, 100.0f));
-	client->root->lookIn(glm::vec3(0.0f, 0.0f, -1.0f));
+	//client->root->setColor(glm::vec3(1,0,0));
+	//client->root->moveTo(glm::vec3(80.0f, 0.0f, 100.0f));
+	//client->root->lookIn(glm::vec3(0.0f, 0.0f, -1.0f));
 
 	//// player 2
 	//sg::Player p2 = sg::Player();
