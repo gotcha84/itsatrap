@@ -97,3 +97,10 @@ glm::vec3 Physics::handleCollisionDetection(glm::vec3 goTo) {
 	return goTo;
 }
 
+void Physics::move(glm::vec3 delta) {
+	m_position += delta;
+}
+
+void Physics::moveTo(glm::vec3 pos) {
+	m_position = pos;
+}

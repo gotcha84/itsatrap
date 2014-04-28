@@ -13,7 +13,6 @@ void testAddObject(int id, float x, float y, float z, int type)
 		sg::Player *player = new sg::Player(glm::vec3(x, y, z));
 		player->setPlayerID(id);
 		player->setColor(glm::vec3(1,1,1));
-		//player->moveTo(glm::vec3(x, y, z));
 		player->lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
 		client->addPlayer(player);
 
@@ -51,12 +50,9 @@ void testUpdate(int id, float x, float y, float z, int type)
 				}
 			}
 			
-			if (collision == -1) {
-				client->players[id]->moveTo(glm::vec3(x,y,z));
-			}
-			else {
-				// TODO maybe colliding with wrong player?
-				cout << "COLLISION with player " << collision << endl;
+			client->players[id]->moveTo(glm::vec3(x,y,z));
+			if (collision != -1) {
+				cout << "p" << id << " collided with p" << collision << endl;
 			}
 		}
 	}

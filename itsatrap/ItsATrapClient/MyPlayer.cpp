@@ -171,11 +171,14 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	this->setModelMatrix(glm::translate(m_physics->m_position));
 	this->updateBoundingBox();
+	
 	Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
 	
-	cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
-	cout << "look at: " << glm::to_string(this->getCamera()->getCameraLookAt()) << endl;
-	cout << "up: " << glm::to_string(this->getCamera()->getCameraUp()) << endl;
+	this->getAABB()->print();
+
+	//cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
+	//cout << "look at: " << glm::to_string(this->getCamera()->getCameraLookAt()) << endl;
+	//cout << "up: " << glm::to_string(this->getCamera()->getCameraUp()) << endl;
 }
 
 void MyPlayer::updateModelViewMatrix() {
@@ -228,13 +231,17 @@ void MyPlayer::setViewportMatrix() {
 
 void MyPlayer::move(glm::vec3 delta) {
 	m_cam->move(delta);
+	m_physics->move(delta);
 
+	this->updateBoundingBox();
 	this->setModelMatrix(glm::translate(this->getModelMatrix(), delta));
 }
 
 void MyPlayer::moveTo(glm::vec3 pos) {
 	m_cam->moveTo(pos);
+	m_physics->moveTo(pos);
 
+	this->updateBoundingBox();
 	this->setModelMatrix(glm::translate(pos));
 }
 

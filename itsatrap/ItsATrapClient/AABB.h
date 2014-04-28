@@ -30,6 +30,8 @@ class AABB {
 		
 		bool collidesWith(AABB other);
 		bool inside(glm::vec3 goTo);
+
+		void print();
 };
 
 #endif

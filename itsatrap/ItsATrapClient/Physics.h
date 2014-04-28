@@ -47,6 +47,8 @@ class Physics {
 
 		glm::vec3 handleCollisionDetection(glm::vec3 goTo);
 
+		void move(glm::vec3 delta);
+		void moveTo(glm::vec3 pos);
 };
 
 #endif
