@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
+
 using namespace std;
 
 #include "Networking\Packet.h"
@@ -30,11 +31,15 @@ struct bufferEntry {
 static struct sockaddr_in	myAddress;
 static int 					i_sockfd;
 static char 				c_msg[BUFSIZE];
+
 //static WSADATA				wsaData;
 static Player				players[MAX_PLAYERS];
 static int					playerCount;
 static struct bufferEntry	packetBuffer[PACKET_BUFFER_SIZE];
 static int					packetBufferCount;
+
+// private vars
+HANDLE bufferMutex;
 
 int main(int argc, char ** argv) 
 {
@@ -85,6 +90,7 @@ int initialize()
 
 	DWORD tmp;
 	CreateThread(NULL, 0, processBufferThread, NULL, 0, &tmp);
+	bufferMutex = CreateMutex(NULL, true, NULL);
 
 	return 0;
 }
@@ -130,8 +136,12 @@ void queueMsg(char * msg, struct sockaddr_in *source)
 	else
 	{
 		// TODO: NEED MUTEX LOCK
+		WaitForSingleObject(bufferMutex, MAX_PROCESS_TIME);
+
 		memcpy(packetBuffer[packetBufferCount].msg, msg, BUFSIZE);
 		packetBufferCount++;
+
+		ReleaseMutex(bufferMutex);
 		// TODO: NEED MUTEX UNLOCK
 	}
 }
@@ -165,7 +175,8 @@ DWORD WINAPI processBufferThread(LPVOID param)
 void processBuffer()
 {
 	// TODO: NEED MUTEX LOCK
-
+	WaitForSingleObject(bufferMutex, MAX_PROCESS_TIME);
+	
 	for (int i = 0; i < packetBufferCount; i++)
 	{
 		struct packet *p = (struct packet *) packetBuffer[i].msg;
@@ -199,6 +210,7 @@ void processBuffer()
 
 	packetBufferCount = 0;
 
+	ReleaseMutex(bufferMutex);
 	// TODO: NEED MUTEX UNLOCK
 }
 
