@@ -136,12 +136,12 @@ void queueMsg(char * msg, struct sockaddr_in *source)
 	else
 	{
 		// TODO: NEED MUTEX LOCK
-		WaitForSingleObject(bufferMutex, MAX_PROCESS_TIME);
+		//WaitForSingleObject(bufferMutex, MAX_PROCESS_TIME);
 
 		memcpy(packetBuffer[packetBufferCount].msg, msg, BUFSIZE);
 		packetBufferCount++;
 
-		ReleaseMutex(bufferMutex);
+		//ReleaseMutex(bufferMutex);
 		// TODO: NEED MUTEX UNLOCK
 	}
 }
@@ -175,7 +175,7 @@ DWORD WINAPI processBufferThread(LPVOID param)
 void processBuffer()
 {
 	// TODO: NEED MUTEX LOCK
-	WaitForSingleObject(bufferMutex, MAX_PROCESS_TIME);
+	//WaitForSingleObject(bufferMutex, MAX_PROCESS_TIME);
 	
 	for (int i = 0; i < packetBufferCount; i++)
 	{
@@ -210,7 +210,7 @@ void processBuffer()
 
 	packetBufferCount = 0;
 
-	ReleaseMutex(bufferMutex);
+	//ReleaseMutex(bufferMutex);
 	// TODO: NEED MUTEX UNLOCK
 }
 
