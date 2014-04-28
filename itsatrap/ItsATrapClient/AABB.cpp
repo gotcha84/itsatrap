@@ -1,5 +1,5 @@
 #include "AABB.h"
-
+#include "Client.h"
 
 AABB::AABB() {
 }
@@ -24,6 +24,8 @@ void AABB::setAABB(float minX, float minY, float minZ, float maxX, float maxY, f
 	m_maxX = maxX;
 	m_maxY = maxY;
 	m_maxZ = maxZ;
+
+	Client::sendStaticObject(minX, minY, minZ, maxX, maxY, maxZ);
 }
 
 bool AABB::collidesWith(AABB other) {

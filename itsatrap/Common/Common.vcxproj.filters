@@ -24,15 +24,24 @@
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StateEntry.h">
+    <ClInclude Include="DynamicObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorldState.h">
+    <ClInclude Include="DynamicWorld.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticWorld.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WorldState.cpp">
+    <ClCompile Include="DynamicWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

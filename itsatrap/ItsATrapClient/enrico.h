@@ -14,10 +14,10 @@
 
 // networking
 #include "Client.h"
-#include "WorldState.h"
+#include "DynamicWorld.h"
 
 void testAddObject(int id, float x, float y, float z, int type);
 void testUpdate(int id, float x, float y, float z, int type);
-void testUpdateWorld(WorldState *world);
+void testUpdateWorld(DynamicWorld *world);
 
 #endif

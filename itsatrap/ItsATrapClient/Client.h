@@ -10,8 +10,8 @@
 
 #include "Packet.h"
 #include "NetworkConfig.h"
-#include "WorldState.h"
-#include "StateEntry.h"
+#include "DynamicWorld.h"
+#include "DynamicObject.h"
 #include "enrico.h"
 
 /*
@@ -44,6 +44,7 @@ public:
 	static void startReceiverThread();
 	static void sendStateUpdate(int id, float x, float y, float z);
 	static int getPlayerId();
+	static void sendStaticObject(float, float, float, float, float, float);
 };
 
 
