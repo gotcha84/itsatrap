@@ -1,21 +1,12 @@
-﻿Build started 4/27/2014 10:24:14 PM.
+﻿Build started 4/28/2014 3:59:47 AM.
      1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Common.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp StaticWorld.cpp
-         StaticWorld.cpp
-         DynamicWorld.cpp
-     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(47): warning C4018: '<' : signed/unsigned mismatch
-         Generating Code...
+         All outputs are up-to-date.
        Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Common.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\DynamicWorld.obj
-         Debug\StaticWorld.obj
-     1>DynamicWorld.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
-            Creating library C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.lib and object C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.exp
+         All outputs are up-to-date.
          Common.vcxproj -> C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll
-       Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll;#2" /manifest Debug\Common.dll.intermediate.manifest
        FinalizeBuildStatus:
          Deleting file "Debug\Common.unsuccessfulbuild".
          Touching "Debug\Common.lastbuildstate".
@@ -23,4 +14,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:23.22
+Time Elapsed 00:00:00.05

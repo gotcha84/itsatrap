@@ -32,6 +32,7 @@ void testAddObject(int id, float x, float y, float z, int type)
 void testUpdate(int id, float x, float y, float z, int type)
 {
 	if (client->objects[id] == nullptr) {
+		// todo check type to add player vs trap
 		testAddObject(id, x, y, z, type);
 		cout << "player added with id " << id << endl;
 		cout << glm::to_string(client->root->getPosition()) << endl;
@@ -39,7 +40,24 @@ void testUpdate(int id, float x, float y, float z, int type)
 
 	if (type == 0) {
 		if (glm::vec3(x,y,z) != client->players[id]->getPosition()) {
-			client->players[id]->moveTo(glm::vec3(x,y,z));
+			int collision = -1;
+
+			for (unordered_map<int,sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
+				if (it->first != id) {
+					if (client->players[id]->collidesWith(it->second)) {
+						collision = it->first;
+						break;
+					}
+				}
+			}
+			
+			if (collision == -1) {
+				client->players[id]->moveTo(glm::vec3(x,y,z));
+			}
+			else {
+				// TODO maybe colliding with wrong player?
+				cout << "COLLISION with player " << collision << endl;
+			}
 		}
 	}
 	else if (type == 1) {

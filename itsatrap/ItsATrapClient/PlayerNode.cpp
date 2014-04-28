@@ -59,6 +59,9 @@ namespace sg {
 		for (int i=0; i<m_nChild; i++) {
 			m_child[i]->draw(glm::mat4(), this->getPlayer()->getCameraMatrix());
 		}
+
+		// draw player avatar
+		this->draw(glm::mat4(), this->getPlayer()->getCameraMatrix());
 	}
 
 	// draws player avatar at player location
@@ -72,7 +75,7 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor3f(this->getColor().x, this->getColor().y, this->getColor().z);
-			glutSolidSphere(10, 10, 10);
+			glutWireSphere(10, 10, 10);
 		glPopMatrix();
 	}
 
@@ -96,4 +99,7 @@ namespace sg {
 		cout << "(" << this->getObjectID() << " Player p" << this->getPlayerID() << ": " << this->getName() << ")";
 	}
 
+	bool Player::collidesWith(sg::Player *other) {
+		return this->getPlayer()->collidesWith(other->getPlayer());
+	}
 }

@@ -16,6 +16,7 @@
 
 #include "Camera.h"
 #include "Physics.h"
+#include "AABB.h"
 
 using namespace std;
 
@@ -23,6 +24,7 @@ class MyPlayer {
 	public:
 		Camera *m_cam;
 		Physics *m_physics;
+		AABB *m_boundingBox;
 
 		glm::mat4 m_transMatrix;
 
@@ -43,6 +45,7 @@ class MyPlayer {
 		Camera *getCamera();
 		glm::vec3 getPosition();
 		Physics *getPhysics();
+		AABB *getAABB();
 		glm::mat4 getTransMatrix();
 		glm::mat4 getModelMatrix();
 		glm::mat4 getCameraMatrix();
@@ -63,6 +66,10 @@ class MyPlayer {
 
 		void lookIn(glm::vec3 direction);
 		void lookAt(glm::vec3 point);
+
+		void updateBoundingBox();
+		void updateBoundingBox(float rad);
+		bool collidesWith(MyPlayer *other);
 };
 
 #endif

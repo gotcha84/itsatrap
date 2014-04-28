@@ -37,6 +37,8 @@ namespace sg {
 			void lookAt(glm::vec3 point);
 
 			void print();
+
+			bool collidesWith(sg::Player *other);
 	};
 }
 

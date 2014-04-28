@@ -17,6 +17,12 @@ MyPlayer::MyPlayer() {
 
 	m_cam = new Camera();
 	m_physics = new Physics();
+	
+	glm::vec3 pos = this->getPosition();
+	float rad = 10.0f;
+	m_boundingBox = new AABB(
+		pos.x - rad, pos.y - rad, pos.z - rad, 
+		pos.x + rad, pos.y + rad, pos.z + rad);
 }
 
 MyPlayer::MyPlayer(glm::vec3 pos) {
@@ -35,6 +41,11 @@ MyPlayer::MyPlayer(glm::vec3 pos) {
 
 	m_cam = new Camera(pos);
 	m_physics = new Physics(pos);
+
+	float rad = 10.0f;
+	m_boundingBox = new AABB(
+		pos.x - rad, pos.y - rad, pos.z - rad, 
+		pos.x + rad, pos.y + rad, pos.z + rad);
 }
 
 MyPlayer::~MyPlayer() {
@@ -43,6 +54,9 @@ MyPlayer::~MyPlayer() {
 
 	delete m_physics;
 	m_physics = nullptr;
+
+	delete m_boundingBox;
+	m_boundingBox = nullptr;
 }
 
 Camera *MyPlayer::getCamera() {
@@ -55,6 +69,10 @@ glm::vec3 MyPlayer::getPosition() {
 
 Physics *MyPlayer::getPhysics() {
 	return m_physics;
+}
+
+AABB *MyPlayer::getAABB() {
+	return m_boundingBox;
 }
 
 glm::mat4 MyPlayer::getTransMatrix() {
@@ -161,6 +179,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 	m_cam->updateCameraMatrix();
 
 	this->setModelMatrix(glm::translate(m_physics->m_position));
+	this->updateBoundingBox();
 	Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
 	
 	cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
@@ -234,4 +253,23 @@ void MyPlayer::lookIn(glm::vec3 direction) {
 
 void MyPlayer::lookAt(glm::vec3 point) {
 	m_cam->lookAt(point);
+}
+
+void MyPlayer::updateBoundingBox() {
+	float rad = 10.0f;
+	glm::vec3 pos = this->getPosition();
+	m_boundingBox->setAABB(
+		pos.x - rad, pos.y - rad, pos.z - rad,
+		pos.x + rad, pos.y + rad, pos.z + rad);
+}
+
+void MyPlayer::updateBoundingBox(float rad) {
+	glm::vec3 pos = this->getPosition();
+	m_boundingBox->setAABB(
+		pos.x - rad, pos.y - rad, pos.z - rad,
+		pos.x + rad, pos.y + rad, pos.z + rad);
+}
+
+bool MyPlayer::collidesWith(MyPlayer *other) {
+	return this->getAABB()->collidesWith(*other->getAABB());
 }

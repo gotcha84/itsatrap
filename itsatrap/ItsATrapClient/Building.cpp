@@ -15,8 +15,7 @@ namespace sg {
 	}*/
 
 	Building::~Building() {
-		
-	
+
 	}
 
 	void Building::draw(glm::mat4 parent, glm::mat4 cam) {
