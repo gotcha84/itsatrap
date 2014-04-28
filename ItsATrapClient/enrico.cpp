@@ -13,7 +13,6 @@ void handleNewObjectFromServer(int id, float x, float y, float z, int type)
 		sg::Player *player = new sg::Player(glm::vec3(x, y, z));
 		player->setPlayerID(id);
 		player->setColor(glm::vec3(1,1,1));
-		//player->moveTo(glm::vec3(x, y, z));
 		player->lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
 		client->addPlayer(player);
 
@@ -51,6 +50,7 @@ void handleUpdateObjectFromServer(int id, float x, float y, float z, int type)
 				}
 			}
 			
+<<<<<<< HEAD:ItsATrapClient/enrico.cpp
 			if (collision == -1) {
 				client->players[id]->moveTo(glm::vec3(x,y,z));
 				printf("[CLIENT]: Player %d move to %.1f %.1f %.1f\n", id, x, y, z);
@@ -58,6 +58,11 @@ void handleUpdateObjectFromServer(int id, float x, float y, float z, int type)
 			else {
 				// TODO maybe colliding with wrong player?
 				cout << "COLLISION with player " << collision << endl;
+=======
+			client->players[id]->moveTo(glm::vec3(x,y,z));
+			if (collision != -1) {
+				cout << "p" << id << " collided with p" << collision << endl;
+>>>>>>> 5a69d6c66f2b4b56e0824bf080bbb91ab5324a84:itsatrap/ItsATrapClient/enrico.cpp
 			}
 		}
 	}

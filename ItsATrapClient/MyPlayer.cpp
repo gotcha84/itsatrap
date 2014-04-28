@@ -171,6 +171,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	this->setModelMatrix(glm::translate(m_physics->m_position));
 	this->updateBoundingBox();
+<<<<<<< HEAD:ItsATrapClient/MyPlayer.cpp
 
 	// Send data to server
 	struct objectProperty prop;
@@ -181,6 +182,16 @@ void MyPlayer::handleMovement(unsigned char key) {
 	prop.lookX = 77.66;
 
 	Client::sendStateUpdate(Client::getPlayerId(), prop);
+=======
+	
+	Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
+	
+	this->getAABB()->print();
+
+	//cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
+	//cout << "look at: " << glm::to_string(this->getCamera()->getCameraLookAt()) << endl;
+	//cout << "up: " << glm::to_string(this->getCamera()->getCameraUp()) << endl;
+>>>>>>> 5a69d6c66f2b4b56e0824bf080bbb91ab5324a84:itsatrap/ItsATrapClient/MyPlayer.cpp
 }
 
 void MyPlayer::updateModelViewMatrix() {
@@ -233,13 +244,17 @@ void MyPlayer::setViewportMatrix() {
 
 void MyPlayer::move(glm::vec3 delta) {
 	m_cam->move(delta);
+	m_physics->move(delta);
 
+	this->updateBoundingBox();
 	this->setModelMatrix(glm::translate(this->getModelMatrix(), delta));
 }
 
 void MyPlayer::moveTo(glm::vec3 pos) {
 	m_cam->moveTo(pos);
+	m_physics->moveTo(pos);
 
+	this->updateBoundingBox();
 	this->setModelMatrix(glm::translate(pos));
 }
 

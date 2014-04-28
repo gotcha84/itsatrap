@@ -38,6 +38,11 @@ void AABB::setAABB(float minX, float minY, float minZ, float maxX, float maxY, f
 	m_maxX = maxX;
 	m_maxY = maxY;
 	m_maxZ = maxZ;
+<<<<<<< HEAD:Common/AABB.cpp
+=======
+
+	//Client::sendStaticObject(m_minX, m_minY, m_minZ, m_maxX, m_maxY, m_maxZ);
+>>>>>>> 5a69d6c66f2b4b56e0824bf080bbb91ab5324a84:itsatrap/ItsATrapClient/AABB.cpp
 }
 
 void AABB::setAABB(glm::vec3 pos, float rad) {
@@ -47,6 +52,11 @@ void AABB::setAABB(glm::vec3 pos, float rad) {
 	m_maxX = pos.x + rad;
 	m_maxY = pos.y + rad;
 	m_maxZ = pos.z + rad;
+<<<<<<< HEAD:Common/AABB.cpp
+=======
+
+	//Client::sendStaticObject(m_minX, m_minY, m_minZ, m_maxX, m_maxY, m_maxZ);
+>>>>>>> 5a69d6c66f2b4b56e0824bf080bbb91ab5324a84:itsatrap/ItsATrapClient/AABB.cpp
 }
 
 bool AABB::collidesWith(AABB other) {
@@ -85,4 +95,8 @@ bool AABB::inside(glm::vec3 goTo) {
 	return (goTo.x >= m_minX && goTo.x <= m_maxX 
 		   && goTo.y >= m_minY && goTo.y <= m_maxY
 		   && goTo.z >= m_minZ && goTo.z <= m_maxZ); 
-	}
+}
+
+void AABB::print() {
+	cout << "(" << m_minX << ", " << m_minY << ", " << m_minZ << ") (" << m_maxX << ", " << m_maxY << ", " << m_maxZ << ")" << endl;
+}
