@@ -28,6 +28,7 @@ namespace sg {
 
 			void setBoundingBox(AABB *box);
 			AABB *getBoundingBox();
+			void updateBoundingBox();
 			
 			void draw(glm::mat4 parent, glm::mat4 cam);
 

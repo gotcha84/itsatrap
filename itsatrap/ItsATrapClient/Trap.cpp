@@ -23,6 +23,7 @@ namespace sg {
 
 	void Trap::setPosition(glm::vec3 pos) {
 		m_position = pos;
+		this->updateBoundingBox();
 	}
 
 	glm::vec3 Trap::getPosition() {
@@ -51,6 +52,10 @@ namespace sg {
 
 	AABB *Trap::getBoundingBox() {
 		return m_boundingBox;
+	}
+
+	void Trap::updateBoundingBox() {
+		m_boundingBox->setAABB(this->getPosition(), 5.0f);
 	}
 
 	void Trap::draw(glm::mat4 parent, glm::mat4 cam) {
