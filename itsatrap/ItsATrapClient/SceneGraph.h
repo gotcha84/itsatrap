@@ -16,5 +16,6 @@
 #include "Cone.cpp"
 #include "City.h"
 #include "Building.h"
+#include "Trap.h"
 
 #endif

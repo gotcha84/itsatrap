@@ -22,9 +22,12 @@ class AABB {
 
 		AABB();
 		AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
+		AABB(glm::vec3 pos, float rad);
 		~AABB();
 
 		void setAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
+		void setAABB(glm::vec3 pos, float rad);
+		
 		bool collidesWith(AABB other);
 		bool inside(glm::vec3 goTo);
 };

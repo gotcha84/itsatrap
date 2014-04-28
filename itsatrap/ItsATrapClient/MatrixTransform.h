@@ -8,7 +8,7 @@ namespace sg {
 
 	class MatrixTransform : public Group {
 		public:
-			glm::fmat4 m_trans;
+			glm::mat4 m_trans;
 
 			MatrixTransform();
 			MatrixTransform(glm::mat4 m);

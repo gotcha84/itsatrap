@@ -17,12 +17,7 @@ MyPlayer::MyPlayer() {
 
 	m_cam = new Camera();
 	m_physics = new Physics();
-	
-	glm::vec3 pos = this->getPosition();
-	float rad = 10.0f;
-	m_boundingBox = new AABB(
-		pos.x - rad, pos.y - rad, pos.z - rad, 
-		pos.x + rad, pos.y + rad, pos.z + rad);
+	m_boundingBox = new AABB(this->getPosition(), 10.0f);
 }
 
 MyPlayer::MyPlayer(glm::vec3 pos) {
@@ -41,11 +36,7 @@ MyPlayer::MyPlayer(glm::vec3 pos) {
 
 	m_cam = new Camera(pos);
 	m_physics = new Physics(pos);
-
-	float rad = 10.0f;
-	m_boundingBox = new AABB(
-		pos.x - rad, pos.y - rad, pos.z - rad, 
-		pos.x + rad, pos.y + rad, pos.z + rad);
+	m_boundingBox = new AABB(pos, 10.0f);
 }
 
 MyPlayer::~MyPlayer() {
@@ -256,18 +247,7 @@ void MyPlayer::lookAt(glm::vec3 point) {
 }
 
 void MyPlayer::updateBoundingBox() {
-	float rad = 10.0f;
-	glm::vec3 pos = this->getPosition();
-	m_boundingBox->setAABB(
-		pos.x - rad, pos.y - rad, pos.z - rad,
-		pos.x + rad, pos.y + rad, pos.z + rad);
-}
-
-void MyPlayer::updateBoundingBox(float rad) {
-	glm::vec3 pos = this->getPosition();
-	m_boundingBox->setAABB(
-		pos.x - rad, pos.y - rad, pos.z - rad,
-		pos.x + rad, pos.y + rad, pos.z + rad);
+	m_boundingBox->setAABB(this->getPosition(), 10.0f);
 }
 
 bool MyPlayer::collidesWith(MyPlayer *other) {

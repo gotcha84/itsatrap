@@ -68,7 +68,6 @@ class MyPlayer {
 		void lookAt(glm::vec3 point);
 
 		void updateBoundingBox();
-		void updateBoundingBox(float rad);
 		bool collidesWith(MyPlayer *other);
 };
 

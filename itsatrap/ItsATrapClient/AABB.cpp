@@ -2,6 +2,12 @@
 #include "Client.h"
 
 AABB::AABB() {
+	m_minX = 0;
+	m_minY = 0;
+	m_minZ = 0;
+	m_maxX = 0;
+	m_maxY = 0;
+	m_maxZ = 0;
 }
 
 AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
@@ -11,6 +17,15 @@ AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float max
 	m_maxX = maxX;
 	m_maxY = maxY;
 	m_maxZ = maxZ;
+}
+
+AABB::AABB(glm::vec3 pos, float rad) {
+	m_minX = pos.x - rad;
+	m_minY = pos.y - rad;
+	m_minZ = pos.z - rad;
+	m_maxX = pos.x + rad;
+	m_maxY = pos.y + rad;
+	m_maxZ = pos.z + rad;
 }
 
 AABB::~AABB() {
@@ -25,7 +40,18 @@ void AABB::setAABB(float minX, float minY, float minZ, float maxX, float maxY, f
 	m_maxY = maxY;
 	m_maxZ = maxZ;
 
-	Client::sendStaticObject(minX, minY, minZ, maxX, maxY, maxZ);
+	Client::sendStaticObject(m_minX, m_minY, m_minZ, m_maxX, m_maxY, m_maxZ);
+}
+
+void AABB::setAABB(glm::vec3 pos, float rad) {
+	m_minX = pos.x - rad;
+	m_minY = pos.y - rad;
+	m_minZ = pos.z - rad;
+	m_maxX = pos.x + rad;
+	m_maxY = pos.y + rad;
+	m_maxZ = pos.z + rad;
+
+	Client::sendStaticObject(m_minX, m_minY, m_minZ, m_maxX, m_maxY, m_maxZ);
 }
 
 bool AABB::collidesWith(AABB other) {

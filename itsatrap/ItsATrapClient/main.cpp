@@ -123,7 +123,9 @@ int main(int argc, char *argv[]) {
 	//city.loadData("Can.obj");
 	client->root->addChild(&city);
 
-	//testAddCube(7, 90, 30, 0);
+	// create a trap
+	sg::Trap testTrap = sg::Trap(glm::vec3(75,0,0));
+	client->root->addChild(&testTrap);
 
 	client->printPlayers();
 	client->printSceneGraph();
