@@ -38,7 +38,7 @@ void testUpdate(int id, float x, float y, float z, int type)
 	}
 
 	if (type == 0) {
-		if (glm::vec3(x,y,z) == client->players[id]->getPosition()) {
+		if (glm::vec3(x,y,z) != client->players[id]->getPosition()) {
 			client->players[id]->moveTo(glm::vec3(x,y,z));
 		}
 	}
