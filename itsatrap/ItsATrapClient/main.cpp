@@ -124,10 +124,6 @@ int main(int argc, char *argv[]) {
 	//city.loadData("banana_obj.obj");
 	client->root->addChild(&city);
 
-	// create a trap
-	sg::Trap testTrap = sg::Trap(glm::vec3(75,0,0));
-	client->root->addChild(&testTrap);
-
 	client->printPlayers();
 	client->printSceneGraph();
 
