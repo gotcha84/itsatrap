@@ -16,6 +16,7 @@
 #include "DynamicObject.h"
 #include "StaticObject.h"
 #include "StaticWorld.h"
+#include "Stopwatch.h"
 
 using namespace std;
 

@@ -14,6 +14,9 @@ int					Server::packetBufferCount;
 DynamicWorld		Server::dynamicWorld;
 StaticWorld			Server::staticWorld;
 
+// Private Vars
+HANDLE	packetBufMutex;
+
 int Server::startServer()
 {
 	if (Server::initialize() != 0)
@@ -61,6 +64,7 @@ int Server::initialize() {
 
 	DWORD tmp;
 	CreateThread(NULL, 0, bufferProcessorThread, NULL, 0, &tmp);
+	packetBufMutex = CreateMutex(NULL, true, NULL);
 
 	return 0;
 }
@@ -110,15 +114,20 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	}
 	else
 	{
-		// TODO: NEED MUTEX LOCK
+		// Lock Mutex: Writing into packet buffer 
+		WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
+
 		memcpy(packetBuffer[packetBufferCount].msg, msg, BUFSIZE);
 		packetBufferCount++;
-		// TODO: NEED MUTEX UNLOCK
+
+		// Releaes Mutex 
+		ReleaseMutex(packetBufMutex);
 	}
 }
 
 DWORD WINAPI Server::bufferProcessorThread(LPVOID param)
 {
+	// TODO (ktngo): Establish buffer buffer sleep to be done after all processes run
 	printf("[SERVER]: Process buffer thread started\n");
 	while (1)
 	{
@@ -140,7 +149,8 @@ void Server::broadcastDynamicWorld()
 
 void Server::processBuffer()
 {
-	// TODO: NEED MUTEX LOCK
+	// Lock Mutex: Process exisiting packet buf without adding more packets 
+	WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
 
 	for (int i = 0; i < packetBufferCount; i++)
 	{
@@ -169,7 +179,8 @@ void Server::processBuffer()
 	if (dynamicWorld.getSize() > 0)
 			broadcastDynamicWorld();
 
-	// TODO: NEED MUTEX UNLOCK
+	// Release Mutex
+	ReleaseMutex(packetBufMutex);
 }
 
 // Server receives a message
