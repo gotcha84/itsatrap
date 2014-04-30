@@ -22,7 +22,7 @@ struct initResponsePacket
 	int givenPlayerId;
 };
 
-// State updates
+
 struct playerUpdatePacket
 {
 	int eventId;
@@ -32,6 +32,7 @@ struct playerUpdatePacket
 struct staticObjectPacket
 {
 	int eventId;
+	int playerId; // who is sending this?
 	struct staticObject object;
 };
 

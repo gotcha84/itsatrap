@@ -17,6 +17,7 @@
 #include "Camera.h"
 #include "Physics.h"
 #include "AABB.h"
+#include "NetworkObjects.h"
 
 using namespace std;
 
@@ -69,6 +70,8 @@ class MyPlayer {
 
 		void updateBoundingBox();
 		bool collidesWith(MyPlayer *other);
+
+		struct playerObject getPlayerObjectForNetworking();
 };
 
 #endif

@@ -1,6 +1,7 @@
 #ifndef DYNAMICWORLD_H
 #define DYNAMICWORLD_H
 
+#include <map>
 #include <vector>
 #include <stdio.h>
 #include <iostream>
@@ -20,20 +21,24 @@ class DynamicWorld {
 
 private:
 	// Variables
-    vector<struct playerObject>	playerObjects; // This vector should contain information about objects
-	                                         // that are currently living in the world
-	
+    map<int, struct playerObject>	playerMap;
+	vector<struct staticObject>		staticObjects;
+
+	// Functions
+	bool checkCollision(struct aabb a, struct aabb b);
 public:
 	// Functions
-	// NOTE: __declspec(dllexport) is used to export this function
-	
 	__declspec(dllexport) DynamicWorld();
 	__declspec(dllexport) DynamicWorld(struct packet *packet);
-	__declspec(dllexport) int getNumPlayers();
 	__declspec(dllexport) int serialize(char **ptr);
 	__declspec(dllexport) void printWorld();
+
 	__declspec(dllexport) void updatePlayer(struct playerObject e);
-	__declspec(dllexport) struct playerObject getObjectAt(int i);
+	__declspec(dllexport) int getNumPlayers();
+	__declspec(dllexport) vector<struct playerObject> getAllPlayers();
+
+	__declspec(dllexport) void addStaticObject(struct staticObject);
+	__declspec(dllexport) int getNumStaticObjects();
 };
 
 #endif

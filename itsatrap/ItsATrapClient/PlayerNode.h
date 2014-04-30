@@ -39,6 +39,8 @@ namespace sg {
 			void print();
 
 			bool collidesWith(sg::Player *other);
+
+			
 	};
 }
 

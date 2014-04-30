@@ -1,5 +1,7 @@
 #include "DynamicWorld.h"
 
+#define HEADER_SIZE (2 * sizeof(int))
+
 /*
  * default constructor DynamicWorld
  *
@@ -24,47 +26,42 @@ DynamicWorld::DynamicWorld(struct packet *packet)
 
 	char *buf = (char *)packet;
 
-	int numUpdates = ((int *)buf)[1];
+	int numPlayers = ((int *)buf)[1];
 
-	for (int i = 0; i < numUpdates; i++)
+	for (int i = 0; i < numPlayers; i++)
 	{
-		struct playerObject *entry = (struct playerObject *)(buf + 2*sizeof(int) + i*sizeof(struct playerObject));
+		void *ptr = (struct playerObject *)(buf + HEADER_SIZE + i*sizeof(struct playerObject));
 		struct playerObject tmp;
-		memcpy(&tmp, entry, sizeof(struct playerObject));
-		playerObjects.push_back(tmp);
+		memcpy(&tmp, ptr, sizeof(struct playerObject));
+		playerMap[tmp.id] = tmp;
 	}
 }
 
 
-/*
- * DynamicWorld::updateObject()
- *
- * Try to find an entry corresponding to 'e'. If found, update it, otherwise
- * create new entry.
- */
 void DynamicWorld::updatePlayer(struct playerObject e)
 {
-	for (int i = 0; i < playerObjects.size(); i++)
+	vector<struct playerObject> players = getAllPlayers();
+	for (int i = 0; i < players.size(); i++)
 	{
-		if (playerObjects[i].id == e.id)
+		if (players[i].id != e.id && checkCollision(e.aabb, players[i].aabb))
 		{
-			memcpy(&playerObjects[i], &e, sizeof(struct playerObject));
+			printf("Collision: player %d with player %d\n", e.id, players[i].id);
+			return;
+		}
+	}
+	for (int i = 0; i < staticObjects.size(); i++)
+	{
+		printf("Check %d %.1f %.1f\n", i, staticObjects[i].aabb.minX, staticObjects[i].aabb.maxX);
+		if (checkCollision(e.aabb, staticObjects[i].aabb))
+		{
+			printf("Collision: player %d with static object\n", e.id);
 			return;
 		}
 	}
 
-	// Entry not found, create a new one.
-	playerObjects.push_back(e);	
+	playerMap[e.id] = e;
 }
 
-/*
- * DynamicWorld::getsize()
- *
- */
-int DynamicWorld::getNumPlayers()
-{
-	return playerObjects.size();
-}
 
 /*
  * DynamicWorld::serialize()
@@ -76,25 +73,28 @@ int DynamicWorld::getNumPlayers()
  *
  * Serialization policy:
  * byte 0: always filled with 4 (eventId)
- *      4: size of payload
+ *      4: number of players
  *      8: playerObjects (not being serialized)
  */
 int DynamicWorld::serialize(char **ptr)
 {
-	int size = 2*sizeof(int) + sizeof(struct playerObject) * getNumPlayers();
-	char *buf = (char *) malloc(size);
+	int payloadSize = sizeof(struct playerObject) * playerMap.size();
+	int totalSize = HEADER_SIZE + payloadSize;
+
+	char *buf = (char *) malloc(totalSize);
 
 	((int *)buf)[0] = 4;
-	((int *)buf)[1] = getNumPlayers();
+	((int *)buf)[1] = playerMap.size();
 
-	for (int i = 0; i < getNumPlayers(); i++)
+	vector<struct playerObject> players = getAllPlayers();
+	for (int i = 0; i < players.size(); i++)
 	{
-		memcpy(buf + 2*sizeof(int) + i * sizeof(struct playerObject), &playerObjects[i], sizeof(struct playerObject));
+		memcpy(buf + 2*sizeof(int) + i * sizeof(struct playerObject), &players[i], sizeof(struct playerObject));
 	}
 
 	*ptr = buf;
 
-	return size;
+	return totalSize;
 }
 
 
@@ -105,14 +105,41 @@ int DynamicWorld::serialize(char **ptr)
 void DynamicWorld::printWorld()
 {
 	printf("[COMMON]: Printing world state:\n");
-	for (int i = 0; i < getNumPlayers(); i++)
-	{
-		printf("[COMMON]: playerObject %3d:   x:%4.1f   y:%4.1f   z:%4.1f\n", playerObjects[i].id,
-			playerObjects[i].x, playerObjects[i].y, playerObjects[i].z);
-	}
+
+	vector<struct playerObject> vec = getAllPlayers();
+	for (int i = 0; i < vec.size(); i++)
+		printf("[COMMON]: playerObject %3d:   x:%4.1f   y:%4.1f   z:%4.1f\n", vec[i].id,
+			vec[i].x, vec[i].y, vec[i].z);
 }
 
-struct playerObject DynamicWorld::getObjectAt(int i)
+vector<struct playerObject> DynamicWorld::getAllPlayers()
 {
-	return playerObjects[i];
+	vector<struct playerObject> vec;
+	for(map<int,struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it) {
+	  vec.push_back(it->second);
+	}
+
+	return vec;
+}
+
+int DynamicWorld::getNumPlayers()
+{
+	return playerMap.size();
+}
+
+bool DynamicWorld::checkCollision(struct aabb a, struct aabb b)
+{
+	return (a.maxX >= b.minX && a.minX <= b.maxX
+		&& a.maxY >= b.minY && a.minY <= b.maxY
+		&& a.maxZ >= b.minZ && a.minZ <= b.maxZ);
+}
+
+void DynamicWorld::addStaticObject(struct staticObject obj)
+{
+	staticObjects.push_back(obj);
+}
+
+int DynamicWorld::getNumStaticObjects() 
+{
+	return staticObjects.size();
 }

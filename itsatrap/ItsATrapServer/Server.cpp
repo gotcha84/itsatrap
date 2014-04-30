@@ -12,7 +12,6 @@ int					Server::playerCount;
 struct bufferEntry	Server::packetBuffer[PACKET_BUFFER_SIZE];
 int					Server::packetBufferCount;
 DynamicWorld		Server::dynamicWorld;
-StaticWorld			Server::staticWorld;
 
 int Server::startServer()
 {
@@ -105,8 +104,14 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	else if (p->eventId == STATIC_OBJECT_CREATION_EVENT)
 	{
 		struct staticObjectPacket *staticObjPkt = (struct staticObjectPacket *)p;
-		staticWorld.addObject(staticObjPkt->object);
-		staticWorld.printWorld();
+		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
+		{
+			//printf("minX %f maxX %f\n", staticObjPkt->object.aabb.minX, staticObjPkt->object.aabb.maxX);
+			struct staticObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
+			dynamicWorld.addStaticObject(tmp);
+			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+		}
 	}
 	else
 	{
@@ -149,12 +154,11 @@ void Server::processBuffer()
 		
 		switch (p->eventId)
 		{
-			case PLAYER_UPDATE_EVENT: // State updates
+			case PLAYER_UPDATE_EVENT:
 			{
 				// Update player state
 				struct playerUpdatePacket *updatePacket = (struct playerUpdatePacket *)p;
 				dynamicWorld.updatePlayer(updatePacket->playerObj);
-
 				break;
 			}
 		
@@ -166,7 +170,7 @@ void Server::processBuffer()
 
 	packetBufferCount = 0;
 
-	if (dynamicWorld.getNumPlayers() > 0)
+	if (dynamicWorld.getAllPlayers().size() > 0)
 			broadcastDynamicWorld();
 
 	// TODO: NEED MUTEX UNLOCK

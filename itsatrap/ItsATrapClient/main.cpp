@@ -29,15 +29,8 @@ int main(int argc, char *argv[]) {
 	client = new ClientInstance(Client::getPlayerId());
 	window = new Window();
 	glm::vec3 starting = client->root->getPosition();
-
-	struct playerObject playerObj;
-	memset(&playerObj, 0, sizeof(struct playerObject));
-	playerObj.id = Client::getPlayerId();
-	playerObj.x = starting.x;
-	playerObj.y = starting.y;
-	playerObj.z = starting.z;
 	
-	Client::sendPlayerUpdate(playerObj);
+	Client::sendPlayerUpdate(client->root->m_player->getPlayerObjectForNetworking());
 
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
@@ -134,8 +127,6 @@ int main(int argc, char *argv[]) {
 	sg::Trap testTrap = sg::Trap(glm::vec3(75,0,0));
 	client->root->addChild(&testTrap);
 
-	client->printPlayers();
-	client->printSceneGraph();
 
 	glutMainLoop();
 

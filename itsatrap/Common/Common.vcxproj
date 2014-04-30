@@ -79,11 +79,9 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="NetworkObjects.h" />
     <ClInclude Include="DynamicWorld.h" />
-    <ClInclude Include="StaticWorld.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DynamicWorld.cpp" />
-    <ClCompile Include="StaticWorld.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
