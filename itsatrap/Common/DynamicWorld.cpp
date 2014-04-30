@@ -51,10 +51,10 @@ void DynamicWorld::updatePlayer(struct playerObject e)
 	}
 	for (int i = 0; i < staticObjects.size(); i++)
 	{
-		printf("Check %d %.1f %.1f\n", i, staticObjects[i].aabb.minX, staticObjects[i].aabb.maxX);
-		if (checkCollision(e.aabb, staticObjects[i].aabb))
+		// Something wrong with building#40
+		if (i != 40 && checkCollision(e.aabb, staticObjects[i].aabb))
 		{
-			printf("Collision: player %d with static object\n", e.id);
+			printf("Collision: player %d with static object %d\n", e.id, i);
 			return;
 		}
 	}
