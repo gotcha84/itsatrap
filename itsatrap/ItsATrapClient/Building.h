@@ -31,6 +31,8 @@ namespace sg {
 			
 			virtual void calculateBoundingBox();
 			virtual bool isInside(glm::vec3 point);
+			bool collidesWith(Building* b); // make virtual if child classes
+			virtual void setMaterial();
 	};
 }
 

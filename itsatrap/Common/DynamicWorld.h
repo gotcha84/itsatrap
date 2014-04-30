@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <iostream>
 
-#include "DynamicObject.h"
+#include "NetworkObjects.h"
 #include "Packet.h"
 
 using namespace std;
@@ -20,7 +20,7 @@ class DynamicWorld {
 
 private:
 	// Variables
-    vector<struct dynamicObject>	objects; // This vector should contain information about objects
+    vector<struct playerObject>	playerObjects; // This vector should contain information about objects
 	                                         // that are currently living in the world
 	
 public:
@@ -29,11 +29,11 @@ public:
 	
 	__declspec(dllexport) DynamicWorld();
 	__declspec(dllexport) DynamicWorld(struct packet *packet);
-	__declspec(dllexport) int getSize();
+	__declspec(dllexport) int getNumPlayers();
 	__declspec(dllexport) int serialize(char **ptr);
 	__declspec(dllexport) void printWorld();
-	__declspec(dllexport) void updateObject(struct dynamicObject e);
-	__declspec(dllexport) struct dynamicObject getObjectAt(int i);
+	__declspec(dllexport) void updatePlayer(struct playerObject e);
+	__declspec(dllexport) struct playerObject getObjectAt(int i);
 };
 
 #endif

@@ -26,6 +26,11 @@ namespace sg {
 			int m_heightMapZShift;
 			int m_numBuildings; // technically = to m_child.size() for now
 			int m_maxArraySize;
+			int m_maxNumArrays;
+
+			float m_cityScale;
+			float m_canScale;
+			float m_defaultScale;
 
 			int* m_nVertices;
 			float** m_vertices;
@@ -47,6 +52,7 @@ namespace sg {
 			// TODO: figure out what it takes 
 			void updateHeightMap();
 			void loadData(string inputfile);
+			bool loadDataAtPlace(string inputfile, glm::vec3 position);
 
 			void print();
 			

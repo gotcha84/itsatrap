@@ -13,8 +13,7 @@
 #include "NetworkConfig.h"
 #include "Player.h"
 #include "DynamicWorld.h"
-#include "DynamicObject.h"
-#include "StaticObject.h"
+#include "NetworkObjects.h"
 #include "StaticWorld.h"
 #include "Stopwatch.h"
 

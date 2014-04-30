@@ -95,6 +95,7 @@
     <ClCompile Include="Geode.cpp" />
     <ClCompile Include="Group.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="MatrixTransform.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MyPlayer.cpp" />
@@ -111,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="City.h" />

@@ -89,23 +89,18 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				// World update. 
 				// This variable 'world' is the world given by the server
 				DynamicWorld world(p);
-				testUpdateWorld(&world);
+				handleUpdateWorldFromServer(&world);
 			}
 		}
 	}
 }
 
-// Sending state updates
-void Client::sendStateUpdate(int id, float x, float y, float z)
-{
-	struct singleStateUpdatePacket p;
-	p.eventId = SINGLE_STATE_UPDATE_EVENT;
-	p.playerId = playerId;
-	p.entry.objectId = id;
-	p.entry.x = x;
-	p.entry.y = y;
-	p.entry.z = z;
 
+void Client::sendPlayerUpdate(struct playerObject player)
+{
+	struct playerUpdatePacket p;
+	p.eventId = PLAYER_UPDATE_EVENT;
+	memcpy(&p.playerObj, &player, sizeof(struct playerObject));
 	Client::sendMsg((char *)&p, sizeof(p));
 }
 
@@ -155,4 +150,9 @@ void Client::sendStaticObject(float minX, float minY, float minZ, float maxX, fl
 	packet.object.maxZ = maxZ;
 
 	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
+}
+
+void Client::requestToSpawnNewObject(struct playerObject)
+{
+	
 }

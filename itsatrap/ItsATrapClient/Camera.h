@@ -33,6 +33,8 @@ class Camera {
 		float m_xRotationAngle;
 		float m_yRotationAngle;
 
+		float m_yRotated;
+
 		Camera();
 		Camera(glm::vec3 pos);
 
@@ -41,8 +43,8 @@ class Camera {
 		glm::vec3 getCameraLookAt();
 		glm::vec3 getCameraUp();
 
-		void handleXRotation(char);
-		void handleYRotation(char);
+		void handleXRotation(float);
+		void handleYRotation(float);
 		void calculateAxis();
 
 		void updateCameraMatrix();

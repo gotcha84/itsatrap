@@ -11,9 +11,11 @@
 #include <vector>
 #include <fstream>
 #include <math.h>
+#include <climits>
 #include <sstream> // to convert float to string
 #include <iomanip> // to round floats
 
+#include "tiny_obj_loader.h"
 //#include "SceneGraph.h"
 
 using namespace std;
@@ -29,7 +31,10 @@ class Utilities {
 		static void writeFloatVectorToFile(vector<float> vec, string filename);
 		static void writeIntArrayToFile(int* arr, int size, string filename);
 		static void writeFloatArrayToFile(float* arr, int size, string filename);
-
+		static vector<float> modifyVec(vector<float> oldVec, float scale, float xTranslate, float yTranslate, float zTranslate);
+		static vector<float> findMinsMaxs(string inputfile);
+		static vector<float> findMinsMaxsHelper(vector<float> vec);
+		static glm::vec3 findAverage(string inputfile);
 		//static int getMaxDepth(sg::Node *node);
 };
 

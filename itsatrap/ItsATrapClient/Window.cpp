@@ -48,30 +48,30 @@ void Window::displaySceneGraph(void)
 	// andre added below if sattements
 	if (client->m_xAngleChange != 0.0f) {
 		if (client->m_xAngleChange < 0) {
-			client->root->getCamera()->handleXRotation('l');
+			client->root->getCamera()->handleXRotation(client->m_xAngleChange);
 		}
 		else {
-			client->root->getCamera()->handleXRotation('r');
+			client->root->getCamera()->handleXRotation(client->m_xAngleChange);
 		}
 		client->m_xAngleChange = 0.0f;
 	}
-
+	
 	// TODO test
-	/*
+	
 	if (client->m_yAngleChange != 0.0f) {
 		if (client->m_yAngleChange < 0) {
-			client->root->getPlayer()->getCamera()->handleYRotation('u');
+			client->root->getPlayer()->getCamera()->handleYRotation(client->m_yAngleChange);
 		}
 		else {
-			client->root->getPlayer()->getCamera()->handleYRotation('d');
+			client->root->getPlayer()->getCamera()->handleYRotation(client->m_yAngleChange);
 		}
 		client->m_yAngleChange = 0.0f;
-	}*/
-	/*
-	cout << "lookat: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraLookAt) << endl;
-	cout << "center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;
-	cout << "lookup: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraUp) << endl << endl;
-	*/
+	}
+
+	// cout << "lookat: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraLookAt) << endl;
+	// cout << "center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;
+	// cout << "lookup: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraUp) << endl << endl;
+
 	// TODO: move to player class?
 	client->root->getPlayer()->getPhysics()->applyGravity();
 	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - client->root->getPlayer()->getCamera()->m_cameraCenter;
@@ -109,6 +109,25 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 			client->toggleCurrentPlayer();
 			client->printSceneGraph();
 			break;
+		case 't':
+			sg::Trap *trap = new sg::Trap(client->root->getPosition());
+			client->root->addChild(trap);
+
+			// TODO: have a getcity method
+			//sg::City* city;
+			//for (int i=0; i < client->root->getNumChildren(); i++) {
+				//city = dynamic_cast<sg::City*>(client->root->m_child[i]);
+				//if (city != nullptr) {
+					//break;
+				//}
+				
+			//}
+			//if (city != nullptr) {
+				
+				//bool result = city->loadDataAtPlace("Can.obj", client->root->getPlayer()->getPosition());
+				//cout << "making a can: " << result << endl;
+			//}
+			break;
 	}
 	
 	// TODO: running
@@ -131,11 +150,11 @@ void Window::processMouseMove(int x, int y) {
 	cout << "clientX: " << client->m_xMouse << endl;
 	cout << "clientY: " << client->m_yMouse << endl;*/
 	if (client->m_xMouse != x) {
-	client->m_xAngleChange = float(client->m_xMouse-x)/client->m_xAngleChangeFactor;
+	client->m_xAngleChange = float((float)x-client->m_xMouse)/client->m_xAngleChangeFactor;
 	}
 
 	if (client->m_yMouse != y) {
-	client->m_yAngleChange = float(client->m_yMouse-y)/client->m_yAngleChangeFactor;
+	client->m_yAngleChange = float((float)y-client->m_yMouse)/client->m_yAngleChangeFactor;
 	}
 	
 	// keeps mouse centered

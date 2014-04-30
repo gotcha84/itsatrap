@@ -1,12 +1,11 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include "DynamicObject.h"
-#include "StaticObject.h"
+#include "NetworkObjects.h"
 
 #define INIT_REQUEST_EVENT 1
 #define INIT_RESPONSE_EVENT 2
-#define SINGLE_STATE_UPDATE_EVENT 3
+#define PLAYER_UPDATE_EVENT 3
 #define WORLD_UPDATE_EVENT 4
 #define STATIC_OBJECT_CREATION_EVENT 5
 
@@ -24,11 +23,10 @@ struct initResponsePacket
 };
 
 // State updates
-struct singleStateUpdatePacket
+struct playerUpdatePacket
 {
 	int eventId;
-	int playerId;
-	struct dynamicObject entry;
+	struct playerObject playerObj;
 };
 
 struct staticObjectPacket

@@ -1,10 +1,14 @@
 #include "City.h"
 
 namespace sg {
-
+	
 	City::City() {
 		m_numBuildings = 0;
+		m_maxNumArrays = 1000;
 		m_maxArraySize = 10000;
+		m_cityScale = 0.1f;
+		m_canScale = 5.0f;
+		m_defaultScale = 1.0f;
 		initArrays();
 	}
 
@@ -16,7 +20,7 @@ namespace sg {
 	}*/
 
 	City::~City() {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < m_maxNumArrays; i++) {
 			delete[] m_vertices[i];
 			m_vertices[i] = nullptr;
 
@@ -51,26 +55,30 @@ namespace sg {
 	}
 
 	void City::initArrays() {
-		m_vertices = new float*[100];
-		m_nVertices = new int[100];
-		m_normals = new float*[100];
-		m_texcoords = new float*[100];
-		m_indices = new int*[100];
-		m_nIndices = new int[100];
+		m_vertices = new float*[m_maxNumArrays];
+		m_nVertices = new int[m_maxNumArrays];
+		m_normals = new float*[m_maxNumArrays];
+		m_texcoords = new float*[m_maxNumArrays];
+		m_indices = new int*[m_maxNumArrays];
+		m_nIndices = new int[m_maxNumArrays];
 
-		for (int i = 0; i < 100; i++) {
-			m_vertices[i] = new float[1000];
-			m_normals[i] = new float[1000];
-			m_texcoords[i] = new float[1000];
-			m_indices[i] = new int[1000];
+		for (int i = 0; i < m_maxNumArrays; i++) {
+			m_vertices[i] = new float[m_maxArraySize];
+			m_normals[i] = new float[m_maxArraySize];
+			m_texcoords[i] = new float[m_maxArraySize];
+			m_indices[i] = new int[m_maxArraySize];
 		}
 	}
 
 	void City::draw(glm::mat4 parent, glm::mat4 camera) {
-
+		int count = 0;
 		for (int i = 0; i < getNumChildren(); i++) {
+			//cout << "city count: " << count << endl;
 			//if (i == 2) {
-				m_child[i]->draw(parent, camera);
+			count++;
+			//cout << "in loop: " << m_child[i]. << endl;
+			m_child[i]->draw(parent, camera);
+			//((sg::Building*)m_child[i])->draw(parent, camera);
 			//}
 		}
 		
@@ -106,10 +114,11 @@ namespace sg {
 		int arr[4][2] = {{0, 1}, {0, 3}, {1, 3}, {2, 3}};  
 		//int arr[5][2] = {{0, 1}, {0, 2}, {0, 3}, {1, 3}, {2, 3}};   
 		//if (!init_heightMap) {
+		/*
 		for (int k = 0; k < m_numBuildings; k++) {
 			for (int i = 0; i < m_nVertices[k]; i++) {
-				//m_vertices[k][i]*=10.0f; // use only for can
-				m_vertices[k][i]/=10.0f; // use only for city
+				//m_vertices[k][i]*=m_canScale; // use only for can
+				//m_vertices[k][i]*=m_cityScale; // use only for city
 				
 				if (i % 3 == 1) {
 					m_vertices[k][i]-=1.0f;
@@ -117,6 +126,7 @@ namespace sg {
 				
 			}
 		}
+		*/
 		//}
 
 		// TODO: fix min/max (only takes 2 args)
@@ -177,6 +187,8 @@ namespace sg {
 				for (int j = minx; j < maxx; j++) {
 					for (int k = minz; k < maxz; k++) {
 						if (maxy > World::m_heightMap[j+World::m_heightMapXShift][k+World::m_heightMapZShift]) {
+							//cout << "x: " << j+World::m_heightMapXShift << endl;
+							//cout << "z: " << k+World::m_heightMapZShift << endl;
 							World::m_heightMap[j+World::m_heightMapXShift][k+World::m_heightMapZShift] = maxy;
 						}
 					}
@@ -259,14 +271,12 @@ namespace sg {
 	}
 	*/
 
-	void City::loadData(string inputfile) {
+	bool City::loadDataAtPlace(string inputfile, glm::vec3 position) {
 
-		std::vector<tinyobj::shape_t> shapes;
+		vector<tinyobj::shape_t> shapes;
   
-		std::string err = tinyobj::LoadObj(shapes, inputfile.c_str());
-		
-		cout << err << endl;
-  
+		string err = tinyobj::LoadObj(shapes, inputfile.c_str());
+
 		int indicesCount = 0;
 		int verticesCount = 0;
 		int texturesCount = 0;
@@ -278,65 +288,230 @@ namespace sg {
 		int tmpTexturesCount = 0;
 		int tmpNormalsCount = 0;
 
-		int added = 0;
+		int num_children = getNumChildren();
 
-		//cout << shapes.size() << endl;
+		int added = 0;
+		std::string tmp;
+		stringstream ss;
+		glm::vec3 avg = Utilities::findAverage(inputfile);
+
+		float xTranslation;
+		float yTranslation;
+		float zTranslation;
+
 		for (int j = 0; j < shapes.size(); j++) {
 			tmpIndicesCount = 0;
 			tmpVerticesCount = 0;
 			tmpTexturesCount = 0;
 			tmpNormalsCount = 0;
 			for (int i = 0; i < shapes[j].mesh.indices.size(); i++) {
-				m_indices[j][i] = shapes[j].mesh.indices[i];
+				m_indices[j+num_children][i] = shapes[j].mesh.indices[i];
 				//cout << m_indices[i+indicesCount] << endl;
-			
 				tmpIndicesCount++;
 			}
-
+			
 			indicesCount += tmpIndicesCount;
 		
+			vector<float> tmpArr;
+
+			if (inputfile == "city.obj") {
+				xTranslation = position.x - (m_cityScale*avg.x);
+				yTranslation = position.y - (m_cityScale*avg.y);
+				zTranslation = position.z - (m_cityScale*avg.z);
+				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_cityScale, xTranslation, yTranslation, zTranslation);
+			}
+			else if (inputfile == "Can.obj") {
+				xTranslation = position.x - (m_canScale*avg.x);
+				yTranslation = position.y - (m_canScale*avg.y);
+				zTranslation = position.z - (m_canScale*avg.z);
+				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_canScale, xTranslation, yTranslation, zTranslation);
+			}
+			else {
+				xTranslation = position.x - (m_defaultScale*avg.x);
+				yTranslation = position.y - (m_defaultScale*avg.y);
+				zTranslation = position.z - (m_defaultScale*avg.z);
+				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_defaultScale, xTranslation, yTranslation, zTranslation);
+			}
 			for (int i = 0; i < shapes[j].mesh.positions.size(); i++) {
-				m_vertices[j][i] = shapes[j].mesh.positions[i];
+				m_vertices[j+num_children][i] = tmpArr[i];
 				tmpVerticesCount++;
 			}
-		
 			verticesCount += tmpVerticesCount;
 
 			for (int i = 0; i < shapes[j].mesh.normals.size(); i++) {
-				m_normals[j][i] = shapes[j].mesh.normals[i];
+				m_normals[j+num_children][i] = shapes[j].mesh.normals[i];
 				tmpNormalsCount++;
 			}
 			normalsCount += tmpNormalsCount;
 
 			// TODO textures
 			for (int i = 0; i < shapes[j].mesh.texcoords.size(); i++) {
-				m_texcoords[j][i] = shapes[j].mesh.texcoords[i];
+				m_texcoords[j+num_children][i] = shapes[j].mesh.texcoords[i];
 				tmpTexturesCount++;
 			}
 			texturesCount +=tmpTexturesCount;
-			m_nIndices[j] = tmpIndicesCount;
-			m_nVertices[j] = tmpVerticesCount;
+			m_nIndices[j+num_children] = tmpIndicesCount;
+			m_nVertices[j+num_children] = tmpVerticesCount;
 
-			Building *newChild = new Building(j);
+			Building *newChild = new Building(j+num_children);
 			addChild(newChild);
 			m_numBuildings++;
 			added++;
-		
 
-			//delete newChild;
-			// TODO delete
+			/*ss.clear();
+			ss << j;
+			tmp = ss.str();
+			Utilities::writeFloatArrayToFile(m_vertices[j], shapes[j].mesh.indices.size(), "verts"+tmp+".txt");
+			*/
+
+			// TODO delete newchild
 		}
 
-		/*
-		Utilities::writeIntArrayToFile(m_nVertices, 100, "nverts.txt");
-		Utilities::writeFloatArrayToFile(m_vertices[7], 10000, "verts7.txt");
-		*/
+		//Utilities::writeIntArrayToFile(m_nVertices, added, "nverts.txt");
 		
 		updateHeightMap();
 
 		for (int i = 0; i < added; i++) {
-			((sg::Building*)m_child[i])->calculateBoundingBox();
+			((sg::Building*)m_child[i+num_children])->calculateBoundingBox();
+			((sg::Building*)m_child[i+num_children])->setMaterial();
 		}
+
+		bool canPlace = true;
+		for (int i = 0; i < added; i++) {
+			// TODO: check if child is buildign?
+			for (int j = 0; j < num_children; j++) {
+				sg::Building* child = (sg::Building*)m_child[j];
+				if (((sg::Building*)m_child[i+num_children])->collidesWith(child)) {
+					canPlace = false;
+					break;
+				}
+			}
+		}
+		if (!canPlace) {
+			//cout << "BEFORE DELETION: " << num_children << endl;
+			for (int i = num_children+added-1; i > num_children-1; i--) {
+				//cout << "DELETING! " << i-num_children << " of " << added << endl;
+				sg::Node* deleteMe = m_child[i];
+			
+
+				m_nIndices[i] = 0;
+				m_nVertices[i] = 0;
+				m_numBuildings--;
+				bool result = removeChild(i);
+				//cout << "result: " << result << endl;
+				//delete deleteMe;
+				//deleteMe = nullptr;
+
+				//delete[] m_vertices[i];
+				//m_vertices[i] = nullptr;
+
+				//delete[] m_normals[i];
+				//m_normals[i] = nullptr;
+
+				//delete[] m_texcoords[i];
+				//m_texcoords = nullptr;
+
+				//delete[] m_indices[i];
+				//m_indices[i] = nullptr;
+			}
+			//cout << "AFTER DELETION: " << getNumChildren() << endl;
+		}
+		return canPlace;
+	}
+
+	void City::loadData(string inputfile) {
+
+		vector<tinyobj::shape_t> shapes;
+  
+		string err = tinyobj::LoadObj(shapes, inputfile.c_str());
+
+		int indicesCount = 0;
+		int verticesCount = 0;
+		int texturesCount = 0;
+		int normalsCount = 0;
+		int max_ele = -1;
+
+		int tmpIndicesCount = 0;
+		int tmpVerticesCount = 0;
+		int tmpTexturesCount = 0;
+		int tmpNormalsCount = 0;
+
+		int num_children = getNumChildren();
+
+		int added = 0;
+		std::string tmp;
+		stringstream ss;
+		
+		for (int j = 0; j < shapes.size(); j++) {
+			tmpIndicesCount = 0;
+			tmpVerticesCount = 0;
+			tmpTexturesCount = 0;
+			tmpNormalsCount = 0;
+			for (int i = 0; i < shapes[j].mesh.indices.size(); i++) {
+				m_indices[j+num_children][i] = shapes[j].mesh.indices[i];
+				//cout << m_indices[i+indicesCount] << endl;
+				tmpIndicesCount++;
+			}
+
+			indicesCount += tmpIndicesCount;
+		
+			vector<float> tmpArr;
+
+			if (inputfile == "city.obj") {
+				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_cityScale, 0.0f, -1.0f, 0.0f);
+			}
+			else if (inputfile == "Can.obj") {
+				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_canScale, 40.0f, 0.0f, 40.0f);
+			}
+			else {
+				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_defaultScale, 0.0f, 0.0f, 0.0f);
+			}
+
+			for (int i = 0; i < shapes[j].mesh.positions.size(); i++) {
+				m_vertices[j+num_children][i] = tmpArr[i];
+				tmpVerticesCount++;
+			}
+			verticesCount += tmpVerticesCount;
+
+			for (int i = 0; i < shapes[j].mesh.normals.size(); i++) {
+				m_normals[j+num_children][i] = shapes[j].mesh.normals[i];
+				tmpNormalsCount++;
+			}
+			normalsCount += tmpNormalsCount;
+
+			// TODO textures
+			for (int i = 0; i < shapes[j].mesh.texcoords.size(); i++) {
+				m_texcoords[j+num_children][i] = shapes[j].mesh.texcoords[i];
+				tmpTexturesCount++;
+			}
+			texturesCount +=tmpTexturesCount;
+			m_nIndices[j+num_children] = tmpIndicesCount;
+			m_nVertices[j+num_children] = tmpVerticesCount;
+
+			Building *newChild = new Building(j+num_children);
+			addChild(newChild);
+			m_numBuildings++;
+			added++;
+
+			/*ss.clear();
+			ss << j;
+			tmp = ss.str();
+			Utilities::writeFloatArrayToFile(m_vertices[j], shapes[j].mesh.indices.size(), "verts"+tmp+".txt");
+			*/
+
+			// TODO delete newchild
+		}
+
+		//Utilities::writeIntArrayToFile(m_nVertices, added, "nverts.txt");
+		
+		updateHeightMap();
+
+		for (int i = 0; i < added; i++) {
+			((sg::Building*)m_child[i+num_children])->calculateBoundingBox();
+			((sg::Building*)m_child[i+num_children])->setMaterial();
+		}
+
+
 
 	}
 
