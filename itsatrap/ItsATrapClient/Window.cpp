@@ -110,21 +110,23 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 			client->printSceneGraph();
 			break;
 		case 't':
+			sg::Trap *trap = new sg::Trap(client->root->getPosition());
+			client->root->addChild(trap);
+
 			// TODO: have a getcity method
-			sg::City* city;
-	
-			for (int i=0; i < client->root->getNumChildren(); i++) {
-				city = dynamic_cast<sg::City*>(client->root->m_child[i]);
-				if (city != nullptr) {
-					break;
-				}
+			//sg::City* city;
+			//for (int i=0; i < client->root->getNumChildren(); i++) {
+				//city = dynamic_cast<sg::City*>(client->root->m_child[i]);
+				//if (city != nullptr) {
+					//break;
+				//}
 				
-			}
-			if (city != nullptr) {
+			//}
+			//if (city != nullptr) {
 				
-				bool result = city->loadDataAtPlace("Can.obj", client->root->getPlayer()->getPosition());
-				cout << "making a can: " << result << endl;
-			}
+				//bool result = city->loadDataAtPlace("Can.obj", client->root->getPlayer()->getPosition());
+				//cout << "making a can: " << result << endl;
+			//}
 			break;
 	}
 	
