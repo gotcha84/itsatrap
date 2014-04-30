@@ -6,5 +6,6 @@
 #define BUFSIZE 512
 #define MAX_PLAYERS 5
 #define PACKET_BUFFER_SIZE 64
+#define MAX_SERVER_PROCESS_RATE 33
 
 #endif

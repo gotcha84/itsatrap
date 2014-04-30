@@ -79,9 +79,11 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="NetworkObjects.h" />
     <ClInclude Include="DynamicWorld.h" />
+    <ClInclude Include="Stopwatch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DynamicWorld.cpp" />
+    <ClCompile Include="Stopwatch.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

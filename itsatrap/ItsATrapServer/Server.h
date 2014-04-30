@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <iostream>
 
+#include "Stopwatch.h"
 #include "Packet.h"
 #include "NetworkConfig.h"
 #include "Player.h"
@@ -42,6 +43,7 @@ private:
 	static struct bufferEntry	packetBuffer[PACKET_BUFFER_SIZE];
 	static int					packetBufferCount;
 	static DynamicWorld			dynamicWorld;
+	static Stopwatch			stopwatch;
 
 	// Functions
 	static int initialize();
