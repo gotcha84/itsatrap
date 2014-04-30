@@ -1,6 +1,6 @@
 #include <ctime>
 
-#include "Utilities\Stopwatch.h"
+#include "Stopwatch.h"
 
 Stopwatch::Stopwatch()
 {

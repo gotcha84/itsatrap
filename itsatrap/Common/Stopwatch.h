@@ -9,15 +9,13 @@ struct struct_stopwatch
 
 class Stopwatch
 {
-	private:
-		struct_stopwatch timer;
-
 	public:
-		Stopwatch();
-		void start();
-		void stop();
-		void reset();
-		unsigned long getElapsedMilliseconds();
+		struct_stopwatch timer;
+		__declspec(dllexport) Stopwatch();
+		__declspec(dllexport) void start();
+		__declspec(dllexport) void stop();
+		__declspec(dllexport) void reset();
+		__declspec(dllexport) unsigned long getElapsedMilliseconds();
 };
 
 #endif

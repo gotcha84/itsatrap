@@ -13,9 +13,10 @@ struct bufferEntry	Server::packetBuffer[PACKET_BUFFER_SIZE];
 int					Server::packetBufferCount;
 DynamicWorld		Server::dynamicWorld;
 StaticWorld			Server::staticWorld;
+Stopwatch			Server::stopwatch;
 
 // Private Vars
-HANDLE	packetBufMutex;
+HANDLE		packetBufMutex;
 
 int Server::startServer()
 {
@@ -127,12 +128,26 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 
 DWORD WINAPI Server::bufferProcessorThread(LPVOID param)
 {
-	// TODO (ktngo): Establish buffer buffer sleep to be done after all processes run
+	long elapsed;
 	printf("[SERVER]: Process buffer thread started\n");
+
 	while (1)
 	{
+		elapsed = 0;
+		stopwatch.reset();
+
 		processBuffer();
-		Sleep(33);
+
+		elapsed = MAX_SERVER_PROCESS_RATE - stopwatch.getElapsedMilliseconds();
+		if (elapsed >= 0)
+		{
+			Sleep(elapsed);
+		}
+		else
+		{
+			// Note: Hopefully this case doesn't happen, means processing time is taking longer than rate
+			Sleep(MAX_SERVER_PROCESS_RATE);	
+		}
 	}
 }
 
