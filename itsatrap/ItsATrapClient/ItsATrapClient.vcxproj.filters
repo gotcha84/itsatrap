@@ -102,6 +102,9 @@
     <ClCompile Include="Trap.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="Trap.h">
       <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

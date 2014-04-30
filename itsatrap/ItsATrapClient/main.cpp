@@ -121,6 +121,7 @@ int main(int argc, char *argv[]) {
 	sg::City city = sg::City();
 	city.loadData("city.obj");
 	//city.loadData("Can.obj");
+	//city.loadData("banana_obj.obj");
 	client->root->addChild(&city);
 
 	// create a trap

@@ -143,10 +143,10 @@ void MyPlayer::handleMovement(unsigned char key) {
 	//cout << "goTo: " << glm::to_string(proposedNewPos) << endl;
 
 	// USE THIS FOR COLLISION DETECTION ON
-	glm::vec3 newPos = m_physics->handleCollisionDetection(proposedNewPos);
+	//glm::vec3 newPos = m_physics->handleCollisionDetection(proposedNewPos);
 
 	// USE THIS FOR COLLISION DETECTION OFF
-	//glm::vec3 newPos = proposedNewPos;
+	glm::vec3 newPos = proposedNewPos;
 
 	//glm::vec3 moved = newPos - oldPos;
 	//cout << "moved: " << glm::to_string(moved) << endl;

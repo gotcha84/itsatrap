@@ -20,6 +20,8 @@ Camera::Camera() {
 	m_cameraLookAt = m_cameraCenter + glm::vec3(0.0f, 0.0f, -1.0f);
 	m_cameraUp = glm::vec3(0, 1.0f, 0);
 
+	m_yRotated = 0.0f;
+
 	updateCameraMatrix();
 }
 
@@ -38,6 +40,8 @@ Camera::Camera(glm::vec3 pos) {
 	m_cameraCenter = pos;// + m_playerHeight;
 	m_cameraLookAt = m_cameraCenter + glm::vec3(0.0f, 0.0f, -1.0f);
 	m_cameraUp = glm::vec3(0, 1.0f, 0);
+
+	m_yRotated = 0.0f;
 
 	updateCameraMatrix();
 }
@@ -58,43 +62,30 @@ glm::vec3 Camera::getCameraUp() {
 	return m_cameraUp;
 }
 
-void Camera::handleXRotation(char direction) {
+void Camera::handleXRotation(float magnitude) {
 
 	glm::vec3 tmp_camZ = glm::vec3(m_camZ.x, 0.0f, m_camZ.z);
 
-	// left
-	if (direction == 'r') {
-		tmp_camZ = glm::rotateY(tmp_camZ, -1.0f*m_xRotationAngle);
-		m_camX = glm::rotateY(m_camX, -1.0f*m_xRotationAngle);
+	tmp_camZ = glm::rotateY(tmp_camZ, magnitude*m_xRotationAngle);
+	m_camX = glm::rotateY(m_camX, magnitude*m_xRotationAngle);
 
-	}
-
-	// right
-	if (direction == 'l') {
-		tmp_camZ = glm::rotateY(tmp_camZ, 1.0f*m_xRotationAngle);
-		m_camX = glm::rotateY(m_camX, 1.0f*m_xRotationAngle);
-	}
-	
 	m_camZ = glm::vec3(tmp_camZ.x, m_camZ.y, tmp_camZ.z);
 	m_cameraLookAt = m_cameraCenter + m_camZ;
 
 	updateCameraMatrix();
 }
 
-void Camera::handleYRotation(char direction) {
+void Camera::handleYRotation(float magnitude) {
 	// TODO modify upvector too for confuse ray
-	if (direction == 'u') {
-		m_camZ = glm::rotateX(m_camZ, 1.0f*m_yRotationAngle);
-		//m_cameraUp = glm::rotateX(m_cameraUp, 1.0f*m_yRotationAngle);
+	if (!(m_yRotated > 80.0f && magnitude > 0) && !(m_yRotated < -80.0f && magnitude < 0)) {
+		m_camZ.y+=magnitude*0.01f*m_yRotationAngle; // both this and the two lines below seem okay
+		//m_camZ = glm::rotate(m_camZ, magnitude*m_yRotationAngle, m_camX);
+		//m_yRotated+=magnitude*m_yRotationAngle;
 	}
-
-	// down
-	if (direction == 'd') {
-		m_camZ = glm::rotateX(m_camZ, -1.0f*m_yRotationAngle);
-		//m_cameraUp = glm::rotateX(m_cameraUp, -1.0f*m_yRotationAngle);
-	}
-
+	//cout << "mcamX: " << glm::to_string(m_camX) << endl;
+	//cout << "before: " << glm::to_string(m_cameraLookAt) << endl;
 	m_cameraLookAt = m_cameraCenter + m_camZ;
+	//cout << "after: " << glm::to_string(m_cameraLookAt) << endl << endl;
 	
 	updateCameraMatrix();
 }
@@ -106,8 +97,10 @@ void Camera::calculateAxis() {
 	// not sure if need to normalize
 	m_camZ = glm::normalize(ZCameraDiff);
 
+	float oldmcamXY = m_camX.y;
 	// or is it radians
 	m_camX = glm::rotateY(m_camZ, -90.0f);
+	m_camX = glm::vec3(m_camX.x, oldmcamXY, m_camX.z);
 }
 
 void Camera::updateCameraMatrix() {
@@ -132,35 +125,29 @@ void Camera::move(glm::vec3 delta) {
 }
 
 void Camera::moveTo(glm::vec3 pos) {
-	/*
-	cout << "b4center " << glm::to_string(client->root->getCamera()->getCameraCenter()) << endl;
-	cout << "b4look at " << glm::to_string(client->root->getCamera()->getCameraLookAt()) << endl;
-	cout << "b4up " << glm::to_string(client->root->getCamera()->getCameraUp()) << endl << endl;
-	*/
+	// cout << "b4center " << glm::to_string(client->root->getCamera()->getCameraCenter()) << endl;
+	// cout << "b4look at " << glm::to_string(client->root->getCamera()->getCameraLookAt()) << endl;
+	// cout << "b4up " << glm::to_string(client->root->getCamera()->getCameraUp()) << endl << endl;
 	glm::vec3 oldCamCenter = m_cameraCenter;
 	m_cameraCenter = glm::vec3(pos.x, pos.y, pos.z);
 	m_cameraLookAt = m_cameraCenter + m_camZ;
-	/*
-	cout << "aftercenter " << glm::to_string(client->root->getCamera()->getCameraCenter()) << endl;
-	cout << "afterlook at " << glm::to_string(client->root->getCamera()->getCameraLookAt()) << endl;
-	cout << "afterup " << glm::to_string(client->root->getCamera()->getCameraUp()) << endl << endl;
-	*/
 	calculateAxis();
 	updateCameraMatrix();
-
-	//cout << glm::to_string(m_cameraCenter) << endl;
+	// cout << "aftercenter " << glm::to_string(client->root->getCamera()->getCameraCenter()) << endl;
+	// cout << "afterlook at " << glm::to_string(client->root->getCamera()->getCameraLookAt()) << endl;
+	// cout << "afterup " << glm::to_string(client->root->getCamera()->getCameraUp()) << endl << endl;
 }
 
 void Camera::lookIn(glm::vec3 direction) {
-	cout << "b4center " << glm::to_string(client->root->getCamera()->getCameraCenter()) << endl;
-	cout << "b4look at " << glm::to_string(client->root->getCamera()->getCameraLookAt()) << endl;
-	cout << "b4up " << glm::to_string(client->root->getCamera()->getCameraUp()) << endl << endl;
+	// cout << "b4center " << glm::to_string(client->root->getCamera()->getCameraCenter()) << endl;
+	// cout << "b4look at " << glm::to_string(client->root->getCamera()->getCameraLookAt()) << endl;
+	// cout << "b4up " << glm::to_string(client->root->getCamera()->getCameraUp()) << endl << endl;
 	m_cameraLookAt = m_cameraCenter + glm::normalize(direction);
 	calculateAxis();
 	updateCameraMatrix();
-	cout << "aftercenter " << glm::to_string(client->root->getCamera()->getCameraCenter()) << endl;
-	cout << "afterlook at " << glm::to_string(client->root->getCamera()->getCameraLookAt()) << endl;
-	cout << "afterup " << glm::to_string(client->root->getCamera()->getCameraUp()) << endl << endl;
+	// cout << "aftercenter " << glm::to_string(client->root->getCamera()->getCameraCenter()) << endl;
+	// cout << "afterlook at " << glm::to_string(client->root->getCamera()->getCameraLookAt()) << endl;
+	// cout << "afterup " << glm::to_string(client->root->getCamera()->getCameraUp()) << endl << endl;
 }
 
 void Camera::lookAt(glm::vec3 point) {

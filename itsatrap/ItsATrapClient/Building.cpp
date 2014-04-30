@@ -15,11 +15,13 @@ namespace sg {
 	}*/
 
 	Building::~Building() {
-
+		
+	
 	}
 
 	void Building::draw(glm::mat4 parent, glm::mat4 cam) {
 		//cout << "nverts is : " << m_nIndices[0] << endl;
+		//cout << "Drawing: " << m_id << endl;
 		glm::mat4 mv = glm::inverse(cam) * parent;
 
 		glPushMatrix();
@@ -69,6 +71,13 @@ namespace sg {
 			glColor3f(1, 1, 0);
 		}
 
+		//cout << "m_id: " << m_id << endl;
+		glMaterialfv( GL_FRONT, GL_AMBIENT, m_material.m_ambient);
+		glMaterialfv( GL_FRONT, GL_DIFFUSE, m_material.m_diffuse);
+		glMaterialfv( GL_FRONT, GL_SPECULAR, m_material.m_specular);
+		glMaterialfv( GL_FRONT, GL_EMISSION, m_material.m_emission);
+		glMaterialf( GL_FRONT, GL_SHININESS, m_material.m_shininess);
+
 		//glColor3f(((m_id%8)%4)%2, (m_id%4)%2, m_id%2);
 		for (int i = 0; i < myParent->m_nIndices[m_id]/3; i++) {
 			//cout << m_indices[i] << endl;
@@ -94,7 +103,7 @@ namespace sg {
 			glBegin(GL_TRIANGLES);
 			for (int j = 0; j < 3; j++) {
 				glNormal3f(myParent->m_normals[m_id][3*myParent->m_indices[m_id][3*i+j]], myParent->m_normals[m_id][3*myParent->m_indices[m_id][3*i+j]+1], myParent->m_normals[m_id][3*myParent->m_indices[m_id][3*i+j]+2]);
-				glTexCoord2f(myParent->m_texcoords[m_id][2*myParent->	m_indices[m_id][t]], myParent->m_texcoords[m_id][2*myParent->m_indices[m_id][t]+1]);
+				glTexCoord2f(myParent->m_texcoords[m_id][2*myParent->m_indices[m_id][t]], myParent->m_texcoords[m_id][2*myParent->m_indices[m_id][t]+1]);
 				glVertex3f(myParent->m_vertices[m_id][3*myParent->m_indices[m_id][3*i+j]], myParent->m_vertices[m_id][3*myParent->m_indices[m_id][3*i+j]+1], myParent->m_vertices[m_id][3*myParent->m_indices[m_id][3*i+j]+2]);
 				t++;
 			}
@@ -158,7 +167,7 @@ namespace sg {
 	}
 
 	bool Building::isInside(glm::vec3 point) {		
-		if (m_id == 40) {
+		if (m_id == 43) {
 			return false;
 		}
 		else {
@@ -170,4 +179,15 @@ namespace sg {
 		}
 	}
 
+	bool Building::collidesWith(Building* b) {
+		return (m_boundingBox.collidesWith(b->m_boundingBox));
+	}
+	
+	void Building::setMaterial() {
+		m_material.setAmbient(0.7f, 0.7f, 0.7f, 1.0f); 
+		m_material.setDiffuse(0.1f, 0.5f, 0.8f, 1.0f);
+		m_material.setDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+		m_material.setEmission(0.3f, 0.2f, 0.2f, 0.0f);
+		m_material.setShininess(128.0f);
+	}
 }

@@ -28,5 +28,12 @@ namespace sg {
 		return false;
 	}
 
+	// void Geode::collidesWith(Geode b) {
+
+	// }
+	
+	void Geode::setMaterial() {
+
+	}
 }
 
