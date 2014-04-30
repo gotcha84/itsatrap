@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <iostream>
 
-#include "StaticObject.h"
+#include "NetworkObjects.h"
 
 using namespace std;
 

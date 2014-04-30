@@ -28,10 +28,10 @@ DynamicWorld::DynamicWorld(struct packet *packet)
 
 	for (int i = 0; i < numUpdates; i++)
 	{
-		struct dynamicObject *entry = (struct dynamicObject *)(buf + 2*sizeof(int) + i*sizeof(struct dynamicObject));
-		struct dynamicObject tmp;
-		memcpy(&tmp, entry, sizeof(struct dynamicObject));
-		objects.push_back(tmp);
+		struct playerObject *entry = (struct playerObject *)(buf + 2*sizeof(int) + i*sizeof(struct playerObject));
+		struct playerObject tmp;
+		memcpy(&tmp, entry, sizeof(struct playerObject));
+		playerObjects.push_back(tmp);
 	}
 }
 
@@ -42,30 +42,28 @@ DynamicWorld::DynamicWorld(struct packet *packet)
  * Try to find an entry corresponding to 'e'. If found, update it, otherwise
  * create new entry.
  */
-void DynamicWorld::updateObject(struct dynamicObject e)
+void DynamicWorld::updatePlayer(struct playerObject e)
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = 0; i < playerObjects.size(); i++)
 	{
-		if (objects[i].objectId == e.objectId)
+		if (playerObjects[i].id == e.id)
 		{
-			objects[i].x = e.x;
-			objects[i].y = e.y;
-			objects[i].z = e.z;
+			memcpy(&playerObjects[i], &e, sizeof(struct playerObject));
 			return;
 		}
 	}
 
 	// Entry not found, create a new one.
-	objects.push_back(e);	
+	playerObjects.push_back(e);	
 }
 
 /*
  * DynamicWorld::getsize()
  *
  */
-int DynamicWorld::getSize()
+int DynamicWorld::getNumPlayers()
 {
-	return objects.size();
+	return playerObjects.size();
 }
 
 /*
@@ -79,19 +77,19 @@ int DynamicWorld::getSize()
  * Serialization policy:
  * byte 0: always filled with 4 (eventId)
  *      4: size of payload
- *      8: objects (not being serialized)
+ *      8: playerObjects (not being serialized)
  */
 int DynamicWorld::serialize(char **ptr)
 {
-	int size = 2*sizeof(int) + sizeof(struct dynamicObject) * getSize();
+	int size = 2*sizeof(int) + sizeof(struct playerObject) * getNumPlayers();
 	char *buf = (char *) malloc(size);
 
 	((int *)buf)[0] = 4;
-	((int *)buf)[1] = getSize();
+	((int *)buf)[1] = getNumPlayers();
 
-	for (int i = 0; i < getSize(); i++)
+	for (int i = 0; i < getNumPlayers(); i++)
 	{
-		memcpy(buf + 2*sizeof(int) + i * sizeof(struct dynamicObject), &objects[i], sizeof(struct dynamicObject));
+		memcpy(buf + 2*sizeof(int) + i * sizeof(struct playerObject), &playerObjects[i], sizeof(struct playerObject));
 	}
 
 	*ptr = buf;
@@ -107,14 +105,14 @@ int DynamicWorld::serialize(char **ptr)
 void DynamicWorld::printWorld()
 {
 	printf("[COMMON]: Printing world state:\n");
-	for (int i = 0; i < getSize(); i++)
+	for (int i = 0; i < getNumPlayers(); i++)
 	{
-		printf("[COMMON]: Object %3d:   x:%4.1f   y:%4.1f   z:%4.1f\n", objects[i].objectId,
-			objects[i].x, objects[i].y, objects[i].z);
+		printf("[COMMON]: playerObject %3d:   x:%4.1f   y:%4.1f   z:%4.1f\n", playerObjects[i].id,
+			playerObjects[i].x, playerObjects[i].y, playerObjects[i].z);
 	}
 }
 
-struct dynamicObject DynamicWorld::getObjectAt(int i)
+struct playerObject DynamicWorld::getObjectAt(int i)
 {
-	return objects[i];
+	return playerObjects[i];
 }

@@ -171,14 +171,17 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	this->setModelMatrix(glm::translate(m_physics->m_position));
 	this->updateBoundingBox();
-	
-	Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
-	
-	this->getAABB()->print();
 
-	//cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
-	//cout << "look at: " << glm::to_string(this->getCamera()->getCameraLookAt()) << endl;
-	//cout << "up: " << glm::to_string(this->getCamera()->getCameraUp()) << endl;
+
+	// Send data to server
+	struct playerObject playerObj;
+	memset(&playerObj, 0, sizeof(struct playerObject));
+	playerObj.id = Client::getPlayerId();
+	playerObj.x = newPos.x;
+	playerObj.y = newPos.y;
+	playerObj.z = newPos.z;
+
+	Client::sendPlayerUpdate(playerObj);
 }
 
 void MyPlayer::updateModelViewMatrix() {

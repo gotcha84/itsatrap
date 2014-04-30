@@ -29,8 +29,15 @@ int main(int argc, char *argv[]) {
 	client = new ClientInstance(Client::getPlayerId());
 	window = new Window();
 	glm::vec3 starting = client->root->getPosition();
+
+	struct playerObject playerObj;
+	memset(&playerObj, 0, sizeof(struct playerObject));
+	playerObj.id = Client::getPlayerId();
+	playerObj.x = starting.x;
+	playerObj.y = starting.y;
+	playerObj.z = starting.z;
 	
-	Client::sendStateUpdate(Client::getPlayerId(), starting.x, starting.y, starting.z);
+	Client::sendPlayerUpdate(playerObj);
 
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
@@ -121,7 +128,6 @@ int main(int argc, char *argv[]) {
 	sg::City city = sg::City();
 	city.loadData("city.obj");
 	//city.loadData("Can.obj");
-	//city.loadData("banana_obj.obj");
 	client->root->addChild(&city);
 
 	// create a trap

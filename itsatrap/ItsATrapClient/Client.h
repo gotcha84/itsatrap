@@ -11,7 +11,7 @@
 #include "Packet.h"
 #include "NetworkConfig.h"
 #include "DynamicWorld.h"
-#include "DynamicObject.h"
+#include "NetworkObjects.h"
 #include "enrico.h"
 
 /*
@@ -42,11 +42,12 @@ public:
 	// Functions
 	static int initializeClient();
 	static void startReceiverThread();
-	static void sendStateUpdate(int id, float x, float y, float z);
 	static int getPlayerId();
 	static void sendStaticObject(float, float, float, float, float, float);
+	static void sendPlayerUpdate(struct playerObject);
+	static void requestToSpawnNewObject(struct playerObject);
 };
 
 
 
-#endif CLIENT_H
+#endif

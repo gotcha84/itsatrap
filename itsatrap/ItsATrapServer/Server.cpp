@@ -149,11 +149,11 @@ void Server::processBuffer()
 		
 		switch (p->eventId)
 		{
-			case 3: // State updates
+			case PLAYER_UPDATE_EVENT: // State updates
 			{
 				// Update player state
-				struct singleStateUpdatePacket *updatePacket = (struct singleStateUpdatePacket *)p;
-				dynamicWorld.updateObject(updatePacket->entry);
+				struct playerUpdatePacket *updatePacket = (struct playerUpdatePacket *)p;
+				dynamicWorld.updatePlayer(updatePacket->playerObj);
 
 				break;
 			}
@@ -166,7 +166,7 @@ void Server::processBuffer()
 
 	packetBufferCount = 0;
 
-	if (dynamicWorld.getSize() > 0)
+	if (dynamicWorld.getNumPlayers() > 0)
 			broadcastDynamicWorld();
 
 	// TODO: NEED MUTEX UNLOCK
