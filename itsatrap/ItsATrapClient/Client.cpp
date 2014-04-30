@@ -140,14 +140,15 @@ int Client::getPlayerId()
 
 void Client::sendStaticObject(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
 {
-	struct staticObjectPacket packet;
+	struct staticObjectPacket packet = {};
 	packet.eventId = STATIC_OBJECT_CREATION_EVENT;
-	packet.object.minX = minX;
-	packet.object.minY = minY;
-	packet.object.minZ = minZ;
-	packet.object.maxX = maxX;
-	packet.object.maxY = maxY;
-	packet.object.maxZ = maxZ;
+	packet.playerId = playerId;
+	packet.object.aabb.minX = minX;
+	packet.object.aabb.minY = minY;
+	packet.object.aabb.minZ = minZ;
+	packet.object.aabb.maxX = maxX;
+	packet.object.aabb.maxY = maxY;
+	packet.object.aabb.maxZ = maxZ;
 
 	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
 }

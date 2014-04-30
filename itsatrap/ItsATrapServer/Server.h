@@ -15,7 +15,6 @@
 #include "Player.h"
 #include "DynamicWorld.h"
 #include "NetworkObjects.h"
-#include "StaticWorld.h"
 
 using namespace std;
 
@@ -44,7 +43,6 @@ private:
 	static struct bufferEntry	packetBuffer[PACKET_BUFFER_SIZE];
 	static int					packetBufferCount;
 	static DynamicWorld			dynamicWorld;
-	static StaticWorld			staticWorld;
 	static Stopwatch			stopwatch;
 
 	// Functions

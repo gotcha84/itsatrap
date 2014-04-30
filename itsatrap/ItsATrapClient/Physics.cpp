@@ -16,7 +16,6 @@ Physics::Physics() {
 
 Physics::Physics(glm::vec3 pos) {
 
-	cout << "pos: " << glm::to_string(pos) << endl;
 	m_currentState = PhysicsStates::None;
 
 	m_velocity = glm::vec3(0.0f, 0.0f, 0.0f);

@@ -22,11 +22,11 @@
     <Filter Include="Source Files\SceneGraph\Shapes">
       <UniqueIdentifier>{fc1b893c-9880-4b07-b8a8-e1b0e760c61a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SceneGraph">
-      <UniqueIdentifier>{f018f9e0-9e2c-4cdd-b8f9-a875dc9919b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Networking">
       <UniqueIdentifier>{b52c816c-9497-4257-bff8-17e818fbd0ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SceneGraph">
+      <UniqueIdentifier>{f018f9e0-9e2c-4cdd-b8f9-a875dc9919b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -132,31 +132,31 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Geode.h">
-      <Filter>SceneGraph</Filter>
+      <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="Group.h">
-      <Filter>SceneGraph</Filter>
+      <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="MatrixTransform.h">
-      <Filter>SceneGraph</Filter>
+      <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
-      <Filter>SceneGraph</Filter>
+      <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="SceneGraph.h">
-      <Filter>SceneGraph</Filter>
+      <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="PlayerNode.h">
-      <Filter>SceneGraph</Filter>
+      <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="Building.h">
-      <Filter>SceneGraph</Filter>
+      <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="City.h">
-      <Filter>SceneGraph</Filter>
+      <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="enrico.h">
       <Filter>Header Files</Filter>
@@ -168,7 +168,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Trap.h">
-      <Filter>SceneGraph</Filter>
+      <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Header Files</Filter>

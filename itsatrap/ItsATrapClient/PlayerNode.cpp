@@ -102,4 +102,5 @@ namespace sg {
 	bool Player::collidesWith(sg::Player *other) {
 		return this->getPlayer()->collidesWith(other->getPlayer());
 	}
+
 }

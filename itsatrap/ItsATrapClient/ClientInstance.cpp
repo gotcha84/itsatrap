@@ -39,8 +39,6 @@ ClientInstance::ClientInstance(int id) {
 	root = new sg::Player(glm::vec3(75.0f,0.0f,0.0f));
 	root->setPlayerID(id);
 	root->setObjectID(id);
-	cout << "pid: " << root->getPlayerID() << endl;
-	cout << "oid: " << root->getObjectID() << endl;
 
 	this->addPlayer(root);
 	objects[id] = root;

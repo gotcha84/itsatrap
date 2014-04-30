@@ -172,16 +172,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 	this->setModelMatrix(glm::translate(m_physics->m_position));
 	this->updateBoundingBox();
 
-
-	// Send data to server
-	struct playerObject playerObj;
-	memset(&playerObj, 0, sizeof(struct playerObject));
-	playerObj.id = Client::getPlayerId();
-	playerObj.x = newPos.x;
-	playerObj.y = newPos.y;
-	playerObj.z = newPos.z;
-
-	Client::sendPlayerUpdate(playerObj);
+	Client::sendPlayerUpdate(getPlayerObjectForNetworking());
 }
 
 void MyPlayer::updateModelViewMatrix() {
@@ -262,4 +253,20 @@ void MyPlayer::updateBoundingBox() {
 
 bool MyPlayer::collidesWith(MyPlayer *other) {
 	return this->getAABB()->collidesWith(*other->getAABB());
+}
+
+struct playerObject MyPlayer::getPlayerObjectForNetworking()
+{
+	struct playerObject p = {};
+	p.id = Client::getPlayerId();
+	p.x = getPosition().x;
+	p.y = getPosition().y;
+	p.z = getPosition().z;
+	p.aabb.minX = getAABB()->m_minX;
+	p.aabb.minY = getAABB()->m_minY;
+	p.aabb.minZ = getAABB()->m_minZ;
+	p.aabb.maxX = getAABB()->m_maxX;
+	p.aabb.maxY = getAABB()->m_maxY;
+	p.aabb.maxZ = getAABB()->m_maxZ;
+	return p;
 }

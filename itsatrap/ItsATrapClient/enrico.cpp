@@ -25,31 +25,15 @@ void handlePlayerUpdate(struct playerObject p)
 	if (client->objects[p.id] == nullptr)
 		handleNewPlayer(p);
 	
-	if (glm::vec3(p.x, p.y, p.z) != client->players[p.id]->getPosition()) {
-		int collision = -1;
-
-		for (unordered_map<int,sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
-			if (it->first != p.id) {
-				if (client->players[p.id]->collidesWith(it->second)) {
-					collision = it->first;
-					break;
-				}
-			}
-		}
-			
+	if (glm::vec3(p.x, p.y, p.z) != client->players[p.id]->getPosition())
 		client->players[p.id]->moveTo(glm::vec3(p.x, p.y, p.z));
-		if (collision != -1) {
-			cout << "p" << p.id << " collided with p" << collision << endl;
-		}
-	}
-
 }
 
 // This will get called everytime server sends an update
 void handleUpdateWorldFromServer(DynamicWorld *world)
 {
-
-	for (int i = 0; i < world->getNumPlayers(); i++)
-		handlePlayerUpdate(world->getObjectAt(i));
+	vector<struct playerObject> players = world->getAllPlayers();
+	for (int i = 0; i < players.size(); i++)
+		handlePlayerUpdate(players[i]);
 
 }
