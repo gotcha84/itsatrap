@@ -70,6 +70,7 @@ class MyPlayer {
 
 		void updateBoundingBox();
 		bool collidesWith(MyPlayer *other);
+		bool knifeHitWith(MyPlayer *other);
 
 		struct playerObject getPlayerObjectForNetworking();
 };

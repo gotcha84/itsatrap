@@ -143,6 +143,27 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 	*/
 }
 
+void Window::processMouseKeys(int button, int state, int x, int y)
+{
+	switch (state)
+	{
+		case GLUT_DOWN:
+			switch (button)
+			{
+				case GLUT_LEFT_BUTTON:
+					// Needs to send a query to the server and check all of the players to see if client has hit anyone
+					//client->root->getPlayer()->knifeHitWith();
+					printf("[Client]: Knife Swung!\n");
+					break;
+				default:
+					break;
+			}
+			break;
+		default:
+			break;
+	}
+}
+
 void Window::processMouseMove(int x, int y) {
 	
 	/*cout << "client factor: " << client->m_xAngleChangeFactor << endl;
