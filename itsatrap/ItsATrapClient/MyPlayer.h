@@ -71,8 +71,6 @@ class MyPlayer {
 		void updateBoundingBox();
 		bool collidesWith(MyPlayer *other);
 		bool knifeHitWith(MyPlayer *other);
-
-		
 };
 
 #endif

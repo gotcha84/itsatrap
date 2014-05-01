@@ -1,40 +1,25 @@
-<<<<<<< HEAD
-﻿Build started 5/1/2014 1:18:21 PM.
-     1>Project "C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (build target(s)).
-     1>InitializeBuildStatus:
-         Touching "Debug\Common.unsuccessfulbuild".
-       ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp
-=======
-﻿Build started 4/30/2014 11:27:31 PM.
+﻿Build started 5/1/2014 3:24:54 PM.
      1>Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp Stopwatch.cpp
          Stopwatch.cpp
->>>>>>> origin/temp_kevin
          DynamicWorld.cpp
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(132): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(137): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(159): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(208): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(216): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(132): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(137): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(159): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(208): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(216): warning C4018: '<' : signed/unsigned mismatch
+         Generating Code...
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Common.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\DynamicWorld.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Common.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\DynamicWorld.obj
          Debug\Stopwatch.obj
      1>DynamicWorld.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
-            Creating library C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.lib and object C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.exp
-         Common.vcxproj -> C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.dll
+            Creating library C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.lib and object C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.exp
+         Common.vcxproj -> C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll
        Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.dll;#2" /manifest Debug\Common.dll.intermediate.manifest
-       FinalizeBuildStatus:
-         Deleting file "Debug\Common.unsuccessfulbuild".
-         Touching "Debug\Common.lastbuildstate".
-     1>Done Building Project "C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Common\Common.vcxproj" (build target(s)).
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll;#2" /manifest Debug\Common.dll.intermediate.manifest
+     1>Done Building Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-<<<<<<< HEAD
-Time Elapsed 00:00:01.35
-=======
-Time Elapsed 00:00:00.78
->>>>>>> origin/temp_kevin
+Time Elapsed 00:00:01.39

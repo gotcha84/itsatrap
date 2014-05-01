@@ -258,9 +258,6 @@ bool MyPlayer::knifeHitWith(MyPlayer *other)
 	glm::vec3 difVec = this->getCamera()->getCameraLookAt() - this->getCamera()->getCameraCenter();
 	glm::vec3 target = this->getCamera()->getCameraCenter() + (15.0f * difVec);
 
-	//cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
-	//cout << "knifed at: " << glm::to_string(target) << endl;
-
 	return other->getAABB()->inside(target);
 }
 

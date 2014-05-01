@@ -9,6 +9,6 @@
 #define PACKET_BUFFER_SIZE 64
 #define MAX_SERVER_PROCESS_RATE 33
 
-#define KNIFE_HIT_DMG 50
+#define KNIFE_HIT_DMG 25 
 
 #endif
