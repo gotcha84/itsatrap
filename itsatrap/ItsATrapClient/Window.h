@@ -30,6 +30,7 @@ class Window {
 		static void displayCallback();
 		static void displaySceneGraph();
 		static void processNormalKeys(unsigned char, int, int);
+		static void processMouseKeys(int, int, int, int);
 		static void processMouseMove(int, int);
 };
 

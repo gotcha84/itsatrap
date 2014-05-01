@@ -20,7 +20,7 @@ void Stopwatch::stop()
 
 void Stopwatch::reset()
 {
-	timer.start = 0;
+	timer.start = clock();
 	timer.stop = 0;
 }
 

@@ -255,6 +255,12 @@ bool MyPlayer::collidesWith(MyPlayer *other) {
 	return this->getAABB()->collidesWith(*other->getAABB());
 }
 
+bool MyPlayer::knifeHitWith(MyPlayer *other)
+{
+	// TODO (ktngo): Make sure to update so that the knife range is truly two units ahead
+	return other->getAABB()->inside(this->getCamera()->getCameraLookAt() + glm::vec3(0.0f, 0.0f, -2.0f));
+}
+
 struct playerObject MyPlayer::getPlayerObjectForNetworking()
 {
 	struct playerObject p = {};

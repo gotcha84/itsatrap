@@ -71,6 +71,7 @@ int main(int argc, char *argv[]) {
 
 	// Process input
 	glutKeyboardFunc(window->processNormalKeys);
+	glutMouseFunc(window->processMouseKeys);
 	glutPassiveMotionFunc(window->processMouseMove);
 
 	// hide mouse cursor
