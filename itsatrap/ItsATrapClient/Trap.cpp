@@ -9,7 +9,8 @@ namespace sg {
 		m_boundingBox = new AABB(m_position, 5.0f);
 	}
 
-	Trap::Trap(glm::vec3 pos) {
+	Trap::Trap(int ownerId, glm::vec3 pos) {
+		m_ownerId = ownerId;
 		m_position = pos;
 		m_model = glm::translate(m_position);
 		m_color = glm::vec3(1,0,0);
@@ -77,4 +78,21 @@ namespace sg {
 		cout << "(" << this->getObjectID() << " Trap: " << this->getName() << ")";
 	}
 
+	struct trapObject Trap::getTrapObjectForNetworking()
+	{
+		struct trapObject t = {};
+		t.ownerId = m_ownerId;
+		t.eventCode = 0;
+		t.x = getPosition().x;
+		t.y = getPosition().y;
+		t.z = getPosition().z;
+		t.aabb.minX = getBoundingBox()->m_minX;
+		t.aabb.minY = getBoundingBox()->m_minY;
+		t.aabb.minZ = getBoundingBox()->m_minZ;
+		t.aabb.maxX = getBoundingBox()->m_maxX;
+		t.aabb.maxY = getBoundingBox()->m_maxY;
+		t.aabb.maxZ = getBoundingBox()->m_maxZ;
+
+		return t;
+	}
 }

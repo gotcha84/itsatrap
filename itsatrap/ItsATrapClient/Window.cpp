@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "ClientInstance.h"
+#include "Client.h"
 
 extern ClientInstance *client;
 
@@ -110,8 +111,10 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 			client->printSceneGraph();
 			break;
 		case 't':
-			sg::Trap *trap = new sg::Trap(client->root->getPosition());
-			client->root->addChild(trap);
+			sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
+			Client::requestToSpawnTrap(trap->getTrapObjectForNetworking());
+			delete trap;
+			trap = nullptr;
 
 			// TODO: have a getcity method
 			//sg::City* city;

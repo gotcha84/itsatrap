@@ -15,6 +15,7 @@
 // networking
 #include "Client.h"
 #include "DynamicWorld.h"
+#include "NetworkObjects.h"
 
 void handleNewObjectFromServer(int id, float x, float y, float z, int type);
 void handleUpdateObjectFromServer(int id, float x, float y, float z, int type);

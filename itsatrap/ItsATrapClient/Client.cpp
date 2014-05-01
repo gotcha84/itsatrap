@@ -153,7 +153,11 @@ void Client::sendStaticObject(float minX, float minY, float minZ, float maxX, fl
 	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
 }
 
-void Client::requestToSpawnNewObject(struct playerObject)
+void Client::requestToSpawnTrap(struct trapObject t)
 {
-	
+	struct spawnTrapPacket p;
+	p.eventId = SPAWN_TRAP_REQUEST;
+	memcpy(&p.trap, &t, sizeof(struct trapObject));
+
+	sendMsg((char *)&p, sizeof(struct spawnTrapPacket));
 }

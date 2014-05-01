@@ -29,6 +29,20 @@ void handlePlayerUpdate(struct playerObject p)
 		client->players[p.id]->moveTo(glm::vec3(p.x, p.y, p.z));
 }
 
+void handleAddTrap(struct trapObject t)
+{
+	sg::Trap *newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z));
+	client->root->addChild(newTrap);
+
+	client->objects[t.id] = newTrap;
+}
+
+void handleRemoveTrap(struct trapObject t)
+{
+	if (client->objects[t.id] != nullptr)
+		((sg::Trap *) client->objects[t.id])->setColor(glm::vec3(0,0,0));
+}
+
 // This will get called everytime server sends an update
 void handleUpdateWorldFromServer(DynamicWorld *world)
 {
@@ -36,4 +50,11 @@ void handleUpdateWorldFromServer(DynamicWorld *world)
 	for (int i = 0; i < players.size(); i++)
 		handlePlayerUpdate(players[i]);
 
+	for (map<int, struct trapObject>::iterator it = world->trapMap.begin(); it != world->trapMap.end(); it++)
+	{
+		if (it->second.eventCode == EVENT_ADD_TRAP)
+			handleAddTrap(it->second);
+		else if (it->second.eventCode == EVENT_REMOVE_TRAP)
+			handleRemoveTrap(it->second);
+	}
 }

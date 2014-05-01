@@ -4,17 +4,20 @@
 
 #include "Geode.h"
 #include "AABB.h"
+#include "NetworkObjects.h"
+#include "Client.h"
 
 namespace sg {
 	class Trap : public Geode {
 		public:
+			int m_ownerId;
 			glm::vec3 m_position;
 			glm::mat4 m_model;
 			glm::vec3 m_color;
 			AABB *m_boundingBox;
 
 			Trap();
-			Trap(glm::vec3 pos);
+			Trap(int, glm::vec3 pos);
 			~Trap();
 
 			void setPosition(glm::vec3 pos);
@@ -33,6 +36,8 @@ namespace sg {
 			void draw(glm::mat4 parent, glm::mat4 cam);
 
 			void print();
+
+			struct trapObject getTrapObjectForNetworking();
 	};
 }
 

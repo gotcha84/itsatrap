@@ -21,12 +21,17 @@ class DynamicWorld {
 
 private:
 	// Variables
+	int								currentId;
     map<int, struct playerObject>	playerMap;
 	vector<struct staticObject>		staticObjects;
 
 	// Functions
 	bool checkCollision(struct aabb a, struct aabb b);
+
 public:
+	// Variables
+	map<int, struct trapObject>		trapMap;
+
 	// Functions
 	__declspec(dllexport) DynamicWorld();
 	__declspec(dllexport) DynamicWorld(struct packet *packet);
@@ -37,8 +42,12 @@ public:
 	__declspec(dllexport) int getNumPlayers();
 	__declspec(dllexport) vector<struct playerObject> getAllPlayers();
 
+	__declspec(dllexport) void addTrap(struct trapObject t);
+
 	__declspec(dllexport) void addStaticObject(struct staticObject);
 	__declspec(dllexport) int getNumStaticObjects();
+
+	
 };
 
 #endif

@@ -187,9 +187,15 @@ void Server::processBuffer()
 				dynamicWorld.updatePlayer(updatePacket->playerObj);
 				break;
 			}
+			case SPAWN_TRAP_REQUEST:
+			{
+				struct spawnTrapPacket *trapPkt = (struct spawnTrapPacket *)p;
+				dynamicWorld.addTrap(trapPkt->trap);
+				break;
+			}
 		
 			default:
-				printf("[SERVER]: Unknown event at buffer %d\n", i);
+				printf("[SERVER]: Unknown event at buffer %d, eventId: %d\n", i, p->eventId);
 				break;
 		}
 	}
