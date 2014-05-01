@@ -193,6 +193,12 @@ void Server::processBuffer()
 				dynamicWorld.addTrap(trapPkt->trap);
 				break;
 			}
+			case KNIFE_HIT_EVENT:
+			{
+				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
+				dynamicWorld.playerMap[knifePkt->targetId].health -= KNIFE_HIT_DMG;
+				break;
+			}
 		
 			default:
 				printf("[SERVER]: Unknown event at buffer %d, eventId: %d\n", i, p->eventId);

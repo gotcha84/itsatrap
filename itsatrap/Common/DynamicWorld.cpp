@@ -48,27 +48,31 @@ DynamicWorld::DynamicWorld(struct packet *packet)
 	}
 }
 
+void DynamicWorld::addNewPlayer(struct playerObject p)
+{
+	
+	while (checkCollisionWithAllNonTraps(p))
+	{
+		p.aabb.minX += 10;
+		p.aabb.maxX += 10;
+		p.x += 10;
+	}
+
+	playerMap[p.id] = p;
+}
+
 
 void DynamicWorld::updatePlayer(struct playerObject e)
 {
-	vector<struct playerObject> players = getAllPlayers();
-	for (int i = 0; i < players.size(); i++)
+	if (playerMap.find(e.id) == playerMap.end())
 	{
-		if (players[i].id != e.id && checkCollision(e.aabb, players[i].aabb))
-		{
-			printf("Collision: player %d with player %d\n", e.id, players[i].id);
-			return;
-		}
+		addNewPlayer(e);
+		return;
 	}
-	for (int i = 0; i < staticObjects.size(); i++)
-	{
-		// Something wrong with building#40
-		if (i != 40 && checkCollision(e.aabb, staticObjects[i].aabb))
-		{
-			printf("Collision: player %d with static object %d\n", e.id, i);
-			return;
-		}
-	}
+
+	if (checkCollisionWithAllNonTraps(e))
+		return;
+	
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); it++)
 	{
 		if (e.id != it->second.ownerId && checkCollision(e.aabb, it->second.aabb))
@@ -196,4 +200,28 @@ void DynamicWorld::addTrap(struct trapObject t)
 	trapMap[currentId] = t;
 
 	currentId++;
+}
+
+bool DynamicWorld::checkCollisionWithAllNonTraps(struct playerObject e)
+{
+	vector<struct playerObject> players = getAllPlayers();
+	for (int i = 0; i < players.size(); i++)
+	{
+		if (players[i].id != e.id && checkCollision(e.aabb, players[i].aabb))
+		{
+			printf("Collision: player %d with player %d\n", e.id, players[i].id);
+			return true;
+		}
+	}
+	for (int i = 0; i < staticObjects.size(); i++)
+	{
+		// Something wrong with building#40
+		if (i != 40 && checkCollision(e.aabb, staticObjects[i].aabb))
+		{
+			printf("Collision: player %d with static object %d\n", e.id, i);
+			return true;
+		}
+	}
+
+	return false;
 }

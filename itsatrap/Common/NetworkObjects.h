@@ -9,7 +9,7 @@ struct aabb {
 };
 
 struct playerObject {
-    int				id;
+    int				id, health;
 	float			x, y, z;
 	struct aabb		aabb;
 	float			lookX, lookY, lookZ;

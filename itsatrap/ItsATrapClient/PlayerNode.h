@@ -8,7 +8,7 @@
 namespace sg {
 	class Player : public MatrixTransform {
 		public:
-			int m_playerID;
+			int m_playerID, m_health;
 			MyPlayer *m_player;
 			glm::vec3 m_color;
 
@@ -40,7 +40,7 @@ namespace sg {
 
 			bool collidesWith(sg::Player *other);
 
-			
+			struct playerObject getPlayerObjectForNetworking();
 	};
 }
 

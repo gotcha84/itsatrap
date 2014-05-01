@@ -103,6 +103,7 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 	// TODO: maybe more states
 	if (/*(client->m_myPlayer.m_physics.m_currentState != PhysicsStates::Falling) && */ (key == 'w' || key == 'a' || key == 's' || key == 'd')) {
 		client->root->getPlayer()->handleMovement(key);
+		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	}
 
 	switch (key) {
@@ -154,10 +155,14 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 			switch (button)
 			{
 				case GLUT_LEFT_BUTTON:
+				{
 					// Needs to send a query to the server and check all of the players to see if client has hit anyone
 					//client->root->getPlayer()->knifeHitWith();
 					printf("[Client]: Knife Swung!\n");
+					int numPlayers = client->players.size();
+					Client::sendKnifeHitEvent(rand() % numPlayers);
 					break;
+				}
 				default:
 					break;
 			}

@@ -46,6 +46,7 @@ public:
 	static void sendStaticObject(float, float, float, float, float, float);
 	static void sendPlayerUpdate(struct playerObject);
 	static void requestToSpawnTrap(struct trapObject);
+	static void sendKnifeHitEvent(int targetId);
 };
 
 

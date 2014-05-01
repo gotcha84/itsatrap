@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 	glm::vec3 starting = client->root->getPosition();
 	client->root->moveTo(glm::vec3(starting.x, starting.y + 2, starting.z));
 	
-	Client::sendPlayerUpdate(client->root->m_player->getPlayerObjectForNetworking());
+	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};

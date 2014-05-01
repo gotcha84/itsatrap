@@ -92,7 +92,6 @@ namespace sg {
 		t.aabb.maxX = getBoundingBox()->m_maxX;
 		t.aabb.maxY = getBoundingBox()->m_maxY;
 		t.aabb.maxZ = getBoundingBox()->m_maxZ;
-
 		return t;
 	}
 }

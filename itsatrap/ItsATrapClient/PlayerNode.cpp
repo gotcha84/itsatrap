@@ -6,12 +6,14 @@ namespace sg {
 		m_player = new MyPlayer();
 		this->setPlayerID(0);
 		this->setColor(glm::vec3(1,1,1));
+		m_health = 100;
 	}
 
 	Player::Player(glm::vec3 pos) {
 		m_player = new MyPlayer(pos);
 		this->setPlayerID(0);
 		this->setColor(glm::vec3(1,1,1));
+		m_health = 100;
 	}
 
 	Player::Player(MyPlayer *p) {
@@ -101,6 +103,29 @@ namespace sg {
 
 	bool Player::collidesWith(sg::Player *other) {
 		return this->getPlayer()->collidesWith(other->getPlayer());
+	}
+
+	struct playerObject Player::getPlayerObjectForNetworking()
+	{
+		struct playerObject p = {};
+		p.id = m_playerID;
+		p.health = m_health;
+		p.x = getPosition().x;
+		p.y = getPosition().y;
+		p.z = getPosition().z;
+		p.aabb.minX = m_player->getAABB()->m_minX;
+		p.aabb.minY = m_player->getAABB()->m_minY;
+		p.aabb.minZ = m_player->getAABB()->m_minZ;
+		p.aabb.maxX = m_player->getAABB()->m_maxX;
+		p.aabb.maxY = m_player->getAABB()->m_maxY;
+		p.aabb.maxZ = m_player->getAABB()->m_maxZ;
+		p.lookX = m_player->m_cam->m_cameraLookAt.x;
+		p.lookY = m_player->m_cam->m_cameraLookAt.y;
+		p.lookZ = m_player->m_cam->m_cameraLookAt.z;
+		p.upX = m_player->m_cam->m_cameraUp.x;
+		p.upY = m_player->m_cam->m_cameraUp.y;
+		p.upZ = m_player->m_cam->m_cameraUp.z;
+		return p;
 	}
 
 }

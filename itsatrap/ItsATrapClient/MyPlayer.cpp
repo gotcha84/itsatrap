@@ -171,8 +171,6 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	this->setModelMatrix(glm::translate(m_physics->m_position));
 	this->updateBoundingBox();
-
-	Client::sendPlayerUpdate(getPlayerObjectForNetworking());
 }
 
 void MyPlayer::updateModelViewMatrix() {
@@ -261,18 +259,3 @@ bool MyPlayer::knifeHitWith(MyPlayer *other)
 	return other->getAABB()->inside(this->getCamera()->getCameraLookAt() + glm::vec3(0.0f, 0.0f, -2.0f));
 }
 
-struct playerObject MyPlayer::getPlayerObjectForNetworking()
-{
-	struct playerObject p = {};
-	p.id = Client::getPlayerId();
-	p.x = getPosition().x;
-	p.y = getPosition().y;
-	p.z = getPosition().z;
-	p.aabb.minX = getAABB()->m_minX;
-	p.aabb.minY = getAABB()->m_minY;
-	p.aabb.minZ = getAABB()->m_minZ;
-	p.aabb.maxX = getAABB()->m_maxX;
-	p.aabb.maxY = getAABB()->m_maxY;
-	p.aabb.maxZ = getAABB()->m_maxZ;
-	return p;
-}

@@ -72,7 +72,7 @@ class MyPlayer {
 		bool collidesWith(MyPlayer *other);
 		bool knifeHitWith(MyPlayer *other);
 
-		struct playerObject getPlayerObjectForNetworking();
+		
 };
 
 #endif

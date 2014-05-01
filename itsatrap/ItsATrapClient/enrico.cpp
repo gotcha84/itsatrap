@@ -8,7 +8,7 @@ extern ClientInstance *client; // 'client' is a global var in main.cpp
 
 void handleNewPlayer(struct playerObject p)
 {
-
+	printf("[CLIENT]: New player (ID:%d) has joined!\n", p.id);
 	sg::Player *player = new sg::Player(glm::vec3(p.x, p.y, p.z));
 	player->setPlayerID(p.id);
 	player->setColor(glm::vec3(1,1,1));
@@ -17,6 +17,8 @@ void handleNewPlayer(struct playerObject p)
 
 	client->players[p.id] = player;
 	client->objects[p.id] = player;
+
+	client->players[p.id]->moveTo(glm::vec3(p.x, p.y, p.z));
 }
 
 // Returns 0 if successful
@@ -27,6 +29,12 @@ void handlePlayerUpdate(struct playerObject p)
 	
 	if (glm::vec3(p.x, p.y, p.z) != client->players[p.id]->getPosition())
 		client->players[p.id]->moveTo(glm::vec3(p.x, p.y, p.z));
+
+	if (client->players[p.id]->m_health != p.health)
+	{
+		printf("HIT! Player %d's health is now %d\n", p.id, p.health);
+		client->players[p.id]->m_health = p.health;
+	}
 }
 
 void handleAddTrap(struct trapObject t)

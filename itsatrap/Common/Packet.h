@@ -9,6 +9,7 @@
 #define WORLD_UPDATE_EVENT 4
 #define STATIC_OBJECT_CREATION_EVENT 5
 #define SPAWN_TRAP_REQUEST 6
+#define KNIFE_HIT_EVENT 7
 
 // Superclass of all packets
 struct packet {
@@ -41,6 +42,13 @@ struct spawnTrapPacket
 {
 	int eventId;
 	struct trapObject trap;
+};
+
+struct knifeHitPacket
+{
+	int eventId;
+	int playerId;
+	int targetId;
 };
 
 #endif
