@@ -1,9 +1,17 @@
+<<<<<<< HEAD
 ﻿Build started 5/1/2014 1:18:21 PM.
      1>Project "C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Touching "Debug\Common.unsuccessfulbuild".
        ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp
+=======
+﻿Build started 4/30/2014 11:27:31 PM.
+     1>Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp Stopwatch.cpp
+         Stopwatch.cpp
+>>>>>>> origin/temp_kevin
          DynamicWorld.cpp
      1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(132): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(137): warning C4018: '<' : signed/unsigned mismatch
@@ -25,4 +33,8 @@
 
 Build succeeded.
 
+<<<<<<< HEAD
 Time Elapsed 00:00:01.35
+=======
+Time Elapsed 00:00:00.78
+>>>>>>> origin/temp_kevin
