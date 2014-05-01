@@ -152,8 +152,16 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 			{
 				case GLUT_LEFT_BUTTON:
 					// Needs to send a query to the server and check all of the players to see if client has hit anyone
-					//client->root->getPlayer()->knifeHitWith();
-					printf("[Client]: Knife Swung!\n");
+					for (int i = 0; i < client->players.size(); ++i)
+					{
+						if (i != client->root->getPlayerID())
+						{
+							bool hit = client->root->getPlayer()->knifeHitWith(client->players[i]->m_player);
+							//printf("Hit: %s - Player %d\n", hit ? "true" : "false", i);
+						}
+					}
+					//printf("Players Count: %d", client->players.size());
+					//printf("[Client]: Knife Swung!\n");
 					break;
 				default:
 					break;
