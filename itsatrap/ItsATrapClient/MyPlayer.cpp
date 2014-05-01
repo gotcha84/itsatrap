@@ -257,19 +257,13 @@ bool MyPlayer::collidesWith(MyPlayer *other) {
 
 bool MyPlayer::knifeHitWith(MyPlayer *other)
 {
-	// TODO (ktngo): Make sure to update so that the knife range is truly two units ahead
 	glm::vec3 difVec = this->getCamera()->getCameraLookAt() - this->getCamera()->getCameraCenter();
-	glm::vec3 target = this->getCamera()->getCameraCenter() + (20.0f * difVec);
+	glm::vec3 target = this->getCamera()->getCameraCenter() + (15.0f * difVec);
 
-	cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
-	cout << "knifed at: " << glm::to_string(target) << endl;
+	//cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
+	//cout << "knifed at: " << glm::to_string(target) << endl;
 
-//	printf("[knifeHitWith] this: %d, other: %d, hit: %s",
-//		this->getPlayerObjectForNetworking().id,
-//		other->getPlayerObjectForNetworking().id,
-	//	other->getAABB()->inside(target));
-
-	return other->getAABB()->inside(this->getCamera()->getCameraLookAt() + glm::vec3(0.0f, 0.0f, -2.0f));
+	return other->getAABB()->inside(target);
 }
 
 struct playerObject MyPlayer::getPlayerObjectForNetworking()

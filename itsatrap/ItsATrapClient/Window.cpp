@@ -157,11 +157,13 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 						if (i != client->root->getPlayerID())
 						{
 							bool hit = client->root->getPlayer()->knifeHitWith(client->players[i]->m_player);
-							//printf("Hit: %s - Player %d\n", hit ? "true" : "false", i);
+
+							if (hit)
+							{
+								cout << "Player " << client->root->getPlayerID() << " hit Player " << i << "!" << endl;
+							}
 						}
 					}
-					//printf("Players Count: %d", client->players.size());
-					//printf("[Client]: Knife Swung!\n");
 					break;
 				default:
 					break;
