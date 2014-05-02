@@ -18,6 +18,11 @@ MyPlayer::MyPlayer() {
 	m_cam = new Camera();
 	m_physics = new Physics();
 	m_boundingBox = new AABB(this->getPosition(), 10.0f);
+
+	m_numDeaths = 0;
+	m_numKills = 0;
+	m_health = 100;
+	m_deathState = false;
 }
 
 MyPlayer::MyPlayer(glm::vec3 pos) {
@@ -37,6 +42,11 @@ MyPlayer::MyPlayer(glm::vec3 pos) {
 	m_cam = new Camera(pos);
 	m_physics = new Physics(pos);
 	m_boundingBox = new AABB(pos, 10.0f);
+
+	m_numDeaths = 0;
+	m_numKills = 0;
+	m_health = 100;
+	m_deathState = false;
 }
 
 MyPlayer::~MyPlayer() {
@@ -256,7 +266,7 @@ bool MyPlayer::collidesWith(MyPlayer *other) {
 bool MyPlayer::knifeHitWith(MyPlayer *other)
 {
 	glm::vec3 difVec = this->getCamera()->getCameraLookAt() - this->getCamera()->getCameraCenter();
-	glm::vec3 target = this->getCamera()->getCameraCenter() + (15.0f * difVec);
+	glm::vec3 target = this->getCamera()->getCameraCenter() + (KNIFE_RANGE * difVec);
 
 	return other->getAABB()->inside(target);
 }

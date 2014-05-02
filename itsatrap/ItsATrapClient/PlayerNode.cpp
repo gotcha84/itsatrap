@@ -6,14 +6,14 @@ namespace sg {
 		m_player = new MyPlayer();
 		this->setPlayerID(0);
 		this->setColor(glm::vec3(1,1,1));
-		m_health = 100;
+		//m_health = 100;
 	}
 
 	Player::Player(glm::vec3 pos) {
 		m_player = new MyPlayer(pos);
 		this->setPlayerID(0);
 		this->setColor(glm::vec3(1,1,1));
-		m_health = 100;
+		//m_health = 100;
 	}
 
 	Player::Player(MyPlayer *p) {
@@ -108,8 +108,8 @@ namespace sg {
 	struct playerObject Player::getPlayerObjectForNetworking()
 	{
 		struct playerObject p = {};
-		p.id = m_playerID;
-		p.health = m_health;
+		p.id = this->getPlayerID();
+		p.health = m_player->m_health;
 		p.x = getPosition().x;
 		p.y = getPosition().y;
 		p.z = getPosition().z;

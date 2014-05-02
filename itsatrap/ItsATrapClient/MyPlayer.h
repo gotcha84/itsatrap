@@ -21,8 +21,13 @@
 
 using namespace std;
 
+#define KNIFE_RANGE 15.0f
+
 class MyPlayer {
 	public:
+		int m_numKills, m_numDeaths, m_health;
+		bool m_deathState;
+
 		Camera *m_cam;
 		Physics *m_physics;
 		AABB *m_boundingBox;

@@ -8,7 +8,7 @@
 namespace sg {
 	class Player : public MatrixTransform {
 		public:
-			int m_playerID, m_health;
+			int m_playerID;		
 			MyPlayer *m_player;
 			glm::vec3 m_color;
 

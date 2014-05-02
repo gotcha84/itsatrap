@@ -30,10 +30,10 @@ void handlePlayerUpdate(struct playerObject p)
 	if (glm::vec3(p.x, p.y, p.z) != client->players[p.id]->getPosition())
 		client->players[p.id]->moveTo(glm::vec3(p.x, p.y, p.z));
 
-	if (client->players[p.id]->m_health != p.health)
+	if (client->players[p.id]->m_player->m_health != p.health)
 	{
 		printf("HIT! Player %d's health is now %d\n", p.id, p.health);
-		client->players[p.id]->m_health = p.health;
+		client->players[p.id]->m_player->m_health = p.health;
 	}
 }
 

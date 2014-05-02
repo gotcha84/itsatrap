@@ -197,6 +197,9 @@ void Server::processBuffer()
 			{
 				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
 				dynamicWorld.playerMap[knifePkt->targetId].health -= KNIFE_HIT_DMG;
+
+				// TODO (ktngo): Kill Event, Death Event, Change state
+				//dynamicWorld.playerMap[knifePkt->targetId].
 				break;
 			}
 		
