@@ -10,19 +10,29 @@ int Window::m_height = 512; // set window height in pixels here
 int Window::m_heightMapXShift = 278;
 int Window::m_heightMapZShift = 463;
 
-Window::Window() {
+bool *Window::keyState = new bool[256];
+bool *Window::specialKeyState = new bool[256];
 
+Window::Window() {
+	for (int i=0; i<256; i++) {
+		keyState[i] = false;
+		specialKeyState[i] = false;
+	}
 }
 
 Window::~Window() {
+	delete[] keyState;
+	keyState = nullptr;
 
+	delete[] specialKeyState;
+	specialKeyState = nullptr;
 }
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
 void Window::idleCallback(void)
 {
-	displaySceneGraph(); // call display routine to re-draw cube
+	displayCallback();
 }
 
 //----------------------------------------------------------------------------
@@ -42,8 +52,10 @@ void Window::reshapeCallback(int w, int h)
 //----------------------------------------------------------------------------
 // Callback method called when window readraw is necessary or
 // when glutPostRedisplay() was called.
-void Window::displaySceneGraph(void)
+void Window::displayCallback(void)
 {	
+	processKeys();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	
 	// andre added below if sattements
@@ -109,53 +121,59 @@ void Window::displaySceneGraph(void)
 	glutSwapBuffers();
 }
 
-void Window::processNormalKeys(unsigned char key, int x, int y)
+void Window::keyDown(unsigned char key, int x, int y)
 {
-	// TODO: maybe more states
-	if (/*(client->m_myPlayer.m_physics.m_currentState != PhysicsStates::Falling) && */ (key == 'w' || key == 'a' || key == 's' || key == 'd')) {
-		client->root->getPlayer()->handleMovement(key);
-	}
+	keyState[key] = true;
+	cout << key << " down" << endl;
+}
 
-	switch (key) {
-		case 9: // TAB
-			client->toggleCurrentPlayer();
-			client->printSceneGraph();
-			break;
-		case 'j':
+void Window::keyUp(unsigned char key, int x, int y) {
+	keyState[key] = false;
+	cout << key << " up" << endl;
+}
+
+void Window::specialKeyDown(int key, int x, int y) {
+	specialKeyState[key] = true;
+	cout << "special " << key << " down" << endl;
+}
+
+void Window::specialKeyUp(int key, int x, int y) {
+	specialKeyState[key] = false;
+	cout << "special " << key << " up" << endl;
+}
+
+void Window::processKeys() {
+		// forward + backward
+		if (keyState['w']) {
+			client->root->getPlayer()->handleMovement('w');
+		}
+		else if (keyState['s']) {
+			client->root->getPlayer()->handleMovement('s');
+		}
+
+		// left + right
+		if (keyState['a']) {
+			client->root->getPlayer()->handleMovement('a');
+		}
+		else if (keyState['d']) {
+			client->root->getPlayer()->handleMovement('d');
+		}
+
+		// jump
+		if (keyState[' ']) {
 			client->root->getPlayer()->handleJump();
-			break;
-		case 't':
+		}
+
+		// trap
+		if (keyState['t']) {
 			sg::Trap *trap = new sg::Trap(client->root->getPosition());
 			client->root->addChild(trap);
+		}
 
-			// TODO: have a getcity method
-			/*sg::City* city;
-			for (int i=0; i < client->root->getNumChildren(); i++) {
-				city = dynamic_cast<sg::City*>(client->root->m_child[i]);
-				if (city != nullptr) {
-					break;
-				}
-				
-			}
-			if (city != nullptr) {
-				
-				bool result = city->loadDataAtPlace("Can.obj", client->root->getPlayer()->getPosition());
-				cout << "making a can: " << result << endl;
-			}*/
-			break;
-	}
-	
-	// TODO: running
-
-	/*
-	Vector3 pos = Vector3(
-	cube.getMatrix().m[3][0], 
-	cube.getMatrix().m[3][1], 
-	cube.getMatrix().m[3][2]
-	);
-
-	pos.print();
-	*/
+		//case 9: // TAB
+			//client->toggleCurrentPlayer();
+			//client->printSceneGraph();
+			//break;
 }
 
 void Window::processMouseMove(int x, int y) {

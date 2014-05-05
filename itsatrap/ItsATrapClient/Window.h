@@ -19,6 +19,9 @@ class Window {
 		static int m_width, m_height; // window size
 		static int m_heightMapXShift, m_heightMapZShift;
 
+		static bool *keyState;
+		static bool *specialKeyState;
+
 		Window();
 		~Window();
 
@@ -28,8 +31,14 @@ class Window {
 		static void idleCallback();
 		static void reshapeCallback(int, int);
 		static void displayCallback();
-		static void displaySceneGraph();
-		static void processNormalKeys(unsigned char, int, int);
+
+		static void keyDown(unsigned char, int, int);
+		static void keyUp(unsigned char key, int x, int y);
+		static void specialKeyDown(int key, int x, int y);
+		static void specialKeyUp(int key, int x, int y);
+
+		static void processKeys();
+
 		static void processMouseMove(int, int);
 };
 

@@ -81,7 +81,6 @@ namespace sg {
 		cout << glm::to_string(this->getMatrix()) << endl;
 	}
 
-
 	void ObjNode::draw(glm::mat4 parent, glm::mat4 cam) {
 		//cout << "Drawing: " << m_id << endl;
 		this->setMatrix(glm::translate(this->getPosition()) * glm::scale(m_scaleVec));
@@ -94,7 +93,6 @@ namespace sg {
 			//glColor3f(color.x, color.y, color.z);
 			drawShape();
 		glPopMatrix();
-
 	}
 
 	void ObjNode::drawShape() {

@@ -40,12 +40,12 @@ namespace sg {
 			ObjNode(int id);
 			~ObjNode();
 
-			void ObjNode::setVertices(vector<float> arr);
-			void ObjNode::setNormals(vector<float> arr);
-			void ObjNode::setTexcoords(vector<float> arr);
-			void ObjNode::setIndices(vector<int> arr);
-			void ObjNode::setNVertices(int ele);
-			void ObjNode::setNIndices(int ele);
+			void setVertices(vector<float> arr);
+			void setNormals(vector<float> arr);
+			void setTexcoords(vector<float> arr);
+			void setIndices(vector<int> arr);
+			void setNVertices(int ele);
+			void setNIndices(int ele);
 			
 			virtual void draw(glm::mat4 parent, glm::mat4 cam);
 			virtual void drawShape();

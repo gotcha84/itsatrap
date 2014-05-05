@@ -10,10 +10,10 @@ MyPlayer::MyPlayer() {
 	setProjectionMatrix();
 	setViewportMatrix();
 
-	m_xWalkFactor = 2.0f;
-	m_zWalkFactor = 2.0f;
-	m_xSlowWalkFactor = 1.0f;
-	m_zSlowWalkFactor = 1.0f;
+	m_xWalkFactor = 0.25f;
+	m_zWalkFactor = 0.25f;
+	m_xSlowWalkFactor = 0.05f;
+	m_zSlowWalkFactor = 0.05f;
 	m_yJumpFactor = 5.0f;
 
 	m_cam = new Camera();
@@ -30,10 +30,10 @@ MyPlayer::MyPlayer(glm::vec3 pos) {
 	setProjectionMatrix();
 	setViewportMatrix();
 
-	m_xWalkFactor = 2.0f;
-	m_zWalkFactor = 2.0f;
-	m_xSlowWalkFactor = 1.0f;
-	m_zSlowWalkFactor = 1.0f;
+	m_xWalkFactor = 0.25f;
+	m_zWalkFactor = 0.25f;
+	m_xSlowWalkFactor = 0.05f;
+	m_zSlowWalkFactor = 0.05f;
 	m_yJumpFactor = 5.0f;
 
 	m_cam = new Camera(pos);
@@ -186,7 +186,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 	this->setModelMatrix(glm::translate(m_physics->m_position));
 	Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
 	this->updateBoundingBox();
-	this->getAABB()->print();
+	//this->getAABB()->print();
 
 	//cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
 	//cout << "look at: " << glm::to_string(this->getCamera()->getCameraLookAt()) << endl;
