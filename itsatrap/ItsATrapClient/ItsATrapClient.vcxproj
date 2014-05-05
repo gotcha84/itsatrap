@@ -94,6 +94,7 @@
     <ClCompile Include="enrico.cpp" />
     <ClCompile Include="Geode.cpp" />
     <ClCompile Include="Group.cpp" />
+    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MatrixTransform.cpp" />
@@ -112,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
+    <ClInclude Include="HUD.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Camera.h" />

@@ -76,6 +76,12 @@ class MyPlayer {
 		void updateBoundingBox();
 		bool collidesWith(MyPlayer *other);
 		bool knifeHitWith(MyPlayer *other);
+
+		int getHealth();
+		void setHealth(int health);
+		void damage(int dmg);
+		bool isDead();
+		bool isAlive();
 };
 
 #endif

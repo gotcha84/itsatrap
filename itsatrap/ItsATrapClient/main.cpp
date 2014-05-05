@@ -13,8 +13,6 @@
 
 // networking
 #include "Client.h"
-
-// Test
 #include "enrico.h"
 
 ClientInstance *client;

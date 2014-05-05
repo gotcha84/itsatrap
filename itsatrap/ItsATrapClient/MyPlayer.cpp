@@ -271,3 +271,22 @@ bool MyPlayer::knifeHitWith(MyPlayer *other)
 	return other->getAABB()->inside(target);
 }
 
+int MyPlayer::getHealth() {
+	return m_health;
+}
+
+void MyPlayer::setHealth(int health) {
+	m_health = health;
+}
+
+void MyPlayer::damage(int dmg) {
+	m_health -= dmg;
+}
+
+bool MyPlayer::isDead() {
+	return m_health <= 0;
+}
+
+bool MyPlayer::isAlive() {
+	return m_health > 0;
+}

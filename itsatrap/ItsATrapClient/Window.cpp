@@ -163,7 +163,7 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 					{
 						if (i != client->root->getPlayerID())
 						{
-							bool hit = client->root->getPlayer()->knifeHitWith(client->players[i]->m_player);
+							bool hit = client->root->knifeHitWith(client->players[i]);
 
 							if (hit)
 							{
