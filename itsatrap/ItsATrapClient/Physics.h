@@ -31,15 +31,20 @@ class Physics {
 	public:
 		PhysicsStates m_currentState;
 
+		glm::vec3 m_gravity;
 		glm::vec3 m_velocity;
+		glm::vec3 m_prevVelocity;
 		glm::vec3 m_position;
 	
 		float m_gravityConstant; 
 		float m_elasticityConstant;
 
+		float m_mass;
+
 		// TODO: find correct sizes
 		Physics();
 		Physics(glm::vec3 pos);
+		Physics(glm::vec3 pos, float mass);
 		~Physics();
 
 		glm::vec3 falling();

@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
 	groundShape.setName("ground");
 	ground.addChild(&groundShape);
 	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
-	groundShape.color = glm::vec3(0,1,0);
+	groundShape.m_color = glm::vec3(0,1,0);
 
 	// cube nodes
 	sg::MatrixTransform obj1 = sg::MatrixTransform();
@@ -123,10 +123,6 @@ int main(int argc, char *argv[]) {
 	//city.loadData("Can.obj");
 	//city.loadData("banana_obj.obj");
 	client->root->addChild(&city);
-
-	// create a trap
-	sg::Trap testTrap = sg::Trap(glm::vec3(75,0,0));
-	client->root->addChild(&testTrap);
 
 	client->printPlayers();
 	client->printSceneGraph();

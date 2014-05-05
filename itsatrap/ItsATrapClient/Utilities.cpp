@@ -146,7 +146,7 @@ glm::vec3 Utilities::findAverage(string inputfile) {
 	int xCount = 0;
 	int zCount = 0;
 
-	float yMin = 1.0f*FLT_MAX; 
+	float yMin = FLT_MAX; 
 
 	float xTotal = 0.0f;
 	float zTotal = 0.0f;
@@ -169,7 +169,7 @@ glm::vec3 Utilities::findAverage(string inputfile) {
 			}
 		}
 	}
-
+	cout << "min found: " << yMin << endl;
 	float xAvg = xTotal/(float)xCount;
 	float zAvg = zTotal/(float)zCount;
 	

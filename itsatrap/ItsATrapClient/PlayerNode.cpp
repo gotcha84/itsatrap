@@ -53,6 +53,9 @@ namespace sg {
 
 	// moves camera to player's view
 	void Player::draw() {
+
+		//this->getPlayer()->getPhysics()->m_velocity = this->getPlayer()->getPhysics()->m_prevVelocity;
+
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
 
