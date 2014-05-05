@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
 	groundShape.setName("ground");
 	ground.addChild(&groundShape);
 	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
-	groundShape.color = glm::vec3(0,1,0);
+	groundShape.m_color = glm::vec3(0,1,0);
 
 	// cube nodes
 	sg::MatrixTransform obj1 = sg::MatrixTransform();

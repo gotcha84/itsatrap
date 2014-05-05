@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "ClientInstance.h"
+#include "Client.h"
 
 extern ClientInstance *client;
 
@@ -68,18 +69,27 @@ void Window::displaySceneGraph(void)
 		client->m_yAngleChange = 0.0f;
 	}
 
+	glm::vec3 oldPos = client->root->getPlayer()->getPhysics()->m_position;
+
 	// cout << "lookat: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraLookAt) << endl;
 	// cout << "center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;
 	// cout << "lookup: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraUp) << endl << endl;
 
 	// TODO: move to player class?
 	client->root->getPlayer()->getPhysics()->applyGravity();
+
+	if (oldPos != client->root->getPlayer()->getPhysics()->m_position) {
+		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position));
+		client->root->getPlayer()->updateBoundingBox();
+		Client::sendStateUpdate(Client::getPlayerId(), client->root->getPlayer()->getPhysics()->m_position.x, client->root->getPlayer()->getPhysics()->m_position.y, client->root->getPlayer()->getPhysics()->m_position.z);
+	}
+
 	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - client->root->getPlayer()->getCamera()->m_cameraCenter;
+	//moved.y += 4.0f;
 	
 	//client->root->getPlayer()->getCamera()->m_cameraCenter = client->root->getPlayer()->getPhysics()->m_position;
 	client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
-	
 	client->root->getPlayer()->getCamera()->m_cameraCenter.y += 4.0f;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt.y += 4.0f;
 	//client->root->getPlayer()->getCamera()->updateCameraMatrix();
@@ -92,7 +102,9 @@ void Window::displaySceneGraph(void)
 
 	client->root->getPlayer()->getCamera()->m_cameraCenter.y -= 4.0f;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt.y -= 4.0f;
-	
+
+	//cout << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
+
 	glFlush();  
 	glutSwapBuffers();
 }
@@ -109,24 +121,27 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 			client->toggleCurrentPlayer();
 			client->printSceneGraph();
 			break;
+		case 'j':
+			client->root->getPlayer()->handleJump();
+			break;
 		case 't':
 			sg::Trap *trap = new sg::Trap(client->root->getPosition());
 			client->root->addChild(trap);
 
 			// TODO: have a getcity method
-			//sg::City* city;
-			//for (int i=0; i < client->root->getNumChildren(); i++) {
-				//city = dynamic_cast<sg::City*>(client->root->m_child[i]);
-				//if (city != nullptr) {
-					//break;
-				//}
+			/*sg::City* city;
+			for (int i=0; i < client->root->getNumChildren(); i++) {
+				city = dynamic_cast<sg::City*>(client->root->m_child[i]);
+				if (city != nullptr) {
+					break;
+				}
 				
-			//}
-			//if (city != nullptr) {
+			}
+			if (city != nullptr) {
 				
-				//bool result = city->loadDataAtPlace("Can.obj", client->root->getPlayer()->getPosition());
-				//cout << "making a can: " << result << endl;
-			//}
+				bool result = city->loadDataAtPlace("Can.obj", client->root->getPlayer()->getPosition());
+				cout << "making a can: " << result << endl;
+			}*/
 			break;
 	}
 	

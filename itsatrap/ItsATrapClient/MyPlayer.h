@@ -25,6 +25,7 @@ class MyPlayer {
 		Camera *m_cam;
 		Physics *m_physics;
 		AABB *m_boundingBox;
+		float m_yJumpFactor;
 
 		glm::mat4 m_transMatrix;
 
@@ -54,6 +55,7 @@ class MyPlayer {
 		glm::mat4 getViewPortMatrix();
 
 		void handleMovement(unsigned char key);
+		void handleJump();
 		void updateModelViewMatrix();
 		
 		void setTransMatrix(glm::mat4 m);

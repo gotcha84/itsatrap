@@ -14,6 +14,7 @@ MyPlayer::MyPlayer() {
 	m_zWalkFactor = 2.0f;
 	m_xSlowWalkFactor = 1.0f;
 	m_zSlowWalkFactor = 1.0f;
+	m_yJumpFactor = 5.0f;
 
 	m_cam = new Camera();
 	m_physics = new Physics();
@@ -33,9 +34,10 @@ MyPlayer::MyPlayer(glm::vec3 pos) {
 	m_zWalkFactor = 2.0f;
 	m_xSlowWalkFactor = 1.0f;
 	m_zSlowWalkFactor = 1.0f;
+	m_yJumpFactor = 5.0f;
 
 	m_cam = new Camera(pos);
-	m_physics = new Physics(pos);
+	m_physics = new Physics(pos, 1.0f);
 	m_boundingBox = new AABB(pos, 10.0f);
 }
 
@@ -91,6 +93,9 @@ glm::mat4 MyPlayer::getViewPortMatrix() {
 }
 
 void MyPlayer::handleMovement(unsigned char key) {
+
+	m_physics->m_prevVelocity = m_physics->m_velocity;
+
 	glm::vec3 proposedNewPos;
 	
 	// DEBUG STATEMENTS
@@ -109,6 +114,8 @@ void MyPlayer::handleMovement(unsigned char key) {
 	glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
 	float xWalkFactor;
 	float zWalkFactor;
+	glm::vec3 proposedNewVelocity = m_physics->m_velocity;
+
 	if (m_physics->m_currentState == PhysicsStates::Falling) {
 		xWalkFactor = m_xSlowWalkFactor;
 		zWalkFactor = m_zSlowWalkFactor;
@@ -120,18 +127,22 @@ void MyPlayer::handleMovement(unsigned char key) {
 	switch (key) {
 		case 'w':
 			proposedNewPos = m_physics->m_position + zWalkFactor*tmp_camZ;
+			proposedNewVelocity += zWalkFactor*tmp_camZ;
 			break;
 
 		case 's':
 			proposedNewPos = m_physics->m_position + -1.0f*zWalkFactor*tmp_camZ;
+			proposedNewVelocity += -1.0f*zWalkFactor*tmp_camZ;
 			break;
 
 		case 'a':
 			proposedNewPos = m_physics->m_position + -1.0f*xWalkFactor*m_cam->m_camX;
+			proposedNewVelocity += -1.0f*xWalkFactor*m_cam->m_camX;
 			break;		
 
 		case 'd':
 			proposedNewPos = m_physics->m_position + xWalkFactor*m_cam->m_camX;
+			proposedNewVelocity += xWalkFactor*m_cam->m_camX;
 			break;
 	}
 	
@@ -142,8 +153,11 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	//cout << "goTo: " << glm::to_string(proposedNewPos) << endl;
 
-	// USE THIS FOR COLLISION DETECTION ON
+	// USE THESE FOR COLLISION DETECTION ON
 	//glm::vec3 newPos = m_physics->handleCollisionDetection(proposedNewPos);
+	//if (newPos == proposedNewPos) {
+	//	m_physics->m_velocity = proposedNewVelocity;
+	//}
 
 	// USE THIS FOR COLLISION DETECTION OFF
 	glm::vec3 newPos = proposedNewPos;
@@ -170,15 +184,28 @@ void MyPlayer::handleMovement(unsigned char key) {
 	m_cam->updateCameraMatrix();
 
 	this->setModelMatrix(glm::translate(m_physics->m_position));
-	this->updateBoundingBox();
-	
 	Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
-	
+	this->updateBoundingBox();
 	this->getAABB()->print();
 
 	//cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
 	//cout << "look at: " << glm::to_string(this->getCamera()->getCameraLookAt()) << endl;
 	//cout << "up: " << glm::to_string(this->getCamera()->getCameraUp()) << endl;
+}
+
+void MyPlayer::handleJump() {
+	cout << "JUMPING\n";
+	// create new position
+	//glm::vec3 proposedNewPos;
+
+	if(m_physics->m_currentState != PhysicsStates::Jumping ) {
+		m_physics->m_velocity.y += m_yJumpFactor;
+		m_physics->m_currentState = PhysicsStates::Jumping; 
+	}
+		//velocity = jump_velocity
+		//set state to jumping state
+	// setup the tmp_z
+	//glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
 }
 
 void MyPlayer::updateModelViewMatrix() {

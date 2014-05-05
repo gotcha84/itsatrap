@@ -5,6 +5,7 @@ namespace sg {
 
 	Building::Building(int id) {
 		m_id = id;
+		
 	}
 
 	/*Building::Building(string filename) {
@@ -52,6 +53,8 @@ namespace sg {
 		sg::City* myParent = (sg::City*)getParent();
 
 		// if city and want colorful buildings!
+		//glColor3f(1, 0, 0);
+		
 		if (m_id % 6 == 0) {
 			glColor3f(0, 0, 1);
 		}
@@ -70,6 +73,7 @@ namespace sg {
 		if (m_id % 6 == 5) {
 			glColor3f(1, 1, 0);
 		}
+		
 
 		//cout << "m_id: " << m_id << endl;
 		glMaterialfv( GL_FRONT, GL_AMBIENT, m_material.m_ambient);
@@ -164,10 +168,15 @@ namespace sg {
 		}*/
 		
 		m_boundingBox.setAABB(minx, miny, minz, maxx, maxy, maxz);
+
+		glm::vec3 tmpPos = glm::vec3((maxx-minx)/2, (maxy-miny)/2, (maxz-minz)/2);
+
+		// TODO: set
+		m_physics = Physics(tmpPos, FLT_MAX);
 	}
 
 	bool Building::isInside(glm::vec3 point) {		
-		if (m_id == 43) {
+		if (m_id == 4) {
 			return false;
 		}
 		else {

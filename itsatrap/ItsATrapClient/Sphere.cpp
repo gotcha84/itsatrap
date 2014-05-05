@@ -11,7 +11,7 @@ namespace sg {
 					glMatrixMode(GL_MODELVIEW);
 					glLoadMatrixf(glm::value_ptr(mv));
 
-					glColor3f(color.x, color.y, color.z);
+					glColor3f(m_color.x, m_color.y, m_color.z);
 					glutSolidSphere(1, 10, 10);
 				glPopMatrix();
 			}

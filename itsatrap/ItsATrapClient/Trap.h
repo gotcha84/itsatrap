@@ -2,36 +2,35 @@
 #ifndef TRAP_H
 #define TRAP_H
 
-#include "Geode.h"
-#include "AABB.h"
+
+#include <iostream>
+#include <fstream>
+
+#include "ObjNode.h"
+#include "tiny_obj_loader.h"
+
+//enum TrapType {
+//	Shrink = 0,
+//	Immobilize = 1,
+//	Intoxicate = 2
+//};
 
 namespace sg {
-	class Trap : public Geode {
+	class Trap : public ObjNode {
 		public:
-			glm::vec3 m_position;
-			glm::mat4 m_model;
-			glm::vec3 m_color;
-			AABB *m_boundingBox;
 
-			Trap();
-			Trap(glm::vec3 pos);
+			//TrapType m_type;
+			Trap(glm::vec3);
+			Trap(glm::vec3 currPos, int type);
 			~Trap();
 
-			void setPosition(glm::vec3 pos);
-			glm::vec3 getPosition();
+			//void loadData();
 
-			void setMatrix(glm::mat4 model);
-			glm::mat4 getMatrix();
-
-			void setColor(glm::vec3 color);
-			glm::vec3 getColor();
-
-			void setBoundingBox(AABB *box);
-			AABB *getBoundingBox();
-			void updateBoundingBox();
+			//void setBoundingBox(AABB box);
+			//AABB getBoundingBox();
+			//void updateBoundingBox();
+			//void calculateBoundingBox();
 			
-			void draw(glm::mat4 parent, glm::mat4 cam);
-
 			void print();
 	};
 }

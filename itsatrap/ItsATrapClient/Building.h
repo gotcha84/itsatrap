@@ -12,6 +12,7 @@
 #include "Geode.h"
 #include "World.h"
 #include "City.h"
+#include "Physics.h"
 
 using namespace std;
 
@@ -19,6 +20,8 @@ namespace sg {
 	class Building : public Geode {
 		public:
 			int m_id;
+
+			Physics m_physics;
 
 			Building(int id);
 			~Building();
