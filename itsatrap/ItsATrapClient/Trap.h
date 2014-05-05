@@ -30,8 +30,7 @@ namespace sg {
 			//AABB getBoundingBox();
 			//void updateBoundingBox();
 			//void calculateBoundingBox();
-			virtual void draw(glm::mat4 parent, glm::mat4 cam);
-
+			
 			void print();
 	};
 }

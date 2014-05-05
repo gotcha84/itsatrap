@@ -24,7 +24,7 @@ enum PhysicsStates {
 	Colliding = 2,
 	Moving = 3,
 	Falling = 4,
-	Count = 5
+	WallJumping = 5
 };
 
 class Physics {
@@ -33,7 +33,7 @@ class Physics {
 
 		glm::vec3 m_gravity;
 		glm::vec3 m_velocity;
-		glm::vec3 m_prevVelocity;
+		glm::vec3 m_velocityDiff;
 		glm::vec3 m_position;
 	
 		float m_gravityConstant; 

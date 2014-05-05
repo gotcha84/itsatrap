@@ -10,11 +10,11 @@ MyPlayer::MyPlayer() {
 	setProjectionMatrix();
 	setViewportMatrix();
 
-	m_xWalkFactor = 0.25f;
-	m_zWalkFactor = 0.25f;
-	m_xSlowWalkFactor = 0.05f;
-	m_zSlowWalkFactor = 0.05f;
-	m_yJumpFactor = 5.0f;
+	m_xWalkFactor = 0.5f;
+	m_zWalkFactor = 0.5f;
+	m_xSlowWalkFactor = 0.5f;
+	m_zSlowWalkFactor = 0.5f;
+	m_yJumpFactor = 2.0f;
 
 	m_cam = new Camera();
 	m_physics = new Physics();
@@ -30,11 +30,11 @@ MyPlayer::MyPlayer(glm::vec3 pos) {
 	setProjectionMatrix();
 	setViewportMatrix();
 
-	m_xWalkFactor = 0.25f;
-	m_zWalkFactor = 0.25f;
-	m_xSlowWalkFactor = 0.05f;
-	m_zSlowWalkFactor = 0.05f;
-	m_yJumpFactor = 5.0f;
+	m_xWalkFactor = 0.5f;
+	m_zWalkFactor = 0.5f;
+	m_xSlowWalkFactor = 0.5f;
+	m_zSlowWalkFactor = 0.5f;
+	m_yJumpFactor = 2.0f;
 
 	m_cam = new Camera(pos);
 	m_physics = new Physics(pos, 1.0f);
@@ -94,29 +94,13 @@ glm::mat4 MyPlayer::getViewPortMatrix() {
 
 void MyPlayer::handleMovement(unsigned char key) {
 
-	m_physics->m_prevVelocity = m_physics->m_velocity;
-
 	glm::vec3 proposedNewPos;
 	
-	// DEBUG STATEMENTS
-	// cout << glm::to_string(m_cam->m_cameraMatrix) << endl;	
-	// cout << "center: " << glm::to_string(m_cam->m_cameraCenter) << endl;
-	// cout << "lookat: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
-	// cout << "xx: " << glm::to_string(m_cam->m_camX) << endl;
-	// cout << "zz: " << glm::to_string(m_cam->m_camZ) << endl;
-	// cout << "zWalkFactor: " << m_zWalkFactor << endl;
-	// cout << "center: " << glm::to_string(m_cam->m_cameraCenter) << endl;
-	// cout << "lookat: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
-	// cout << glm::to_string(m_cam->m_cameraMatrix) << endl;
-	
-	// calculate proposals
-	// TODO change all cam centers to player pos
 	glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
 	float xWalkFactor;
 	float zWalkFactor;
-	glm::vec3 proposedNewVelocity = m_physics->m_velocity;
 
-	if (m_physics->m_currentState == PhysicsStates::Falling) {
+	if (m_physics->m_currentState == PhysicsStates::Jumping || m_physics->m_currentState == PhysicsStates::Falling || m_physics->m_currentState == PhysicsStates::WallJumping) {
 		xWalkFactor = m_xSlowWalkFactor;
 		zWalkFactor = m_zSlowWalkFactor;
 	}
@@ -127,46 +111,54 @@ void MyPlayer::handleMovement(unsigned char key) {
 	switch (key) {
 		case 'w':
 			proposedNewPos = m_physics->m_position + zWalkFactor*tmp_camZ;
-			proposedNewVelocity += zWalkFactor*tmp_camZ;
+			m_physics->m_velocityDiff = zWalkFactor*tmp_camZ;
 			break;
 
 		case 's':
 			proposedNewPos = m_physics->m_position + -1.0f*zWalkFactor*tmp_camZ;
-			proposedNewVelocity += -1.0f*zWalkFactor*tmp_camZ;
+			m_physics->m_velocityDiff = -1.0f*zWalkFactor*tmp_camZ;
 			break;
 
 		case 'a':
 			proposedNewPos = m_physics->m_position + -1.0f*xWalkFactor*m_cam->m_camX;
-			proposedNewVelocity += -1.0f*xWalkFactor*m_cam->m_camX;
+			m_physics->m_velocityDiff = -1.0f*xWalkFactor*m_cam->m_camX;
 			break;		
 
 		case 'd':
 			proposedNewPos = m_physics->m_position + xWalkFactor*m_cam->m_camX;
-			proposedNewVelocity += xWalkFactor*m_cam->m_camX;
+			m_physics->m_velocityDiff = xWalkFactor*m_cam->m_camX;
 			break;
 	}
 	
-	// collision detection
 	glm::vec3 oldPos = m_physics->m_position;
 
-	// placeholder for:
-
-	//cout << "goTo: " << glm::to_string(proposedNewPos) << endl;
-
 	// USE THESE FOR COLLISION DETECTION ON
-	//glm::vec3 newPos = m_physics->handleCollisionDetection(proposedNewPos);
-	//if (newPos == proposedNewPos) {
-	//	m_physics->m_velocity = proposedNewVelocity;
-	//}
-
+	glm::vec3 newPos = m_physics->handleCollisionDetection(proposedNewPos);
+	if (newPos == oldPos) {
+		if (m_physics->m_currentState != PhysicsStates::Jumping && m_physics->m_currentState != PhysicsStates::Falling && m_physics->m_currentState != PhysicsStates::WallJumping) {
+			m_physics->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+		}
+		else {
+			m_cam->m_cameraLookAt = m_cam->m_cameraCenter - m_cam->m_camZ;
+			m_cam->m_camZ*=-1.0f;
+			m_cam->m_camX*=-1.0f;
+			m_physics->m_velocity*=-1.0f;
+			m_physics->m_velocityDiff*=-1.0f;
+			m_cam->updateCameraMatrix();
+			m_physics->m_currentState == PhysicsStates::WallJumping;
+		}
+		
+	}
+	m_physics->m_velocity += m_physics->m_velocityDiff;
+	
+	//cout << "velocity after movment: " << glm::to_string(m_physics->m_velocity) << endl;
+	//cout << "velocitydiff after movment: " << glm::to_string(m_physics->m_velocityDiff) << endl;
+	
 	// USE THIS FOR COLLISION DETECTION OFF
-	glm::vec3 newPos = proposedNewPos;
+	//glm::vec3 newPos = proposedNewPos;
 
-	//glm::vec3 moved = newPos - oldPos;
-	//cout << "moved: " << glm::to_string(moved) << endl;
-	//m_physics->m_velocity = moved;
-
-	m_physics->m_position = newPos;
+	// USED BEFORE
+	//m_physics->m_position = newPos;
 
 	//m_physics->applyGravity();
 
@@ -183,29 +175,19 @@ void MyPlayer::handleMovement(unsigned char key) {
 	//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 	m_cam->updateCameraMatrix();
 
-	this->setModelMatrix(glm::translate(m_physics->m_position));
+	this->setModelMatrix(glm::translate(newPos));
 	Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
 	this->updateBoundingBox();
 	//this->getAABB()->print();
 
-	//cout << "center: " << glm::to_string(this->getCamera()->getCameraCenter()) << endl;
-	//cout << "look at: " << glm::to_string(this->getCamera()->getCameraLookAt()) << endl;
-	//cout << "up: " << glm::to_string(this->getCamera()->getCameraUp()) << endl;
 }
 
 void MyPlayer::handleJump() {
-	cout << "JUMPING\n";
-	// create new position
-	//glm::vec3 proposedNewPos;
 
-	if(m_physics->m_currentState != PhysicsStates::Jumping ) {
+	if(m_physics->m_currentState != PhysicsStates::Jumping && m_physics->m_currentState != PhysicsStates::WallJumping) {
 		m_physics->m_velocity.y += m_yJumpFactor;
 		m_physics->m_currentState = PhysicsStates::Jumping; 
 	}
-		//velocity = jump_velocity
-		//set state to jumping state
-	// setup the tmp_z
-	//glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
 }
 
 void MyPlayer::updateModelViewMatrix() {

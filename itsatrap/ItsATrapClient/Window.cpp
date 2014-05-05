@@ -60,38 +60,35 @@ void Window::displayCallback(void)
 	
 	// andre added below if sattements
 	if (client->m_xAngleChange != 0.0f) {
-		if (client->m_xAngleChange < 0) {
-			client->root->getCamera()->handleXRotation(client->m_xAngleChange);
-		}
-		else {
-			client->root->getCamera()->handleXRotation(client->m_xAngleChange);
-		}
+		client->root->getCamera()->handleXRotation(client->m_xAngleChange);
+
 		client->m_xAngleChange = 0.0f;
 	}
 	
 	// TODO test
 	
 	if (client->m_yAngleChange != 0.0f) {
-		if (client->m_yAngleChange < 0) {
-			client->root->getPlayer()->getCamera()->handleYRotation(client->m_yAngleChange);
-		}
-		else {
-			client->root->getPlayer()->getCamera()->handleYRotation(client->m_yAngleChange);
-		}
+		client->root->getPlayer()->getCamera()->handleYRotation(client->m_yAngleChange);
 		client->m_yAngleChange = 0.0f;
 	}
+	
+	glm::vec3 oldPos = client->root->getPlayer()->getPosition();
 
-	glm::vec3 oldPos = client->root->getPlayer()->getPhysics()->m_position;
-
-	// cout << "lookat: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraLookAt) << endl;
-	// cout << "center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;
-	// cout << "lookup: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraUp) << endl << endl;
-
-	// TODO: move to player class?
 	client->root->getPlayer()->getPhysics()->applyGravity();
 
-	if (oldPos != client->root->getPlayer()->getPhysics()->m_position) {
-		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position));
+	client->root->getPlayer()->getPhysics()->m_position += client->root->getPlayer()->getPhysics()->m_velocity;
+	client->root->getPlayer()->getPhysics()->m_velocity = glm::vec3(0.0f, client->root->getPlayer()->getPhysics()->m_velocity.y, 0.0f);
+	//client->root->getPlayer()->getPhysics()->m_velocity -= client->root->getPlayer()->getPhysics()->m_velocityDiff;
+	client->root->getPlayer()->getPhysics()->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+	// TODO: move to player class?
+	/*cout << "oldpos: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
+	cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
+	cout << "newpos: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl << endl;*/
+
+	if (oldPos != client->root->getPlayer()->getPosition()) {		
+
+		//cout << "change is good " << endl;
+		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position + client->root->getPlayer()->getPhysics()->m_velocity));
 		client->root->getPlayer()->updateBoundingBox();
 		Client::sendStateUpdate(Client::getPlayerId(), client->root->getPlayer()->getPhysics()->m_position.x, client->root->getPlayer()->getPhysics()->m_position.y, client->root->getPlayer()->getPhysics()->m_position.z);
 	}
@@ -99,13 +96,10 @@ void Window::displayCallback(void)
 	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - client->root->getPlayer()->getCamera()->m_cameraCenter;
 	//moved.y += 4.0f;
 	
-	//client->root->getPlayer()->getCamera()->m_cameraCenter = client->root->getPlayer()->getPhysics()->m_position;
 	client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
 	client->root->getPlayer()->getCamera()->m_cameraCenter.y += 4.0f;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt.y += 4.0f;
-	//client->root->getPlayer()->getCamera()->updateCameraMatrix();
-	//cout << "cam is: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_position) << endl;
 
 	// updates player view
 	client->root->getPlayer()->getCamera()->updateCameraMatrix();
@@ -124,22 +118,22 @@ void Window::displayCallback(void)
 void Window::keyDown(unsigned char key, int x, int y)
 {
 	keyState[key] = true;
-	cout << key << " down" << endl;
+	//cout << key << " down" << endl;
 }
 
 void Window::keyUp(unsigned char key, int x, int y) {
 	keyState[key] = false;
-	cout << key << " up" << endl;
+	//cout << key << " up" << endl;
 }
 
 void Window::specialKeyDown(int key, int x, int y) {
 	specialKeyState[key] = true;
-	cout << "special " << key << " down" << endl;
+	//cout << "special " << key << " down" << endl;
 }
 
 void Window::specialKeyUp(int key, int x, int y) {
 	specialKeyState[key] = false;
-	cout << "special " << key << " up" << endl;
+	//cout << "special " << key << " up" << endl;
 }
 
 void Window::processKeys() {

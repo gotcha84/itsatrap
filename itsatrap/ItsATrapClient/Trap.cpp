@@ -32,21 +32,6 @@ namespace sg {
 		//m_boundingBox = nullptr;
 	}
 	
-	void Trap::draw(glm::mat4 parent, glm::mat4 cam) {
-		//cout << "Drawing: " << m_id << endl;
-		this->setMatrix(glm::translate(this->getPosition()) * glm::scale(m_scaleVec));
-		glm::mat4 new_model = parent * this->getMatrix();
-		glm::mat4 mv = glm::inverse(cam) * new_model;
-
-		glPushMatrix();
-			glMatrixMode(GL_MODELVIEW);
-			glLoadMatrixf(glm::value_ptr(mv));
-			
-			glColor3f(1,0,0);
-			glutSolidCube(1.0f);
-		glPopMatrix();
-	}
-
 	void Trap::print() {
 		cout << "(" << this->getObjectID() << " Trap: " << this->getName() << ")";
 	}

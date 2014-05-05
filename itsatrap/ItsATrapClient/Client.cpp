@@ -118,7 +118,7 @@ int Client::receiveMsg(char * msg) {
 
 	if (bytesReceived < 0) {
 		int error = WSAGetLastError();
-		printf("[CLIENT]: client->cpp - recvfrom failed with error code %d\n", error);
+		//printf("[CLIENT]: client->cpp - recvfrom failed with error code %d\n", error);
 		return 1;
 	}
 
@@ -131,7 +131,7 @@ int Client::receiveMsg(char * msg) {
 int Client::sendMsg(char * msg, int len) {
 	if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0) {
 		int error = WSAGetLastError();
-		printf("[CLIENT]: client->cpp - sendto failed with error code %d\n", error);
+		//printf("[CLIENT]: client->cpp - sendto failed with error code %d\n", error);
 		return 1;
 	}
 
