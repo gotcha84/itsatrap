@@ -159,7 +159,7 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 					// Needs to send a query to the server and check all of the players to see if client has hit anyone
 					printf("[Client]: Knife Swung!\n");
 					int numPlayers = client->players.size();
-					for (int i = 0; i < client->players.size(); ++i)
+					for (int i = 0; i < numPlayers; ++i)
 					{
 						if (i != client->root->getPlayerID())
 						{

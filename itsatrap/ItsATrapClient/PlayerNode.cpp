@@ -110,6 +110,9 @@ namespace sg {
 		struct playerObject p = {};
 		p.id = this->getPlayerID();
 		p.health = m_player->m_health;
+		p.deathState = m_player->m_deathState;
+		p.numKills = m_player->m_numKills;
+		p.numDeaths = m_player->m_numDeaths;
 		p.x = getPosition().x;
 		p.y = getPosition().y;
 		p.z = getPosition().z;

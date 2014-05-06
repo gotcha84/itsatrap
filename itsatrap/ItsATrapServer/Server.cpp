@@ -196,10 +196,19 @@ void Server::processBuffer()
 			case KNIFE_HIT_EVENT:
 			{
 				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
-				dynamicWorld.playerMap[knifePkt->targetId].health -= KNIFE_HIT_DMG;
 
-				// TODO (ktngo): Kill Event, Death Event, Change state
-				//dynamicWorld.playerMap[knifePkt->targetId].
+				// TODO (ktngo): Maybe have a more general player interaction method?
+				playerObject player = dynamicWorld.playerMap[knifePkt->playerId];
+				playerObject target = dynamicWorld.playerMap[knifePkt->targetId];
+
+				// Knife Damage Hit
+				if (!target.deathState && (target.health -= KNIFE_HIT_DMG) <= 0)
+				{	
+					// Set death state
+					target.deathState = true;
+					++target.numDeaths;
+					++player.numKills;
+				}
 				break;
 			}
 		
@@ -240,6 +249,5 @@ int Server::sendMsg(char * msg, int len, struct sockaddr_in *destination) {
 	}
 
 	//printf("[SERVER]: Sent a packet of length %d\n", len);
-
 	return 0;
 }
