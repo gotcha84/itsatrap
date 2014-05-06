@@ -50,7 +50,6 @@ DynamicWorld::DynamicWorld(struct packet *packet)
 
 void DynamicWorld::addNewPlayer(struct playerObject p)
 {
-	
 	while (checkCollisionWithAllNonTraps(p))
 	{
 		p.aabb.minX += 10;

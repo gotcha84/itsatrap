@@ -123,15 +123,11 @@ int main(int argc, char *argv[]) {
 	//city.loadData("Can.obj");
 	client->root->addChild(&city);
 
-	// create a trap
-	//sg::Trap testTrap = sg::Trap(glm::vec3(75,0,0));
-	//client->root->addChild(&testTrap);
-
-
 	glutMainLoop();
 
 	delete client;
 	client = nullptr;
+
 	delete window;
 	window = nullptr;
 

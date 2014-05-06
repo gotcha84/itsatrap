@@ -14,6 +14,7 @@ struct playerObject {
 	struct aabb		aabb;
 	float			lookX, lookY, lookZ;
 	float			upX, upY, upZ;
+	float			xRotated, yRotated;
 };
 
 struct trapObject {

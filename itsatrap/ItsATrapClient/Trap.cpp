@@ -83,15 +83,15 @@ namespace sg {
 		struct trapObject t = {};
 		t.ownerId = m_ownerId;
 		t.eventCode = 0;
-		t.x = getPosition().x;
-		t.y = getPosition().y;
-		t.z = getPosition().z;
-		t.aabb.minX = getBoundingBox()->m_minX;
-		t.aabb.minY = getBoundingBox()->m_minY;
-		t.aabb.minZ = getBoundingBox()->m_minZ;
-		t.aabb.maxX = getBoundingBox()->m_maxX;
-		t.aabb.maxY = getBoundingBox()->m_maxY;
-		t.aabb.maxZ = getBoundingBox()->m_maxZ;
+		t.x = this->getPosition().x;
+		t.y = this->getPosition().y;
+		t.z = this->getPosition().z;
+		t.aabb.minX = this->getBoundingBox()->m_minX;
+		t.aabb.minY = this->getBoundingBox()->m_minY;
+		t.aabb.minZ = this->getBoundingBox()->m_minZ;
+		t.aabb.maxX = this->getBoundingBox()->m_maxX;
+		t.aabb.maxY = this->getBoundingBox()->m_maxY;
+		t.aabb.maxZ = this->getBoundingBox()->m_maxZ;
 		return t;
 	}
 }

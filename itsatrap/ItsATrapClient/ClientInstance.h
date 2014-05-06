@@ -17,8 +17,6 @@ class ClientInstance {
 		sg::Player *root;
 
 		int m_xMouse, m_yMouse; // mouse position
-		float m_xAngleChange, m_yAngleChange;
-		float m_xAngleChangeFactor, m_yAngleChangeFactor;
 
 		ClientInstance();
 		ClientInstance(int id);

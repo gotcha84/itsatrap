@@ -51,7 +51,10 @@ class MyPlayer {
 		Camera *getCamera();
 		glm::vec3 getPosition();
 		Physics *getPhysics();
+		
 		AABB *getAABB();
+		void setAABB(AABB *bbox);
+
 		glm::mat4 getTransMatrix();
 		glm::mat4 getModelMatrix();
 		glm::mat4 getCameraMatrix();
@@ -59,6 +62,8 @@ class MyPlayer {
 		glm::mat4 getProjectionMatrix();
 		glm::mat4 getViewPortMatrix();
 
+		void handleXRotation(float magnitude);
+		void handleYRotation(float magnitude);
 		void handleMovement(unsigned char key);
 		void updateModelViewMatrix();
 		

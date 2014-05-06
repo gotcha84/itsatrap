@@ -1,5 +1,7 @@
 #include "MyPlayer.h"
-#include "Client.h"
+//#include "Client.h"
+
+#define BBOX_RAD 5.0f
 
 MyPlayer::MyPlayer() {
 	m_modelMatrix = glm::mat4();
@@ -17,7 +19,7 @@ MyPlayer::MyPlayer() {
 
 	m_cam = new Camera();
 	m_physics = new Physics();
-	m_boundingBox = new AABB(this->getPosition(), 10.0f);
+	m_boundingBox = new AABB(this->getPosition(), BBOX_RAD);
 
 	m_numDeaths = 0;
 	m_numKills = 0;
@@ -41,7 +43,7 @@ MyPlayer::MyPlayer(glm::vec3 pos) {
 
 	m_cam = new Camera(pos);
 	m_physics = new Physics(pos);
-	m_boundingBox = new AABB(pos, 10.0f);
+	m_boundingBox = new AABB(pos, BBOX_RAD);
 
 	m_numDeaths = 0;
 	m_numKills = 0;
@@ -76,6 +78,10 @@ AABB *MyPlayer::getAABB() {
 	return m_boundingBox;
 }
 
+void MyPlayer::setAABB(AABB *bbox) {
+	m_boundingBox = bbox;
+}
+
 glm::mat4 MyPlayer::getTransMatrix() {
 	return m_transMatrix;
 }
@@ -98,6 +104,14 @@ glm::mat4 MyPlayer::getProjectionMatrix() {
 
 glm::mat4 MyPlayer::getViewPortMatrix() {
 	return m_viewportMatrix;
+}
+
+void MyPlayer::handleXRotation(float magnitude) {
+	this->getCamera()->handleXRotation(magnitude);
+}
+
+void MyPlayer::handleYRotation(float magnitude) {
+	this->getCamera()->handleYRotation(magnitude);
 }
 
 void MyPlayer::handleMovement(unsigned char key) {
@@ -179,7 +193,6 @@ void MyPlayer::handleMovement(unsigned char key) {
 	//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 	m_cam->updateCameraMatrix();
 
-	this->setModelMatrix(glm::translate(m_physics->m_position));
 	this->updateBoundingBox();
 }
 
@@ -256,7 +269,7 @@ void MyPlayer::lookAt(glm::vec3 point) {
 }
 
 void MyPlayer::updateBoundingBox() {
-	m_boundingBox->setAABB(this->getPosition(), 10.0f);
+	m_boundingBox->setAABB(this->getPosition(), BBOX_RAD);
 }
 
 bool MyPlayer::collidesWith(MyPlayer *other) {

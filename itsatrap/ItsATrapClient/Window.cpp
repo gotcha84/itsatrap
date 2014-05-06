@@ -47,26 +47,16 @@ void Window::displaySceneGraph(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	
 	// andre added below if sattements
-	if (client->m_xAngleChange != 0.0f) {
-		if (client->m_xAngleChange < 0) {
-			client->root->getCamera()->handleXRotation(client->m_xAngleChange);
-		}
-		else {
-			client->root->getCamera()->handleXRotation(client->m_xAngleChange);
-		}
-		client->m_xAngleChange = 0.0f;
+	if (client->root->m_xAngleChange != 0.0f) {
+		client->root->handleXRotation(client->root->m_xAngleChange);
+		client->root->m_xAngleChange = 0.0f;
+		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	}
 	
-	// TODO test
-	
-	if (client->m_yAngleChange != 0.0f) {
-		if (client->m_yAngleChange < 0) {
-			client->root->getPlayer()->getCamera()->handleYRotation(client->m_yAngleChange);
-		}
-		else {
-			client->root->getPlayer()->getCamera()->handleYRotation(client->m_yAngleChange);
-		}
-		client->m_yAngleChange = 0.0f;
+	if (client->root->m_yAngleChange != 0.0f) {
+		client->root->handleYRotation(client->root->m_yAngleChange);
+		client->root->m_yAngleChange = 0.0f;
+		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	}
 
 	// cout << "lookat: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraLookAt) << endl;
@@ -102,7 +92,7 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 {
 	// TODO: maybe more states
 	if (/*(client->m_myPlayer.m_physics.m_currentState != PhysicsStates::Falling) && */ (key == 'w' || key == 'a' || key == 's' || key == 'd')) {
-		client->root->getPlayer()->handleMovement(key);
+		client->root->handleMovement(key);
 		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	}
 
@@ -110,41 +100,15 @@ void Window::processNormalKeys(unsigned char key, int x, int y)
 		case 9: // TAB
 			client->toggleCurrentPlayer();
 			client->printSceneGraph();
+			Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 			break;
 		case 't':
 			sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
 			Client::requestToSpawnTrap(trap->getTrapObjectForNetworking());
 			delete trap;
 			trap = nullptr;
-
-			// TODO: have a getcity method
-			//sg::City* city;
-			//for (int i=0; i < client->root->getNumChildren(); i++) {
-				//city = dynamic_cast<sg::City*>(client->root->m_child[i]);
-				//if (city != nullptr) {
-					//break;
-				//}
-				
-			//}
-			//if (city != nullptr) {
-				
-				//bool result = city->loadDataAtPlace("Can.obj", client->root->getPlayer()->getPosition());
-				//cout << "making a can: " << result << endl;
-			//}
 			break;
 	}
-	
-	// TODO: running
-
-	/*
-	Vector3 pos = Vector3(
-	cube.getMatrix().m[3][0], 
-	cube.getMatrix().m[3][1], 
-	cube.getMatrix().m[3][2]
-	);
-
-	pos.print();
-	*/
 }
 
 void Window::processMouseKeys(int button, int state, int x, int y)
@@ -185,16 +149,16 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 
 void Window::processMouseMove(int x, int y) {
 	
-	/*cout << "client factor: " << client->m_xAngleChangeFactor << endl;
-	cout << "client factor: " << client->m_yAngleChangeFactor << endl;
+	/*cout << "client factor: " << client->root->m_xAngleChangeFactor << endl;
+	cout << "client factor: " << client->root->m_yAngleChangeFactor << endl;
 	cout << "clientX: " << client->m_xMouse << endl;
 	cout << "clientY: " << client->m_yMouse << endl;*/
 	if (client->m_xMouse != x) {
-	client->m_xAngleChange = float((float)x-client->m_xMouse)/client->m_xAngleChangeFactor;
+	client->root->m_xAngleChange = float((float)x-client->m_xMouse)/client->root->m_xAngleChangeFactor;
 	}
 
 	if (client->m_yMouse != y) {
-	client->m_yAngleChange = float((float)y-client->m_yMouse)/client->m_yAngleChangeFactor;
+	client->root->m_yAngleChange = float((float)y-client->m_yMouse)/client->root->m_yAngleChangeFactor;
 	}
 	
 	// keeps mouse centered
@@ -202,12 +166,12 @@ void Window::processMouseMove(int x, int y) {
 		glutWarpPointer(m_width/2, m_height/2);
 		
 		// TODO: actually fix this
-		/*cout << "xchange: " << client->m_xAngleChange << endl;
-		cout << "ychange: " << client->m_yAngleChange << endl;
-		client->m_xAngleChange = -1.0f * client->m_xAngleChange;
-		client->m_yAngleChange = -1.0f * client->m_yAngleChange;
-		cout << "xchange: " << client->m_xAngleChange << endl;
-		cout << "ychange: " << client->m_yAngleChange << endl;*/
+		/*cout << "xchange: " << client->root->m_xAngleChange << endl;
+		cout << "ychange: " << client->root->m_yAngleChange << endl;
+		client->root->m_xAngleChange = -1.0f * client->root->m_xAngleChange;
+		client->root->m_yAngleChange = -1.0f * client->root->m_yAngleChange;
+		cout << "xchange: " << client->root->m_xAngleChange << endl;
+		cout << "ychange: " << client->root->m_yAngleChange << endl;*/
 	}
 
 	client->m_xMouse = x;

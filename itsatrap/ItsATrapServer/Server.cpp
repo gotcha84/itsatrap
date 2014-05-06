@@ -211,7 +211,7 @@ void Server::processBuffer()
 	packetBufferCount = 0;
 
 	if (dynamicWorld.getAllPlayers().size() > 0)
-			broadcastDynamicWorld();
+		broadcastDynamicWorld();
 
 	// Release Mutex
 	ReleaseMutex(packetBufMutex);
