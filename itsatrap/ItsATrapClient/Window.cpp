@@ -168,7 +168,10 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 							if (hit)
 							{
 								Client::sendKnifeHitEvent(i);
+								client->players[i]->updateHealthHud();
+
 								cout << "Player " << client->root->getPlayerID() << " hit Player " << i << "!" << endl;
+								cout << "Player " << i << " has " << client->players[i]->getHealth() << endl;
 							}
 						}
 					}

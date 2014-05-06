@@ -197,17 +197,19 @@ void Server::processBuffer()
 				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
 
 				// TODO (ktngo): Maybe have a more general player interaction method?
-				playerObject player = dynamicWorld.playerMap[knifePkt->playerId];
-				playerObject target = dynamicWorld.playerMap[knifePkt->targetId];
+				playerObject *player = &dynamicWorld.playerMap[knifePkt->playerId];
+				playerObject *target = &dynamicWorld.playerMap[knifePkt->targetId];
+
 
 				// Knife Damage Hit
-				if (!target.deathState && (target.health -= KNIFE_HIT_DMG) <= 0)
+				if (!target->deathState && (target->health -= KNIFE_HIT_DMG) <= 0)
 				{	
 					// Set death state
-					target.deathState = true;
-					++target.numDeaths;
-					++player.numKills;
+					target->deathState = true;
+					++target->numDeaths;
+					++player->numKills;
 				}
+
 				break;
 			}
 		

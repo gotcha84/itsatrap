@@ -50,6 +50,8 @@ namespace sg {
 			void damage(int dmg);
 			bool isDead();
 			bool isAlive();
+
+			void updateHealthHud();
 	};
 }
 
