@@ -10,19 +10,29 @@ int Window::m_height = 512; // set window height in pixels here
 int Window::m_heightMapXShift = 278;
 int Window::m_heightMapZShift = 463;
 
-Window::Window() {
+bool *Window::keyState = new bool[256];
+bool *Window::specialKeyState = new bool[256];
 
+Window::Window() {
+	for (int i=0; i<256; i++) {
+		keyState[i] = false;
+		specialKeyState[i] = false;
+	}
 }
 
 Window::~Window() {
+	delete[] keyState;
+	keyState = nullptr;
 
+	delete[] specialKeyState;
+	specialKeyState = nullptr;
 }
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
 void Window::idleCallback(void)
 {
-	displaySceneGraph(); // call display routine to re-draw cube
+	displayCallback();
 }
 
 //----------------------------------------------------------------------------
@@ -42,8 +52,10 @@ void Window::reshapeCallback(int w, int h)
 //----------------------------------------------------------------------------
 // Callback method called when window readraw is necessary or
 // when glutPostRedisplay() was called.
-void Window::displaySceneGraph(void)
+void Window::displayCallback(void)
 {	
+	processKeys();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	
 	// andre added below if sattements
@@ -58,23 +70,36 @@ void Window::displaySceneGraph(void)
 		client->root->m_yAngleChange = 0.0f;
 		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	}
-
-	// cout << "lookat: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraLookAt) << endl;
-	// cout << "center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;
-	// cout << "lookup: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraUp) << endl << endl;
-
-	// TODO: move to player class?
-	client->root->getPlayer()->getPhysics()->applyGravity();
-	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - client->root->getPlayer()->getCamera()->m_cameraCenter;
 	
-	//client->root->getPlayer()->getCamera()->m_cameraCenter = client->root->getPlayer()->getPhysics()->m_position;
+	glm::vec3 oldPos = client->root->getPlayer()->getPosition();
+
+	client->root->getPlayer()->getPhysics()->applyGravity();
+
+	client->root->getPlayer()->getPhysics()->m_position += client->root->getPlayer()->getPhysics()->m_velocity;
+	client->root->getPlayer()->getPhysics()->m_velocity = glm::vec3(0.0f, client->root->getPlayer()->getPhysics()->m_velocity.y, 0.0f);
+	//client->root->getPlayer()->getPhysics()->m_velocity -= client->root->getPlayer()->getPhysics()->m_velocityDiff;
+	client->root->getPlayer()->getPhysics()->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+	// TODO: move to player class?
+	/*cout << "oldpos: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
+	cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
+	cout << "newpos: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl << endl;*/
+	client->root->getPlayer()->getPhysics()->m_lastMoved = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	if (oldPos != client->root->getPlayer()->getPosition()) {		
+		client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
+		//cout << "change is good " << endl;
+		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position + client->root->getPlayer()->getPhysics()->m_velocity));
+		client->root->getPlayer()->updateBoundingBox();
+		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+	}
+
+	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - client->root->getPlayer()->getCamera()->m_cameraCenter;
+	//moved.y += 4.0f;
+	
 	client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
-	
 	client->root->getPlayer()->getCamera()->m_cameraCenter.y += 4.0f;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt.y += 4.0f;
-	//client->root->getPlayer()->getCamera()->updateCameraMatrix();
-	//cout << "cam is: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_position) << endl;
 
 	// updates player view
 	client->root->getPlayer()->getCamera()->updateCameraMatrix();
@@ -83,32 +108,66 @@ void Window::displaySceneGraph(void)
 
 	client->root->getPlayer()->getCamera()->m_cameraCenter.y -= 4.0f;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt.y -= 4.0f;
-	
+
+	//cout << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
+
 	glFlush();  
 	glutSwapBuffers();
 }
 
-void Window::processNormalKeys(unsigned char key, int x, int y)
+void Window::keyDown(unsigned char key, int x, int y)
 {
-	// TODO: maybe more states
-	if (/*(client->m_myPlayer.m_physics.m_currentState != PhysicsStates::Falling) && */ (key == 'w' || key == 'a' || key == 's' || key == 'd')) {
-		client->root->handleMovement(key);
-		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-	}
+	keyState[key] = true;
+	//cout << key << " down" << endl;
+}
 
-	switch (key) {
-		case 9: // TAB
-			client->toggleCurrentPlayer();
-			client->printSceneGraph();
-			Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-			break;
-		case 't':
-			sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
-			Client::requestToSpawnTrap(trap->getTrapObjectForNetworking());
-			delete trap;
-			trap = nullptr;
-			break;
-	}
+void Window::keyUp(unsigned char key, int x, int y) {
+	keyState[key] = false;
+	//cout << key << " up" << endl;
+}
+
+void Window::specialKeyDown(int key, int x, int y) {
+	specialKeyState[key] = true;
+	//cout << "special " << key << " down" << endl;
+}
+
+void Window::specialKeyUp(int key, int x, int y) {
+	specialKeyState[key] = false;
+	//cout << "special " << key << " up" << endl;
+}
+
+void Window::processKeys() {
+		// forward + backward
+		if (keyState['w']) {
+			client->root->getPlayer()->handleMovement('w');
+		}
+		else if (keyState['s']) {
+			client->root->getPlayer()->handleMovement('s');
+		}
+
+		// left + right
+		if (keyState['a']) {
+			client->root->getPlayer()->handleMovement('a');
+		}
+		else if (keyState['d']) {
+			client->root->getPlayer()->handleMovement('d');
+		}
+
+		// jump
+		if (keyState[' ']) {
+			client->root->getPlayer()->handleJump();
+		}
+
+		// trap
+		if (keyState['t']) {
+			sg::Trap *trap = new sg::Trap(client->root->getPosition());
+			client->root->addChild(trap);
+		}
+
+		//case 9: // TAB
+			//client->toggleCurrentPlayer();
+			//client->printSceneGraph();
+			//break;
 }
 
 void Window::processMouseKeys(int button, int state, int x, int y)

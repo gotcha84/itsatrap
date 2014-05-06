@@ -59,16 +59,20 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_LIGHT0);
 	
 	// Install callback functions:
-	//glutDisplayFunc(window->displayCallback);
-	glutDisplayFunc(window->displaySceneGraph);
+	glutDisplayFunc(window->displayCallback);
 	glutReshapeFunc(window->reshapeCallback);
 	glutIdleFunc(window->idleCallback);
 
 	// to avoid cube turning white on scaling down
 	glEnable(GL_NORMALIZE);
 
-	// Process input
-	glutKeyboardFunc(window->processNormalKeys);
+	// keyboard input
+	glutKeyboardFunc(window->keyDown);
+	glutKeyboardUpFunc(window->keyUp);
+	glutSpecialFunc(window->specialKeyDown); // Tell GLUT to use the method "keySpecial" for special key presses  
+	glutSpecialUpFunc(window->specialKeyUp);
+
+	// mouse input
 	glutMouseFunc(window->processMouseKeys);
 	glutPassiveMotionFunc(window->processMouseMove);
 
@@ -107,7 +111,7 @@ int main(int argc, char *argv[]) {
 	groundShape.setName("ground");
 	ground.addChild(&groundShape);
 	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
-	groundShape.color = glm::vec3(0,1,0);
+	groundShape.m_color = glm::vec3(0,1,0);
 
 	// cube nodes
 	sg::MatrixTransform obj1 = sg::MatrixTransform();
@@ -122,6 +126,9 @@ int main(int argc, char *argv[]) {
 	city.loadData("city.obj");
 	//city.loadData("Can.obj");
 	client->root->addChild(&city);
+
+	client->printPlayers();
+	// client->printSceneGraph();
 
 	glutMainLoop();
 

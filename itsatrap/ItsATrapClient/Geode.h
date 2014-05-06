@@ -2,6 +2,8 @@
 #ifndef GEODE_H
 #define GEODE_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <GL/glut.h>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -14,12 +16,25 @@ namespace sg {
 
 	class Geode : public Node {
 		public:
-			glm::vec3 color;
 			AABB m_boundingBox;
 			Material m_material;
 
+			glm::vec3 m_position;
+			glm::mat4 m_model;
+			glm::vec3 m_color;
+
 			Texture *texture;
 			GLuint texturePPM;
+			char* m_textureFilename;
+
+			void setPosition(glm::vec3);
+			glm::vec3 getPosition();
+			void setMatrix(glm::mat4);
+			glm::mat4 getMatrix();
+			void setColor(glm::vec3);
+			glm::vec3 getColor();
+
+			AABB getBoundingBox();
 
 			Geode();
 			~Geode();

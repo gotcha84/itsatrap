@@ -100,6 +100,7 @@
     <ClCompile Include="MatrixTransform.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MyPlayer.cpp" />
+    <ClCompile Include="ObjNode.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PlayerNode.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -115,6 +116,7 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="ObjNode.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="City.h" />

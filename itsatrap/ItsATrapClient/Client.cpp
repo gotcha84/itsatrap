@@ -113,7 +113,7 @@ int Client::receiveMsg(char * msg) {
 
 	if (bytesReceived < 0) {
 		int error = WSAGetLastError();
-		printf("[CLIENT]: client->cpp - recvfrom failed with error code %d\n", error);
+		//printf("[CLIENT]: client->cpp - recvfrom failed with error code %d\n", error);
 		return 1;
 	}
 

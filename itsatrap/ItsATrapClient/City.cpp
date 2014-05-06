@@ -462,7 +462,7 @@ namespace sg {
 				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_cityScale, 0.0f, -1.0f, 0.0f);
 			}
 			else if (inputfile == "Can.obj") {
-				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_canScale, 40.0f, 0.0f, 40.0f);
+				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_canScale, 0.0f, 0.0f, 0.0f);
 			}
 			else {
 				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_defaultScale, 0.0f, 0.0f, 0.0f);

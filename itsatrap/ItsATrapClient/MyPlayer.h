@@ -65,6 +65,7 @@ class MyPlayer {
 		void handleXRotation(float magnitude);
 		void handleYRotation(float magnitude);
 		void handleMovement(unsigned char key);
+		void handleJump();
 		void updateModelViewMatrix();
 		
 		void setTransMatrix(glm::mat4 m);
