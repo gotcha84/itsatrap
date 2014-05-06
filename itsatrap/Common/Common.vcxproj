@@ -74,6 +74,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ConfigSettings.h" />
+    <ClInclude Include="Exports.h" />
     <ClInclude Include="NetworkConfig.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="Player.h" />
@@ -82,8 +84,12 @@
     <ClInclude Include="Stopwatch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ConfigSettings.cpp" />
     <ClCompile Include="DynamicWorld.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ConfigTemplate.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

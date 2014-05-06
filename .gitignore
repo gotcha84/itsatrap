@@ -8,3 +8,4 @@ itsatrap/ipch/
 *.log
 *.pdb
 *.idb
+itsatrap/Common/ConfigSettings.ini

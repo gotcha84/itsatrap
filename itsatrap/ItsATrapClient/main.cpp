@@ -10,6 +10,7 @@
 #include "ClientInstance.h"
 #include "Window.h"
 #include "SceneGraph.h"
+#include "ConfigSettings.h"
 
 // networking
 #include "Client.h"
@@ -21,6 +22,11 @@ Window *window;
 int main(int argc, char *argv[]) {
 
 	Sleep(1000);
+
+	ConfigSettings::getConfig()->loadSettingsFile();
+	int testVal = 0;
+	ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
+	cout << "Test config file: ScreenWidth:" << testVal << endl;
 
 	// Initialize networking for client
 	Client::initializeClient();

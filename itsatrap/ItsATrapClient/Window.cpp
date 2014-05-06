@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "ClientInstance.h"
 #include "Client.h"
+#include "ConfigSettings.h"
 
 extern ClientInstance *client;
 
@@ -161,7 +162,17 @@ void Window::processKeys() {
 		// trap
 		if (keyState['t']) {
 			sg::Trap *trap = new sg::Trap(client->root->getPosition());
-			client->root->addChild(trap);
+			Client::sendSpawnTrapEvent(trap->getTrapObjectForNetworking());
+			delete trap;
+			trap = nullptr;
+		}
+
+		// reload config file
+		if (keyState['r']) {
+			ConfigSettings::getConfig()->reloadSettingsFile();
+			int testVal = 0;
+			ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
+			cout << "Reloaded config: ScreenWidth: " << testVal << endl;
 		}
 
 		//case 9: // TAB
