@@ -35,6 +35,7 @@ namespace sg {
 			glm::vec3 getColor();
 
 			AABB getBoundingBox();
+			void setBoundingBox(glm::vec3 pos, float rad);
 
 			Geode();
 			~Geode();
