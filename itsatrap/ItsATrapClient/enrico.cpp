@@ -72,23 +72,27 @@ void handleAddTrap(struct trapObject t)
 	client->root->addChild(newTrap);
 
 	client->objects[t.id] = newTrap;
+
+	delete newTrap;
+	newTrap = nullptr;
 }
 
 void handleRemoveTrap(struct trapObject t)
 {
-	if (client->objects[t.id] != nullptr)
-		((sg::Trap *) client->objects[t.id])->setColor(glm::vec3(0,0,0));
+	if (client->objects[t.id] != nullptr) {
+		dynamic_cast<sg::Trap*>(client->objects[t.id])->setColor(glm::vec3(0,0,0));
+	}
 }
 
 // This will get called everytime server sends an update
 void handleUpdateWorldFromServer(DynamicWorld *world)
 {
 	vector<struct playerObject> players = world->getAllPlayers();
-	for (int i = 0; i < players.size(); i++)
+	for (int i = 0; i < players.size(); i++) {
 		handlePlayerUpdate(players[i]);
+	}
 
-	for (map<int, struct trapObject>::iterator it = world->trapMap.begin(); it != world->trapMap.end(); it++)
-	{
+	for (map<int, struct trapObject>::iterator it = world->trapMap.begin(); it != world->trapMap.end(); it++) {
 		if (it->second.eventCode == EVENT_ADD_TRAP)
 			handleAddTrap(it->second);
 		else if (it->second.eventCode == EVENT_REMOVE_TRAP)
