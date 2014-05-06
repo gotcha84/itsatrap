@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿Build started 5/1/2014 5:23:28 PM.
      1>Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
@@ -21,3 +22,22 @@
 Build succeeded.
 
 Time Elapsed 00:00:01.66
+=======
+﻿Build started 5/4/2014 5:34:44 PM.
+     1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\Common.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       Link:
+         All outputs are up-to-date.
+         Common.vcxproj -> C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll
+       FinalizeBuildStatus:
+         Deleting file "Debug\Common.unsuccessfulbuild".
+         Touching "Debug\Common.lastbuildstate".
+     1>Done Building Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.04
+>>>>>>> de511262ce5ab83769bbfd8efa3b4b589f58199d

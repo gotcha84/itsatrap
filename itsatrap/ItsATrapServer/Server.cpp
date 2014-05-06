@@ -17,7 +17,6 @@ Stopwatch			Server::stopwatch;
 // Private Vars
 HANDLE		packetBufMutex;
 
-
 int Server::startServer()
 {
 	if (Server::initialize() != 0)

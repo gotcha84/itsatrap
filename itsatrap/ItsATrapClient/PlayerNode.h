@@ -4,12 +4,14 @@
 
 #include "MatrixTransform.h"
 #include "MyPlayer.h"
+#include "HUD.h"
 
 namespace sg {
 	class Player : public MatrixTransform {
 		public:
 			int m_playerID;		
 			MyPlayer *m_player;
+			HUD *m_hud;
 			glm::vec3 m_color;
 
 			Player();
@@ -39,8 +41,15 @@ namespace sg {
 			void print();
 
 			bool collidesWith(sg::Player *other);
+			bool knifeHitWith(sg::Player *other);
 
 			struct playerObject getPlayerObjectForNetworking();
+
+			int getHealth();
+			void setHealth(int health);
+			void damage(int dmg);
+			bool isDead();
+			bool isAlive();
 	};
 }
 

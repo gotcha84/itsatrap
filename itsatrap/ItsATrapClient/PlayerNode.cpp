@@ -3,15 +3,17 @@
 namespace sg {
 
 	Player::Player() {
-		m_player = new MyPlayer();
 		this->setPlayerID(0);
+		m_player = new MyPlayer();
+		m_hud = new HUD();
 		this->setColor(glm::vec3(1,1,1));
 		//m_health = 100;
 	}
 
 	Player::Player(glm::vec3 pos) {
-		m_player = new MyPlayer(pos);
 		this->setPlayerID(0);
+		m_player = new MyPlayer(pos);
+		m_hud = new HUD();
 		this->setColor(glm::vec3(1,1,1));
 		//m_health = 100;
 	}
@@ -23,6 +25,9 @@ namespace sg {
 	Player::~Player() {
 		delete m_player;
 		m_player = nullptr;
+
+		delete m_hud;
+		m_hud = nullptr;
 	}
 
 	void Player::setColor(glm::vec3 color) {
@@ -64,6 +69,9 @@ namespace sg {
 
 		// draw player avatar
 		this->draw(glm::mat4(), this->getPlayer()->getCameraMatrix());
+
+		// draw player hud
+		m_hud->draw(this->getHealth());
 	}
 
 	// draws player avatar at player location
@@ -105,6 +113,10 @@ namespace sg {
 		return this->getPlayer()->collidesWith(other->getPlayer());
 	}
 
+	bool Player::knifeHitWith(sg::Player *other) {
+		return this->getPlayer()->knifeHitWith(other->getPlayer());
+	}
+
 	struct playerObject Player::getPlayerObjectForNetworking()
 	{
 		struct playerObject p = {};
@@ -131,4 +143,23 @@ namespace sg {
 		return p;
 	}
 
+	int Player::getHealth() {
+		return this->getPlayer()->getHealth();
+	}
+
+	void Player::setHealth(int health) {
+		this->getPlayer()->setHealth(health);
+	}
+
+	void Player::damage(int dmg) {
+		this->getPlayer()->damage(dmg);
+	}
+
+	bool Player::isDead() {
+		return this->getPlayer()->isDead();
+	}
+
+	bool Player::isAlive() {
+		return this->getPlayer()->isAlive();
+	}
 }
