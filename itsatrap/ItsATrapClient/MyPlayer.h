@@ -25,7 +25,6 @@ class MyPlayer {
 		Camera *m_cam;
 		Physics *m_physics;
 		AABB *m_boundingBox;
-		float m_yJumpFactor;
 
 		glm::mat4 m_transMatrix;
 

@@ -84,9 +84,10 @@ void Window::displayCallback(void)
 	/*cout << "oldpos: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
 	cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
 	cout << "newpos: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl << endl;*/
+	client->root->getPlayer()->getPhysics()->m_lastMoved = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	if (oldPos != client->root->getPlayer()->getPosition()) {		
-
+		client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
 		//cout << "change is good " << endl;
 		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position + client->root->getPlayer()->getPhysics()->m_velocity));
 		client->root->getPlayer()->updateBoundingBox();

@@ -9,10 +9,15 @@ Physics::Physics() {
 	
 	m_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_position = glm::vec3(75.0f, 0.0f, 0.0f);
-	
+	m_lastMoved = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	m_yJumpFactor = 2.0f;
+
 	m_gravityConstant = -0.1f;
 	m_gravity  = glm::vec3(0.0f, m_gravityConstant, 0.0f);
 	m_elasticityConstant = 0.9f;
+
+	m_restConstant = glm::vec3(0.01f, 0.01f, 0.01f);
 }
 
 Physics::Physics(glm::vec3 pos) {
@@ -22,10 +27,15 @@ Physics::Physics(glm::vec3 pos) {
 
 	m_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_position = glm::vec3(pos.x, pos.y, pos.z);
+	m_lastMoved = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	m_yJumpFactor = 2.0f;
 	
 	m_gravityConstant = -0.1f; 
 	m_gravity  = glm::vec3(0.0f, m_gravityConstant, 0.0f);
 	m_elasticityConstant = 0.9f;
+
+	m_restConstant = glm::vec3(0.01f, 0.01f, 0.01f);
 }
 
 Physics::Physics(glm::vec3 pos, float mass) {
@@ -35,11 +45,16 @@ Physics::Physics(glm::vec3 pos, float mass) {
 
 	m_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_position = glm::vec3(pos.x, pos.y, pos.z);
+	m_lastMoved = glm::vec3(0.0f, 0.0f, 0.0f);
 	
+	m_yJumpFactor = 2.0f;
+
 	m_gravityConstant = -0.1f; 
 	m_gravity  = glm::vec3(0.0f, m_gravityConstant, 0.0f);
 	m_elasticityConstant = 0.9f;
 
+	m_restConstant = glm::vec3(0.01f, 0.01f, 0.01f);
+	
 	m_mass = mass;
 }
 
@@ -50,22 +65,25 @@ Physics::~Physics() {
 
 // TODO: check for collision detection, not just with heightmap
 void Physics::applyGravity() {
-	int xIndex = Utilities::roundToInt(m_position.x+m_velocity.x);
-	int zIndex = Utilities::roundToInt(m_position.z+m_velocity.z);
 
-	//TODO add collision detection for gravity
+	if (m_currentState != WallJumping) {
+	
+		int xIndex = Utilities::roundToInt(m_position.x+m_velocity.x);
+		int zIndex = Utilities::roundToInt(m_position.z+m_velocity.z);
 
-	//cout << "entering with position " << xIndex << ", " << zIndex << endl;
-	//cout << "heightmap's value at this pos is : " << World::m_heightMap[xIndex+World::m_heightMapXShift][zIndex+World::m_heightMapZShift] << endl;
-	///cout << "vs: " << m_position.y - m_gravityConstant << endl;*/
+		//TODO add collision detection for gravity
+
+		//cout << "entering with position " << xIndex << ", " << zIndex << endl;
+		//cout << "heightmap's value at this pos is : " << World::m_heightMap[xIndex+World::m_heightMapXShift][zIndex+World::m_heightMapZShift] << endl;
+		///cout << "vs: " << m_position.y - m_gravityConstant << endl;*/
 		
-	// TODO: possibly check more cases
-	//if (m_currentState != PhysicsStates::Falling) {
-		//cout << "position before: " << glm::to_string(m_position) << endl;
-		//cout << "velocity before: " << glm::to_string(m_velocity) << endl;
-		//cout << "gravity: " << glm::to_string(m_gravity) << endl;
+		// TODO: possibly check more cases
+		//if (m_currentState != PhysicsStates::Falling) {
+			//cout << "position before: " << glm::to_string(m_position) << endl;
+			//cout << "velocity before: " << glm::to_string(m_velocity) << endl;
+			//cout << "gravity: " << glm::to_string(m_gravity) << endl;
 
-		//m_position += m_velocity;
+			//m_position += m_velocity;
 		m_velocity += m_gravity;
 	
 		/*cout << "position after: " << glm::to_string(m_position) << endl;
@@ -83,6 +101,7 @@ void Physics::applyGravity() {
 			m_currentState = PhysicsStates::None;
 		
 		}
+	}
 		/*if (m_velocity != glm::vec3(0.0f, 0.0f, 0.0f)) {
 			cout << "velocity: " << glm::to_string(m_velocity) << endl;
 		}*/
@@ -97,6 +116,18 @@ void Physics::applyGravity() {
 	//cout << "exiting with position: " << glm::to_string(m_position) << endl << endl;
 
 	//m_position = glm::vec3(m_position.x, World::m_heightMap[xIndex+World::m_heightMapXShift][zIndex+World::m_heightMapZShift], m_position.z);
+}
+
+
+bool Physics::atRest() {
+	//cout << "lastmoved: " << glm::to_string(m_lastMoved) << endl;
+	//if (abs(m_lastMoved.x) < m_restConstant.x && abs(m_lastMoved.y-1.9f) < m_restConstant.y && abs(m_lastMoved.z) < m_restConstant.z) {
+	//	return true;
+	//}
+	if (abs(m_lastMoved.x) < m_restConstant.x && abs(m_lastMoved.z) < m_restConstant.z) {
+		return true;
+	}
+	return false;
 }
 
 // TODO: make it so you move right into the wall even if presing w would make you go past it, not just not move at all if you would

@@ -14,7 +14,6 @@ MyPlayer::MyPlayer() {
 	m_zWalkFactor = 0.5f;
 	m_xSlowWalkFactor = 0.5f;
 	m_zSlowWalkFactor = 0.5f;
-	m_yJumpFactor = 2.0f;
 
 	m_cam = new Camera();
 	m_physics = new Physics();
@@ -34,7 +33,6 @@ MyPlayer::MyPlayer(glm::vec3 pos) {
 	m_zWalkFactor = 0.5f;
 	m_xSlowWalkFactor = 0.5f;
 	m_zSlowWalkFactor = 0.5f;
-	m_yJumpFactor = 2.0f;
 
 	m_cam = new Camera(pos);
 	m_physics = new Physics(pos, 1.0f);
@@ -135,23 +133,33 @@ void MyPlayer::handleMovement(unsigned char key) {
 	// USE THESE FOR COLLISION DETECTION ON
 	glm::vec3 newPos = m_physics->handleCollisionDetection(proposedNewPos);
 	if (newPos == oldPos) {
-		if (m_physics->m_currentState != PhysicsStates::Jumping && m_physics->m_currentState != PhysicsStates::Falling && m_physics->m_currentState != PhysicsStates::WallJumping) {
+		//cout << "amiatrest??: " << m_physics->atRest() << endl;
+		if ((m_physics->m_currentState != PhysicsStates::Jumping && m_physics->m_currentState != PhysicsStates::Falling && m_physics->m_currentState != PhysicsStates::WallJumping) || m_physics->atRest()) {
 			m_physics->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 		}
-		else {
+		if (m_physics->m_currentState == PhysicsStates::Jumping && !m_physics->atRest()) {
+
+			m_physics->m_stateStart = clock();
+			
+			
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter - m_cam->m_camZ;
 			m_cam->m_camZ*=-1.0f;
 			m_cam->m_camX*=-1.0f;
-			m_physics->m_velocity*=-1.0f;
+			//m_physics->m_velocity*=-1.0f;
+			// change below line to -50.0f and comment out all of above lines for noob anu's way
 			m_physics->m_velocityDiff*=-1.0f;
 			m_cam->updateCameraMatrix();
 			m_physics->m_currentState == PhysicsStates::WallJumping;
 		}
 		
 	}
+	clock_t end = clock();
+
 	m_physics->m_velocity += m_physics->m_velocityDiff;
 	
-	//cout << "velocity after movment: " << glm::to_string(m_physics->m_velocity) << endl;
+	//cout << "seconds elapsed: " << double(end - m_physics->m_stateStart) / CLOCKS_PER_SEC << endl;
+
+	
 	//cout << "velocitydiff after movment: " << glm::to_string(m_physics->m_velocityDiff) << endl;
 	
 	// USE THIS FOR COLLISION DETECTION OFF
@@ -185,7 +193,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 void MyPlayer::handleJump() {
 
 	if(m_physics->m_currentState != PhysicsStates::Jumping && m_physics->m_currentState != PhysicsStates::WallJumping) {
-		m_physics->m_velocity.y += m_yJumpFactor;
+		m_physics->m_velocity.y += m_physics->m_yJumpFactor;
 		m_physics->m_currentState = PhysicsStates::Jumping; 
 	}
 }
