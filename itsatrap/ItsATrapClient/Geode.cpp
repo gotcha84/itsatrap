@@ -43,6 +43,10 @@ namespace sg {
 		return m_boundingBox;
 	}
 
+	void Geode::setBoundingBox(glm::vec3 pos, float rad) {
+		m_boundingBox.setAABB(pos, rad);
+	}
+
 	void Geode::print() {
 		cout << "(" << this->getObjectID() << " Geode: " << this->getName() << ")";
 	}

@@ -36,9 +36,20 @@ namespace sg {
 
 			//void setBoundingBox(AABB box);
 			//AABB getBoundingBox();
-			//void updateBoundingBox();
+			void updateBoundingBox();
 			//void calculateBoundingBox();
 			
+			void setPosition(glm::vec3 pos);
+			glm::vec3 getPosition();
+
+			void setMatrix(glm::mat4 model);
+			glm::mat4 getMatrix();
+
+			void setColor(glm::vec3 color);
+			glm::vec3 getColor();
+
+			void draw(glm::mat4 parent, glm::mat4 cam);
+
 			void print();
 
 			struct trapObject getTrapObjectForNetworking();
