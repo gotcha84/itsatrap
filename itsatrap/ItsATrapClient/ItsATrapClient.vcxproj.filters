@@ -28,6 +28,9 @@
     <Filter Include="Header Files\Networking">
       <UniqueIdentifier>{b52c816c-9497-4257-bff8-17e818fbd0ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{0c02ee5e-d511-4c42-b3b7-fc0802a54304}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -105,6 +108,9 @@
     <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -161,9 +167,6 @@
     <ClInclude Include="enrico.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -173,5 +176,37 @@
     <ClInclude Include="Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="can.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="can.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\..\phong.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\..\phong.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="phongandtexture.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="phongandtexture.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="gouraud.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="gouraud.vert">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

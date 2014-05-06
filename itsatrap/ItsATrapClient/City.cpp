@@ -72,6 +72,7 @@ namespace sg {
 
 	void City::draw(glm::mat4 parent, glm::mat4 camera) {
 		int count = 0;
+
 		for (int i = 0; i < getNumChildren(); i++) {
 			//cout << "city count: " << count << endl;
 			//if (i == 2) {
@@ -81,6 +82,7 @@ namespace sg {
 			//((sg::Building*)m_child[i])->draw(parent, camera);
 			//}
 		}
+
 		
 		//glm::mat4 cam_inverse = glm::inverse(camera);
 		//glm::mat4 mv = cam_inverse * parent;

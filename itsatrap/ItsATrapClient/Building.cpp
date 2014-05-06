@@ -45,15 +45,31 @@ namespace sg {
 		int t = 0;
 		//cout << m_nm_indices << endl;
 		int max_ele = 10000;
+
+		/* These two lines of codes apply shader and texture*/
+		
+
+
+		//glColor3f(1, 1, 1);
+		/*will bind differrent texture for buildings*/
+		if (m_id %2 == 0){
+			glUseProgram(light);
+			glBindTexture(GL_TEXTURE_2D, texturePPM2);
+		}
+		else{
+			glUseProgram(light);
+			glBindTexture(GL_TEXTURE_2D, texturePPM);
+		}
 			
 		// bind texture here
-		glBindTexture(GL_TEXTURE_2D, texturePPM);
+		//glBindTexture(GL_TEXTURE_2D, texturePPM);
 
 		sg::City* myParent = (sg::City*)getParent();
 
 		// if city and want colorful buildings!
+		/*
 		if (m_id % 6 == 0) {
-			glColor3f(0, 0, 1);
+			glColor3f(1, 0, 0);
 		}
 		if (m_id % 6 == 1) {
 			glColor3f(0, 1, 0);
@@ -70,14 +86,15 @@ namespace sg {
 		if (m_id % 6 == 5) {
 			glColor3f(1, 1, 0);
 		}
-
+		*/
 		//cout << "m_id: " << m_id << endl;
+
 		glMaterialfv( GL_FRONT, GL_AMBIENT, m_material.m_ambient);
 		glMaterialfv( GL_FRONT, GL_DIFFUSE, m_material.m_diffuse);
 		glMaterialfv( GL_FRONT, GL_SPECULAR, m_material.m_specular);
 		glMaterialfv( GL_FRONT, GL_EMISSION, m_material.m_emission);
 		glMaterialf( GL_FRONT, GL_SHININESS, m_material.m_shininess);
-
+		
 		//glColor3f(((m_id%8)%4)%2, (m_id%4)%2, m_id%2);
 		for (int i = 0; i < myParent->m_nIndices[m_id]/3; i++) {
 			//cout << m_indices[i] << endl;
@@ -186,7 +203,7 @@ namespace sg {
 	void Building::setMaterial() {
 		m_material.setAmbient(0.7f, 0.7f, 0.7f, 1.0f); 
 		m_material.setDiffuse(0.1f, 0.5f, 0.8f, 1.0f);
-		m_material.setDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+		m_material.setSpecular(1.0f, 1.0f, 1.0f, 1.0f);
 		m_material.setEmission(0.3f, 0.2f, 0.2f, 0.0f);
 		m_material.setShininess(128.0f);
 	}

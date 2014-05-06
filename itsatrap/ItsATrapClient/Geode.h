@@ -9,6 +9,8 @@
 #include "AABB.h"
 #include "Texture.h"
 #include "Material.h"
+#include "Shader.h"
+#include "glext.h"
 
 namespace sg {
 
@@ -19,7 +21,10 @@ namespace sg {
 			Material m_material;
 
 			Texture *texture;
-			GLuint texturePPM;
+			GLuint texturePPM, texturePPM2;
+
+			Shader *shader;
+			GLuint light;
 
 			Geode();
 			~Geode();

@@ -55,7 +55,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)/glm/;$(SolutionDir)/glut/include/;$(SolutionDir)/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <OmitDefaultLibName>false</OmitDefaultLibName>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -101,6 +101,7 @@
     <ClCompile Include="MyPlayer.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PlayerNode.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="tiny_obj_loader.cc" />
@@ -113,6 +114,7 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="City.h" />
@@ -133,6 +135,27 @@
     <ClInclude Include="Window.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\phong.frag" />
+    <None Include="..\..\phong.vert" />
+    <None Include="can.frag">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="can.vert">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="gouraud.frag" />
+    <None Include="gouraud.vert" />
+    <None Include="phongandtexture.frag" />
+    <None Include="phongandtexture.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
