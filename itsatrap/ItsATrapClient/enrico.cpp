@@ -60,7 +60,7 @@ void handlePlayerUpdate(struct playerObject p)
 		}
 
 		if (client->players[p.id]->m_player->m_health != p.health) {
-			printf("HIT! Player %d's health is now %d\n", p.id, p.health);
+			printf("[CLIENT]: HIT! Player %d's health is now %d\n", p.id, p.health);
 			client->players[p.id]->m_player->m_health = p.health;
 		}
 	}

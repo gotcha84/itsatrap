@@ -227,9 +227,14 @@ namespace sg {
 		return this->getPlayer()->knifeHitWith(other->getPlayer());
 	}
 
+	void Player::updateHealthHud() {
+		this->m_hud->drawHealthBar(this->getHealth());
+	}
+
 	struct playerObject Player::getPlayerObjectForNetworking()
 	{
 		struct playerObject p = {};
+		
 		p.id = this->getPlayerID();
 		p.health = this->getHealth();
 		p.x = this->getPosition().x;
