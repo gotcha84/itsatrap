@@ -160,8 +160,11 @@ void Window::processKeys() {
 
 		// trap
 		if (keyState['t']) {
-			sg::Trap *trap = new sg::Trap(client->root->getPosition());
+			sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
 			client->root->addChild(trap);
+			//Client::requestToSpawnTrap(trap->getTrapObjectForNetworking());
+			//delete trap;
+			//trap = nullptr;
 		}
 
 		//case 9: // TAB

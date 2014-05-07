@@ -68,6 +68,10 @@ void handlePlayerUpdate(struct playerObject p)
 
 void handleAddTrap(struct trapObject t)
 {
+	if (client->objects[t.id] != nullptr) {
+		return;
+	}
+
 	sg::Trap *newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z));
 	client->root->addChild(newTrap);
 

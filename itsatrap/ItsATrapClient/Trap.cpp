@@ -6,43 +6,38 @@ namespace sg {
 
 	Trap::Trap(glm::vec3 currPos) {
 		m_position = currPos;
-		m_objFilename = "Can.obj";
 		m_model = glm::translate(currPos);
-		m_color = glm::vec3(1,0,0);
-		m_turtleScale = 0.01f;
-		m_cityScale = 0.1f;
-		m_canScale = 5.0f;
-		m_defaultScale = 1.0f;
+		this->setColor(glm::vec3(1,0,0));
 
-		if (m_objFilename == "Can.obj") {
-			m_scaleVec = glm::vec3(m_canScale, m_canScale, m_canScale);
-		}
-		else {
-			m_scaleVec = glm::vec3(m_defaultScale, m_defaultScale, m_defaultScale);
-		}
-
-		m_physics = Physics(currPos, FLT_MAX);
-		
-		loadData();
+		this->initModel(m_model1);
 	}
 
-	Trap::Trap(int ownerId, glm::vec3 pos) {
+	Trap::Trap(int ownerId, glm::vec3 currPos) {
 		m_ownerId = ownerId;
-		m_position = pos;
-		m_model = glm::translate(m_position);
-		m_color = glm::vec3(1,0,0);
-		m_boundingBox = AABB(m_position, TRAP_RAD);
+		m_position = currPos;
+		m_model = glm::translate(currPos);
+		this->setColor(glm::vec3(1,0,0));
+
+		this->initModel(m_model1);
 	}
 	
 	// TODO - implement when traps have different types
 	Trap::Trap(glm::vec3 currPos, int type) {
+
 	}
 
 	Trap::~Trap() {
+		delete m_model1;
+		m_model1 = nullptr;
 	}
 	
+	void Trap::initModel(ObjModel *model) {
+		model = new ObjModel("Can.obj");
+		model->setColor(this->getColor());
+	}
+
 	void Trap::updateBoundingBox() {
-		this->setBoundingBox(this->getPosition(), TRAP_RAD);
+		this->m_model1->setBoundingBox(this->getPosition(), TRAP_RAD);
 	}
 
 	void Trap::setPosition(glm::vec3 pos) {
@@ -62,14 +57,6 @@ namespace sg {
 		return m_model;
 	}
 
-	void Trap::setColor(glm::vec3 color) {
-		m_color = color;
-	}
-
-	glm::vec3 Trap::getColor() {
-		return m_color;
-	}
-
 	void Trap::draw(glm::mat4 parent, glm::mat4 cam) {
 		this->setMatrix(glm::translate(this->getPosition()) * glm::scale(glm::vec3(1.0f, 0.5f, 1.0f)));
 
@@ -86,7 +73,7 @@ namespace sg {
 	}
 
 	void Trap::print() {
-		cout << "(" << this->getObjectID() << " Trap: " << this->getName() << ")";
+		cout << "(" << this->m_model1->getObjectID() << " Trap: " << this->m_model1->getName() << ")";
 	}
 
 	struct trapObject Trap::getTrapObjectForNetworking()
@@ -97,12 +84,12 @@ namespace sg {
 		t.x = this->getPosition().x;
 		t.y = this->getPosition().y;
 		t.z = this->getPosition().z;
-		t.aabb.minX = this->getBoundingBox().m_minX;
-		t.aabb.minY = this->getBoundingBox().m_minY;
-		t.aabb.minZ = this->getBoundingBox().m_minZ;
-		t.aabb.maxX = this->getBoundingBox().m_maxX;
-		t.aabb.maxY = this->getBoundingBox().m_maxY;
-		t.aabb.maxZ = this->getBoundingBox().m_maxZ;
+		t.aabb.minX = this->m_model1->getBoundingBox().m_minX;
+		t.aabb.minY = this->m_model1->getBoundingBox().m_minY;
+		t.aabb.minZ = this->m_model1->getBoundingBox().m_minZ;
+		t.aabb.maxX = this->m_model1->getBoundingBox().m_maxX;
+		t.aabb.maxY = this->m_model1->getBoundingBox().m_maxY;
+		t.aabb.maxZ = this->m_model1->getBoundingBox().m_maxZ;
 		return t;
 	}
 }

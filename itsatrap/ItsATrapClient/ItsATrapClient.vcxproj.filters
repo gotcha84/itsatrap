@@ -108,7 +108,7 @@
     <ClCompile Include="HUD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ObjNode.cpp">
+    <ClCompile Include="ObjModel.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -182,8 +182,8 @@
     <ClInclude Include="HUD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ObjNode.h">
-      <Filter>SceneGraph</Filter>
+    <ClInclude Include="ObjModel.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -35,7 +35,6 @@ class Camera {
 		glm::vec3 m_camZWallJump;
 		glm::vec3 m_camXWallJump;
 
-
 		glm::mat4 m_cameraMatrix;
 
 		float m_xRotationAngle;

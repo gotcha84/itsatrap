@@ -5,8 +5,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "ObjNode.h"
-#include "tiny_obj_loader.h"
+#include "Geode.h"
+#include "ObjModel.h"
 #include "NetworkObjects.h"
 
 // andre
@@ -17,13 +17,14 @@
 //};
 
 namespace sg {
-	class Trap : public ObjNode {
+	class Trap : public Geode {
 		public:
 			int m_ownerId;
 			glm::vec3 m_position;
 			glm::mat4 m_model;
-			glm::vec3 m_color;
 			//TrapType m_type;
+
+			ObjModel *m_model1;
 
 			Trap();
 			Trap(int, glm::vec3 pos);
@@ -32,8 +33,8 @@ namespace sg {
 
 			~Trap();
 
+			void initModel(ObjModel *model);
 			//void loadData();
-
 			//void setBoundingBox(AABB box);
 			//AABB getBoundingBox();
 			void updateBoundingBox();
@@ -44,9 +45,6 @@ namespace sg {
 
 			void setMatrix(glm::mat4 model);
 			glm::mat4 getMatrix();
-
-			void setColor(glm::vec3 color);
-			glm::vec3 getColor();
 
 			void draw(glm::mat4 parent, glm::mat4 cam);
 

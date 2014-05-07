@@ -169,6 +169,17 @@ void MyPlayer::handleMovement(unsigned char key) {
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter - m_cam->m_camZ;
 			m_cam->m_camZ*=-1.0f;
 			m_cam->m_camX*=-1.0f;
+			
+			// reset xRotated
+			float newXRotated = m_cam->getXRotated() + 180.0f;
+			//if (newXRotated > 360.0f) {
+				//float diff = newXRotated - m_cam->getXRotated();
+				//this->getCamera()->setXRotated(diff);
+			//}
+			//else {
+				this->getCamera()->setXRotated(newXRotated);
+			//}
+
 			//m_physics->m_velocity*=-1.0f;
 			// change below line to -50.0f and comment out all of above lines for noob anu's way
 			m_physics->m_velocityDiff*=-1.0f;
