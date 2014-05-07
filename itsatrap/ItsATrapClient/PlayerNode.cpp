@@ -16,7 +16,7 @@ namespace sg {
 		m_xAngleChange = 0.0f;
 		m_yAngleChange = 0.0f;
 
-		m_color = glm::vec3(10,10,10);
+		m_color = glm::vec4(10,10,10,1);
 		m_xAngleChangeFactor = 20.0f;
 		m_yAngleChangeFactor = 20.0f;
 	}
@@ -33,7 +33,7 @@ namespace sg {
 		m_xAngleChange = 0.0f;
 		m_yAngleChange = 0.0f;
 
-		m_color = glm::vec3(10,10,10);
+		m_color = glm::vec4(10,10,10,1);
 		m_xAngleChangeFactor = 20.0f;
 		m_yAngleChangeFactor = 20.0f;
 	}
@@ -50,11 +50,11 @@ namespace sg {
 		m_hud = nullptr;
 	}
 
-	void Player::setColor(glm::vec3 color) {
+	void Player::setColor(glm::vec4 color) {
 		m_color = color;
 	}
 
-	glm::vec3 Player::getColor() {
+	glm::vec4 Player::getColor() {
 		return m_color;
 	}
 
@@ -156,7 +156,7 @@ namespace sg {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
-			glColor3f(this->getColor().x, this->getColor().y, this->getColor().z);
+			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			glutWireCube(PLAYER_RAD*2);
 		glPopMatrix();
 	}
@@ -178,11 +178,11 @@ namespace sg {
 			glPushMatrix();
 				glTranslatef(0, 0, -PLAYER_RAD);
 				glScalef(1, 1, 0.1f);
-				glColor3f(10,0,0);
+				glColor4f(10,0,0,1);
 				glutSolidCube(PLAYER_RAD*2);
 			glPopMatrix();
 
-			glColor3f(this->getColor().x, this->getColor().y, this->getColor().z);
+			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			glutSolidCube(PLAYER_RAD*2);
 		glPopMatrix();
 	}

@@ -34,7 +34,7 @@ void HUD::drawCrossHair() {
 		glLoadIdentity();
 
 		std::string text = "X";
-		glColor3f(0,0,0);
+		glColor4f(0,0,0,1);
 		glRasterPos2f(0.0f, 0.0f);
 		for (int i=0; i<text.length(); i++) {
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
@@ -49,13 +49,13 @@ void HUD::drawHealthBar(int health) {
 
 		std::string text = std::to_string(static_cast<long long>(health));
 		if (health > 50) {
-			glColor3f(0,20,0); // green
+			glColor4f(0,20,0,1); // green
 		}
 		else if (health > 25) {
-			glColor3f(20,20,0); // yellow
+			glColor4f(20,20,0,1); // yellow
 		}
 		else {
-			glColor3f(20,0,0); // red
+			glColor4f(20,0,0,1); // red
 		}
 			
 		glRasterPos2f(-0.95f, 0.9f);
@@ -68,7 +68,7 @@ void HUD::drawHealthBar(int health) {
 		glm::mat4 matrix;
 		matrix = glm::translate(matrix, glm::vec3(-0.9f, -0.9f, 0.0f));
 		matrix = glm::scale(matrix, glm::vec3(0.5f, 0.2f, 0.0f));
-		glColor3f(0.0f, 1.0f, 0.0f);
+		glColor4f(0,1,0,1);
 			
 		glLoadMatrixf(glm::value_ptr(matrix));
 		glutSolidCube(1);

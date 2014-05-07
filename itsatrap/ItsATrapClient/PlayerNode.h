@@ -13,7 +13,7 @@ namespace sg {
 			MyPlayer *m_player;
 			HUD *m_hud;
 			
-			glm::vec3 m_color;
+			glm::vec4 m_color;
 			glm::vec3 m_translate;
 			glm::quat m_rotate;
 			glm::vec3 m_scale;
@@ -26,8 +26,8 @@ namespace sg {
 			Player(MyPlayer *p);
 			~Player();
 
-			void setColor(glm::vec3 color);
-			glm::vec3 getColor();
+			void setColor(glm::vec4 color);
+			glm::vec4 getColor();
 
 			MyPlayer *getPlayer();
 			Camera *getCamera();

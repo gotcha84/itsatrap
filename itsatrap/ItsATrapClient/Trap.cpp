@@ -7,7 +7,7 @@ namespace sg {
 	Trap::Trap(glm::vec3 currPos) {
 		m_position = currPos;
 		m_model = glm::translate(currPos);
-		this->setColor(glm::vec3(1,0,0));
+		this->setColor(glm::vec4(1,0,0,1));
 
 		this->initModel(m_model1);
 	}
@@ -16,7 +16,7 @@ namespace sg {
 		m_ownerId = ownerId;
 		m_position = currPos;
 		m_model = glm::translate(currPos);
-		this->setColor(glm::vec3(1,0,0));
+		this->setColor(glm::vec4(1,0,0,1));
 
 		this->initModel(m_model1);
 	}
@@ -67,7 +67,7 @@ namespace sg {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
-			glColor3f(this->getColor().x, this->getColor().y, this->getColor().z);
+			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			glutSolidCube(5);
 		glPopMatrix();
 	}
@@ -76,8 +76,7 @@ namespace sg {
 		cout << "(" << this->m_model1->getObjectID() << " Trap: " << this->m_model1->getName() << ")";
 	}
 
-	struct trapObject Trap::getTrapObjectForNetworking()
-	{
+	struct trapObject Trap::getTrapObjectForNetworking() {
 		struct trapObject t = {};
 		t.ownerId = m_ownerId;
 		t.eventCode = 0;

@@ -90,7 +90,7 @@ namespace sg {
 		//	glMatrixMode(GL_MODELVIEW);
 		//	glLoadMatrixf(glm::value_ptr(mv));
 
-		//	glColor3f(color.x, color.y, color.z);
+		//	glColor4f(color.r, color.g, color.b, color.a);
 		//	drawShape();
 		//glPopMatrix();
 	}

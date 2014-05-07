@@ -84,7 +84,7 @@ void handleAddTrap(struct trapObject t)
 void handleRemoveTrap(struct trapObject t)
 {
 	if (client->objects[t.id] != nullptr) {
-		dynamic_cast<sg::Trap*>(client->objects[t.id])->setColor(glm::vec3(0,0,0));
+		dynamic_cast<sg::Trap*>(client->objects[t.id])->setColor(glm::vec4(0,0,0,1));
 	}
 }
 

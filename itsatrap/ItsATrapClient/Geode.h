@@ -21,7 +21,7 @@ namespace sg {
 
 			glm::vec3 m_position;
 			glm::mat4 m_model;
-			glm::vec3 m_color;
+			glm::vec4 m_color;
 
 			Texture *texture;
 			GLuint texturePPM;
@@ -29,10 +29,12 @@ namespace sg {
 
 			void setPosition(glm::vec3);
 			glm::vec3 getPosition();
+			
 			void setMatrix(glm::mat4);
 			glm::mat4 getMatrix();
-			void setColor(glm::vec3);
-			glm::vec3 getColor();
+			
+			void setColor(glm::vec4 color);
+			glm::vec4 getColor();
 
 			AABB getBoundingBox();
 			void setBoundingBox(glm::vec3 pos, float rad);

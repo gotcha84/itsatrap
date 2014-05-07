@@ -3,7 +3,7 @@
 namespace sg {
 
 	Geode::Geode() {
-		m_color = glm::vec3(1,0,0);
+		m_color = glm::vec4(1,0,0,1);
 		texture = new Texture();
 		m_textureFilename = "building1.ppm";
 		texturePPM = texture->loadTexture(m_textureFilename);
@@ -31,11 +31,11 @@ namespace sg {
 		return m_model;
 	}
 
-	void Geode::setColor(glm::vec3 color) {
+	void Geode::setColor(glm::vec4 color) {
 		m_color = color;
 	}
 
-	glm::vec3 Geode::getColor() {
+	glm::vec4 Geode::getColor() {
 		return m_color;
 	}
 

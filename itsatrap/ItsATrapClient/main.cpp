@@ -28,18 +28,18 @@ int main(int argc, char *argv[]) {
 	ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
 	cout << "Test config file: ScreenWidth:" << testVal << endl;
 
+	// opengl lighting
+	float specular[]  = {1.0, 1.0, 1.0, 1.0};
+	float shininess[] = {100.0};
+	float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
+
 	// Initialize networking for client
 	Client::initializeClient();
 	client = new ClientInstance(Client::getPlayerId());
 	window = new Window();
 	glm::vec3 starting = client->root->getPosition();
 	client->root->moveTo(glm::vec3(starting.x, starting.y + 2, starting.z));
-	
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-
-	float specular[]  = {1.0, 1.0, 1.0, 1.0};
-	float shininess[] = {100.0};
-	float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
 
 	glutInit(&argc, argv);                      // initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 	glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
 	glClearColor(0.0, 0.0, 0.0, 0.0);           // set clear color to black
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // set polygon drawing mode to fill front and back of each polygon
-	glDisable(GL_CULL_FACE);     // disable backface culling to render both sides of polygons
+	glDisable(GL_CULL_FACE);					// disable backface culling to render both sides of polygons
 	glShadeModel(GL_SMOOTH);                    // set shading to smooth
 	
 	// Generate material properties:
@@ -71,6 +71,10 @@ int main(int argc, char *argv[]) {
 
 	// to avoid cube turning white on scaling down
 	glEnable(GL_NORMALIZE);
+
+	// enable alpha channel
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// keyboard input
 	glutKeyboardFunc(window->keyDown);
@@ -117,7 +121,7 @@ int main(int argc, char *argv[]) {
 	groundShape.setName("ground");
 	ground.addChild(&groundShape);
 	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
-	groundShape.m_color = glm::vec3(0,1,0);
+	groundShape.m_color = glm::vec4(0,1,0,1);
 
 	// cube nodes
 	sg::MatrixTransform obj1 = sg::MatrixTransform();

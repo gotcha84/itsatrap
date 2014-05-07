@@ -29,7 +29,7 @@ namespace sg {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
-			//glColor3f(color.x, color.y, color.z);
+			//glColor4f(color.r, color.g, color.b, color.a);
 			drawShape();
 		glPopMatrix();
 
@@ -53,25 +53,25 @@ namespace sg {
 		sg::City* myParent = (sg::City*)getParent();
 
 		// if city and want colorful buildings!
-		//glColor3f(1, 0, 0);
+		//glColor4f(1,0,0,1);
 		
 		if (m_id % 6 == 0) {
-			glColor3f(0, 0, 1);
+			glColor4f(0,0,1,1);
 		}
 		if (m_id % 6 == 1) {
-			glColor3f(0, 1, 0);
+			glColor4f(0,1,0,1);
 		}
 		if (m_id % 6 == 2) {
-			glColor3f(1, 0, 0);
+			glColor4f(1,0,0,1);
 		}
 		if (m_id % 6 == 3) {
-			glColor3f(0, 1, 1);
+			glColor4f(0,1,1,1);
 		}
 		if (m_id % 6 == 4) {
-			glColor3f(1, 0, 1);
+			glColor4f(1,0,1,1);
 		}
 		if (m_id % 6 == 5) {
-			glColor3f(1, 1, 0);
+			glColor4f(1,1,0,1);
 		}
 		
 
@@ -82,26 +82,26 @@ namespace sg {
 		glMaterialfv( GL_FRONT, GL_EMISSION, m_material.m_emission);
 		glMaterialf( GL_FRONT, GL_SHININESS, m_material.m_shininess);
 
-		//glColor3f(((m_id%8)%4)%2, (m_id%4)%2, m_id%2);
+		//glColor4f(((m_id%8)%4)%2, (m_id%4)%2, m_id%2, 1);
 		for (int i = 0; i < myParent->m_nIndices[m_id]/3; i++) {
 			//cout << m_indices[i] << endl;
 			//cout << ((m_id%2)%2)%2 << endl;
 			/*
 			if (m_id == 2) {
-				glColor3f(0, 1, 0);
+				glColor4f(0,1,0,1);
 			}
 			else if (m_id == 7) {
-				glColor3f(0, 0, 1);
+				glColor4f(0,0,1,1);
 			}
 			else if (m_id == 25) {
-				glColor3f(1, 0, 1);
+				glColor4f(1,0,1,1);
 			}
 
 			else if (m_id == 31) {
-				glColor3f(1, 1, 0);
+				glColor4f(1,1,0,1);
 			}
 			else {
-				glColor3f(1, 0, 0);
+				glColor4f(1,0,0,1);
 			}*/
 		
 			glBegin(GL_TRIANGLES);

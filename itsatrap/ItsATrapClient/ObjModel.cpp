@@ -4,7 +4,7 @@ ObjModel::ObjModel() {
 	this->initScales();
 
 	//m_physics = Physics();
-	this->setColor(glm::vec3(1,0,0));
+	this->setColor(glm::vec4(1,0,0,1));
 }
 
 ObjModel::ObjModel(int id) {
@@ -12,7 +12,7 @@ ObjModel::ObjModel(int id) {
 	m_id = id;
 
 	//m_physics = Physics();
-	this->setColor(glm::vec3(1,0,0));
+	this->setColor(glm::vec4(1,0,0,1));
 }
 
 ObjModel::ObjModel(std::string filename) {
@@ -22,7 +22,7 @@ ObjModel::ObjModel(std::string filename) {
 	this->loadModel();
 
 	//m_physics = Physics();
-	this->setColor(glm::vec3(1,0,0));
+	this->setColor(glm::vec4(1,0,0,1));
 }
 
 ObjModel::ObjModel(int id, std::string filename) {
@@ -33,7 +33,7 @@ ObjModel::ObjModel(int id, std::string filename) {
 	this->loadModel();
 
 	//m_physics = Physics();
-	this->setColor(glm::vec3(1,0,0));
+	this->setColor(glm::vec4(1,0,0,1));
 }
 
 ObjModel::~ObjModel() {
@@ -83,7 +83,7 @@ void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
 	glPushMatrix();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrixf(glm::value_ptr(mv));
-		glColor3f(this->getColor().x, this->getColor().y, this->getColor().z);
+		glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 		drawModel();
 	glPopMatrix();
 
@@ -104,7 +104,7 @@ void ObjModel::drawModel() {
 	glBindTexture(GL_TEXTURE_2D, texturePPM);
 
 	// if city and want colorful ObjModels!
-	glColor3f(1, 0, 0);
+	glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 
 	//cout << "m_id: " << m_id << endl;
 	glMaterialfv( GL_FRONT, GL_AMBIENT, m_material.m_ambient);
