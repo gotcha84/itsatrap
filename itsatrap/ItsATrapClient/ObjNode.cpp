@@ -278,6 +278,18 @@ namespace sg {
 		return (m_boundingBox.inside(point));
 	}
 
+	bool ObjNode::nearTop(glm::vec3 point) {		
+		return (m_boundingBox.nearTop(point));
+	}
+
+	glm::vec3 ObjNode::intersects(glm::vec3 from, glm::vec3 goTo) {
+		return (m_boundingBox.intersects(from, goTo));
+	}
+
+	float ObjNode::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
+		return (m_boundingBox.angleIntersection(from, goTo));
+	}
+
 	bool ObjNode::collidesWith(ObjNode* o) {
 		return (m_boundingBox.collidesWith(o->m_boundingBox));
 	}

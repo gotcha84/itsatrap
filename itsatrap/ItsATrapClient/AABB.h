@@ -20,6 +20,8 @@ class AABB {
 		float m_maxY;
 		float m_maxZ;
 
+		float m_nearTopFactor;
+
 		AABB();
 		AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
 		AABB(glm::vec3 pos, float rad);
@@ -30,6 +32,9 @@ class AABB {
 		
 		bool collidesWith(AABB other);
 		bool inside(glm::vec3 goTo);
+		bool nearTop(glm::vec3 goTo);
+		glm::vec3 intersects(glm::vec3 from, glm::vec3 goTo);
+		float angleIntersection(glm::vec3 from, glm::vec3 goTo);
 
 		void print();
 };

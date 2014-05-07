@@ -7,6 +7,7 @@ extern ClientInstance *client;
 
 Camera::Camera() {
 	m_playerHeight = glm::vec3(0.0f, 4.0f, 0.0f);
+	m_slidingHeight = glm::vec3(0.0f, 2.0f, 0.0f);
 
 	m_xRotationAngle = 1.0f;
 	m_yRotationAngle = 1.0f;
@@ -20,6 +21,8 @@ Camera::Camera() {
 	m_cameraLookAt = m_cameraCenter + glm::vec3(0.0f, 0.0f, -1.0f);
 	m_cameraUp = glm::vec3(0, 1.0f, 0);
 
+	m_camZSliding = glm::vec3(0.0f, 10.0f, 0.0f);
+
 	m_yRotated = 0.0f;
 
 	updateCameraMatrix();
@@ -27,6 +30,7 @@ Camera::Camera() {
 
 Camera::Camera(glm::vec3 pos) {
 	m_playerHeight = glm::vec3(0.0f, 4.0f, 0.0f);
+	m_slidingHeight = glm::vec3(0.0f, 2.0f, 0.0f);
 
 	m_xRotationAngle = 1.0f;
 	m_yRotationAngle = 1.0f;
@@ -40,6 +44,8 @@ Camera::Camera(glm::vec3 pos) {
 	m_cameraCenter = pos;// + m_playerHeight;
 	m_cameraLookAt = m_cameraCenter + glm::vec3(0.0f, 0.0f, -1.0f);
 	m_cameraUp = glm::vec3(0, 1.0f, 0);
+
+	m_camZSliding = glm::vec3(0.0f, 10.0f, 0.0f);
 
 	m_yRotated = 0.0f;
 

@@ -37,6 +37,10 @@ class MyPlayer {
 		float m_zWalkFactor;
 		float m_xSlowWalkFactor;
 		float m_zSlowWalkFactor;
+		float m_wallJumpFactor;
+		float m_wallJumpTime;
+		float m_teleportFactor;
+		float m_slideFactor;
 
 		MyPlayer();
 		MyPlayer(glm::vec3 pos);
@@ -53,8 +57,11 @@ class MyPlayer {
 		glm::mat4 getProjectionMatrix();
 		glm::mat4 getViewPortMatrix();
 
+		void handleSliding();
+		void handleTeleport();
 		void handleMovement(unsigned char key);
 		void handleJump();
+		void applyWallJump();
 		void updateModelViewMatrix();
 		
 		void setTransMatrix(glm::mat4 m);

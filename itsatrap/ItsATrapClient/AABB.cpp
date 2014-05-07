@@ -8,6 +8,8 @@ AABB::AABB() {
 	m_maxX = 0;
 	m_maxY = 0;
 	m_maxZ = 0;
+
+	m_nearTopFactor = 0.2f;
 }
 
 AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
@@ -17,6 +19,9 @@ AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float max
 	m_maxX = maxX;
 	m_maxY = maxY;
 	m_maxZ = maxZ;
+
+	m_nearTopFactor = 0.2f;
+
 }
 
 AABB::AABB(glm::vec3 pos, float rad) {
@@ -26,6 +31,8 @@ AABB::AABB(glm::vec3 pos, float rad) {
 	m_maxX = pos.x + rad;
 	m_maxY = pos.y + rad;
 	m_maxZ = pos.z + rad;
+
+	m_nearTopFactor = 0.2f;
 }
 
 AABB::~AABB() {
@@ -64,6 +71,74 @@ bool AABB::inside(glm::vec3 goTo) {
 	return (goTo.x >= m_minX && goTo.x <= m_maxX 
 		&& goTo.y >= m_minY && goTo.y <= m_maxY
 		&& goTo.z >= m_minZ && goTo.z <= m_maxZ); 
+}
+
+bool AABB::nearTop(glm::vec3 goTo) {
+	return (goTo.y >= m_maxY-((m_maxY-m_minY)*m_nearTopFactor));
+}
+
+glm::vec3 AABB::intersects(glm::vec3 from, glm::vec3 goTo) {
+	glm::vec3 direction = goTo-from;
+
+	float xMinCoeff = FLT_MAX;
+	float xMaxCoeff = FLT_MAX;
+	float yMinCoeff = FLT_MAX;
+	float yMaxCoeff = FLT_MAX;
+	float zMinCoeff = FLT_MAX;
+	float zMaxCoeff = FLT_MAX;
+
+	if (direction.x != 0) {
+		xMinCoeff = ((m_minX - from.x)/direction.x > 0) ? ((m_minX - from.x)/direction.x > 0) : FLT_MAX;
+		xMaxCoeff = ((m_maxX - from.x)/direction.x > 0) ? ((m_maxX - from.x)/direction.x > 0) : FLT_MAX;
+	}
+	if (direction.y != 0) {
+		yMinCoeff = ((m_minY - from.y)/direction.y > 0) ? ((m_minY - from.y)/direction.y > 0) : FLT_MAX;
+		yMaxCoeff = ((m_maxY - from.y)/direction.y > 0) ? ((m_maxY - from.y)/direction.y > 0) : FLT_MAX;
+	}
+	if (direction.z != 0) {
+		zMinCoeff = ((m_minZ - from.z)/direction.z > 0) ? ((m_minZ - from.z)/direction.z > 0) : FLT_MAX;
+		zMaxCoeff = ((m_maxZ - from.z)/direction.z > 0) ? ((m_maxZ - from.z)/direction.z > 0) : FLT_MAX;
+	}
+
+	float coeff = min(min(min(xMinCoeff, xMaxCoeff), min(yMinCoeff, yMaxCoeff)), min(zMinCoeff, zMaxCoeff));
+
+	return from+(coeff*direction);
+
+}
+
+float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
+	glm::vec3 direction = goTo-from;
+
+	float xMinCoeff = FLT_MAX;
+	float xMaxCoeff = FLT_MAX;
+	float yMinCoeff = FLT_MAX;
+	float yMaxCoeff = FLT_MAX;
+	float zMinCoeff = FLT_MAX;
+	float zMaxCoeff = FLT_MAX;
+
+	if (direction.x != 0) {
+		xMinCoeff = ((m_minX - from.x)/direction.x > 0) ? ((m_minX - from.x)/direction.x > 0) : FLT_MAX;
+		xMaxCoeff = ((m_maxX - from.x)/direction.x > 0) ? ((m_maxX - from.x)/direction.x > 0) : FLT_MAX;
+	}
+	if (direction.y != 0) {
+		yMinCoeff = ((m_minY - from.y)/direction.y > 0) ? ((m_minY - from.y)/direction.y > 0) : FLT_MAX;
+		yMaxCoeff = ((m_maxY - from.y)/direction.y > 0) ? ((m_maxY - from.y)/direction.y > 0) : FLT_MAX;
+	}
+	if (direction.z != 0) {
+		zMinCoeff = ((m_minZ - from.z)/direction.z > 0) ? ((m_minZ - from.z)/direction.z > 0) : FLT_MAX;
+		zMaxCoeff = ((m_maxZ - from.z)/direction.z > 0) ? ((m_maxZ - from.z)/direction.z > 0) : FLT_MAX;
+	}
+
+	float coeff = min(min(min(xMinCoeff, xMaxCoeff), min(yMinCoeff, yMaxCoeff)), min(zMinCoeff, zMaxCoeff));
+	if (coeff == xMinCoeff || coeff == xMaxCoeff) {
+		return 180.0f*(acos((direction.z*direction.z)/(glm::length(direction)*direction.z)))/atan(1.0f)*4.0f;
+	}
+	else if (coeff == yMinCoeff || coeff == yMaxCoeff) {
+		return -1.0f;
+	}
+	else {
+		return 180.0f*(acos((direction.x*direction.x)/(glm::length(direction)*direction.x)))/atan(1.0f)*4.0f;
+	}
 }
 
 void AABB::print() {

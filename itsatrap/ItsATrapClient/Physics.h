@@ -26,7 +26,8 @@ enum PhysicsStates {
 	Colliding = 2,
 	Moving = 3,
 	Falling = 4,
-	WallJumping = 5
+	WallJumping = 5,
+	Sliding = 6
 };
 
 class Physics {
@@ -34,12 +35,18 @@ class Physics {
 
 		PhysicsStates m_currentState;
 		clock_t m_stateStart;
+		clock_t m_lastTeleported;
+		clock_t m_lastSlid;
+		float m_teleportDelay;
+		float m_slideDelay;
 
 		glm::vec3 m_gravity;
 		glm::vec3 m_velocity;
 		glm::vec3 m_velocityDiff;
+		glm::vec3 m_velocityDiffWallJump;
 		glm::vec3 m_position;
 		glm::vec3 m_lastMoved;
+		
 
 		float m_gravityConstant; 
 		float m_elasticityConstant;
@@ -60,6 +67,8 @@ class Physics {
 		bool atRest();
 
 		glm::vec3 handleCollisionDetection(glm::vec3 goTo);
+		glm::vec3 handleIntersection(glm::vec3 from, glm::vec3 goTo);
+		glm::vec3 handleAngleIntersection(glm::vec3 from, glm::vec3 goTo);
 
 		void move(glm::vec3 delta);
 		void moveTo(glm::vec3 pos);
