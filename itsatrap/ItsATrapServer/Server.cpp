@@ -167,6 +167,14 @@ void Server::broadcastDynamicWorld()
 	}
 }
 
+void Server::respawnPlayer(int id) {
+	dynamicWorld.playerMap[id].x = 75;
+	dynamicWorld.playerMap[id].y = 0;
+	dynamicWorld.playerMap[id].z = 0;
+	dynamicWorld.playerMap[id].health = 100;
+	dynamicWorld.playerMap[id].deathState = false;
+}
+
 void Server::processBuffer()
 {
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
@@ -200,19 +208,19 @@ void Server::processBuffer()
 				playerObject *player = &dynamicWorld.playerMap[knifePkt->playerId];
 				playerObject *target = &dynamicWorld.playerMap[knifePkt->targetId];
 
-
 				// Knife Damage Hit
-				if (!target->deathState && (target->health -= KNIFE_HIT_DMG) <= 0)
-				{	
+				if (!target->deathState && (target->health -= KNIFE_HIT_DMG) <= 0) {
 					// Set death state
 					target->deathState = true;
-					++target->numDeaths;
-					++player->numKills;
-				}
+					target->numDeaths++;
+					player->numKills++;
 
+					// Start 5 second timer
+					respawnPlayer(target->id);
+				}
 				break;
 			}
-		
+
 			default:
 				printf("[SERVER]: Unknown event at buffer %d, eventId: %d\n", i, p->eventId);
 				break;

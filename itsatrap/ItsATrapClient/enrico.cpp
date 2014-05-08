@@ -23,7 +23,6 @@ void handleNewPlayer(struct playerObject p)
 	client->objects[p.id] = player;
 }
 
-// Returns 0 if successful
 void handlePlayerUpdate(struct playerObject p)
 {
 	if (client->objects[p.id] == nullptr) {
@@ -32,6 +31,7 @@ void handlePlayerUpdate(struct playerObject p)
 	else {	
 		if (glm::vec3(p.x, p.y, p.z) != client->players[p.id]->getPosition()) {
 			client->players[p.id]->moveTo(glm::vec3(p.x, p.y, p.z));
+			Client::sendPlayerUpdate(client->players[p.id]->getPlayerObjectForNetworking());
 		}
 
 		if (client->root->getPlayerID() != p.id) {
@@ -77,8 +77,8 @@ void handleAddTrap(struct trapObject t)
 
 	client->objects[t.id] = newTrap;
 
-	delete newTrap;
-	newTrap = nullptr;
+	//delete newTrap;
+	//newTrap = nullptr;
 }
 
 void handleRemoveTrap(struct trapObject t)

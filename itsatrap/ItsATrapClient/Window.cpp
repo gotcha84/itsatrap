@@ -138,48 +138,53 @@ void Window::specialKeyUp(int key, int x, int y) {
 }
 
 void Window::processKeys() {
-		// forward + backward
-		if (keyState['w']) {
-			client->root->getPlayer()->handleMovement('w');
-		}
-		else if (keyState['s']) {
-			client->root->getPlayer()->handleMovement('s');
-		}
+	// esc to quit
+	if (keyState[27]) {
+		exit(0);
+	}
 
-		// left + right
-		if (keyState['a']) {
-			client->root->getPlayer()->handleMovement('a');
-		}
-		else if (keyState['d']) {
-			client->root->getPlayer()->handleMovement('d');
-		}
+	// forward + backward
+	if (keyState['w']) {
+		client->root->getPlayer()->handleMovement('w');
+	}
+	else if (keyState['s']) {
+		client->root->getPlayer()->handleMovement('s');
+	}
 
-		// jump
-		if (keyState[' ']) {
-			client->root->getPlayer()->handleJump();
-		}
+	// left + right
+	if (keyState['a']) {
+		client->root->getPlayer()->handleMovement('a');
+	}
+	else if (keyState['d']) {
+		client->root->getPlayer()->handleMovement('d');
+	}
 
-		// trap
-		if (keyState['t']) {
-			sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
-			client->root->addChild(trap);
-			//Client::requestToSpawnTrap(trap->getTrapObjectForNetworking());
-			//delete trap;
-			//trap = nullptr;
-		}
+	// jump
+	if (keyState[' ']) {
+		client->root->getPlayer()->handleJump();
+	}
 
-		// reload config file
-		if (keyState['r']) {
-			ConfigSettings::getConfig()->reloadSettingsFile();
-			int testVal = 0;
-			ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
-			cout << "Reloaded config: ScreenWidth: " << testVal << endl;
-		}
+	// trap
+	if (keyState['t']) {
+		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
+		//client->root->addChild(trap);
+		Client::sendSpawnTrapEvent(trap->getTrapObjectForNetworking());
+		//delete trap;
+		//trap = nullptr;
+	}
 
-		//case 9: // TAB
-			//client->toggleCurrentPlayer();
-			//client->printSceneGraph();
-			//break;
+	// reload config file
+	if (keyState['r']) {
+		ConfigSettings::getConfig()->reloadSettingsFile();
+		int testVal = 0;
+		ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
+		cout << "Reloaded config: ScreenWidth: " << testVal << endl;
+	}
+
+	//case 9: // TAB
+		//client->toggleCurrentPlayer();
+		//client->printSceneGraph();
+		//break;
 }
 
 void Window::processMouseKeys(int button, int state, int x, int y)
@@ -203,7 +208,6 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 							if (hit)
 							{
 								Client::sendKnifeHitEvent(i);
-								client->players[i]->updateHealthHud();
 
 								cout << "Player " << client->root->getPlayerID() << " hit Player " << i << "!" << endl;
 								cout << "Player " << i << " has " << client->players[i]->getHealth() << endl;
