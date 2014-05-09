@@ -19,6 +19,8 @@ using namespace std;
 class Camera {
 	public:
 		glm::vec3 m_playerHeight;
+		glm::vec3 m_slidingHeight;
+
 		glm::vec3 m_playerCenter;
 
 		glm::vec3 m_cameraCenter;
@@ -35,6 +37,8 @@ class Camera {
 		glm::vec3 m_camZWallJump;
 		glm::vec3 m_camXWallJump;
 
+		glm::vec3 m_camZSliding;
+	
 		glm::mat4 m_cameraMatrix;
 
 		float m_xRotationAngle;

@@ -14,6 +14,7 @@
 #include <vector>
 #include <math.h>
 
+#include "AABB.h"
 #include "Utilities.h"
 #include "World.h"
 
@@ -26,7 +27,9 @@ enum PhysicsStates {
 	Colliding = 2,
 	Moving = 3,
 	Falling = 4,
-	WallJumping = 5
+	Climbing = 5,
+	Sliding = 6,
+	WallJumping = 7
 };
 
 class Physics {
@@ -34,12 +37,18 @@ class Physics {
 
 		PhysicsStates m_currentState;
 		clock_t m_stateStart;
+		clock_t m_lastTeleported;
+		clock_t m_lastSlid;
+		float m_teleportDelay;
+		float m_slideDelay;
 
 		glm::vec3 m_gravity;
 		glm::vec3 m_velocity;
 		glm::vec3 m_velocityDiff;
+		glm::vec3 m_velocityDiffWallJump;
 		glm::vec3 m_position;
 		glm::vec3 m_lastMoved;
+		
 
 		float m_gravityConstant; 
 		float m_elasticityConstant;
@@ -59,7 +68,10 @@ class Physics {
 
 		bool atRest();
 
-		glm::vec3 handleCollisionDetection(glm::vec3 goTo);
+		int handleCollisionDetection(AABB* other);
+		float handleIntersection(glm::vec3 from, glm::vec3 goTo, AABB* other); // not used
+		float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, AABB* other, int buildingId);
+		int handleReflectionIntersection(glm::vec3 from, glm::vec3 goTo, AABB* other, int buildingId);
 
 		void move(glm::vec3 delta);
 		void moveTo(glm::vec3 pos);

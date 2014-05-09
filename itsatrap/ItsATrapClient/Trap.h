@@ -33,7 +33,7 @@ namespace sg {
 
 			~Trap();
 
-			void initModel(ObjModel *model);
+			void initModel(std::string filename);
 			//void loadData();
 			//void setBoundingBox(AABB box);
 			//AABB getBoundingBox();

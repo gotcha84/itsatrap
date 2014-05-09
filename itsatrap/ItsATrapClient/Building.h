@@ -34,7 +34,13 @@ namespace sg {
 			
 			virtual void calculateBoundingBox();
 			virtual bool isInside(glm::vec3 point);
-			bool collidesWith(Building* b); // make virtual if child classes
+			bool nearTop (glm::vec3 point);
+
+			virtual glm::vec3 intersects(glm::vec3 from, glm::vec3 goTo);
+			virtual float angleIntersection(glm::vec3 from, glm::vec3 goTo);
+			virtual int reflectionIntersection(glm::vec3 from, glm::vec3 goTo);
+			
+			int collidesWith(AABB* b); // make virtual if child classes
 			virtual void setMaterial();
 	};
 }

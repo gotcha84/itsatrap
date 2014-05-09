@@ -133,6 +133,7 @@ void ObjModel::drawModel() {
 }
 
 void ObjModel::loadFilename(std::string filename) {
+	cout << "SET FILE NAME" << endl;
 	m_filename = filename;
 
 	if (m_filename == "Can.obj") {

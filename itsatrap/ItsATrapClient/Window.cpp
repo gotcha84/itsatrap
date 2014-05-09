@@ -73,6 +73,14 @@ void Window::displayCallback(void)
 	}
 	
 	glm::vec3 oldPos = client->root->getPlayer()->getPosition();
+	//cout << "curr state: " << client->root->getPlayer()->getPhysics()->m_currentState << endl;
+	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
+		client->root->getPlayer()->handleSliding();
+	}
+
+	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Climbing) {
+		client->root->getPlayer()->applyWallJump();
+	}
 
 	client->root->getPlayer()->getPhysics()->applyGravity();
 
@@ -99,16 +107,30 @@ void Window::displayCallback(void)
 	
 	client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
-	client->root->getPlayer()->getCamera()->m_cameraCenter.y += 4.0f;
-	client->root->getPlayer()->getCamera()->m_cameraLookAt.y += 4.0f;
+	
+	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
+		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_slidingHeight;
+		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding;
+	}
+	else {
+		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_playerHeight;
+		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
+	}
+
 
 	// updates player view
 	client->root->getPlayer()->getCamera()->updateCameraMatrix();
 	client->root->getPlayer()->updateModelViewMatrix(); // andre added this line
 	client->root->draw();
 
-	client->root->getPlayer()->getCamera()->m_cameraCenter.y -= 4.0f;
-	client->root->getPlayer()->getCamera()->m_cameraLookAt.y -= 4.0f;
+	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
+		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_slidingHeight;
+		client->root->getPlayer()->getCamera()->m_cameraLookAt -= (client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding);
+	}
+	else {
+		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_playerHeight;
+		client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
+	}
 
 	//cout << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
 
@@ -139,6 +161,7 @@ void Window::specialKeyUp(int key, int x, int y) {
 
 void Window::processKeys() {
 		// forward + backward
+	if (client->root->getPlayer()->getPhysics()->m_currentState != PhysicsStates::Climbing && client->root->getPlayer()->getPhysics()->m_currentState != PhysicsStates::Sliding) {
 		if (keyState['w']) {
 			client->root->getPlayer()->handleMovement('w');
 		}
@@ -153,33 +176,43 @@ void Window::processKeys() {
 		else if (keyState['d']) {
 			client->root->getPlayer()->handleMovement('d');
 		}
+	}
 
-		// jump
-		if (keyState[' ']) {
-			client->root->getPlayer()->handleJump();
-		}
+	// jump
+	if (keyState[' ']) {
+		client->root->getPlayer()->handleJump();
+	}
 
-		// trap
-		if (keyState['t']) {
-			sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
-			client->root->addChild(trap);
-			//Client::requestToSpawnTrap(trap->getTrapObjectForNetworking());
-			//delete trap;
-			//trap = nullptr;
-		}
+	// trap
+	if (keyState['t']) {
+		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
+		client->root->addChild(trap);
+		//Client::requestToSpawnTrap(trap->getTrapObjectForNetworking());
+		//delete trap;
+		//trap = nullptr;
+	}
 
-		// reload config file
-		if (keyState['r']) {
-			ConfigSettings::getConfig()->reloadSettingsFile();
-			int testVal = 0;
-			ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
-			cout << "Reloaded config: ScreenWidth: " << testVal << endl;
-		}
+	// reload config file
+	if (keyState['r']) {
+		ConfigSettings::getConfig()->reloadSettingsFile();
+		int testVal = 0;
+		ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
+		cout << "Reloaded config: ScreenWidth: " << testVal << endl;
+	}
 
-		//case 9: // TAB
-			//client->toggleCurrentPlayer();
-			//client->printSceneGraph();
-			//break;
+	if (keyState['m']) {
+		client->root->getPlayer()->handleTeleport();
+	}
+
+	if (keyState['x']) {
+		client->root->getPlayer()->handleSliding();
+	}
+
+
+	//case 9: // TAB
+		//client->toggleCurrentPlayer();
+		//client->printSceneGraph();
+		//break;
 }
 
 void Window::processMouseKeys(int button, int state, int x, int y)

@@ -271,7 +271,7 @@ namespace sg {
 
 	}
 	*/
-
+	/* UNUSED
 	bool City::loadDataAtPlace(string inputfile, glm::vec3 position) {
 
 		vector<tinyobj::shape_t> shapes;
@@ -359,11 +359,7 @@ namespace sg {
 			m_numBuildings++;
 			added++;
 
-			/*ss.clear();
-			ss << j;
-			tmp = ss.str();
-			Utilities::writeFloatArrayToFile(m_vertices[j], shapes[j].mesh.indices.size(), "verts"+tmp+".txt");
-			*/
+
 
 			// TODO delete newchild
 		}
@@ -419,7 +415,7 @@ namespace sg {
 		}
 		return canPlace;
 	}
-
+	*/
 	void City::loadData(string inputfile) {
 
 		vector<tinyobj::shape_t> shapes;

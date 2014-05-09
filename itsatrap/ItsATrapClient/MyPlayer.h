@@ -16,7 +16,6 @@
 
 #include "Camera.h"
 #include "Physics.h"
-#include "AABB.h"
 #include "NetworkObjects.h"
 
 using namespace std;
@@ -43,6 +42,11 @@ class MyPlayer {
 		float m_zWalkFactor;
 		float m_xSlowWalkFactor;
 		float m_zSlowWalkFactor;
+		float m_wallJumpFactor;
+		float m_wallJumpTime;
+		float m_teleportFactor;
+		float m_slideFactor;
+		float m_bounceFactor;
 
 		MyPlayer();
 		MyPlayer(glm::vec3 pos);
@@ -64,8 +68,11 @@ class MyPlayer {
 
 		void handleXRotation(float magnitude);
 		void handleYRotation(float magnitude);
+		void handleSliding();
+		void handleTeleport();
 		void handleMovement(unsigned char key);
 		void handleJump();
+		void applyWallJump();
 		void updateModelViewMatrix();
 		
 		void setTransMatrix(glm::mat4 m);

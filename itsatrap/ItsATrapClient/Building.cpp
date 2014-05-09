@@ -176,20 +176,40 @@ namespace sg {
 	}
 
 	bool Building::isInside(glm::vec3 point) {		
-		if (m_id == 4) {
-			return false;
-		}
-		else {
+		//if (m_id == 4) {
+		//	return false;
+		//}
+		//else {
 			//cout << "m_id: " << m_id << endl;
 			//cout << "mins: " << m_boundingBox.m_minX << ", " << m_boundingBox.m_minY << ", " << m_boundingBox.m_minZ << endl;
 			//cout << "maxs: " << m_boundingBox.m_maxX << ", " << m_boundingBox.m_maxY << ", " << m_boundingBox.m_maxZ << endl;
 			//cout << "goto: " << glm::to_string(point) << endl;
 			return (m_boundingBox.inside(point));
-		}
+		//}
 	}
 
-	bool Building::collidesWith(Building* b) {
-		return (m_boundingBox.collidesWith(b->m_boundingBox));
+	bool Building::nearTop(glm::vec3 point) {		
+		return (m_boundingBox.nearTop(point));
+	}
+
+
+	glm::vec3 Building::intersects(glm::vec3 from, glm::vec3 goTo) {
+		return (m_boundingBox.intersects(from, goTo));
+	}
+
+	float Building::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
+		return (m_boundingBox.angleIntersection(from, goTo));
+	}
+
+	int Building::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
+		return (m_boundingBox.reflectionIntersection(from, goTo));
+	}
+
+	int Building::collidesWith(AABB* other) {
+		if (m_id == 40 || !m_boundingBox.collidesWithPointer(other)) {
+			return -1;
+		}
+		return m_id;
 	}
 	
 	void Building::setMaterial() {

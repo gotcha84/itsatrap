@@ -17,6 +17,10 @@ Physics::Physics() {
 	m_elasticityConstant = 0.9f;
 
 	m_restConstant = glm::vec3(0.01f, 0.01f, 0.01f);
+	m_lastTeleported = clock();
+	m_lastSlid = clock();
+	m_teleportDelay = 5.0f;
+	m_slideDelay = 0.5f;
 }
 
 Physics::Physics(glm::vec3 pos) {
@@ -33,6 +37,10 @@ Physics::Physics(glm::vec3 pos) {
 	m_elasticityConstant = 0.9f;
 
 	m_restConstant = glm::vec3(0.01f, 0.01f, 0.01f);
+	m_lastTeleported = clock();
+	m_lastSlid = clock();
+	m_teleportDelay = 5.0f;
+	m_slideDelay = 0.5f;
 }
 
 Physics::Physics(glm::vec3 pos, float mass) {
@@ -49,7 +57,10 @@ Physics::Physics(glm::vec3 pos, float mass) {
 	m_elasticityConstant = 0.9f;
 
 	m_restConstant = glm::vec3(0.01f, 0.01f, 0.01f);
-	
+	m_lastTeleported = clock();
+	m_teleportDelay = 5.0f;
+	m_slideDelay = 0.5f;
+
 	m_mass = mass;
 }
 
@@ -61,7 +72,7 @@ Physics::~Physics() {
 // TODO: check for collision detection, not just with heightmap
 void Physics::applyGravity() {
 
-	if (m_currentState != WallJumping) {
+	if (m_currentState != Climbing) {
 	
 		int xIndex = Utilities::roundToInt(m_position.x+m_velocity.x);
 		int zIndex = Utilities::roundToInt(m_position.z+m_velocity.z);
@@ -93,7 +104,9 @@ void Physics::applyGravity() {
 			
 			m_velocity.y = 0.0f; /* = glm::vec3(m_velocity.x, 0.0f, m_velocity.z); */
 			m_velocityDiff.y = 0.0f;
-			m_currentState = PhysicsStates::None;
+			if (m_currentState != PhysicsStates::Sliding) {
+				m_currentState = PhysicsStates::None;
+			}
 		
 		}
 	}
@@ -114,6 +127,7 @@ void Physics::applyGravity() {
 }
 
 
+
 bool Physics::atRest() {
 	//cout << "lastmoved: " << glm::to_string(m_lastMoved) << endl;
 	//if (abs(m_lastMoved.x) < m_restConstant.x && abs(m_lastMoved.y-1.9f) < m_restConstant.y && abs(m_lastMoved.z) < m_restConstant.z) {
@@ -127,7 +141,7 @@ bool Physics::atRest() {
 
 // TODO: make it so you move right into the wall even if presing w would make you go past it, not just not move at all if you would
 // move into the wall
-glm::vec3 Physics::handleCollisionDetection(glm::vec3 goTo) {
+int Physics::handleCollisionDetection(AABB* other) {
 	sg::City* city;
 	
 	for (int i=0; i < client->root->getNumChildren(); i++) {
@@ -137,23 +151,82 @@ glm::vec3 Physics::handleCollisionDetection(glm::vec3 goTo) {
 		}
 	}
 
-	bool tmp = false;
+	int tmp = -1;
 	for (int i = 0; i < city->getNumChildren(); i++) {
 		sg::Building *b = dynamic_cast<sg::Building*>(city->m_child[i]);
 		if (b != nullptr) {
-			tmp = b->isInside(goTo);
+			tmp = b->collidesWith(other);
 		}
 		
-		if (tmp) {
+		if (tmp != -1) {
 			//cout << "i: " << i << ", COLLISION DETECTED" << endl;
 			//cout << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minX << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minY << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minZ << endl;
 			//cout << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxX << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxY << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxZ << endl;
 			//cout << "goTo: " << glm::to_string(goTo) << endl << endl;
-			return m_position;
+			return tmp;
 		}	
 	}
 
-	return goTo;
+	return -1;
+}
+
+float Physics::handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, AABB* other, int buildingId) {
+	sg::City* city;
+	float angle = -1.0f;
+	for (int i=0; i < client->root->getNumChildren(); i++) {
+		city = dynamic_cast<sg::City*>(client->root->m_child[i]);
+		if (city != nullptr) {
+			break;
+		}
+	}
+
+	bool tmp = false;
+	//for (int i = 0; i < city->getNumChildren(); i++) {
+	sg::Building *b = dynamic_cast<sg::Building*>(city->m_child[buildingId]);
+	if (b != nullptr) {
+		tmp = b->collidesWith(other);
+	}
+		
+	if (tmp) {
+
+		float angle = b->angleIntersection(from, goTo);
+		cout << "angle: " << angle << endl;
+
+		bool nearTop = b->nearTop(goTo);
+		cout << "near top: " << nearTop << endl;
+		return angle;
+	}	
+	//}
+	return angle;
+}
+
+int Physics::handleReflectionIntersection(glm::vec3 from, glm::vec3 goTo, AABB* other, int buildingId) {
+	sg::City* city;
+	int newDirection = -1;
+	for (int i=0; i < client->root->getNumChildren(); i++) {
+		city = dynamic_cast<sg::City*>(client->root->m_child[i]);
+		if (city != nullptr) {
+			break;
+		}
+	}
+
+	bool tmp = false;
+	//for (int i = 0; i < city->getNumChildren(); i++) {
+	sg::Building *b = dynamic_cast<sg::Building*>(city->m_child[buildingId]);
+	if (b != nullptr) {
+		tmp = b->collidesWith(other);
+	}
+		
+	if (tmp) {
+
+		newDirection = b->reflectionIntersection(from, goTo);
+
+		bool nearTop = b->nearTop(goTo);
+		cout << "near top: " << nearTop << endl;
+		return newDirection;
+	}	
+	//}
+	return newDirection;
 }
 
 void Physics::move(glm::vec3 delta) {

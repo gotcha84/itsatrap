@@ -9,7 +9,7 @@ namespace sg {
 		m_model = glm::translate(currPos);
 		this->setColor(glm::vec4(1,0,0,1));
 
-		this->initModel(m_model1);
+		this->initModel("Can.obj");
 	}
 
 	Trap::Trap(int ownerId, glm::vec3 currPos) {
@@ -18,7 +18,8 @@ namespace sg {
 		m_model = glm::translate(currPos);
 		this->setColor(glm::vec4(1,0,0,1));
 
-		this->initModel(m_model1);
+		this->initModel("Can.obj");
+		//cout << "filename: " << m_model1->m_cityScale << endl;
 	}
 	
 	// TODO - implement when traps have different types
@@ -31,9 +32,10 @@ namespace sg {
 		m_model1 = nullptr;
 	}
 	
-	void Trap::initModel(ObjModel *model) {
-		model = new ObjModel("Can.obj");
-		model->setColor(this->getColor());
+	void Trap::initModel(std::string filename) {
+		m_model1 = new ObjModel(filename);
+		m_model1->setColor(this->getColor());
+
 	}
 
 	void Trap::updateBoundingBox() {
@@ -58,7 +60,7 @@ namespace sg {
 	}
 
 	void Trap::draw(glm::mat4 parent, glm::mat4 cam) {
-		this->setMatrix(glm::translate(this->getPosition()) * glm::scale(glm::vec3(1.0f, 0.5f, 1.0f)));
+		this->setMatrix(glm::translate(this->getPosition()) /** glm::scale(glm::vec3(1.0f, 0.5f, 1.0f))*/);
 
 		glm::mat4 new_model = parent * this->getMatrix();
 		glm::mat4 mv = glm::inverse(cam) * new_model;
@@ -68,7 +70,8 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			glutSolidCube(5);
+			this->m_model1->draw(new_model, cam);
+			//glutSolidCube(5);
 		glPopMatrix();
 	}
 
