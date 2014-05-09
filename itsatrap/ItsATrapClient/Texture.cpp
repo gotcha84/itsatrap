@@ -1,4 +1,6 @@
 #include "Texture.h"
+
+
 	
 GLuint buildingTexture1;
 
@@ -12,6 +14,9 @@ GLuint Texture::loadTexture(char* the_texture) {
 	//GLuint texture;			 // storage for one texture
 	int twidth, theight;   // texture width/height [pixels]
 	unsigned char* tdata;  // texture pixel data
+
+	//glUniform1i(glGetUniformLocation(gl2Program, "texture"), 0);
+
 	// Load image file
 	tdata = loadPPM(the_texture, twidth, theight);
 	GLuint i = -1;

@@ -106,7 +106,7 @@ void ObjModel::drawModel() {
 	int max_ele = 10000;
 			
 	// bind texture here
-	glBindTexture(GL_TEXTURE_2D, texturePPM);
+	//glBindTexture(GL_TEXTURE_2D, texturePPM);
 
 	// if city and want colorful ObjModels!
 	glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);

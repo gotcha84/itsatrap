@@ -14,6 +14,10 @@
 #include "City.h"
 #include "Physics.h"
 
+#include "Texture.h"
+#include "Shader.h"
+#include "glext.h"
+
 using namespace std;
 
 namespace sg {
@@ -22,6 +26,15 @@ namespace sg {
 			int m_id;
 
 			Physics m_physics;
+			
+			// textures
+			Texture *texture;
+			GLuint texturePPM;
+			char* m_textureFilename;
+
+			// shaders
+			Shader *shader;
+			GLuint light;
 
 			Building(int id);
 			~Building();

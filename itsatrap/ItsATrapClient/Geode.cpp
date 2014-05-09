@@ -4,14 +4,10 @@ namespace sg {
 
 	Geode::Geode() {
 		m_color = glm::vec4(1,0,0,1);
-		texture = new Texture();
-		m_textureFilename = "building1.ppm";
-		texturePPM = texture->loadTexture(m_textureFilename);
 	}
 
 	Geode::~Geode() {
-		delete texture;
-		texture = nullptr;
+
 	}
 
 	void Geode::setPosition(glm::vec3 pos) {

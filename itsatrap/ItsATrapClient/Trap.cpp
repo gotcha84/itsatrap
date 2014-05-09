@@ -34,7 +34,6 @@ namespace sg {
 	void Trap::initModel(std::string filename) {
 		m_model1 = new ObjModel(filename);
 		m_model1->setColor(this->getColor());
-
 	}
 
 	void Trap::updateBoundingBox() {
