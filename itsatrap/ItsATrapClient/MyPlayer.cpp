@@ -244,7 +244,10 @@ void MyPlayer::handleYRotation(float magnitude) {
 
 void MyPlayer::handleMovement(unsigned char key) {
 
-	//cout << "curr state: " << m_physics->m_currentState << endl;
+	if (this->getPhysics()->m_currentState == PhysicsStates::Climbing || 
+		this->getPhysics()->m_currentState == PhysicsStates::Sliding) {
+		return;
+	}
 
 	glm::vec3 proposedNewPos;
 	

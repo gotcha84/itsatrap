@@ -160,22 +160,26 @@ void Window::specialKeyUp(int key, int x, int y) {
 }
 
 void Window::processKeys() {
-		// forward + backward
-	if (client->root->getPlayer()->getPhysics()->m_currentState != PhysicsStates::Climbing && client->root->getPlayer()->getPhysics()->m_currentState != PhysicsStates::Sliding) {
-		if (keyState['w']) {
-			client->root->getPlayer()->handleMovement('w');
-		}
-		else if (keyState['s']) {
-			client->root->getPlayer()->handleMovement('s');
-		}
+	
+	// esc to quit
+	if (keyState[27]) {
+		exit(0);
+	}
 
-		// left + right
-		if (keyState['a']) {
-			client->root->getPlayer()->handleMovement('a');
-		}
-		else if (keyState['d']) {
-			client->root->getPlayer()->handleMovement('d');
-		}
+	// forward + backward
+	if (keyState['w']) {
+		client->root->getPlayer()->handleMovement('w');
+	}
+	else if (keyState['s']) {
+		client->root->getPlayer()->handleMovement('s');
+	}
+
+	// left + right
+	if (keyState['a']) {
+		client->root->getPlayer()->handleMovement('a');
+	}
+	else if (keyState['d']) {
+		client->root->getPlayer()->handleMovement('d');
 	}
 
 	// jump
@@ -186,10 +190,7 @@ void Window::processKeys() {
 	// trap
 	if (keyState['t']) {
 		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
-		client->root->addChild(trap);
-		//Client::requestToSpawnTrap(trap->getTrapObjectForNetworking());
-		//delete trap;
-		//trap = nullptr;
+		Client::sendSpawnTrapEvent(trap->getTrapObjectForNetworking());
 	}
 
 	// reload config file
@@ -207,8 +208,7 @@ void Window::processKeys() {
 	if (keyState['x']) {
 		client->root->getPlayer()->handleSliding();
 	}
-
-
+	
 	//case 9: // TAB
 		//client->toggleCurrentPlayer();
 		//client->printSceneGraph();
@@ -236,7 +236,6 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 							if (hit)
 							{
 								Client::sendKnifeHitEvent(i);
-								client->players[i]->updateHealthHud();
 
 								cout << "Player " << client->root->getPlayerID() << " hit Player " << i << "!" << endl;
 								cout << "Player " << i << " has " << client->players[i]->getHealth() << endl;

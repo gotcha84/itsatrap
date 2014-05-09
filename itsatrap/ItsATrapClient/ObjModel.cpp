@@ -92,6 +92,11 @@ void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
 void ObjModel::drawModel() {
 	glEnable(GL_TEXTURE_2D);
 
+	// change order of vertices for backface culling for can
+	if (this->m_filename == "Can.obj") {
+		glFrontFace(GL_CW);
+	}
+
 	//cout << "nverts is : " << m_nIndices[0] << endl;
 	int p = 0;
 	int k = 0;
@@ -130,6 +135,9 @@ void ObjModel::drawModel() {
 		}
 	}
 	//cout << max_ele << endl;	
+
+	// reset backface culling
+	glFrontFace(GL_CCW);
 }
 
 void ObjModel::loadFilename(std::string filename) {

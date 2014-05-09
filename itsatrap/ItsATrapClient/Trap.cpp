@@ -9,7 +9,7 @@ namespace sg {
 		m_model = glm::translate(currPos);
 		this->setColor(glm::vec4(1,0,0,1));
 
-		this->initModel("Can.obj");
+		this->initModel("Polynoid.obj");
 	}
 
 	Trap::Trap(int ownerId, glm::vec3 currPos) {
@@ -18,8 +18,7 @@ namespace sg {
 		m_model = glm::translate(currPos);
 		this->setColor(glm::vec4(1,0,0,1));
 
-		this->initModel("Can.obj");
-		//cout << "filename: " << m_model1->m_cityScale << endl;
+		this->initModel("Polynoid.obj");
 	}
 	
 	// TODO - implement when traps have different types
