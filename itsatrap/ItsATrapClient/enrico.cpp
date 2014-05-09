@@ -60,8 +60,8 @@ void handlePlayerUpdate(struct playerObject p)
 		}
 
 		if (client->players[p.id]->m_player->m_health != p.health) {
-			printf("[CLIENT]: HIT! Player %d's health is now %d\n", p.id, p.health);
-			client->players[p.id]->m_player->m_health = p.health;
+			cout << "[CLIENT]: HIT! Player " << p.id << "'s health is now " << p.health << endl;
+			client->players[p.id]->setHealth(p.health);
 		}
 	}
 }
@@ -76,9 +76,6 @@ void handleAddTrap(struct trapObject t)
 	client->root->addChild(newTrap);
 
 	client->objects[t.id] = newTrap;
-
-	//delete newTrap;
-	//newTrap = nullptr;
 }
 
 void handleRemoveTrap(struct trapObject t)

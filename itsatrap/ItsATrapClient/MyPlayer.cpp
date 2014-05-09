@@ -426,9 +426,11 @@ void MyPlayer::handleMovement(unsigned char key) {
 }
 
 void MyPlayer::handleJump() {
-	if(m_physics->m_currentState != PhysicsStates::Jumping && m_physics->m_currentState != PhysicsStates::Climbing) {
+	if(m_physics->m_currentState != PhysicsStates::Jumping && 
+		m_physics->m_currentState != PhysicsStates::Climbing) {
+		
 		m_physics->m_velocity.y += m_physics->m_yJumpFactor;
-		m_physics->m_currentState = PhysicsStates::Jumping; 
+		m_physics->m_currentState = PhysicsStates::Jumping;
 	}
 }
 
@@ -447,7 +449,6 @@ void MyPlayer::applyWallJump() {
 		m_physics->m_velocityDiff = glm::vec3(0.0f, m_wallJumpFactor, 0.0f);
 	}
 }
-
 
 void MyPlayer::updateModelViewMatrix() {
 	m_modelviewMatrix = glm::inverse(this->getCameraMatrix()) * this->getModelMatrix();

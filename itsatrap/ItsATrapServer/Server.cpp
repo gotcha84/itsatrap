@@ -215,7 +215,7 @@ void Server::processBuffer()
 					target->numDeaths++;
 					player->numKills++;
 
-					// Start 5 second timer
+					// TODO - Start 5 second death timer
 					respawnPlayer(target->id);
 				}
 				break;
@@ -229,8 +229,9 @@ void Server::processBuffer()
 
 	packetBufferCount = 0;
 
-	if (dynamicWorld.getAllPlayers().size() > 0)
+	if (dynamicWorld.getAllPlayers().size() > 0) {
 		broadcastDynamicWorld();
+	}
 
 	// Release Mutex
 	ReleaseMutex(packetBufMutex);

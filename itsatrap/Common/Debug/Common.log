@@ -1,4 +1,4 @@
-﻿Build started 5/8/2014 7:46:16 PM.
+﻿Build started 5/8/2014 8:52:36 PM.
      1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Common.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -14,4 +14,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.05
+Time Elapsed 00:00:00.08

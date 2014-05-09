@@ -13,6 +13,7 @@ int Window::m_heightMapZShift = 463;
 
 bool *Window::keyState = new bool[256];
 bool *Window::specialKeyState = new bool[256];
+int Window::modifierKey = 0;
 
 Window::Window() {
 	for (int i=0; i<256; i++) {
@@ -150,25 +151,43 @@ void Window::keyUp(unsigned char key, int x, int y) {
 }
 
 void Window::specialKeyDown(int key, int x, int y) {
+	modifierKey = glutGetModifiers();
+	
 	specialKeyState[key] = true;
 	//cout << "special " << key << " down" << endl;
 }
 
 void Window::specialKeyUp(int key, int x, int y) {
+	modifierKey = glutGetModifiers();
+
 	specialKeyState[key] = false;
 	//cout << "special " << key << " up" << endl;
 }
 
 void Window::processKeys() {
-	
+	// modifierKey = 
+	// GLUT_ACTIVE_SHIFT
+	// GLUT_ACTIVE_CTRL
+	// GLUT_ACTIVE_ALT
+
 	// esc to quit
 	if (keyState[27]) {
 		exit(0);
 	}
 
+	// teleport
+	if (modifierKey == GLUT_ACTIVE_ALT) {
+		client->root->getPlayer()->handleTeleport();
+	}
+
 	// forward + backward
 	if (keyState['w']) {
-		client->root->getPlayer()->handleMovement('w');
+		if (modifierKey == GLUT_ACTIVE_SHIFT) {
+			client->root->getPlayer()->handleSliding();
+		}
+		else {
+			client->root->getPlayer()->handleMovement('w');
+		}
 	}
 	else if (keyState['s']) {
 		client->root->getPlayer()->handleMovement('s');
@@ -201,14 +220,6 @@ void Window::processKeys() {
 		cout << "Reloaded config: ScreenWidth: " << testVal << endl;
 	}
 
-	if (keyState['m']) {
-		client->root->getPlayer()->handleTeleport();
-	}
-
-	if (keyState['x']) {
-		client->root->getPlayer()->handleSliding();
-	}
-	
 	//case 9: // TAB
 		//client->toggleCurrentPlayer();
 		//client->printSceneGraph();

@@ -48,7 +48,7 @@ class Physics {
 		glm::vec3 m_velocityDiffWallJump;
 		glm::vec3 m_position;
 		glm::vec3 m_lastMoved;
-		
+		glm::vec3 falling();
 
 		float m_gravityConstant; 
 		float m_elasticityConstant;
@@ -63,7 +63,6 @@ class Physics {
 		Physics(glm::vec3 pos, float mass);
 		~Physics();
 
-		glm::vec3 falling();
 		void applyGravity();
 
 		bool atRest();

@@ -59,7 +59,8 @@ namespace sg {
 	}
 
 	void Trap::draw(glm::mat4 parent, glm::mat4 cam) {
-		this->setMatrix(glm::translate(this->getPosition()) /** glm::scale(glm::vec3(1.0f, 0.5f, 1.0f))*/);
+		this->setMatrix(glm::translate(this->getPosition()) * glm::scale(glm::vec3(1.0f, 0.5f, 1.0f)));
+		//this->setMatrix(glm::translate(this->getPosition()));
 
 		glm::mat4 new_model = parent * this->getMatrix();
 		glm::mat4 mv = glm::inverse(cam) * new_model;
@@ -69,8 +70,8 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			this->m_model1->draw(new_model, cam);
-			//glutSolidCube(5);
+			//this->m_model1->draw(new_model, cam);
+			glutSolidCube(5);
 		glPopMatrix();
 	}
 

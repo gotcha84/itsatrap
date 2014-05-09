@@ -20,9 +20,9 @@ void HUD::draw(int health) {
 		glPushMatrix();
 			glLoadIdentity();
 
-			//drawCrossHair();
+			drawCrossHair();
 			drawHealthBar(health);
-			drawDeathTimer(5.0f);
+			//drawDeathTimer(5.0f);
 
 		glPopMatrix();
 	glPopMatrix();
@@ -96,31 +96,3 @@ void HUD::drawDeathTimer(float respawnTime) {
 		}
 	glPopMatrix();
 }
-
-//GLuint HUD::loadAndBufferImage( const char *filename) {
-//	GLuint Texture;
-//	glGenTextures(1, &Texture);
-//	glBindTexture(GL_TEXTURE_2D, Texture);
-//	if( glfwLoadTexture2D( filename, GLFW_BUILD_MIPMAPS_BIT)) {
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//		return Texture;
-//	}else return -1;
-
-	/*GLFWimage imageData;
-	int tmp = 100;
-	tmp = glfwReadImage(filename, &imageData, NULL);
-	if(tmp == GL_FALSE) exit(1);
-	GLuint textureBufferID = NULL;
-	glGenTextures(1, &textureBufferID);
-	glBindTexture(GL_TEXTURE_2D, textureBufferID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageData.Width, imageData.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData.Data);
-		
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	glfwFreeImage(&imageData);
-	return textureBufferID;*/
-//}
