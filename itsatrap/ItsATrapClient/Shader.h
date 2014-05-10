@@ -11,8 +11,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-//Since the tutorial I did used glext.h library, include it
-#include "glext.h"
+#include <../glext.h> //Since the tutorial I did used glext.h library, include it
 
 extern PFNGLATTACHSHADERPROC glAttachShader;
 extern PFNGLBINDATTRIBLOCATIONPROC glBindAttribLocation;

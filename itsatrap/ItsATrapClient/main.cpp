@@ -1,16 +1,22 @@
-#include <GL/glut.h>
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
-
+#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+
+#include <GL/glut.h>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 // graphics
 #include "ClientInstance.h"
 #include "Window.h"
 #include "SceneGraph.h"
 #include "ConfigSettings.h"
+
+// audio
+#include <AL/al.h>
+#include <AL/alc.h>
+#include "Sound.h"
 
 // networking
 #include "Client.h"
@@ -146,6 +152,9 @@ int main(int argc, char *argv[]) {
 	client->printPlayers();
 	// client->printSceneGraph();
 
+	Sound s1 = Sound();
+	s1.wav_demo("Sound.wav");
+	
 	glutMainLoop();
 
 	delete client;
@@ -156,4 +165,3 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-

@@ -16,7 +16,7 @@
 
 #include "Texture.h"
 #include "Shader.h"
-#include "glext.h"
+#include <../glext.h>
 
 using namespace std;
 
