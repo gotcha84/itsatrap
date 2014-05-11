@@ -7,6 +7,7 @@
 #include <glm/ext.hpp>
 #include <vector>
 
+#include <ctime>
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -18,6 +19,8 @@ class Window {
 	public:
 		static int m_width, m_height; // window size
 		static int m_heightMapXShift, m_heightMapZShift;
+		static int m_fpsCounter;
+		static clock_t m_timer;
 
 		static bool *keyState;
 		static bool *specialKeyState;

@@ -72,7 +72,7 @@ Physics::~Physics() {
 // TODO: check for collision detection, not just with heightmap
 void Physics::applyGravity() {
 
-	if (m_currentState != Climbing) {
+	if (m_currentState != Climbing && m_currentState != PullingUp) {
 	
 		int xIndex = Utilities::roundToInt(m_position.x+m_velocity.x);
 		int zIndex = Utilities::roundToInt(m_position.z+m_velocity.z);
@@ -228,6 +228,50 @@ int Physics::handleReflectionIntersection(glm::vec3 from, glm::vec3 goTo, AABB* 
 	//}
 	return newDirection;
 }
+
+bool Physics::handleNearTop(glm::vec3 from, int buildingId) {
+	sg::City* city;
+	int newDirection = -1;
+	for (int i=0; i < client->root->getNumChildren(); i++) {
+		city = dynamic_cast<sg::City*>(client->root->m_child[i]);
+		if (city != nullptr) {
+			break;
+		}
+	}
+
+	bool tmp = false;
+	//for (int i = 0; i < city->getNumChildren(); i++) {
+	sg::Building *b = dynamic_cast<sg::Building*>(city->m_child[buildingId]);
+	if (b != nullptr) {
+		bool nearTop = b->nearTop(from);
+		return nearTop;
+	}
+
+	return false;
+}
+
+
+bool Physics::handleClearedTop(AABB *other, int buildingId) {
+	sg::City* city;
+	int newDirection = -1;
+	for (int i=0; i < client->root->getNumChildren(); i++) {
+		city = dynamic_cast<sg::City*>(client->root->m_child[i]);
+		if (city != nullptr) {
+			break;
+		}
+	}
+
+	bool tmp = false;
+	//for (int i = 0; i < city->getNumChildren(); i++) {
+	sg::Building *b = dynamic_cast<sg::Building*>(city->m_child[buildingId]);
+	if (b != nullptr) {
+		bool clearedTop = b->clearedTop(other);
+		return clearedTop;
+	}
+
+	return false;
+}
+
 
 void Physics::move(glm::vec3 delta) {
 	m_position += delta;

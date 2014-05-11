@@ -35,6 +35,7 @@ namespace sg {
 			virtual void calculateBoundingBox();
 			virtual bool isInside(glm::vec3 point);
 			bool nearTop (glm::vec3 point);
+			bool clearedTop(AABB* other);
 
 			virtual glm::vec3 intersects(glm::vec3 from, glm::vec3 goTo);
 			virtual float angleIntersection(glm::vec3 from, glm::vec3 goTo);

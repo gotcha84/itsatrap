@@ -11,6 +11,9 @@ int Window::m_height = 512; // set window height in pixels here
 int Window::m_heightMapXShift = 278;
 int Window::m_heightMapZShift = 463;
 
+int Window::m_fpsCounter = 0;
+clock_t Window::m_timer = clock();
+
 bool *Window::keyState = new bool[256];
 bool *Window::specialKeyState = new bool[256];
 
@@ -46,7 +49,7 @@ void Window::reshapeCallback(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glFrustum(-10.0, 10.0, -10.0, 10.0, 10, 1000.0); // set perspective projection viewing frustum
-	glTranslatef(0, 0, -20);
+	//glTranslatef(0, 0, -20);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -79,7 +82,11 @@ void Window::displayCallback(void)
 	}
 
 	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Climbing) {
-		client->root->getPlayer()->applyWallJump();
+		client->root->getPlayer()->applyClimbing();
+	}
+
+	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::PullingUp) {
+		client->root->getPlayer()->applyPullingUp();
 	}
 
 	client->root->getPlayer()->getPhysics()->applyGravity();
@@ -132,6 +139,14 @@ void Window::displayCallback(void)
 		client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
 	}
 
+	m_fpsCounter+=1;
+				
+	if (clock()-m_timer > 1000) {
+		cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
+		m_timer = clock();
+		m_fpsCounter = 0;
+	}
+
 	//cout << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
 
 	glFlush();  
@@ -161,7 +176,8 @@ void Window::specialKeyUp(int key, int x, int y) {
 
 void Window::processKeys() {
 		// forward + backward
-	if (client->root->getPlayer()->getPhysics()->m_currentState != PhysicsStates::Climbing && client->root->getPlayer()->getPhysics()->m_currentState != PhysicsStates::Sliding) {
+	PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState; 
+	if (curr_state != PhysicsStates::Climbing && curr_state != PhysicsStates::Sliding && curr_state != PhysicsStates::PullingUp) {
 		if (keyState['w']) {
 			client->root->getPlayer()->handleMovement('w');
 		}

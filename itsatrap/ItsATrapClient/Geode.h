@@ -50,6 +50,8 @@ namespace sg {
 			virtual bool isInside(glm::vec3 point);
 			// virtual bool collidesWith(Geode b);
 			virtual void setMaterial();
+
+			bool shouldDraw();
 	};
 
 }

@@ -30,13 +30,20 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			//glColor4f(color.r, color.g, color.b, color.a);
-			drawShape();
+			if (shouldDraw()) {
+				drawShape();
+			}
+			/*else {
+				cout << "didnt render: " << m_id << endl;
+			}*/
+
+			//drawShape();
 		glPopMatrix();
 
 	}
 
 	void Building::drawShape() {
-		
+
 		glEnable(GL_TEXTURE_2D);
 
 		//cout << "nverts is : " << m_nIndices[0] << endl;
@@ -192,6 +199,9 @@ namespace sg {
 		return (m_boundingBox.nearTop(point));
 	}
 
+	bool Building::clearedTop(AABB* other) {
+		return (m_boundingBox.clearedTop(other));
+	}
 
 	glm::vec3 Building::intersects(glm::vec3 from, glm::vec3 goTo) {
 		return (m_boundingBox.intersects(from, goTo));

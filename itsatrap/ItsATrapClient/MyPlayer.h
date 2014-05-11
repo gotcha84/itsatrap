@@ -48,6 +48,8 @@ class MyPlayer {
 		float m_slideFactor;
 		float m_bounceFactor;
 
+		int m_wallJumpingBuildingId;
+
 		MyPlayer();
 		MyPlayer(glm::vec3 pos);
 		~MyPlayer();
@@ -72,7 +74,8 @@ class MyPlayer {
 		void handleTeleport();
 		void handleMovement(unsigned char key);
 		void handleJump();
-		void applyWallJump();
+		void applyClimbing();
+		void applyPullingUp();
 		void updateModelViewMatrix();
 		
 		void setTransMatrix(glm::mat4 m);

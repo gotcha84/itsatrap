@@ -30,6 +30,8 @@ MyPlayer::MyPlayer() {
 	m_numKills = 0;
 	m_health = 100;
 	m_deathState = false;
+
+	m_wallJumpingBuildingId = -1;
 }
 
 MyPlayer::MyPlayer(glm::vec3 pos) {
@@ -59,6 +61,8 @@ MyPlayer::MyPlayer(glm::vec3 pos) {
 	m_numKills = 0;
 	m_health = 100;
 	m_deathState = false;
+
+	m_wallJumpingBuildingId = -1;
 }
 
 MyPlayer::~MyPlayer() {
@@ -358,6 +362,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 				m_physics->m_velocity-=m_physics->m_velocityDiff;
 
+				m_wallJumpingBuildingId = canMove;
 			}
 			else {
 				// 0 = x, 1 = x, 2 = z
@@ -429,22 +434,47 @@ void MyPlayer::handleJump() {
 	}
 }
 
-void MyPlayer::applyWallJump() {
+void MyPlayer::applyClimbing() {
 	//cout << "lookat: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
 	clock_t end = clock();
 	if (((float)(end - m_physics->m_stateStart) / CLOCKS_PER_SEC) > m_wallJumpTime) {
-		cout << "END WALL JUMPING " << endl;
+		cout << "END CLIMB " << endl;
 		m_physics->m_currentState = PhysicsStates::Falling;
 		m_cam->m_camX = m_cam->m_camXWallJump;
 		m_cam->m_camZ = m_cam->m_camZWallJump;
 		m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
 		m_physics->m_velocityDiff = m_physics->m_velocityDiffWallJump;
+		m_wallJumpingBuildingId = -1;
 	}
 	else {
 		m_physics->m_velocityDiff = glm::vec3(0.0f, m_wallJumpFactor, 0.0f);
+		
+		if (m_physics->handleNearTop(m_physics->m_position, m_wallJumpingBuildingId)) {
+			m_physics->handleClearedTop(m_boundingBox, m_wallJumpingBuildingId);
+			cout << "SHOULD BE PULLING UP" << endl;
+			m_physics->m_currentState = PhysicsStates::PullingUp;
+			m_cam->m_camX = -1.0f*m_cam->m_camXWallJump;
+			m_cam->m_camZ = -1.0f*m_cam->m_camZWallJump;
+			m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
+		}
 	}
 }
 
+void MyPlayer::applyPullingUp() {
+
+	if (m_physics->handleClearedTop(m_boundingBox, m_wallJumpingBuildingId)) {
+		cout << "CLEARED" << endl;
+		m_physics->m_velocityDiff = 100.0f*m_physics->m_velocityDiffWallJump;
+		//m_physics->m_velocity.y += m_physics->m_yJumpFactor;
+		m_physics->m_currentState = PhysicsStates::None;
+		m_wallJumpingBuildingId = -1;
+	}
+	else {
+		cout << "PULLING UP" << endl;
+		m_physics->m_velocityDiff = glm::vec3(0.0f, m_wallJumpFactor, 0.0f);
+	}
+
+}
 
 void MyPlayer::updateModelViewMatrix() {
 	m_modelviewMatrix = glm::inverse(this->getCameraMatrix()) * this->getModelMatrix();

@@ -9,7 +9,7 @@ AABB::AABB() {
 	m_maxY = 0;
 	m_maxZ = 0;
 
-	m_nearTopFactor = 0.2f;
+	m_nearTopFactor = 10.0f;
 }
 
 AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
@@ -20,7 +20,7 @@ AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float max
 	m_maxY = maxY;
 	m_maxZ = maxZ;
 
-	m_nearTopFactor = 0.2f;
+	m_nearTopFactor = 10.0f;
 
 }
 
@@ -32,7 +32,7 @@ AABB::AABB(glm::vec3 pos, float rad) {
 	m_maxY = pos.y + rad;
 	m_maxZ = pos.z + rad;
 
-	m_nearTopFactor = 0.2f;
+	m_nearTopFactor = 10.0f;
 }
 
 AABB::~AABB() {
@@ -79,8 +79,19 @@ bool AABB::inside(glm::vec3 goTo) {
 		&& goTo.z >= m_minZ && goTo.z <= m_maxZ); 
 }
 
+bool AABB::inside(AABB other) {
+	return (m_minX > other.m_minX && m_maxX < other.m_maxX 
+		&& m_minY > other.m_minY && m_maxY < other.m_maxY
+		&& m_minZ > other.m_minZ && m_maxZ < other.m_maxZ);
+	
+}
+
 bool AABB::nearTop(glm::vec3 goTo) {
-	return (goTo.y >= m_maxY-((m_maxY-m_minY)*m_nearTopFactor));
+	return (goTo.y >= m_maxY-m_nearTopFactor);
+}
+
+bool AABB::clearedTop(AABB* other) {
+	return (other->m_minY >= m_maxY);
 }
 
 glm::vec3 AABB::intersects(glm::vec3 from, glm::vec3 goTo) {

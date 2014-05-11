@@ -90,6 +90,9 @@ void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
 }
 
 void ObjModel::drawModel() {
+
+	
+
 	glEnable(GL_TEXTURE_2D);
 
 	//cout << "nverts is : " << m_nIndices[0] << endl;

@@ -29,7 +29,8 @@ enum PhysicsStates {
 	Falling = 4,
 	Climbing = 5,
 	Sliding = 6,
-	WallJumping = 7
+	WallJumping = 7,
+	PullingUp = 8
 };
 
 class Physics {
@@ -72,6 +73,8 @@ class Physics {
 		float handleIntersection(glm::vec3 from, glm::vec3 goTo, AABB* other); // not used
 		float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, AABB* other, int buildingId);
 		int handleReflectionIntersection(glm::vec3 from, glm::vec3 goTo, AABB* other, int buildingId);
+		bool handleNearTop(glm::vec3 from, int buildingId);
+		bool handleClearedTop(AABB* other, int buildingId);
 
 		void move(glm::vec3 delta);
 		void moveTo(glm::vec3 pos);
