@@ -52,7 +52,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ConfigTemplate.ini">
+    <None Include="ConfigSettings.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ConfigSettingsTemplate.ini">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

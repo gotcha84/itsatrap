@@ -115,8 +115,8 @@ glm::vec3 AABB::intersects(glm::vec3 from, glm::vec3 goTo) {
 int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
 	glm::vec3 direction = goTo-from;
 
-	cout << "from: " << glm::to_string(from) << endl;
-	cout << "direction: " << glm::to_string(direction) << endl;
+	//cout << "from: " << glm::to_string(from) << endl;
+	//cout << "direction: " << glm::to_string(direction) << endl;
 	float xMinCoeff = FLT_MAX;
 	float xMaxCoeff = FLT_MAX;
 	float yMinCoeff = FLT_MAX;
@@ -156,8 +156,8 @@ int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
 float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 	glm::vec3 direction = goTo-from;
 
-	cout << "from: " << glm::to_string(from) << endl;
-	cout << "direction: " << glm::to_string(direction) << endl;
+	//cout << "from: " << glm::to_string(from) << endl;
+	//cout << "direction: " << glm::to_string(direction) << endl;
 	float xMinCoeff = FLT_MAX;
 	float xMaxCoeff = FLT_MAX;
 	float yMinCoeff = FLT_MAX;

@@ -255,13 +255,21 @@ void MyPlayer::handleMovement(unsigned char key) {
 	float xWalkFactor;
 	float zWalkFactor;
 
+	float speedMultiplier = 1.0;
+	if (m_slowDuration > 0)
+	{
+		float slowFactor = 0;
+		ConfigSettings::getConfig()->getValue("SlowFactor", slowFactor);
+		speedMultiplier = slowFactor;
+	}
+
 	if (m_physics->m_currentState == PhysicsStates::Jumping || m_physics->m_currentState == PhysicsStates::Falling || m_physics->m_currentState == PhysicsStates::Climbing) {
-		xWalkFactor = m_xSlowWalkFactor;
-		zWalkFactor = m_zSlowWalkFactor;
+		xWalkFactor = m_xSlowWalkFactor * speedMultiplier;
+		zWalkFactor = m_zSlowWalkFactor * speedMultiplier;
 	}
 	else {
-		xWalkFactor = m_xWalkFactor;
-		zWalkFactor = m_zWalkFactor;
+		xWalkFactor = m_xWalkFactor * speedMultiplier;
+		zWalkFactor = m_zWalkFactor * speedMultiplier;
 	}
 	switch (key) {
 		case 'w':

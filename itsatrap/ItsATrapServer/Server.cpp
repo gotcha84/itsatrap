@@ -74,7 +74,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	// TODO (ktngo): Bad practice. Move away from using structs
 	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
-	printf("[SERVER]: Received a packet. eventId: %d\n", p->eventId);
+	//printf("[SERVER]: Received a packet. eventId: %d\n", p->eventId);
 
 	// Some events can be processed immediately (like init request)
 	// Some events must be stored into the buffer, process it later
@@ -177,13 +177,15 @@ void Server::respawnPlayer(int id) {
 
 void Server::processBuffer()
 {
+	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
+
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
 	WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
 
 	for (int i = 0; i < packetBufferCount; i++)
 	{
 		struct packet *p = (struct packet *) packetBuffer[i].msg;
-		printf("[SERVER]: Now processing packet at buffer %d with eventId: %d\n", i, p->eventId);
+		//printf("[SERVER]: Now processing packet at buffer %d with eventId: %d\n", i, p->eventId);
 		
 		switch (p->eventId)
 		{
@@ -198,6 +200,7 @@ void Server::processBuffer()
 			{
 				struct spawnTrapPacket *trapPkt = (struct spawnTrapPacket *)p;
 				dynamicWorld.addTrap(trapPkt->trap);
+								cout << trapPkt->trap.aabb.minX << " " << trapPkt->trap.aabb.maxX << endl;
 				break;
 			}
 			case KNIFE_HIT_EVENT:
@@ -243,7 +246,7 @@ int Server::receiveMsg(char * msg, struct sockaddr_in *source) {
 
 	if (recvfrom(i_sockfd, msg, BUFSIZE, 0, (struct sockaddr *)source, &len) < 0) {
 		int error = WSAGetLastError();
-		printf("[SERVER]: server.cpp - recvfrom failed with error code %d\n", error);
+		//printf("[SERVER]: server.cpp - recvfrom failed with error code %d\n", error);
 		return 1;
 	}
 
@@ -254,7 +257,7 @@ int Server::receiveMsg(char * msg, struct sockaddr_in *source) {
 int Server::sendMsg(char * msg, int len, struct sockaddr_in *destination) {
 	if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *)destination, sizeof(struct sockaddr_in)) < 0) {
 		int error = WSAGetLastError();
-		printf("[SERVER]: server.cpp - sendto failed with error code %d\n", error);
+		//printf("[SERVER]: server.cpp - sendto failed with error code %d\n", error);
 		return 1;
 	}
 

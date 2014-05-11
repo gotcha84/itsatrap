@@ -17,6 +17,7 @@
 #include "Camera.h"
 #include "Physics.h"
 #include "NetworkObjects.h"
+#include "ConfigSettings.h"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ using namespace std;
 
 class MyPlayer {
 	public:
-		int m_numKills, m_numDeaths, m_health;
+		int m_numKills, m_numDeaths, m_health, m_stunDuration, m_slowDuration;
 		bool m_deathState;
 
 		Camera *m_cam;

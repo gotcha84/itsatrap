@@ -22,6 +22,7 @@ void HUD::draw(int health) {
 
 			drawCrossHair();
 			drawHealthBar(health);
+			drawResource(0);
 			//drawDeathTimer(5.0f);
 
 		glPopMatrix();
@@ -60,6 +61,32 @@ void HUD::drawHealthBar(int health) {
 
 		std::string text = std::to_string(static_cast<long long>(health));			
 		glRasterPos2f(-0.95f, 0.9f);
+		for (int i=0; i<text.length(); i++) {
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+		}
+
+		/*
+		// TODO - draw health bar(s) instead of number
+		glm::mat4 matrix;
+		matrix = glm::translate(matrix, glm::vec3(-0.9f, -0.9f, 0.0f));
+		matrix = glm::scale(matrix, glm::vec3(0.5f, 0.2f, 0.0f));
+		glColor4f(0,1,0,1);
+			
+		glLoadMatrixf(glm::value_ptr(matrix));
+		glutSolidCube(1);
+		*/
+	glPopMatrix();
+}
+
+void HUD::drawResource(int resource) {
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+		glLoadIdentity();
+		
+		glColor4f(0,20,0,1); // green
+
+		std::string text = std::to_string(static_cast<long long>(50));			
+		glRasterPos2f(0.8f, 0.9f);
 		for (int i=0; i<text.length(); i++) {
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
 		}

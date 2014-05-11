@@ -57,31 +57,93 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 		p.x += 10;
 	}
 
+	p.health = 100;
+	p.numKills = 0;
+	p.numDeaths = 0;
+	p.stunDuration = 0;
+	p.slowDuration = 0;
+
 	playerMap[p.id] = p;
 }
 
 
-void DynamicWorld::updatePlayer(struct playerObject e)
+void DynamicWorld::updatePlayer(struct playerObject p)
 {
-	if (playerMap.find(e.id) == playerMap.end())
+	if (playerMap.find(p.id) == playerMap.end())
 	{
-		addNewPlayer(e);
+		addNewPlayer(p);
 		return;
 	}
 
-	if (checkCollisionWithAllNonTraps(e))
+	// Clients don't have full rights to update player objects. For example, client cannot update
+	// player's health.
+	p.health = playerMap[p.id].health;
+	p.stunDuration = playerMap[p.id].stunDuration;
+	p.slowDuration = playerMap[p.id].slowDuration;
+	p.numKills = playerMap[p.id].numKills;
+	p.numDeaths = playerMap[p.id].numDeaths;
+
+	if (checkCollisionWithAllNonTraps(p))
 		return;
 	
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); it++)
 	{
-		if (e.id != it->second.ownerId && checkCollision(e.aabb, it->second.aabb))
+		if (p.id != it->second.ownerId && checkCollision(p.aabb, it->second.aabb))
 		{
-			printf("Collision: player %d with trap id %d\n", e.id, it->second.id);
+			printf("Collision: player %d with trap id %d\n", p.id, it->second.id);
+			switch (it->second.type)
+			{
+				case TYPE_FREEZE_TRAP:
+				{
+					int stunDuration = 0;
+					ConfigSettings::getConfig()->getValue("StunTrapDuration", stunDuration);
+					p.stunDuration = stunDuration;
+					break;
+				}
+				case TYPE_TRAMPOLINE_TRAP:
+				{
+					int trampolinePower = 0;
+					ConfigSettings::getConfig()->getValue("TrampolinePower", trampolinePower);
+					p.xVel = 0;
+					p.yVel = trampolinePower;
+					p.zVel = 0;
+					break;
+				}
+				case TYPE_SLOW_TRAP:
+				{
+					int slowDuration = 0;
+					ConfigSettings::getConfig()->getValue("SlowTrapDuration", slowDuration);
+					p.slowDuration = slowDuration;
+					break;
+				}
+				case TYPE_PUSH_TRAP:
+				{
+					float pushPower = 0;
+					ConfigSettings::getConfig()->getValue("PushTrapPower", pushPower);
+
+					glm::vec3 force = glm::rotateY(glm::vec3(0, 0, -1), it->second.rotationAngle);
+					force*=pushPower;
+
+					p.xVel = force.x;
+					p.yVel = 0;
+					p.zVel = force.z;
+
+					cout << "ANGLE: " << it->second.rotationAngle << endl;
+					cout << "VELOCITY: " << glm::to_string(force) << endl;
+
+					break;
+				}
+				default:
+					break;
+			}
+
 			it->second.eventCode = EVENT_REMOVE_TRAP;
+
+			
 		}
 	}
 
-	playerMap[e.id] = e;
+	playerMap[p.id] = p;
 }
 
 
@@ -103,6 +165,7 @@ void DynamicWorld::updatePlayer(struct playerObject e)
 int DynamicWorld::serialize(char **ptr)
 {
 	vector<struct trapObject> trapsToSend;
+	vector<int> trapsToRemove;
 
 	// Iterating traps
 	for(map<int,struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); ++it) 
@@ -111,9 +174,16 @@ int DynamicWorld::serialize(char **ptr)
 		{
 			printf("Sending something about trap %d\n", it->second.id);
 			trapsToSend.push_back(it->second);
+
+			if (it->second.eventCode == EVENT_REMOVE_TRAP)
+				trapsToRemove.push_back(it->first);
+
 			it->second.eventCode = 0;
 		}
 	}
+
+	for (int i = 0; i < trapsToRemove.size(); i++)
+		trapMap.erase(trapsToRemove[i]);
 
 	int payloadSize = sizeof(struct playerObject)*playerMap.size() + sizeof(trapObject)*trapsToSend.size();
 	int totalSize = HEADER_SIZE + payloadSize;
@@ -127,10 +197,12 @@ int DynamicWorld::serialize(char **ptr)
 	((int *)buf)[2] = trapsToSend.size();
 
 	// PAYLOAD
-	vector<struct playerObject> players = getAllPlayers();
-	for (int i = 0; i < players.size(); i++)
+	for(map<int,struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
-		memcpy(movingPtr, &players[i], sizeof(struct playerObject));
+		memcpy(movingPtr, &it->second, sizeof(struct playerObject));
+		it->second.xVel = 0; // reset velocity
+		it->second.yVel = 0; // reset velocity
+		it->second.zVel = 0; // reset velocity
 		movingPtr += sizeof(struct playerObject);
 	}
 	for (int i = 0; i < trapsToSend.size(); i++)
@@ -223,4 +295,17 @@ bool DynamicWorld::checkCollisionWithAllNonTraps(struct playerObject e)
 	}
 
 	return false;
+}
+
+void DynamicWorld::updatePlayerBuffs(int timeDiff)
+{
+	for(map<int,struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
+	{
+		struct playerObject &p = it->second;
+		if (p.stunDuration > 0)
+			p.stunDuration -= timeDiff;
+		
+		if (p.slowDuration > 0)
+			p.slowDuration -= timeDiff;
+	}
 }

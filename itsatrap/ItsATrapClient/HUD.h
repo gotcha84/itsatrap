@@ -19,6 +19,7 @@ class HUD {
 		
 		void drawCrossHair(); 
 		void drawHealthBar(int health);
+		void drawResource(int resource);
 		void drawDeathTimer(float respawnTime);
 
 		// GLuint loadAndBufferImage( const char *filename);

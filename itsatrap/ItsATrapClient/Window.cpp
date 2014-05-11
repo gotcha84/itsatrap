@@ -87,6 +87,7 @@ void Window::displayCallback(void)
 
 	client->root->getPlayer()->getPhysics()->m_position += client->root->getPlayer()->getPhysics()->m_velocity;
 	client->root->getPlayer()->getPhysics()->m_velocity = glm::vec3(0.0f, client->root->getPlayer()->getPhysics()->m_velocity.y, 0.0f);
+	
 	//client->root->getPlayer()->getPhysics()->m_velocity -= client->root->getPlayer()->getPhysics()->m_velocityDiff;
 	client->root->getPlayer()->getPhysics()->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 	// TODO: move to player class?
@@ -143,6 +144,36 @@ void Window::keyDown(unsigned char key, int x, int y)
 {
 	keyState[key] = true;
 	//cout << key << " down" << endl;
+	if (key >= '1' && key <= '9') {
+		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated);
+		struct trapObject t = trap->getTrapObjectForNetworking();
+		switch (key)
+		{
+		case '1':
+			t.type = TYPE_FREEZE_TRAP;
+			break;
+		case '2':
+			t.type = TYPE_TRAMPOLINE_TRAP;
+			break;
+		case '3':
+			t.type = TYPE_SLOW_TRAP;
+			break;
+		case '4':
+			t.type = TYPE_PUSH_TRAP;
+			break;
+		case '5':
+			t.type = TYPE_LIGHTNING_TRAP;
+			break;
+		default:
+			t.type = TYPE_FREEZE_TRAP;
+			break;
+		}
+
+		cout << glm::to_string(client->root->getCamera()->getCameraLookAt() - client->root->getCamera()->getCameraCenter()) << endl;
+		
+		Client::sendSpawnTrapEvent(t);
+		delete trap;
+	}
 }
 
 void Window::keyUp(unsigned char key, int x, int y) {
@@ -165,6 +196,13 @@ void Window::specialKeyUp(int key, int x, int y) {
 }
 
 void Window::processKeys() {
+
+	if (client->root->m_player->m_stunDuration > 0)
+	{
+		printf("[CLIENT]: Sorry, you are STUNNED! Remaining: %d\n", client->root->m_player->m_stunDuration);
+		return;
+	}
+
 	// modifierKey = 
 	// GLUT_ACTIVE_SHIFT
 	// GLUT_ACTIVE_CTRL
@@ -207,17 +245,19 @@ void Window::processKeys() {
 	}
 
 	// trap
-	if (keyState['t']) {
+	/*
+	if (keyState['1']) {
 		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
-		Client::sendSpawnTrapEvent(trap->getTrapObjectForNetworking());
+		struct trapObject t = trap->getTrapObjectForNetworking();
+		t.type = TYPE_FREEZE_TRAP;
+		Client::sendSpawnTrapEvent(t);
+		delete trap;
 	}
+	*/
 
 	// reload config file
 	if (keyState['r']) {
 		ConfigSettings::getConfig()->reloadSettingsFile();
-		int testVal = 0;
-		ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
-		cout << "Reloaded config: ScreenWidth: " << testVal << endl;
 	}
 
 	//case 9: // TAB
@@ -247,9 +287,6 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 							if (hit)
 							{
 								Client::sendKnifeHitEvent(i);
-
-								cout << "Player " << client->root->getPlayerID() << " hit Player " << i << "!" << endl;
-								cout << "Player " << i << " has " << client->players[i]->getHealth() << endl;
 							}
 						}
 					}

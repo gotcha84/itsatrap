@@ -28,12 +28,30 @@ void handlePlayerUpdate(struct playerObject p)
 	if (client->objects[p.id] == nullptr) {
 		handleNewPlayer(p);
 	}
-	else {	
+	else {
+		
+		// HEALTH
+		if (client->players[p.id]->m_player->m_health != p.health) {
+			cout << "[CLIENT]: HIT! Player " << p.id << "'s health is now " << p.health << endl;
+			client->players[p.id]->setHealth(p.health);
+		}
+
+		// BUFFS
+		client->players[p.id]->m_player->m_stunDuration = p.stunDuration;
+		client->players[p.id]->m_player->m_slowDuration = p.slowDuration;
+		
+		if (p.xVel != 0 || p.yVel != 0 || p.zVel != 0)
+		{
+			
+			client->players[p.id]->getPlayer()->getPhysics()->m_velocity += glm::vec3(p.xVel, p.yVel, p.zVel);
+			cout << "VELOCITY: " << glm::to_string(client->players[p.id]->getPlayer()->getPhysics()->m_velocity) << endl;
+		}
+
+		// POSITION & GRAPHIC
 		if (glm::vec3(p.x, p.y, p.z) != client->players[p.id]->getPosition()) {
 			client->players[p.id]->moveTo(glm::vec3(p.x, p.y, p.z));
 			Client::sendPlayerUpdate(client->players[p.id]->getPlayerObjectForNetworking());
 		}
-
 		if (client->root->getPlayerID() != p.id) {
 			glm::vec3 pCenter = glm::vec3(p.x, p.y, p.z);
 			glm::vec3 pLookAt = glm::vec3(p.lookX, p.lookY, p.lookZ);
@@ -59,10 +77,6 @@ void handlePlayerUpdate(struct playerObject p)
 			}
 		}
 
-		if (client->players[p.id]->m_player->m_health != p.health) {
-			cout << "[CLIENT]: HIT! Player " << p.id << "'s health is now " << p.health << endl;
-			client->players[p.id]->setHealth(p.health);
-		}
 	}
 }
 
@@ -72,16 +86,31 @@ void handleAddTrap(struct trapObject t)
 		return;
 	}
 
-	sg::Trap *newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z));
-	client->root->addChild(newTrap);
+	sg::Trap *newTrap;
+	switch (t.type)
+	{
+	case TYPE_TRAMPOLINE_TRAP:
+		newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle, "Can.obj");
+		break;
+	case TYPE_FREEZE_TRAP:
+		newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle, "Polynoid.obj");
+		break;
+	default:
+		newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle, "Polynoid.obj");
+		break;
+	}
 
+	client->root->addChild(newTrap);
 	client->objects[t.id] = newTrap;
 }
 
 void handleRemoveTrap(struct trapObject t)
 {
-	if (client->objects[t.id] != nullptr) {
-		dynamic_cast<sg::Trap*>(client->objects[t.id])->setColor(glm::vec4(0,0,0,1));
+	printf("[CLIENT]: Removing trap %d\n", t.id);
+	if (client->objects[t.id] != nullptr)
+	{
+		client->root->removeChild(client->objects[t.id]);
+		client->objects[t.id] = nullptr;
 	}
 }
 

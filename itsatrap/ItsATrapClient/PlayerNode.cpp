@@ -75,7 +75,7 @@ namespace sg {
 		glm::mat4 translationMatrix = glm::translate(m_translate);
 
 		this->getCamera()->calculateAxis();
-		glm::mat4 rotatedX = this->rotateY(this->getCamera()->m_xRotated);
+		glm::mat4 rotatedX = Utilities::rotateY(this->getCamera()->m_xRotated);
 		//glm::mat4 rotatedY = this->rotate(this->getCamera()->m_camX, this->getCamera()->m_yRotated);
 		glm::mat4 rotationMatrix = rotatedX;
 		
@@ -84,16 +84,6 @@ namespace sg {
 		return translationMatrix * rotationMatrix * scaleMatrix;
 	}
 	
-	glm::mat4 Player::rotateY(float theta) { // theta = angle in degrees
-		theta = glm::radians(theta);
-		
-		return glm::transpose(glm::mat4(
-			glm::cos(theta), 0, glm::sin(theta), 0,
-			0, 1, 0, 0,
-			-glm::sin(theta), 0, glm::cos(theta), 0, 
-			0, 0, 0, 1
-			));
-	}
 
 	// TODO - fix implementation
 	glm::mat4 Player::rotate(glm::vec3 axis, float theta) {
@@ -254,7 +244,8 @@ namespace sg {
 		p.upZ = this->getCamera()->getCameraUp().z;
 		p.xRotated = this->getCamera()->getXRotated();
 		p.yRotated = this->getCamera()->getYRotated();
-		
+		p.stunDuration = m_player->m_stunDuration;
+		p.slowDuration = m_player->m_slowDuration;
 		return p;
 	}
 

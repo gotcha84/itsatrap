@@ -1,6 +1,9 @@
 #ifndef DYNAMICWORLD_H
 #define DYNAMICWORLD_H
 
+#include <../glm/glm/glm.hpp>
+#include <../glm/glm/ext.hpp>
+
 #include <map>
 #include <vector>
 #include <stdio.h>
@@ -8,6 +11,7 @@
 
 #include "NetworkObjects.h"
 #include "Packet.h"
+#include "ConfigSettings.h"
 
 using namespace std;
 
@@ -43,6 +47,7 @@ public:
 	__declspec(dllexport) void updatePlayer(struct playerObject e);
 	__declspec(dllexport) int getNumPlayers();
 	__declspec(dllexport) vector<struct playerObject> getAllPlayers();
+	__declspec(dllexport) void updatePlayerBuffs(int timeDiff);
 
 	__declspec(dllexport) void addTrap(struct trapObject t);
 

@@ -24,9 +24,6 @@ int main(int argc, char *argv[]) {
 	Sleep(1000);
 
 	ConfigSettings::getConfig()->loadSettingsFile();
-	int testVal = 0;
-	ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
-	cout << "Test config file: ScreenWidth:" << testVal << endl;
 
 	// opengl lighting
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
