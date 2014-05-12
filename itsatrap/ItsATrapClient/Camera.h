@@ -50,6 +50,8 @@ class Camera {
 		Camera();
 		Camera(glm::vec3 pos);
 
+		void initCommon();
+
 		glm::mat4 getCameraMatrix();
 		glm::vec3 getCameraCenter();
 		glm::vec3 getCameraLookAt();

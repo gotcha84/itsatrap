@@ -28,6 +28,9 @@
     <Filter Include="Header Files\SceneGraph">
       <UniqueIdentifier>{f018f9e0-9e2c-4cdd-b8f9-a875dc9919b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{0c02ee5e-d511-4c42-b3b7-fc0802a54304}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -87,9 +90,6 @@
     <ClCompile Include="City.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
-    <ClCompile Include="enrico.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -110,6 +110,12 @@
     </ClCompile>
     <ClCompile Include="ObjModel.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="enrico.cpp">
+      <Filter>Source Files\Networking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -164,12 +170,6 @@
     <ClInclude Include="City.h">
       <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
-    <ClInclude Include="enrico.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -185,5 +185,40 @@
     <ClInclude Include="ObjModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enrico.h">
+      <Filter>Header Files\Networking</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="can.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="can.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\..\phong.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\..\phong.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="phongandtexture.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="phongandtexture.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="gouraud.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="gouraud.vert">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

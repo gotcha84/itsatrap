@@ -20,7 +20,6 @@
 
 using namespace std;
 
-// TODO: add more if needed
 enum PhysicsStates {
 	None = 0,
 	Jumping = 1,
@@ -49,23 +48,34 @@ class Physics {
 		glm::vec3 m_velocityDiffWallJump;
 		glm::vec3 m_position;
 		glm::vec3 m_lastMoved;
-		
 
 		float m_gravityConstant; 
 		float m_elasticityConstant;
 		glm::vec3 m_restConstant;
 
+		float m_wallJumpLookUp;
+		float m_wallJumpLookDown;
+		float m_wallJumpLookUpIncrement;
+		float m_wallJumpLookDownIncrement;
+		float m_wallJumpLookReadjustIncrement;
+		bool m_wallJumpLookedDown;
+
+		float m_wallJumpLookXHolder;
+		float m_wallJumpLookRight;
+		float m_wallJumpLookXIncrement;
+		bool m_wallJumpLookedRight;
+
 		float m_mass;
 		float m_yJumpFactor;
 
-		// TODO: find correct sizes
 		Physics();
 		Physics(glm::vec3 pos);
 		Physics(glm::vec3 pos, float mass);
 		~Physics();
 
-		glm::vec3 falling();
-		void applyGravity();
+		void initCommon();
+
+		bool applyGravity();
 
 		bool atRest();
 

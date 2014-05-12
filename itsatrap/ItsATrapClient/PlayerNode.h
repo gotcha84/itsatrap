@@ -2,6 +2,7 @@
 #ifndef PLAYERNODE_H
 #define PLAYERNODE_H
 
+#include "Utilities.h"
 #include "MatrixTransform.h"
 #include "MyPlayer.h"
 #include "HUD.h"
@@ -9,7 +10,7 @@
 namespace sg {
 	class Player : public Group {
 		public:
-			int m_playerID;		
+			int m_playerID;
 			MyPlayer *m_player;
 			HUD *m_hud;
 			
@@ -34,7 +35,6 @@ namespace sg {
 			glm::vec3 getPosition();
 			glm::mat4 getModelMatrix();
 
-			glm::mat4 rotateY(float theta);
 			glm::mat4 rotate(glm::vec3 axis, float theta);
 			
 			int getPlayerID();
@@ -70,8 +70,6 @@ namespace sg {
 			void damage(int dmg);
 			bool isDead();
 			bool isAlive();
-
-			void updateHealthHud();
 	};
 }
 

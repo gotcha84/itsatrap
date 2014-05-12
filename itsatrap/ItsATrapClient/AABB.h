@@ -28,6 +28,8 @@ class AABB {
 		AABB(glm::vec3 pos, float rad);
 		~AABB();
 
+		void initCommon();
+
 		void setAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
 		void setAABB(glm::vec3 pos, float rad);
 		

@@ -178,6 +178,16 @@ glm::vec3 Utilities::findAverage(string inputfile) {
 	return returnMe;
 }
 
+glm::mat4 Utilities::rotateY(float theta) { // theta = angle in degrees
+	theta = glm::radians(theta);
+		
+	return glm::transpose(glm::mat4(
+		glm::cos(theta), 0, glm::sin(theta), 0,
+		0, 1, 0, 0,
+		-glm::sin(theta), 0, glm::cos(theta), 0, 
+		0, 0, 0, 1
+		));
+}
 
 /*
 int Utilities::getMaxDepth(sg::Node *node) {

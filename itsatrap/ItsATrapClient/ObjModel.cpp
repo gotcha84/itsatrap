@@ -25,6 +25,18 @@ ObjModel::ObjModel(std::string filename) {
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
+ObjModel::ObjModel(std::string filename, glm::vec3 currPos) {
+	this->initScales();
+
+	m_position = currPos;
+
+	this->loadFilename(filename);
+	this->loadModel();
+
+	//m_physics = Physics();
+	this->setColor(glm::vec4(1,0,0,1));
+}
+
 ObjModel::ObjModel(int id, std::string filename) {
 	this->initScales();
 
@@ -71,7 +83,7 @@ void ObjModel::setNVertices(int ele) {
 	
 void ObjModel::setNIndices(int ele) {
 	m_nIndices.push_back(ele);
-	cout << glm::to_string(this->getMatrix()) << endl;
+	//cout << glm::to_string(this->getMatrix()) << endl;
 }
 
 
@@ -95,6 +107,11 @@ void ObjModel::drawModel() {
 
 	glEnable(GL_TEXTURE_2D);
 
+	// change order of vertices for backface culling for can
+	if (this->m_filename == "Can.obj") {
+		glFrontFace(GL_CW);
+	}
+
 	//cout << "nverts is : " << m_nIndices[0] << endl;
 	int p = 0;
 	int k = 0;
@@ -104,7 +121,7 @@ void ObjModel::drawModel() {
 	int max_ele = 10000;
 			
 	// bind texture here
-	glBindTexture(GL_TEXTURE_2D, texturePPM);
+	//glBindTexture(GL_TEXTURE_2D, texturePPM);
 
 	// if city and want colorful ObjModels!
 	glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
@@ -133,10 +150,12 @@ void ObjModel::drawModel() {
 		}
 	}
 	//cout << max_ele << endl;	
+
+	// reset backface culling
+	glFrontFace(GL_CCW);
 }
 
 void ObjModel::loadFilename(std::string filename) {
-	cout << "SET FILE NAME" << endl;
 	m_filename = filename;
 
 	if (m_filename == "Can.obj") {
@@ -256,7 +275,7 @@ void ObjModel::calculateBoundingBox() {
 		}
 	}
 				
-	m_boundingBox.setAABB(minx, miny, minz, maxx, maxy, maxz);
+	m_boundingBox.setAABB(minx+m_position.x, miny+m_position.y, minz+m_position.z, maxx+m_position.x, maxy+m_position.y, maxz+m_position.z);
 }
 
 bool ObjModel::isInside(glm::vec3 point) {		

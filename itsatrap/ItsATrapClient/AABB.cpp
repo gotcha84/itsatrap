@@ -8,8 +8,7 @@ AABB::AABB() {
 	m_maxX = 0;
 	m_maxY = 0;
 	m_maxZ = 0;
-
-	m_nearTopFactor = 10.0f;
+	initCommon();
 }
 
 AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
@@ -19,9 +18,7 @@ AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float max
 	m_maxX = maxX;
 	m_maxY = maxY;
 	m_maxZ = maxZ;
-
-	m_nearTopFactor = 10.0f;
-
+	initCommon();
 }
 
 AABB::AABB(glm::vec3 pos, float rad) {
@@ -31,12 +28,15 @@ AABB::AABB(glm::vec3 pos, float rad) {
 	m_maxX = pos.x + rad;
 	m_maxY = pos.y + rad;
 	m_maxZ = pos.z + rad;
-
-	m_nearTopFactor = 10.0f;
+	initCommon();
 }
 
 AABB::~AABB() {
 
+}
+
+void AABB::initCommon() {
+	m_nearTopFactor = 10.0f;
 }
 
 void AABB::setAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
@@ -75,13 +75,13 @@ bool AABB::collidesWithPointer(AABB* other) {
 
 bool AABB::inside(glm::vec3 goTo) {
 	return (goTo.x >= m_minX && goTo.x <= m_maxX 
-		&& goTo.y >= m_minY && goTo.y <= m_maxY
+		&& goTo.y >= m_minY &&  goTo.y <= m_maxY
 		&& goTo.z >= m_minZ && goTo.z <= m_maxZ); 
 }
 
 bool AABB::inside(AABB other) {
 	return (m_minX > other.m_minX && m_maxX < other.m_maxX 
-		&& m_minY > other.m_minY && m_maxY < other.m_maxY
+		&& m_minY > other.m_minY && m_maxY < other.m_maxY 
 		&& m_minZ > other.m_minZ && m_maxZ < other.m_maxZ);
 	
 }
@@ -91,7 +91,7 @@ bool AABB::nearTop(glm::vec3 goTo) {
 }
 
 bool AABB::clearedTop(AABB* other) {
-	return (other->m_minY >= m_maxY);
+	return (other->m_minY >= m_maxY+m_nearTopFactor);
 }
 
 glm::vec3 AABB::intersects(glm::vec3 from, glm::vec3 goTo) {
@@ -126,8 +126,6 @@ glm::vec3 AABB::intersects(glm::vec3 from, glm::vec3 goTo) {
 int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
 	glm::vec3 direction = goTo-from;
 
-	cout << "from: " << glm::to_string(from) << endl;
-	cout << "direction: " << glm::to_string(direction) << endl;
 	float xMinCoeff = FLT_MAX;
 	float xMaxCoeff = FLT_MAX;
 	float yMinCoeff = FLT_MAX;
@@ -135,7 +133,6 @@ int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
 	float zMinCoeff = FLT_MAX;
 	float zMaxCoeff = FLT_MAX;
 
-	// TODO: fix properly
 	if (direction.x != 0) {
 		xMinCoeff = ((m_minX - from.x)/direction.x > 0) ? ((m_minX - from.x)/direction.x) : FLT_MAX;
 		xMaxCoeff = ((m_maxX - from.x)/direction.x > 0) ? ((m_maxX - from.x)/direction.x) : FLT_MAX;
@@ -150,16 +147,22 @@ int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
 	}
 	float coeff = min(min(min(xMinCoeff, xMaxCoeff), min(yMinCoeff, yMaxCoeff)), min(zMinCoeff, zMaxCoeff));
 
-	if (coeff == xMinCoeff || coeff == xMaxCoeff) {
+	if (coeff == xMinCoeff) {
 		return 0;
 	}
+	if (coeff == xMaxCoeff) {
+		return 1;
+	}
 		
-	if (coeff == zMinCoeff || coeff == zMaxCoeff) {
-		return 2;
+	if (coeff == zMinCoeff) {
+		return 4;
+	}
+	if (coeff == zMaxCoeff) {
+		return 5;
 	}
 
 	else {
-		return 1;
+		return -1;
 	}
 
 }
@@ -167,8 +170,6 @@ int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
 float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 	glm::vec3 direction = goTo-from;
 
-	cout << "from: " << glm::to_string(from) << endl;
-	cout << "direction: " << glm::to_string(direction) << endl;
 	float xMinCoeff = FLT_MAX;
 	float xMaxCoeff = FLT_MAX;
 	float yMinCoeff = FLT_MAX;
@@ -176,7 +177,6 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 	float zMinCoeff = FLT_MAX;
 	float zMaxCoeff = FLT_MAX;
 
-	// TODO: fix properly
 	if (direction.x != 0) {
 		xMinCoeff = ((m_minX - from.x)/direction.x > 0) ? ((m_minX - from.x)/direction.x) : FLT_MAX;
 		xMaxCoeff = ((m_maxX - from.x)/direction.x > 0) ? ((m_maxX - from.x)/direction.x) : FLT_MAX;
@@ -193,34 +193,28 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 	float coeff = min(min(min(xMinCoeff, xMaxCoeff), min(yMinCoeff, yMaxCoeff)), min(zMinCoeff, zMaxCoeff));
 
 	if (coeff == xMinCoeff || coeff == xMaxCoeff) {
-		if (coeff == xMinCoeff) {
-			cout << "xMinCoeff" << endl;
+		tmpAngle = 180.0f*(acos((direction.z*direction.z)/(glm::length(direction)*direction.z)))/(atan(1.0f)*4.0f);
+		/*if (coeff == xMinCoeff) {
+			cout << "tmpAngle1: " << tmpAngle << endl;
 		}
 		else {
-			cout << "xMaxCoeff" << endl;
-		}
-		tmpAngle = 180.0f*(acos((direction.z*direction.z)/(glm::length(direction)*direction.z)))/(atan(1.0f)*4.0f);
-		cout << "tmpAngle" << tmpAngle << endl; 
-		return abs(90.0f-tmpAngle);
+			cout << "tmpAngle2: " << tmpAngle << endl;
+		}*/
+		return tmpAngle;
 	}
 	else if (coeff == yMinCoeff || coeff == yMaxCoeff) {
 		return -1.0f;
 	}
 	else {
-		if (coeff == zMinCoeff) {
-			cout << "zMinCoeff" << endl;
+		tmpAngle = 180.0f*(acos((direction.x*direction.x)/(glm::length(direction)*direction.x)))/(atan(1.0f)*4.0f);
+		/*if (coeff == zMinCoeff) {
+			cout << "tmpAngle3: " << tmpAngle << endl;
 		}
 		else {
-			cout << "zMaxCoeff" << endl;
-		}
-		tmpAngle = 180.0f*(acos((direction.x*direction.x)/(glm::length(direction)*direction.x)))/(atan(1.0f)*4.0f);
-		cout << "tmpAngle" << tmpAngle << endl; 
-		return abs(90.0f-tmpAngle);
+			cout << "tmpAngle4: " << tmpAngle << endl;
+		}*/
+		return tmpAngle;
 	}
-	/*while (tmpAngle > 90.0f) {
-		tmpAngle -= 90.0f;
-	}
-	return abs(45.0f-tmpAngle);*/
 }
 
 void AABB::print() {

@@ -23,6 +23,8 @@ class ObjModel : public sg::Geode {
 		float m_turtleScale;
 		glm::vec3 m_scaleVec;
 
+		glm::vec3 m_position;
+
 		int m_id;
 		string m_filename;
 
@@ -38,6 +40,7 @@ class ObjModel : public sg::Geode {
 		ObjModel();
 		ObjModel(int id);
 		ObjModel(std::string filename);
+		ObjModel(std::string filename, glm::vec3 currPos);
 		ObjModel(int id, std::string filename);
 		~ObjModel();
 

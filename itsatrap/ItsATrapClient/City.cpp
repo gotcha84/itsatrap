@@ -73,6 +73,7 @@ namespace sg {
 
 	void City::draw(glm::mat4 parent, glm::mat4 camera) {
 		int count = 0;
+
 		for (int i = 0; i < getNumChildren(); i++) {
 			//cout << "city count: " << count << endl;
 			//if (i == 2) {
@@ -82,6 +83,7 @@ namespace sg {
 			//((sg::Building*)m_child[i])->draw(parent, camera);
 			//}
 		}
+
 		
 		//glm::mat4 cam_inverse = glm::inverse(camera);
 		//glm::mat4 mv = cam_inverse * parent;
@@ -111,28 +113,9 @@ namespace sg {
 		float tmpmaxy = -1.0f*FLT_MAX;
 		float tmpmaxz = -1.0f*FLT_MAX;
 
-		//int arr[1][2] = {{0, 1}};
 		int arr[4][2] = {{0, 1}, {0, 3}, {1, 3}, {2, 3}};  
-		//int arr[5][2] = {{0, 1}, {0, 2}, {0, 3}, {1, 3}, {2, 3}};   
-		//if (!init_heightMap) {
-		/*
-		for (int k = 0; k < m_numBuildings; k++) {
-			for (int i = 0; i < m_nVertices[k]; i++) {
-				//m_vertices[k][i]*=m_canScale; // use only for can
-				//m_vertices[k][i]*=m_cityScale; // use only for city
-				
-				if (i % 3 == 1) {
-					m_vertices[k][i]-=1.0f;
-				}
-				
-			}
-		}
-		*/
-		//}
 
-		// TODO: fix min/max (only takes 2 args)
 		for (int l = 0; l < m_numBuildings; l++) {
-			//for (int i = 0; i < m_nVertices[l]-m_nVertices[l]%9; i+=9) { 
 			for (int i = 0; i < m_nVertices[l]-m_nVertices[l]%12; i+=12) { 
 
 				tmpminx = min(min(m_vertices[l][i], m_vertices[l][i+3]),  min(m_vertices[l][i+6], m_vertices[l][i+9]));
@@ -188,24 +171,12 @@ namespace sg {
 				for (int j = minx; j < maxx; j++) {
 					for (int k = minz; k < maxz; k++) {
 						if (maxy > World::m_heightMap[j+World::m_heightMapXShift][k+World::m_heightMapZShift]) {
-							//cout << "x: " << j+World::m_heightMapXShift << endl;
-							//cout << "z: " << k+World::m_heightMapZShift << endl;
 							World::m_heightMap[j+World::m_heightMapXShift][k+World::m_heightMapZShift] = maxy;
 						}
 					}
 				} 
 			}
 		}
-	
-		// player is 4 feet "tall"
-		/*for (int i = 0; i < 1019; i++) {
-			for (int j = 0; j < 787; j++) {
-					World::m_heightMap[i][j]+=4;
-					//cout << World::m_heightMap[i][j] << endl;
-			}
-		}*/
-
-	
 	}
 	
 

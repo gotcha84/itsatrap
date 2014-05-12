@@ -24,6 +24,7 @@ class Window {
 
 		static bool *keyState;
 		static bool *specialKeyState;
+		static int modifierKey;
 
 		Window();
 		~Window();

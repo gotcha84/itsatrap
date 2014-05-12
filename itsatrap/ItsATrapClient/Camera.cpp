@@ -6,29 +6,16 @@ using namespace std;
 extern ClientInstance *client;
 
 Camera::Camera() {
-	m_playerHeight = glm::vec3(0.0f, 4.0f, 0.0f);
-	m_slidingHeight = glm::vec3(0.0f, 2.0f, 0.0f);
-
-	m_xRotationAngle = 1.0f;
-	m_yRotationAngle = 0.01f*1.0f;
-	m_camX = glm::vec3(1.0f, 0, 0);
-	m_camZ = glm::vec3(0, 0, -1.0f);
-
-	//m_cameraCenter = glm::vec3(75.0f, 4.0f, 0.0f);
-	//m_cameraLookAt = glm::vec3(75.0f, 4.0f, -1.0f);
-	m_playerCenter = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_cameraCenter = m_playerCenter;// + m_playerHeight;
-	m_cameraLookAt = m_cameraCenter + glm::vec3(0.0f, 0.0f, -1.0f);
-	m_cameraUp = glm::vec3(0, 1.0f, 0);
-
-	m_xRotated = 0.0f;
-	m_camZSliding = glm::vec3(0.0f, 10.0f, 0.0f);
-	m_yRotated = 0.0f;
-
-	updateCameraMatrix();
+	m_cameraCenter = glm::vec3(0.0f, 0.0f, 0.0f);// + m_playerHeight;
+	initCommon();
 }
 
 Camera::Camera(glm::vec3 pos) {
+	m_cameraCenter = pos;// + m_playerHeight;
+	initCommon();
+}
+
+void Camera::initCommon() {
 	m_playerHeight = glm::vec3(0.0f, 4.0f, 0.0f);
 	m_slidingHeight = glm::vec3(0.0f, 2.0f, 0.0f);
 
@@ -37,11 +24,8 @@ Camera::Camera(glm::vec3 pos) {
 	m_camX = glm::vec3(1.0f, 0, 0);
 	m_camZ = glm::vec3(0, 0, -1.0f);
 
-	//m_cameraCenter = glm::vec3(75.0f, 4.0f, 0.0f);
-	//m_cameraLookAt = glm::vec3(75.0f, 4.0f, -1.0f);
-	//cout << "pos: " << glm::to_string(pos) << endl;
 	m_playerCenter = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_cameraCenter = pos;// + m_playerHeight;
+
 	m_cameraLookAt = m_cameraCenter + glm::vec3(0.0f, 0.0f, -1.0f);
 	m_cameraUp = glm::vec3(0, 1.0f, 0);
 

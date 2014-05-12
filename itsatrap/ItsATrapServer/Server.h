@@ -53,6 +53,7 @@ private:
 	static DWORD WINAPI bufferProcessorThread(LPVOID);
 	static void processBuffer();
 	static void broadcastDynamicWorld();
+	static void respawnPlayer(int id);
 
 public:
 

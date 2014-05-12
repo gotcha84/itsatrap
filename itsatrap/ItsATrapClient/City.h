@@ -49,7 +49,6 @@ namespace sg {
 			void initArrays();
 			void draw(glm::mat4 parent, glm::mat4 camera);
 
-			// TODO: figure out what it takes 
 			void updateHeightMap();
 			void loadData(string inputfile);
 			bool loadDataAtPlace(string inputfile, glm::vec3 position);

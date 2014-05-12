@@ -1,3 +1,5 @@
+#define ENABLE_SHADER 0
+
 #include "Building.h"
 
 namespace sg {
@@ -6,6 +8,17 @@ namespace sg {
 	Building::Building(int id) {
 		m_id = id;
 		
+		if (ENABLE_SHADER) {
+			shader = new Shader();
+			light = shader->lightShader("phongandtexture.frag", "phongandtexture.vert");
+		}
+
+		//this let the shaders on texture, so when you try to use shader on texture you add this on eline of a code
+		texture = new Texture();
+		if (ENABLE_SHADER) {
+			glUniform1i(glGetUniformLocation(light, "building1.ppm"), 0);
+		}
+		texturePPM = texture->loadTexture("building1.ppm");
 	}
 
 	/*Building::Building(string filename) {
@@ -16,8 +29,11 @@ namespace sg {
 	}*/
 
 	Building::~Building() {
+		delete texture;
+		texture = nullptr;
 		
-	
+		delete shader;
+		shader = nullptr;
 	}
 
 	void Building::draw(glm::mat4 parent, glm::mat4 cam) {
@@ -53,36 +69,41 @@ namespace sg {
 		int t = 0;
 		//cout << m_nm_indices << endl;
 		int max_ele = 10000;
-			
-		// bind texture here
+
+		// These two lines of codes apply shader and texture
+		if (ENABLE_SHADER) {
+			glUseProgram(light);
+		}
 		glBindTexture(GL_TEXTURE_2D, texturePPM);
 
 		sg::City* myParent = (sg::City*)getParent();
 
 		// if city and want colorful buildings!
-		//glColor4f(1,0,0,1);
-		
-		if (m_id % 6 == 0) {
-			glColor4f(0,0,1,1);
-		}
-		if (m_id % 6 == 1) {
-			glColor4f(0,1,0,1);
-		}
-		if (m_id % 6 == 2) {
+		if (!ENABLE_SHADER) {
 			glColor4f(1,0,0,1);
+
+			if (m_id % 6 == 0) {
+				glColor4f(0,0,1,1);
+			}
+			if (m_id % 6 == 1) {
+				glColor4f(0,1,0,1);
+			}
+			if (m_id % 6 == 2) {
+				glColor4f(1,0,0,1);
+			}
+			if (m_id % 6 == 3) {
+				glColor4f(0,1,1,1);
+			}
+			if (m_id % 6 == 4) {
+				glColor4f(1,0,1,1);
+			}
+			if (m_id % 6 == 5) {
+				glColor4f(1,1,0,1);
+			}
 		}
-		if (m_id % 6 == 3) {
-			glColor4f(0,1,1,1);
-		}
-		if (m_id % 6 == 4) {
-			glColor4f(1,0,1,1);
-		}
-		if (m_id % 6 == 5) {
-			glColor4f(1,1,0,1);
-		}
-		
 
 		//cout << "m_id: " << m_id << endl;
+
 		glMaterialfv( GL_FRONT, GL_AMBIENT, m_material.m_ambient);
 		glMaterialfv( GL_FRONT, GL_DIFFUSE, m_material.m_diffuse);
 		glMaterialfv( GL_FRONT, GL_SPECULAR, m_material.m_specular);
@@ -90,27 +111,30 @@ namespace sg {
 		glMaterialf( GL_FRONT, GL_SHININESS, m_material.m_shininess);
 
 		//glColor4f(((m_id%8)%4)%2, (m_id%4)%2, m_id%2, 1);
+
 		for (int i = 0; i < myParent->m_nIndices[m_id]/3; i++) {
 			//cout << m_indices[i] << endl;
 			//cout << ((m_id%2)%2)%2 << endl;
-			/*
-			if (m_id == 2) {
-				glColor4f(0,1,0,1);
-			}
-			else if (m_id == 7) {
-				glColor4f(0,0,1,1);
-			}
-			else if (m_id == 25) {
-				glColor4f(1,0,1,1);
-			}
+			
+			//if (!ENABLE_SHADER) {
+			//	if (m_id == 2) {
+			//		glColor4f(0,1,0,1);
+			//	}
+			//	else if (m_id == 7) {
+			//		glColor4f(0,0,1,1);
+			//	}
+			//	else if (m_id == 25) {
+			//		glColor4f(1,0,1,1);
+			//	}
 
-			else if (m_id == 31) {
-				glColor4f(1,1,0,1);
-			}
-			else {
-				glColor4f(1,0,0,1);
-			}*/
-		
+			//	else if (m_id == 31) {
+			//		glColor4f(1,1,0,1);
+			//	}
+			//	else {
+			//		glColor4f(1,0,0,1);
+			//	}
+			//}
+
 			glBegin(GL_TRIANGLES);
 			for (int j = 0; j < 3; j++) {
 				glNormal3f(myParent->m_normals[m_id][3*myParent->m_indices[m_id][3*i+j]], myParent->m_normals[m_id][3*myParent->m_indices[m_id][3*i+j]+1], myParent->m_normals[m_id][3*myParent->m_indices[m_id][3*i+j]+2]);
@@ -121,7 +145,8 @@ namespace sg {
 			glEnd();
 		}
 		
-		//cout << max_ele << endl;	
+		//cout << max_ele << endl;
+		glDisable(GL_TEXTURE_2D);
 	}
 
 	void Building::print() {
@@ -154,45 +179,20 @@ namespace sg {
 			if (myParent->m_vertices[m_id][i+1] > maxy) {
 				maxy = myParent->m_vertices[m_id][i+1];
 			}
-			//if (m_id == 7) {
-			//	cout << myParent->m_vertices[m_id][i+2] << endl;
-			//}
 			if (myParent->m_vertices[m_id][i+2] > maxz) {
 				maxz = myParent->m_vertices[m_id][i+2];
-				/*if (m_id == 7) {
-					cout << "i'm working" << endl;
-				}*/
 			}
 		}
-		/*
-		if (m_id == 7) {
-			cout << "minx: " << minx << endl;
-			cout << "miny: " << miny << endl;
-			cout << "minz: " << minz << endl;
-			cout << "maxx: " << maxx << endl;
-			cout << "maxy: " << maxy << endl;
-			cout << "maxz: " << maxz << endl;
-		}*/
 		
 		m_boundingBox.setAABB(minx, miny, minz, maxx, maxy, maxz);
 
 		glm::vec3 tmpPos = glm::vec3((maxx-minx)/2, (maxy-miny)/2, (maxz-minz)/2);
 
-		// TODO: set
 		m_physics = Physics(tmpPos, FLT_MAX);
 	}
 
 	bool Building::isInside(glm::vec3 point) {		
-		//if (m_id == 4) {
-		//	return false;
-		//}
-		//else {
-			//cout << "m_id: " << m_id << endl;
-			//cout << "mins: " << m_boundingBox.m_minX << ", " << m_boundingBox.m_minY << ", " << m_boundingBox.m_minZ << endl;
-			//cout << "maxs: " << m_boundingBox.m_maxX << ", " << m_boundingBox.m_maxY << ", " << m_boundingBox.m_maxZ << endl;
-			//cout << "goto: " << glm::to_string(point) << endl;
-			return (m_boundingBox.inside(point));
-		//}
+		return (m_boundingBox.inside(point));
 	}
 
 	bool Building::nearTop(glm::vec3 point) {		
@@ -225,7 +225,7 @@ namespace sg {
 	void Building::setMaterial() {
 		m_material.setAmbient(0.7f, 0.7f, 0.7f, 1.0f); 
 		m_material.setDiffuse(0.1f, 0.5f, 0.8f, 1.0f);
-		m_material.setDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+		m_material.setSpecular(1.0f, 1.0f, 1.0f, 1.0f);
 		m_material.setEmission(0.3f, 0.2f, 0.2f, 0.0f);
 		m_material.setShininess(128.0f);
 	}

@@ -24,9 +24,6 @@ int main(int argc, char *argv[]) {
 	Sleep(1000);
 
 	ConfigSettings::getConfig()->loadSettingsFile();
-	int testVal = 0;
-	ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
-	cout << "Test config file: ScreenWidth:" << testVal << endl;
 
 	// opengl lighting
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
@@ -45,6 +42,7 @@ int main(int argc, char *argv[]) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
 	glutInitWindowSize(window->m_width, window->m_height);      // set initial window size
 	glutCreateWindow("It's a Trap!");           // open window and set window title
+	//glutFullScreen();
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
 	glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
@@ -54,6 +52,11 @@ int main(int argc, char *argv[]) {
 	//glCullFace(GL_FRONT);
 	//glFrontFace(GL_CCW);
 	glShadeModel(GL_SMOOTH);                    // set shading to smooth
+
+	// backface culling to render front sides of polygons
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 	
 	// Generate material properties:
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -62,9 +65,10 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_COLOR_MATERIAL);
 	
 	// Generate light source:
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+	glDisable(GL_LIGHTING);
+	//glLightfv(GL_LIGHT0, GL_POSITION, position);
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT0);
 	
 	// Install callback functions:
 	glutDisplayFunc(window->displayCallback);

@@ -9,17 +9,27 @@ namespace sg {
 		m_model = glm::translate(currPos);
 		this->setColor(glm::vec4(1,0,0,1));
 
-		this->initModel("Can.obj");
+		this->initModel("Polynoid.obj");
 	}
 
-	Trap::Trap(int ownerId, glm::vec3 currPos) {
+	Trap::Trap(int ownerId, glm::vec3 currPos, float rotationAngle, string filename) {
 		m_ownerId = ownerId;
 		m_position = currPos;
 		m_model = glm::translate(currPos);
+		this->rotationAngle = rotationAngle;
 		this->setColor(glm::vec4(1,0,0,1));
 
-		this->initModel("Can.obj");
-		//cout << "filename: " << m_model1->m_cityScale << endl;
+		this->initModel(filename);
+	}
+
+	Trap::Trap(int ownerId, glm::vec3 currPos, float rotationAngle) {
+		m_ownerId = ownerId;
+		m_position = currPos;
+		m_model = glm::translate(currPos);
+		this->rotationAngle = rotationAngle;
+		this->setColor(glm::vec4(1,0,0,1));
+
+		this->initModel("Polynoid.obj");
 	}
 	
 	// TODO - implement when traps have different types
@@ -33,9 +43,8 @@ namespace sg {
 	}
 	
 	void Trap::initModel(std::string filename) {
-		m_model1 = new ObjModel(filename);
+		m_model1 = new ObjModel(filename, m_position);
 		m_model1->setColor(this->getColor());
-
 	}
 
 	void Trap::updateBoundingBox() {
@@ -60,9 +69,10 @@ namespace sg {
 	}
 
 	void Trap::draw(glm::mat4 parent, glm::mat4 cam) {
-		this->setMatrix(glm::translate(this->getPosition()) /** glm::scale(glm::vec3(1.0f, 0.5f, 1.0f))*/);
+		glm::mat4 new_model = glm::translate(this->getPosition()) * glm::scale(glm::vec3(1.0f, 0.5f, 1.0f)) * Utilities::rotateY(rotationAngle+180.0f);
+		this->setMatrix(new_model);
 
-		glm::mat4 new_model = parent * this->getMatrix();
+		new_model = parent * this->getMatrix();
 		glm::mat4 mv = glm::inverse(cam) * new_model;
 
 		glPushMatrix();
@@ -92,6 +102,7 @@ namespace sg {
 		t.aabb.maxX = this->m_model1->getBoundingBox().m_maxX;
 		t.aabb.maxY = this->m_model1->getBoundingBox().m_maxY;
 		t.aabb.maxZ = this->m_model1->getBoundingBox().m_maxZ;
+		t.rotationAngle = rotationAngle;
 		return t;
 	}
 }

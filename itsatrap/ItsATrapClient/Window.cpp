@@ -16,6 +16,7 @@ clock_t Window::m_timer = clock();
 
 bool *Window::keyState = new bool[256];
 bool *Window::specialKeyState = new bool[256];
+int Window::modifierKey = 0;
 
 Window::Window() {
 	for (int i=0; i<256; i++) {
@@ -58,11 +59,12 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
 {	
+	PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState; 
+	//cout << "position: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
 	processKeys();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	
-	// andre added below if sattements
 	if (client->root->m_xAngleChange != 0.0f) {
 		client->root->handleXRotation(client->root->m_xAngleChange);
 		client->root->m_xAngleChange = 0.0f;
@@ -76,46 +78,69 @@ void Window::displayCallback(void)
 	}
 	
 	glm::vec3 oldPos = client->root->getPlayer()->getPosition();
-	//cout << "curr state: " << client->root->getPlayer()->getPhysics()->m_currentState << endl;
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
+	if (curr_state == PhysicsStates::Sliding) {
 		client->root->getPlayer()->handleSliding();
 	}
 
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Climbing) {
+	if (curr_state == PhysicsStates::Climbing) {
 		client->root->getPlayer()->applyClimbing();
 	}
 
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::PullingUp) {
+	if (curr_state == PhysicsStates::PullingUp) {
 		client->root->getPlayer()->applyPullingUp();
 	}
 
-	client->root->getPlayer()->getPhysics()->applyGravity();
+	bool onGround = client->root->getPlayer()->getPhysics()->applyGravity();
+
+	if (onGround) {
+		client->root->getPlayer()->m_onTopOfBuildingId = -1;
+	}
+
+	client->root->getPlayer()->getPhysics()->m_velocity += client->root->getPlayer()->getPhysics()->m_velocityDiff;
+
+	
+	/*if (curr_state == PhysicsStates::PullingUp || curr_state == PhysicsStates::Climbing) {
+		cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
+		cout << "velodiff: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocityDiff) << endl;
+	}*/
 
 	client->root->getPlayer()->getPhysics()->m_position += client->root->getPlayer()->getPhysics()->m_velocity;
-	client->root->getPlayer()->getPhysics()->m_velocity = glm::vec3(0.0f, client->root->getPlayer()->getPhysics()->m_velocity.y, 0.0f);
-	//client->root->getPlayer()->getPhysics()->m_velocity -= client->root->getPlayer()->getPhysics()->m_velocityDiff;
+
+	/*if (client->root->getPlayer()->getPhysics()->m_velocity.x != client->root->getPlayer()->getPhysics()->m_velocityDiff.x || client->root->getPlayer()->getPhysics()->m_velocity.z != client->root->getPlayer()->getPhysics()->m_velocityDiff.z) {
+
+		cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
+		cout << "velodiff: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocityDiff) << endl;
+
+	}*/
+	
+	//client->root->getPlayer()->getPhysics()->m_velocity = glm::vec3(0.0f, client->root->getPlayer()->getPhysics()->m_velocity.y, 0.0f);
+	
+	client->root->getPlayer()->getPhysics()->m_velocity -= client->root->getPlayer()->getPhysics()->m_velocityDiff;
+	//client->root->getPlayer()->getPhysics()->m_velocity.x -= client->root->getPlayer()->getPhysics()->m_velocityDiff.x;
+	//client->root->getPlayer()->getPhysics()->m_velocity.z -= client->root->getPlayer()->getPhysics()->m_velocityDiff.z;
+
 	client->root->getPlayer()->getPhysics()->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-	// TODO: move to player class?
-	/*cout << "oldpos: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
-	cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
-	cout << "newpos: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl << endl;*/
+
 	client->root->getPlayer()->getPhysics()->m_lastMoved = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	if (oldPos != client->root->getPlayer()->getPosition()) {		
 		client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
-		//cout << "change is good " << endl;
-		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position + client->root->getPlayer()->getPhysics()->m_velocity));
+		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position/* + client->root->getPlayer()->getPhysics()->m_velocity*/));
 		client->root->getPlayer()->updateBoundingBox();
 		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	}
 
-	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - client->root->getPlayer()->getCamera()->m_cameraCenter;
-	//moved.y += 4.0f;
+	/*if (client->root->getPlayer()->getCamera()->m_cameraCenter != oldPos) {
+		cout << "oldpos: " << glm::to_string(oldPos) << endl;
+		cout << "cam center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;
+	}*/
+
+	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - /*oldPos */client->root->getPlayer()->getCamera()->m_cameraCenter;
 	
 	client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
 	
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
+	if (curr_state == PhysicsStates::Sliding) {
 		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_slidingHeight;
 		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding;
 	}
@@ -127,10 +152,10 @@ void Window::displayCallback(void)
 
 	// updates player view
 	client->root->getPlayer()->getCamera()->updateCameraMatrix();
-	client->root->getPlayer()->updateModelViewMatrix(); // andre added this line
+	client->root->getPlayer()->updateModelViewMatrix();
 	client->root->draw();
 
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
+	if (curr_state == PhysicsStates::Sliding) {
 		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_slidingHeight;
 		client->root->getPlayer()->getCamera()->m_cameraLookAt -= (client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding);
 	}
@@ -138,6 +163,9 @@ void Window::displayCallback(void)
 		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_playerHeight;
 		client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
 	}
+
+	client->root->getPlayer()->getCamera()->updateCameraMatrix();
+	client->root->getPlayer()->updateModelViewMatrix();
 
 	m_fpsCounter+=1;
 				
@@ -147,8 +175,6 @@ void Window::displayCallback(void)
 		m_fpsCounter = 0;
 	}
 
-	//cout << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
-
 	glFlush();  
 	glutSwapBuffers();
 }
@@ -156,42 +182,94 @@ void Window::displayCallback(void)
 void Window::keyDown(unsigned char key, int x, int y)
 {
 	keyState[key] = true;
-	//cout << key << " down" << endl;
+	if (key >= '1' && key <= '9') {
+		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated);
+		struct trapObject t = trap->getTrapObjectForNetworking();
+		switch (key)
+		{
+		case '1':
+			t.type = TYPE_FREEZE_TRAP;
+			break;
+		case '2':
+			t.type = TYPE_TRAMPOLINE_TRAP;
+			break;
+		case '3':
+			t.type = TYPE_SLOW_TRAP;
+			break;
+		case '4':
+			t.type = TYPE_PUSH_TRAP;
+			break;
+		case '5':
+			t.type = TYPE_LIGHTNING_TRAP;
+			break;
+		default:
+			t.type = TYPE_FREEZE_TRAP;
+			break;
+		}
+
+		Client::sendSpawnTrapEvent(t);
+		delete trap;
+	}
 }
 
 void Window::keyUp(unsigned char key, int x, int y) {
 	keyState[key] = false;
-	//cout << key << " up" << endl;
 }
 
 void Window::specialKeyDown(int key, int x, int y) {
+	modifierKey = glutGetModifiers();
+	
 	specialKeyState[key] = true;
-	//cout << "special " << key << " down" << endl;
 }
 
 void Window::specialKeyUp(int key, int x, int y) {
+	modifierKey = glutGetModifiers();
+
 	specialKeyState[key] = false;
-	//cout << "special " << key << " up" << endl;
 }
 
 void Window::processKeys() {
-		// forward + backward
-	PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState; 
-	if (curr_state != PhysicsStates::Climbing && curr_state != PhysicsStates::Sliding && curr_state != PhysicsStates::PullingUp) {
-		if (keyState['w']) {
+	int count = 0;
+	if (client->root->m_player->m_stunDuration > 0)
+	{
+		printf("[CLIENT]: Sorry, you are STUNNED! Remaining: %d\n", client->root->m_player->m_stunDuration);
+		return;
+	}
+
+	// modifierKey = 
+	// GLUT_ACTIVE_SHIFT
+	// GLUT_ACTIVE_CTRL
+	// GLUT_ACTIVE_ALT
+
+	// esc to quit
+	if (keyState[27]) {
+		exit(0);
+	}
+
+	// teleport
+	if (modifierKey == GLUT_ACTIVE_ALT) {
+		client->root->getPlayer()->handleTeleport();
+	}
+
+	// forward + backward
+	if (keyState['w']) {
+		if (modifierKey == GLUT_ACTIVE_SHIFT) {
+			client->root->getPlayer()->handleSliding();
+		}
+		else {
 			client->root->getPlayer()->handleMovement('w');
 		}
-		else if (keyState['s']) {
-			client->root->getPlayer()->handleMovement('s');
-		}
+	}
+	else if (keyState['s']) {
+		client->root->getPlayer()->handleMovement('s');
+	}
 
-		// left + right
-		if (keyState['a']) {
-			client->root->getPlayer()->handleMovement('a');
-		}
-		else if (keyState['d']) {
-			client->root->getPlayer()->handleMovement('d');
-		}
+	// left + right
+	if (keyState['a']) {
+		client->root->getPlayer()->handleMovement('a');
+	}
+	else if (keyState['d']) {
+		client->root->getPlayer()->handleMovement('d');
 	}
 
 	// jump
@@ -200,30 +278,20 @@ void Window::processKeys() {
 	}
 
 	// trap
-	if (keyState['t']) {
+	/*
+	if (keyState['1']) {
 		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
-		client->root->addChild(trap);
-		//Client::requestToSpawnTrap(trap->getTrapObjectForNetworking());
-		//delete trap;
-		//trap = nullptr;
+		struct trapObject t = trap->getTrapObjectForNetworking();
+		t.type = TYPE_FREEZE_TRAP;
+		Client::sendSpawnTrapEvent(t);
+		delete trap;
 	}
+	*/
 
 	// reload config file
 	if (keyState['r']) {
 		ConfigSettings::getConfig()->reloadSettingsFile();
-		int testVal = 0;
-		ConfigSettings::getConfig()->getValue("ScreenWidth", testVal);
-		cout << "Reloaded config: ScreenWidth: " << testVal << endl;
 	}
-
-	if (keyState['m']) {
-		client->root->getPlayer()->handleTeleport();
-	}
-
-	if (keyState['x']) {
-		client->root->getPlayer()->handleSliding();
-	}
-
 
 	//case 9: // TAB
 		//client->toggleCurrentPlayer();
@@ -252,10 +320,6 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 							if (hit)
 							{
 								Client::sendKnifeHitEvent(i);
-								client->players[i]->updateHealthHud();
-
-								cout << "Player " << client->root->getPlayerID() << " hit Player " << i << "!" << endl;
-								cout << "Player " << i << " has " << client->players[i]->getHealth() << endl;
 							}
 						}
 					}
@@ -287,14 +351,6 @@ void Window::processMouseMove(int x, int y) {
 	// keeps mouse centered
 	if (x != m_width/2 || y != m_height/2) {
 		glutWarpPointer(m_width/2, m_height/2);
-		
-		// TODO: actually fix this
-		/*cout << "xchange: " << client->root->m_xAngleChange << endl;
-		cout << "ychange: " << client->root->m_yAngleChange << endl;
-		client->root->m_xAngleChange = -1.0f * client->root->m_xAngleChange;
-		client->root->m_yAngleChange = -1.0f * client->root->m_yAngleChange;
-		cout << "xchange: " << client->root->m_xAngleChange << endl;
-		cout << "ychange: " << client->root->m_yAngleChange << endl;*/
 	}
 
 	client->m_xMouse = x;

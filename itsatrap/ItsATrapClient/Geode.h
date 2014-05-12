@@ -9,7 +9,6 @@
 
 #include "Node.h"
 #include "AABB.h"
-#include "Texture.h"
 #include "Material.h"
 
 namespace sg {
@@ -22,10 +21,6 @@ namespace sg {
 			glm::vec3 m_position;
 			glm::mat4 m_model;
 			glm::vec4 m_color;
-
-			Texture *texture;
-			GLuint texturePPM;
-			char* m_textureFilename;
 
 			void setPosition(glm::vec3);
 			glm::vec3 getPosition();

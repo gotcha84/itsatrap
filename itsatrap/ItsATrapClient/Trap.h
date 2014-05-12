@@ -8,18 +8,13 @@
 #include "Geode.h"
 #include "ObjModel.h"
 #include "NetworkObjects.h"
-
-// andre
-//enum TrapType {
-//	Shrink = 0,
-//	Immobilize = 1,
-//	Intoxicate = 2
-//};
+#include "Utilities.h"
 
 namespace sg {
 	class Trap : public Geode {
 		public:
 			int m_ownerId;
+			float rotationAngle;
 			glm::vec3 m_position;
 			glm::mat4 m_model;
 			//TrapType m_type;
@@ -27,7 +22,8 @@ namespace sg {
 			ObjModel *m_model1;
 
 			Trap();
-			Trap(int, glm::vec3 pos);
+			Trap(int, glm::vec3 pos, float rotationAngle);
+			Trap(int, glm::vec3 pos, float rotationAngle, string filename);
 			Trap(glm::vec3);
 			Trap(glm::vec3 currPos, int type);
 
