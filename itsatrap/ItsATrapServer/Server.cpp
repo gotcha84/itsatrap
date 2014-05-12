@@ -111,7 +111,6 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		struct staticObjectPacket *staticObjPkt = (struct staticObjectPacket *)p;
 		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
 		{
-			//printf("minX %f maxX %f\n", staticObjPkt->object.aabb.minX, staticObjPkt->object.aabb.maxX);
 			struct staticObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticObject(tmp);
@@ -120,14 +119,17 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	}
 	else
 	{
-		// Lock Mutex: Writing into packet buffer 
-		WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
+		if (packetBufferCount < PACKET_BUFFER_SIZE)
+		{
+			// Lock Mutex: Writing into packet buffer 
+			WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
 
-		memcpy(packetBuffer[packetBufferCount].msg, msg, BUFSIZE);
-		packetBufferCount++;
+			memcpy(packetBuffer[packetBufferCount].msg, msg, BUFSIZE);
+			packetBufferCount++;
 
-		// Releaes Mutex 
-		ReleaseMutex(packetBufMutex);
+			// Releaes Mutex 
+			ReleaseMutex(packetBufMutex);
+		}
 	}
 }
 
@@ -143,16 +145,19 @@ DWORD WINAPI Server::bufferProcessorThread(LPVOID param)
 
 		processBuffer();
 
+
 		elapsed = MAX_SERVER_PROCESS_RATE - stopwatch.getElapsedMilliseconds();
 		if (elapsed >= 0)
 		{
 			Sleep(elapsed);
 		}
+		/*
 		else
 		{
 			// Note: Hopefully this case doesn't happen, means processing time is taking longer than rate
 			Sleep(MAX_SERVER_PROCESS_RATE);	
 		}
+		*/
 	}
 }
 
@@ -200,7 +205,6 @@ void Server::processBuffer()
 			{
 				struct spawnTrapPacket *trapPkt = (struct spawnTrapPacket *)p;
 				dynamicWorld.addTrap(trapPkt->trap);
-								cout << trapPkt->trap.aabb.minX << " " << trapPkt->trap.aabb.maxX << endl;
 				break;
 			}
 			case KNIFE_HIT_EVENT:
@@ -232,7 +236,7 @@ void Server::processBuffer()
 
 	packetBufferCount = 0;
 
-	if (dynamicWorld.getAllPlayers().size() > 0) {
+	if (playerCount > 0) {
 		broadcastDynamicWorld();
 	}
 

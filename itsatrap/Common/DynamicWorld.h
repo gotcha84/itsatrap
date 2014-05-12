@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include "NetworkObjects.h"
+#include "NetworkConfig.h"
 #include "Packet.h"
 #include "ConfigSettings.h"
 
@@ -27,6 +28,7 @@ private:
 	// Variables
 	int								currentId;
 	vector<struct staticObject>		staticObjects;
+	bool							playerLock[MAX_PLAYERS];
 
 	// Functions
 	bool checkCollision(struct aabb a, struct aabb b);

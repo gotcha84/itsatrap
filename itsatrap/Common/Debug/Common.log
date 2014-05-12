@@ -1,72 +1,72 @@
-﻿Build started 5/10/2014 8:08:20 PM.
-     1>Project "\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (build target(s)).
+﻿Build started 5/12/2014 2:36:44 PM.
+     1>Project "C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Common.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\/glm/" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IC:\Users\Enrico\ItsATrap\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp
          DynamicWorld.cpp
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
                  with
                  [
                      _Elem=char,
                      _Traits=std::char_traits<char>,
                      _Ax=std::allocator<char>
                  ]
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
                  with
                  [
                      _Elem=char,
                      _Traits=std::char_traits<char>,
                      _Ax=std::allocator<char>
                  ]
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
                  with
                  [
                      _Elem=char,
                      _Traits=std::char_traits<char>,
                      _Ax=std::allocator<char>
                  ]
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<_Kty,_Ty>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<_Kty,_Ty>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
                  with
                  [
                      _Kty=std::string,
                      _Ty=std::string
                  ]
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
                  with
                  [
                      _Elem=char,
                      _Traits=std::char_traits<char>,
                      _Ax=std::allocator<char>
                  ]
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
                  with
                  [
                      _Elem=char,
                      _Traits=std::char_traits<char>,
                      _Ax=std::allocator<char>
                  ]
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\dynamicworld.cpp(108): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\dynamicworld.cpp(185): warning C4018: '<' : signed/unsigned mismatch
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\dynamicworld.cpp(208): warning C4018: '<' : signed/unsigned mismatch
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\dynamicworld.cpp(230): warning C4018: '<' : signed/unsigned mismatch
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\dynamicworld.cpp(279): warning C4018: '<' : signed/unsigned mismatch
-     1>\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\common\dynamicworld.cpp(287): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(115): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(189): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(212): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(242): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(291): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(299): warning C4018: '<' : signed/unsigned mismatch
          GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:"\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\Debug\\" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Common.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\ConfigSettings.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Common.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\ConfigSettings.obj
          Debug\DynamicWorld.obj
          Debug\Stopwatch.obj
      1>ConfigSettings.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
-            Creating library \\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\Debug\Common.lib and object \\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\Debug\Common.exp
-         Common.vcxproj -> \\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\Debug\Common.dll
+            Creating library C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.lib and object C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.exp
+         Common.vcxproj -> C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.dll
        Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\Debug\Common.dll;#2" /manifest Debug\Common.dll.intermediate.manifest
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.dll;#2" /manifest Debug\Common.dll.intermediate.manifest
        FinalizeBuildStatus:
          Deleting file "Debug\Common.unsuccessfulbuild".
          Touching "Debug\Common.lastbuildstate".
-     1>Done Building Project "\\acsnfs4.ucsd.edu\unix-home\linux\ieng6\cs125s\etanuwid\itsatrap\itsatrap\Common\Common.vcxproj" (build target(s)).
+     1>Done Building Project "C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Common\Common.vcxproj" (build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:08.51
+Time Elapsed 00:00:02.26
