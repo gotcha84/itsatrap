@@ -15,7 +15,7 @@ class HUD {
 		HUD();
 		~HUD();
 
-		void draw(int health);
+		void draw(int health, int resources);
 		
 		void drawCrossHair(); 
 		void drawHealthBar(int health);

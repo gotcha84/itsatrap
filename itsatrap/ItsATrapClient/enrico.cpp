@@ -39,6 +39,9 @@ void handlePlayerUpdate(struct playerObject p)
 		// BUFFS
 		client->players[p.id]->m_player->m_stunDuration = p.stunDuration;
 		client->players[p.id]->m_player->m_slowDuration = p.slowDuration;
+
+		// RESOURCES
+		client->players[p.id]->m_player->m_resources = p.resources;
 		
 		if (p.xVel != 0 || p.yVel != 0 || p.zVel != 0)
 		{

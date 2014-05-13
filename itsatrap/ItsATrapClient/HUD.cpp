@@ -10,7 +10,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health) {
+void HUD::draw(int health, int resources) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -22,7 +22,7 @@ void HUD::draw(int health) {
 
 			drawCrossHair();
 			drawHealthBar(health);
-			drawResource(0);
+			drawResource(resources);
 			//drawDeathTimer(5.0f);
 
 		glPopMatrix();
@@ -85,7 +85,7 @@ void HUD::drawResource(int resource) {
 		
 		glColor4f(0,20,0,1); // green
 
-		std::string text = std::to_string(static_cast<long long>(50));			
+		std::string text = std::to_string(static_cast<long long>(resource));			
 		glRasterPos2f(0.8f, 0.9f);
 		for (int i=0; i<text.length(); i++) {
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);

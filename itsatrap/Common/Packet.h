@@ -10,6 +10,8 @@
 #define STATIC_OBJECT_CREATION_EVENT 5
 #define SPAWN_TRAP_REQUEST 6
 #define KNIFE_HIT_EVENT 7
+#define HOT_SPOT_UPDATE 8
+#define RELOAD_CONFIG_FILE 9
 
 // Superclass of all packets
 struct packet {
@@ -49,6 +51,12 @@ struct knifeHitPacket
 	int eventId;
 	int playerId;
 	int targetId;
+};
+
+struct hotSpotPacket
+{
+	int eventId;
+	int x,y,z;
 };
 
 #endif

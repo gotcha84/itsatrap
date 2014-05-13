@@ -88,6 +88,7 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	p.slowDuration = playerMap[p.id].slowDuration;
 	p.numKills = playerMap[p.id].numKills;
 	p.numDeaths = playerMap[p.id].numDeaths;
+	p.resources = playerMap[p.id].resources;
 
 	if (checkCollisionWithAllNonTraps(p))
 		return;
@@ -134,6 +135,15 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 					p.xVel = force.x;
 					p.yVel = 0;
 					p.zVel = force.z;
+
+					break;
+				}
+				case TYPE_LIGHTNING_TRAP:
+				{
+					float power = 0;
+					ConfigSettings::getConfig()->getValue("LightningTrapPower", power);
+
+					p.health -= power;
 
 					break;
 				}
@@ -281,6 +291,26 @@ void DynamicWorld::addTrap(struct trapObject t)
 	t.eventCode = EVENT_ADD_TRAP;
 	t.id = currentId;
 	trapMap[currentId] = t;
+	
+	playerLock[t.ownerId] = true;
+	switch (t.type)
+	{
+		case TYPE_FREEZE_TRAP:
+			playerMap[t.ownerId].resources -= 20;
+			break;
+
+		case TYPE_TRAMPOLINE_TRAP:
+			playerMap[t.ownerId].resources -= 30;
+			break;
+
+		case TYPE_SLOW_TRAP:
+			playerMap[t.ownerId].resources -= 15;
+			break;
+
+		default:
+			playerMap[t.ownerId].resources -= 10;
+			break;
+	}
 
 	currentId++;
 }

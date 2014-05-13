@@ -174,6 +174,10 @@ void Window::keyDown(unsigned char key, int x, int y)
 		Client::sendSpawnTrapEvent(t);
 		delete trap;
 	}
+	else if (key == 'r') {
+		ConfigSettings::getConfig()->reloadSettingsFile();
+		Client::sendReloadConfigFile();
+	}
 }
 
 void Window::keyUp(unsigned char key, int x, int y) {
@@ -254,11 +258,6 @@ void Window::processKeys() {
 		delete trap;
 	}
 	*/
-
-	// reload config file
-	if (keyState['r']) {
-		ConfigSettings::getConfig()->reloadSettingsFile();
-	}
 
 	//case 9: // TAB
 		//client->toggleCurrentPlayer();

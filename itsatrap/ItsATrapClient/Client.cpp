@@ -1,5 +1,7 @@
 #include "Client.h"
 
+extern ClientInstance *client;
+
 // Variables
 struct sockaddr_in	Client::myAddress, Client::serverAddress;
 int					Client::len;
@@ -91,6 +93,16 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				DynamicWorld world(p);
 				handleUpdateWorldFromServer(&world);
 			}
+			else if (p->eventId == HOT_SPOT_UPDATE)
+			{
+				struct hotSpotPacket *hsp = (struct hotSpotPacket *) p;
+				updateHotSpot(hsp->x, hsp->y, hsp->z);
+			}
+			else if (p->eventId == RELOAD_CONFIG_FILE)
+			{
+				printf("[CLIENT]: Reload config file packet received\n");
+				ConfigSettings::getConfig()->reloadSettingsFile();
+			}
 		}
 	}
 }
@@ -170,4 +182,30 @@ void Client::sendKnifeHitEvent(int targetId)
 	p.targetId = targetId;
 
 	sendMsg((char *)&p, sizeof(struct knifeHitPacket));
+}
+
+void Client::updateHotSpot(int x, int y, int z)
+{
+	if (client->hotSpot != nullptr)
+	{
+		client->root->removeChild(client->hotSpot);
+	}
+
+	// CONE node
+	sg::MatrixTransform *mt = new sg::MatrixTransform();
+	client->root->addChild(mt);
+	client->hotSpot = mt;
+
+	sg::Cone *cone = new sg::Cone();
+	mt->addChild(cone);
+	mt->setMatrix(glm::translate(glm::vec3(x,y,z)) * glm::scale(glm::vec3(10,10,10)));
+}
+
+void Client::sendReloadConfigFile()
+{
+	struct packet p = {};
+	p.eventId = RELOAD_CONFIG_FILE;
+	sendMsg((char *)&p, sizeof(struct packet));
+
+	printf("[CLIENT]: Sent reload config file\n");
 }
