@@ -34,6 +34,7 @@ private:
 	bool checkCollision(struct aabb a, struct aabb b);
 	bool checkCollisionWithAllNonTraps(struct playerObject e);
 	void addNewPlayer(struct playerObject p);
+	void respawnPlayer(struct playerObject *p);
 
 public:
 	// Variables
@@ -55,6 +56,8 @@ public:
 
 	__declspec(dllexport) void addStaticObject(struct staticObject);
 	__declspec(dllexport) int getNumStaticObjects();
+
+	__declspec(dllexport) void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
 	
 };

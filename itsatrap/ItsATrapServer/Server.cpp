@@ -212,13 +212,7 @@ void Server::broadcastDynamicWorld()
 	}
 }
 
-void Server::respawnPlayer(int id) {
-	dynamicWorld.playerMap[id].x = 75;
-	dynamicWorld.playerMap[id].y = 0;
-	dynamicWorld.playerMap[id].z = 0;
-	dynamicWorld.playerMap[id].health = 100;
-	dynamicWorld.playerMap[id].deathState = false;
-}
+
 
 void Server::processBuffer()
 {
@@ -256,16 +250,7 @@ void Server::processBuffer()
 				playerObject *player = &dynamicWorld.playerMap[knifePkt->playerId];
 				playerObject *target = &dynamicWorld.playerMap[knifePkt->targetId];
 
-				// Knife Damage Hit
-				if (!target->deathState && (target->health -= KNIFE_HIT_DMG) <= 0) {
-					// Set death state
-					target->deathState = true;
-					target->numDeaths++;
-					player->numKills++;
-
-					// TODO - Start 5 second death timer
-					respawnPlayer(target->id);
-				}
+				dynamicWorld.playerDamage(player, target, KNIFE_HIT_DMG);
 				break;
 			}
 

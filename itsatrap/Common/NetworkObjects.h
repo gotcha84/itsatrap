@@ -16,7 +16,6 @@ struct aabb {
 
 struct playerObject {
     int				id, health, numKills, numDeaths;
-	bool			deathState;
 	float			x, y, z;
 	struct aabb		aabb;
 	float			lookX, lookY, lookZ;
@@ -24,6 +23,7 @@ struct playerObject {
 	float			xRotated, yRotated;
 	float			xVel, yVel, zVel;
 	int				stunDuration, slowDuration;
+	int				timeUntilRespawn;
 	int				resources;
 };
 

@@ -81,6 +81,10 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 		return;
 	}
 
+	// You're dead, you shall not update yourself.
+	if (playerMap[p.id].timeUntilRespawn > 0)
+		return;
+
 	// Clients don't have full rights to update player objects. For example, client cannot update
 	// player's health.
 	p.health = playerMap[p.id].health;
@@ -143,7 +147,7 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 					float power = 0;
 					ConfigSettings::getConfig()->getValue("LightningTrapPower", power);
 
-					p.health -= power;
+					playerDamage(&playerMap[it->second.ownerId], &p, power);
 
 					break;
 				}
@@ -307,6 +311,14 @@ void DynamicWorld::addTrap(struct trapObject t)
 			playerMap[t.ownerId].resources -= 15;
 			break;
 
+		case TYPE_PUSH_TRAP:
+			playerMap[t.ownerId].resources -= 15;
+			break;
+
+		case TYPE_LIGHTNING_TRAP:
+			playerMap[t.ownerId].resources -= 75;
+			break;
+
 		default:
 			playerMap[t.ownerId].resources -= 10;
 			break;
@@ -349,5 +361,53 @@ void DynamicWorld::updatePlayerBuffs(int timeDiff)
 		
 		if (p.slowDuration > 0)
 			p.slowDuration -= timeDiff;
+
+		if (p.timeUntilRespawn > 0)
+		{
+			p.timeUntilRespawn -= timeDiff;
+			if (p.timeUntilRespawn < 0)
+				respawnPlayer(&p);
+		}
 	}
+}
+
+void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObject *target, int damage)
+{
+	playerLock[target->id] = true;
+	playerLock[attacker->id] = true;
+
+	if (target->timeUntilRespawn > 0)
+		return;
+
+	target->health -= damage;
+
+	if (target->health <= 0)
+	{
+		int respawnTime = 0;
+		ConfigSettings::getConfig()->getValue("RespawnTime", respawnTime);
+		target->timeUntilRespawn = respawnTime;
+
+		target->numDeaths++;
+		target->x = 0;
+		target->y = 0;
+		target->z = 0;
+		target->aabb.maxX = 0;
+		target->aabb.maxY = 0;
+		target->aabb.maxZ = 0;
+		target->aabb.minX = 0;
+		target->aabb.minY = 0;
+		target->aabb.minZ = 0;
+		attacker->numKills++;
+
+		int killBonusResource = 0;
+		ConfigSettings::getConfig()->getValue("KillBonusResource", killBonusResource);
+		attacker->resources += killBonusResource;
+	}
+}
+
+void DynamicWorld::respawnPlayer(struct playerObject *p) {
+	p->x = 75;
+	p->y = 0;
+	p->z = 0;
+	p->health = 100;
 }

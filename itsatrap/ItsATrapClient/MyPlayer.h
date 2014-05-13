@@ -25,7 +25,7 @@ using namespace std;
 
 class MyPlayer {
 	public:
-		int m_numKills, m_numDeaths, m_health, m_stunDuration, m_slowDuration, m_resources;
+		int m_numKills, m_numDeaths, m_health, m_stunDuration, m_slowDuration, m_resources, m_timeUntilRespawn;
 		bool m_deathState;
 
 		Camera *m_cam;
