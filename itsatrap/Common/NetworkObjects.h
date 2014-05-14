@@ -19,6 +19,7 @@ struct playerObject {
 	float			x, y, z;
 	struct aabb		aabb;
 	float			lookX, lookY, lookZ;
+	float			centerX, centerY, centerZ;
 	float			upX, upY, upZ;
 	float			xRotated, yRotated;
 	float			xVel, yVel, zVel;

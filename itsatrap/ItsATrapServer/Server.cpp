@@ -250,7 +250,20 @@ void Server::processBuffer()
 				playerObject *player = &dynamicWorld.playerMap[knifePkt->playerId];
 				playerObject *target = &dynamicWorld.playerMap[knifePkt->targetId];
 
-				dynamicWorld.playerDamage(player, target, KNIFE_HIT_DMG);
+				float knifeRange = 0.0f;
+				ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
+
+				glm::vec3 lookAt = glm::vec3(player->lookX, player->lookY, player->lookZ);
+				glm::vec3 center = glm::vec3(player->centerX, player->centerY, player->centerZ);
+				glm::vec3 difVec = lookAt - center;
+				glm::vec3 hitPt = center + (knifeRange * difVec);
+
+				if (hitPt.x >= target->aabb.minX && hitPt.x <= target->aabb.maxX
+					&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
+					&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
+				{
+					dynamicWorld.playerDamage(player, target, KNIFE_HIT_DMG);
+				}
 				break;
 			}
 

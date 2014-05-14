@@ -375,12 +375,12 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 					{
 						if (i != client->root->getPlayerID())
 						{
-							bool hit = client->root->knifeHitWith(client->players[i]);
+							//bool hit = client->root->knifeHitWith(client->players[i]);
 
-							if (hit)
-							{
+							//if (hit)
+							//{
 								Client::sendKnifeHitEvent(i);
-							}
+							//}
 						}
 					}
 					break;

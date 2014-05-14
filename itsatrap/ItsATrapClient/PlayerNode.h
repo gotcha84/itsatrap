@@ -61,7 +61,7 @@ namespace sg {
 			void print();
 
 			bool collidesWith(sg::Player *other);
-			bool knifeHitWith(sg::Player *other);
+			//bool knifeHitWith(sg::Player *other);
 
 			struct playerObject getPlayerObjectForNetworking();
 

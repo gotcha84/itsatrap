@@ -774,13 +774,13 @@ bool MyPlayer::collidesWith(MyPlayer *other) {
 	return this->getAABB()->collidesWith(*other->getAABB());
 }
 
-bool MyPlayer::knifeHitWith(MyPlayer *other)
-{
-	glm::vec3 difVec = this->getCamera()->getCameraLookAt() - this->getCamera()->getCameraCenter();
-	glm::vec3 target = this->getCamera()->getCameraCenter() + (KNIFE_RANGE * difVec);
-
-	return other->getAABB()->inside(target);
-}
+//bool MyPlayer::knifeHitWith(MyPlayer *other)
+//{
+//	glm::vec3 difVec = this->getCamera()->getCameraLookAt() - this->getCamera()->getCameraCenter();
+//	glm::vec3 target = this->getCamera()->getCameraCenter() + (KNIFE_RANGE * difVec);
+//
+//	return other->getAABB()->inside(target);
+//}
 
 int MyPlayer::getHealth() {
 	return m_health;

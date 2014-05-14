@@ -217,9 +217,9 @@ namespace sg {
 		return this->getPlayer()->collidesWith(other->getPlayer());
 	}
 
-	bool Player::knifeHitWith(sg::Player *other) {
-		return this->getPlayer()->knifeHitWith(other->getPlayer());
-	}
+	//bool Player::knifeHitWith(sg::Player *other) {
+	//	return this->getPlayer()->knifeHitWith(other->getPlayer());
+	//}
 
 	struct playerObject Player::getPlayerObjectForNetworking()
 	{
@@ -239,6 +239,9 @@ namespace sg {
 		p.lookX = this->getCamera()->getCameraLookAt().x;
 		p.lookY = this->getCamera()->getCameraLookAt().y;
 		p.lookZ = this->getCamera()->getCameraLookAt().z;
+		p.centerX = this->getCamera()->getCameraCenter().x;
+		p.centerY = this->getCamera()->getCameraCenter().y;
+		p.centerZ = this->getCamera()->getCameraCenter().z;
 		p.upX = this->getCamera()->getCameraUp().x;
 		p.upY = this->getCamera()->getCameraUp().y;
 		p.upZ = this->getCamera()->getCameraUp().z;

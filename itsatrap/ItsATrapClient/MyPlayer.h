@@ -101,7 +101,7 @@ class MyPlayer {
 
 		void updateBoundingBox();
 		bool collidesWith(MyPlayer *other);
-		bool knifeHitWith(MyPlayer *other);
+		//bool knifeHitWith(MyPlayer *other);
 
 		int getHealth();
 		void setHealth(int health);
