@@ -16,6 +16,7 @@ class ClientInstance {
 		unordered_map<int,sg::Trap*> traps;
 		unordered_map<int, sg::Node*> objects;
 		sg::Player *root;
+		sg::MatrixTransform *hotSpot;
 
 		int m_xMouse, m_yMouse; // mouse position
 

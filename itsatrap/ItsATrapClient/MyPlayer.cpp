@@ -353,7 +353,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 					4 +,-*/
 					if (angle < 90.0f) {
 						if (newDirection == 0 || newDirection == 5) {
-							m_cam->m_xRotated+=(2.0f*angle);
+							m_cam->m_xRotated-=(2.0f*angle);
 						}
 						if (newDirection == 1 || newDirection == 4) {
 							m_cam->m_xRotated-=(2.0f*(180.0f-angle));
@@ -361,7 +361,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 					}
 					if (angle > 90.0f) {
 						if (newDirection == 0 || newDirection == 5) {
-							m_cam->m_xRotated-=(2.0f*(180.0f-angle));
+							m_cam->m_xRotated+=(2.0f*(180.0f-angle));
 						}
 						if (newDirection == 1 || newDirection == 4) {
 							m_cam->m_xRotated+=(2.0f*angle);
@@ -445,6 +445,7 @@ void MyPlayer::applyClimbing() {
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;*/
 		}
 	}
+	m_cam->updateCameraMatrix();
 }
 
 void MyPlayer::applyPullingUp() {
@@ -536,6 +537,7 @@ void MyPlayer::applyPullingUp() {
 		m_physics->m_velocityDiff = glm::vec3(0.0f, m_wallJumpFactor, 0.0f);
 		m_physics->m_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	}
+	m_cam->updateCameraMatrix();
 
 }
 

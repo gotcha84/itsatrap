@@ -59,6 +59,9 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
 {	
+
+	float oldXRotated = client->root->getCamera()->getXRotated();
+	float oldYRotated = client->root->getCamera()->getYRotated();
 	PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState; 
 	//cout << "position: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
 	processKeys();
@@ -68,12 +71,16 @@ void Window::displayCallback(void)
 	if (client->root->m_xAngleChange != 0.0f) {
 		client->root->handleXRotation(client->root->m_xAngleChange);
 		client->root->m_xAngleChange = 0.0f;
-		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	}
 	
 	if (client->root->m_yAngleChange != 0.0f) {
 		client->root->handleYRotation(client->root->m_yAngleChange);
 		client->root->m_yAngleChange = 0.0f;
+		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+	}
+
+	if (oldXRotated != client->root->getCamera()->getXRotated() || oldYRotated != client->root->getCamera()->getYRotated()) {
 		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	}
 	
@@ -210,6 +217,10 @@ void Window::keyDown(unsigned char key, int x, int y)
 		Client::sendSpawnTrapEvent(t);
 		delete trap;
 	}
+	else if (key == 'r') {
+		ConfigSettings::getConfig()->reloadSettingsFile();
+		Client::sendReloadConfigFile();
+	}
 }
 
 void Window::keyUp(unsigned char key, int x, int y) {
@@ -287,11 +298,6 @@ void Window::processKeys() {
 		delete trap;
 	}
 	*/
-
-	// reload config file
-	if (keyState['r']) {
-		ConfigSettings::getConfig()->reloadSettingsFile();
-	}
 
 	//case 9: // TAB
 		//client->toggleCurrentPlayer();

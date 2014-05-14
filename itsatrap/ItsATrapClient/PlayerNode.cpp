@@ -137,7 +137,7 @@ namespace sg {
 		this->drawAsCurrentPlayer(mv);
 
 		// draw player hud
-		m_hud->draw(this->getHealth());
+		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources);
 	}
 
 	void Player::drawAsCurrentPlayer(glm::mat4 mv) {

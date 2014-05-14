@@ -24,6 +24,7 @@ struct playerObject {
 	float			xRotated, yRotated;
 	float			xVel, yVel, zVel;
 	int				stunDuration, slowDuration;
+	int				resources;
 };
 
 struct trapObject {

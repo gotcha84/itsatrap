@@ -13,6 +13,7 @@
 #include "DynamicWorld.h"
 #include "NetworkObjects.h"
 #include "enrico.h"
+#include "ClientInstance.h"
 
 /*
  * class Client
@@ -36,6 +37,7 @@ private:
 	static int receiveMsg(char *);
 	static int sendMsg(char *, int);
 	static DWORD WINAPI receiverThread(LPVOID);
+	static void updateHotSpot(int x, int y, int z);
 
 public:
 
@@ -47,6 +49,7 @@ public:
 	static void sendPlayerUpdate(struct playerObject);
 	static void sendSpawnTrapEvent(struct trapObject);
 	static void sendKnifeHitEvent(int targetId);
+	static void sendReloadConfigFile();
 };
 
 

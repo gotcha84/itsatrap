@@ -9,6 +9,7 @@
 DynamicWorld::DynamicWorld()
 {
 	currentId = 100;
+	memset(playerLock, 0, sizeof(playerLock));
 }
 
 /*
@@ -18,6 +19,8 @@ DynamicWorld::DynamicWorld()
  */
 DynamicWorld::DynamicWorld(struct packet *packet)
 {
+	memset(playerLock, 0, sizeof(playerLock));
+
 	if (packet->eventId != WORLD_UPDATE_EVENT)
 	{
 		printf("[COMMON]: ERROR: Invalid packet!\n");
@@ -34,7 +37,7 @@ DynamicWorld::DynamicWorld(struct packet *packet)
 	{
 		void *ptr = (struct playerObject *)movingPtr;
 		movingPtr += sizeof(struct playerObject);
-		struct playerObject tmp;
+		struct playerObject tmp = {};
 		memcpy(&tmp, ptr, sizeof(struct playerObject));
 		playerMap[tmp.id] = tmp;
 	}
@@ -69,6 +72,9 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 
 void DynamicWorld::updatePlayer(struct playerObject p)
 {
+	if (playerLock[p.id] == true)
+		return;
+
 	if (playerMap.find(p.id) == playerMap.end())
 	{
 		addNewPlayer(p);
@@ -82,15 +88,17 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	p.slowDuration = playerMap[p.id].slowDuration;
 	p.numKills = playerMap[p.id].numKills;
 	p.numDeaths = playerMap[p.id].numDeaths;
+	p.resources = playerMap[p.id].resources;
 
 	if (checkCollisionWithAllNonTraps(p))
 		return;
 	
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); it++)
 	{
-		if (p.id != it->second.ownerId && checkCollision(p.aabb, it->second.aabb))
+		if (p.id != it->second.ownerId && checkCollision(p.aabb, it->second.aabb) && it->second.eventCode == 0)
 		{
 			printf("Collision: player %d with trap id %d\n", p.id, it->second.id);
+			playerLock[p.id] = true;
 			switch (it->second.type)
 			{
 				case TYPE_FREEZE_TRAP:
@@ -128,8 +136,14 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 					p.yVel = 0;
 					p.zVel = force.z;
 
-					cout << "ANGLE: " << it->second.rotationAngle << endl;
-					cout << "VELOCITY: " << force.x << ", " << force.y << ", " << force.z << endl;
+					break;
+				}
+				case TYPE_LIGHTNING_TRAP:
+				{
+					float power = 0;
+					ConfigSettings::getConfig()->getValue("LightningTrapPower", power);
+
+					p.health -= power;
 
 					break;
 				}
@@ -139,7 +153,7 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 
 			it->second.eventCode = EVENT_REMOVE_TRAP;
 
-			
+			break;
 		}
 	}
 
@@ -172,7 +186,7 @@ int DynamicWorld::serialize(char **ptr)
 	{
 		if (it->second.eventCode != 0)
 		{
-			printf("Sending something about trap %d\n", it->second.id);
+			printf("Sending event %d about trap %d\n", it->second.eventCode, it->second.id);
 			trapsToSend.push_back(it->second);
 
 			if (it->second.eventCode == EVENT_REMOVE_TRAP)
@@ -200,9 +214,9 @@ int DynamicWorld::serialize(char **ptr)
 	for(map<int,struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		memcpy(movingPtr, &it->second, sizeof(struct playerObject));
-		it->second.xVel = 0; // reset velocity
-		it->second.yVel = 0; // reset velocity
-		it->second.zVel = 0; // reset velocity
+		//it->second.xVel = 0; // reset velocity
+		//it->second.yVel = 0; // reset velocity
+		//it->second.zVel = 0; // reset velocity
 		movingPtr += sizeof(struct playerObject);
 	}
 	for (int i = 0; i < trapsToSend.size(); i++)
@@ -213,6 +227,14 @@ int DynamicWorld::serialize(char **ptr)
 	
 
 	*ptr = buf;
+
+	if (trapsToSend.size() > 0)
+		printf("trapstosend: %d\n", ((int *)buf)[2]);
+
+	if (totalSize > BUFSIZE)
+		printf("[COMMON]: ERROR!! SIZE exceeds BUFSIZE. SIZE: %d\n", totalSize); 
+
+	memset(playerLock, 0, sizeof(playerLock)); // unlock all players
 
 	return totalSize;
 }
@@ -269,6 +291,26 @@ void DynamicWorld::addTrap(struct trapObject t)
 	t.eventCode = EVENT_ADD_TRAP;
 	t.id = currentId;
 	trapMap[currentId] = t;
+	
+	playerLock[t.ownerId] = true;
+	switch (t.type)
+	{
+		case TYPE_FREEZE_TRAP:
+			playerMap[t.ownerId].resources -= 20;
+			break;
+
+		case TYPE_TRAMPOLINE_TRAP:
+			playerMap[t.ownerId].resources -= 30;
+			break;
+
+		case TYPE_SLOW_TRAP:
+			playerMap[t.ownerId].resources -= 15;
+			break;
+
+		default:
+			playerMap[t.ownerId].resources -= 10;
+			break;
+	}
 
 	currentId++;
 }

@@ -13,6 +13,15 @@ struct bufferEntry	Server::packetBuffer[PACKET_BUFFER_SIZE];
 int					Server::packetBufferCount;
 DynamicWorld		Server::dynamicWorld;
 Stopwatch			Server::stopwatch;
+int					Server::timeUntilResourceBonus;
+int					Server::timeUntilHotSpotChange;
+int					Server::resourcePerInterval;
+int					Server::resourceHotSpotBonusPerInterval;
+int					Server::resourceInterval;
+int					Server::hotSpotChangeInterval;
+vector<glm::vec3>	Server::hotSpotLocations;
+glm::vec3			Server::currentHotSpot;
+int					Server::currentHotSpotIndex;
 
 // Private Vars
 HANDLE		packetBufMutex;
@@ -66,6 +75,23 @@ int Server::initialize() {
 	CreateThread(NULL, 0, bufferProcessorThread, NULL, 0, &tmp);
 	packetBufMutex = CreateMutex(NULL, true, NULL);
 
+
+	// GAME MECHANICS
+	ConfigSettings::getConfig()->getValue("ResourcePerInterval", resourcePerInterval);
+	ConfigSettings::getConfig()->getValue("ResourceHotSpotBonusPerInterval", resourceHotSpotBonusPerInterval);
+	ConfigSettings::getConfig()->getValue("ResourceInterval", resourceInterval);
+	ConfigSettings::getConfig()->getValue("HotSpotChangeInterval", hotSpotChangeInterval);
+
+	timeUntilResourceBonus = resourcePerInterval;
+	timeUntilHotSpotChange = hotSpotChangeInterval;
+
+	hotSpotLocations.push_back(glm::vec3(75, 0, 0));
+	hotSpotLocations.push_back(glm::vec3(35, 0, 0));
+	hotSpotLocations.push_back(glm::vec3(105, 0, 0));
+
+	currentHotSpotIndex = 0;
+	currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+	
 	return 0;
 }
 
@@ -100,6 +126,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			printf("[SERVER]: Init Response sent. Given ID = %d\n", response.givenPlayerId);
 				
 			playerCount++;
+
+			sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
 		}
 		else
 		{
@@ -111,23 +139,37 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		struct staticObjectPacket *staticObjPkt = (struct staticObjectPacket *)p;
 		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
 		{
-			//printf("minX %f maxX %f\n", staticObjPkt->object.aabb.minX, staticObjPkt->object.aabb.maxX);
 			struct staticObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticObject(tmp);
 			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
 		}
 	}
+	else if (p->eventId == RELOAD_CONFIG_FILE)
+	{
+		ConfigSettings::getConfig()->reloadSettingsFile();
+		printf("[SERVER]: Config file reloaded.\n");
+
+		struct packet reloadPkt;
+		reloadPkt.eventId = RELOAD_CONFIG_FILE;
+
+		// Send reload config file to everyone
+		for (int i = 0; i < playerCount; i++)
+			Server::sendMsg((char *) &reloadPkt, sizeof(reloadPkt), &players[i].clientAddress);
+	}
 	else
 	{
-		// Lock Mutex: Writing into packet buffer 
-		WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
+		if (packetBufferCount < PACKET_BUFFER_SIZE)
+		{
+			// Lock Mutex: Writing into packet buffer 
+			WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
 
-		memcpy(packetBuffer[packetBufferCount].msg, msg, BUFSIZE);
-		packetBufferCount++;
+			memcpy(packetBuffer[packetBufferCount].msg, msg, BUFSIZE);
+			packetBufferCount++;
 
-		// Releaes Mutex 
-		ReleaseMutex(packetBufMutex);
+			// Releaes Mutex 
+			ReleaseMutex(packetBufMutex);
+		}
 	}
 }
 
@@ -143,16 +185,19 @@ DWORD WINAPI Server::bufferProcessorThread(LPVOID param)
 
 		processBuffer();
 
+
 		elapsed = MAX_SERVER_PROCESS_RATE - stopwatch.getElapsedMilliseconds();
 		if (elapsed >= 0)
 		{
 			Sleep(elapsed);
 		}
+		/*
 		else
 		{
 			// Note: Hopefully this case doesn't happen, means processing time is taking longer than rate
 			Sleep(MAX_SERVER_PROCESS_RATE);	
 		}
+		*/
 	}
 }
 
@@ -178,6 +223,7 @@ void Server::respawnPlayer(int id) {
 void Server::processBuffer()
 {
 	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
+	updateResources();
 
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
 	WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
@@ -200,7 +246,6 @@ void Server::processBuffer()
 			{
 				struct spawnTrapPacket *trapPkt = (struct spawnTrapPacket *)p;
 				dynamicWorld.addTrap(trapPkt->trap);
-								cout << trapPkt->trap.aabb.minX << " " << trapPkt->trap.aabb.maxX << endl;
 				break;
 			}
 			case KNIFE_HIT_EVENT:
@@ -232,7 +277,7 @@ void Server::processBuffer()
 
 	packetBufferCount = 0;
 
-	if (dynamicWorld.getAllPlayers().size() > 0) {
+	if (playerCount > 0) {
 		broadcastDynamicWorld();
 	}
 
@@ -263,4 +308,48 @@ int Server::sendMsg(char * msg, int len, struct sockaddr_in *destination) {
 
 	//printf("[SERVER]: Sent a packet of length %d\n", len);
 	return 0;
+}
+
+void Server::updateResources()
+{
+	timeUntilHotSpotChange -= MAX_SERVER_PROCESS_RATE;
+	timeUntilResourceBonus -= MAX_SERVER_PROCESS_RATE;
+	if (timeUntilResourceBonus < 0)
+	{
+		timeUntilResourceBonus = resourceInterval;
+
+		for(map<int,struct playerObject>::iterator it = dynamicWorld.playerMap.begin(); it != dynamicWorld.playerMap.end(); ++it)
+		{
+			it->second.resources += resourcePerInterval;
+
+			// Hot spot bonus
+			glm::vec3 pos = glm::vec3(it->second.x, it->second.y, it->second.z);
+			if (glm::distance(pos, currentHotSpot) < 10)
+				it->second.resources += resourceHotSpotBonusPerInterval;
+		}
+	}
+
+	if (timeUntilHotSpotChange < 0)
+	{
+		timeUntilHotSpotChange = hotSpotChangeInterval;
+		currentHotSpotIndex += 1; 
+		currentHotSpotIndex = currentHotSpotIndex % hotSpotLocations.size();
+
+		currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+		sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
+	}
+}
+
+void Server::sendHotSpotUpdate(int x, int y, int z)
+{
+	struct hotSpotPacket p;
+	p.eventId = HOT_SPOT_UPDATE;
+	p.x = x;
+	p.y = y;
+	p.z = z;
+	
+	// Send Message
+	for (int i = 0; i < playerCount; i++)
+		Server::sendMsg((char *) &p, sizeof(p), &players[i].clientAddress);
+
 }

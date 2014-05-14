@@ -1,17 +1,17 @@
-﻿Build started 5/12/2014 2:48:18 AM.
-     1>Project "C:\Users\alvin\Desktop\125\working\itsatrap\Common\Common.vcxproj" on node 2 (build target(s)).
+﻿Build started 5/13/2014 5:02:03 PM.
+     1>Project "C:\Users\alvin\Desktop\125\merging\itsatrap\Common\Common.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Common.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
          All outputs are up-to-date.
        Link:
          All outputs are up-to-date.
-         Common.vcxproj -> C:\Users\alvin\Desktop\125\working\itsatrap\Debug\Common.dll
+         Common.vcxproj -> C:\Users\alvin\Desktop\125\merging\itsatrap\Debug\Common.dll
        FinalizeBuildStatus:
          Deleting file "Debug\Common.unsuccessfulbuild".
          Touching "Debug\Common.lastbuildstate".
-     1>Done Building Project "C:\Users\alvin\Desktop\125\working\itsatrap\Common\Common.vcxproj" (build target(s)).
+     1>Done Building Project "C:\Users\alvin\Desktop\125\merging\itsatrap\Common\Common.vcxproj" (build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.10
+Time Elapsed 00:00:00.08
