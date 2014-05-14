@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <iostream>
 
+// sound
+#include "Sound.h"
+
 // graphics
 #include "ClientInstance.h"
 #include "Window.h"
@@ -18,6 +21,8 @@
 
 ClientInstance *client;
 Window *window;
+Sound *sound;
+Sound *otherPlayerSound;
 
 int main(int argc, char *argv[]) {
 
@@ -143,7 +148,19 @@ int main(int argc, char *argv[]) {
 	client->printPlayers();
 	// client->printSceneGraph();
 
+	// setup background music and other player's footstep
+	otherPlayerSound = new Sound("footstep.wav");
+	sound = new Sound();
+	otherPlayerSound->playMusic(false,false,true);
+	sound->playMusic();
+	otherPlayerSound->setCenterPosition();
+	// hardcode the distance value for now, it will be the input from the server
+	otherPlayerSound->changePosition(-1.0f);
+
 	glutMainLoop();
+
+	delete sound;
+	sound = nullptr;
 
 	delete client;
 	client = nullptr;

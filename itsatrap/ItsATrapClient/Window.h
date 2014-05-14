@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <iostream>
 
+#include "Sound.h"
+
 #include "MyPlayer.h"
 #include "SceneGraph.h"
 
@@ -22,6 +24,7 @@ class Window {
 		static bool *keyState;
 		static bool *specialKeyState;
 		static int modifierKey;
+		//Sound *sound;
 
 		Window();
 		~Window();
