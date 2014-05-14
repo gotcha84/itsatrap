@@ -46,9 +46,12 @@ void MyPlayer::initCommon() {
 	m_zSlowWalkFactor = 0.5f;
 	m_wallJumpFactor = 0.5f;
 	m_wallJumpTime = 1.0f;
+	m_holdingEdgeTime = 3.0f;
 	m_teleportFactor = 100.0f;
 	m_slideFactor = 2.0f;
 	m_bounceFactor = 1.0f;
+
+	m_miniJumpYVelocityThreshold = -1.0f;
 
 	m_numDeaths = 0;
 	m_numKills = 0;
@@ -303,9 +306,9 @@ void MyPlayer::handleMovement(unsigned char key) {
 		// TODO: check guy is facing wall too
 		if (m_physics->m_currentState == PhysicsStates::Jumping && !(m_physics->atRest())) {
 			float angle = m_physics->handleAngleIntersection(oldPos, proposedNewPos, this->getAABB(), canMove);
-			if (abs(90.0f-angle) < 22.5f && m_physics->m_velocity.y >= -0.5f) {
+			if (abs(90.0f-angle) < 22.5f && m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold) {
 				newPos = oldPos;
-				cout << "starting the climb " << endl;
+				cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << canMove << endl;
 				//m_cam->m_cameraLookAtWallJump = m_cam->m_cameraCenter - m_cam->m_camZ;
 				
 				m_cam->m_camZWallJump = m_cam->m_camZ;
@@ -336,7 +339,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 			else {
 				if (oldOnTopOfBuildingId != canMove) {
 				//if (m_onTopOfBuildingId != -1) {
-					cout << "mini wall jump" << endl;
+					cout << "starting the minijump with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << canMove << endl;
 					// 0,1 = x, -1 = y, 4,5 = z
 
 				
@@ -444,13 +447,113 @@ void MyPlayer::applyClimbing() {
 		}
 
 		if (m_physics->handleNearTop(m_physics->m_position, m_wallJumpingBuildingId)) {
-			m_physics->m_currentState = PhysicsStates::PullingUp;
+			cout << "started holding edge" << endl; 
+			m_physics->m_stateStart = clock();
+			m_physics->m_currentState = PhysicsStates::HoldingEdge;
 			/*m_cam->m_camX = -1.0f*m_cam->m_camXWallJump;
 			m_cam->m_camZ = -1.0f*m_cam->m_camZWallJump;
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;*/
 		}
 	}
 	m_cam->updateCameraMatrix();
+}
+
+void MyPlayer::handleHoldingEdge(unsigned char key) {
+	glm::vec3 proposedNewPos;
+	
+	glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
+	float xWalkFactor;
+	float zWalkFactor;
+
+	float speedMultiplier = 1.0;
+	if (m_slowDuration > 0)
+	{
+		float slowFactor = 0;
+		ConfigSettings::getConfig()->getValue("SlowFactor", slowFactor);
+		speedMultiplier = slowFactor;
+	}
+
+	if (m_physics->m_currentState == PhysicsStates::Jumping || m_physics->m_currentState == PhysicsStates::Falling || m_physics->m_currentState == PhysicsStates::Climbing) {
+		xWalkFactor = m_xSlowWalkFactor * speedMultiplier;
+		zWalkFactor = m_zSlowWalkFactor * speedMultiplier;
+	}
+	else {
+		xWalkFactor = m_xWalkFactor * speedMultiplier;
+		zWalkFactor = m_zWalkFactor * speedMultiplier;
+	}
+	glm::vec3 toAdd;
+	switch (key) {
+		case 'w':
+			cout << "started pulling up" << endl;
+			m_physics->m_currentState = PhysicsStates::PullingUp;
+			return;
+			break;
+
+		case 's':
+			cout << "decided to fall back down" << endl;
+			m_physics->m_currentState = PhysicsStates::Falling;
+			m_cam->m_camX = m_cam->m_camXWallJump;
+			m_cam->m_camZ = m_cam->m_camZWallJump;
+			m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
+			//m_physics->m_velocityDiff = m_physics->m_velocityDiffWallJump;
+			m_wallJumpingBuildingId = -1;
+			break;
+
+		case 'a':
+			proposedNewPos = m_physics->m_position + -1.0f*xWalkFactor*m_cam->m_camX;
+			toAdd = -1.0f*xWalkFactor*m_cam->m_camX;
+			break;		
+
+		case 'd':
+			proposedNewPos = m_physics->m_position + xWalkFactor*m_cam->m_camX;
+			toAdd = xWalkFactor*m_cam->m_camX;
+			break;
+
+		case ' ':
+			/*cout << "started pulling up" << endl;
+			m_physics->m_currentState = PhysicsStates::PullingUp;*/
+			return;
+			break;
+
+	}
+	// TODO: use server clock?
+	//clock_t end;
+	
+	glm::vec3 oldPos = m_physics->m_position;
+	glm::vec3 newPos;
+
+	m_physics->m_position = proposedNewPos;
+	this->updateBoundingBox();
+	int canMove = m_physics->handleCollisionDetection(this->getAABB());
+	m_physics->m_position = oldPos;
+
+	if (canMove != -1) {
+		int oldOnTopOfBuildingId = m_onTopOfBuildingId;
+		m_onTopOfBuildingId = -1;
+
+		toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
+		m_physics->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+		m_physics->m_velocity = glm::vec3(0.0f, m_physics->m_velocity.y, 0.0f);
+	}
+	else {
+		newPos = proposedNewPos;
+	}
+	m_physics->m_velocityDiff+=toAdd;
+
+}
+
+void MyPlayer::applyHoldingEdge() {
+	clock_t end = clock();
+	if (((float)(end - m_physics->m_stateStart) / CLOCKS_PER_SEC) > m_holdingEdgeTime) {
+		cout << "END HOLD " << endl;
+		m_physics->m_currentState = PhysicsStates::Falling;
+		m_cam->m_camX = m_cam->m_camXWallJump;
+		m_cam->m_camZ = m_cam->m_camZWallJump;
+		m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
+		//m_physics->m_velocityDiff = m_physics->m_velocityDiffWallJump;
+		m_wallJumpingBuildingId = -1;
+	}
+
 }
 
 void MyPlayer::applyPullingUp() {
@@ -467,7 +570,6 @@ void MyPlayer::applyPullingUp() {
 		m_physics->m_currentState = PhysicsStates::None;
 		m_onTopOfBuildingId = m_wallJumpingBuildingId;
 		m_wallJumpingBuildingId = -1;
-
 
 	}
 	else {
@@ -518,7 +620,7 @@ void MyPlayer::applyPullingUp() {
 
 			tmp_camZ = glm::rotate(tmp_camZ, -1.0f*m_physics->m_wallJumpLookXIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
 			m_cam->m_camX = glm::rotate(m_cam->m_camX, -1.0f*m_physics->m_wallJumpLookXIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
-
+				
 			m_cam->m_camZ = glm::vec3(tmp_camZ.x, m_cam->m_camZ.y, tmp_camZ.z);
 			m_cam->m_xRotated+= -1.0f*m_physics->m_wallJumpLookXIncrement;
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;

@@ -56,7 +56,7 @@ void Physics::initCommon() {
 // TODO: check for collision detection, not just with heightmap
 int Physics::applyGravity(AABB* player) {
 	int buildingId = -2;
-	if (m_currentState != Climbing && m_currentState != PullingUp) {
+	if (m_currentState != PhysicsStates::Climbing && m_currentState != PhysicsStates::PullingUp && m_currentState != PhysicsStates::HoldingEdge) {
 	
 		int xIndex = Utilities::roundToInt(m_position.x+m_velocity.x);
 		int zIndex = Utilities::roundToInt(m_position.z+m_velocity.z);
@@ -92,7 +92,7 @@ int Physics::applyGravity(AABB* player) {
 					tmp = b->onTopOf(player);
 				}
 				if (tmp) {
-					cout << "landed on : " << i << endl;
+					//cout << "landed on : " << i << endl;
 					if (i == 40) {
 						return -1;
 					}

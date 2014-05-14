@@ -65,7 +65,7 @@ void Window::displayCallback(void)
 	PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState;
 	bool sendUpdate = false;
 
-	cout << "curr_state: " << curr_state << endl;
+	//cout << "curr_state: " << curr_state << endl;
 
 	//cout << "position: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
 	processKeys();
@@ -105,6 +105,10 @@ void Window::displayCallback(void)
 
 	if (curr_state == PhysicsStates::PullingUp) {
 		client->root->getPlayer()->applyPullingUp();
+	}
+
+	if (curr_state == PhysicsStates::HoldingEdge) {
+		client->root->getPlayer()->applyHoldingEdge();
 	}
 
 	int buildingId = client->root->getPlayer()->getPhysics()->applyGravity(client->root->getPlayer()->getAABB());
@@ -261,6 +265,7 @@ void Window::specialKeyUp(int key, int x, int y) {
 
 void Window::processKeys() {
 	int count = 0;
+	PhysicsStates curr_state = client->root->m_player->getPhysics()->m_currentState;
 	if (client->root->m_player->m_stunDuration > 0)
 	{
 		printf("[CLIENT]: Sorry, you are STUNNED! Remaining: %d\n", client->root->m_player->m_stunDuration);
@@ -288,19 +293,39 @@ void Window::processKeys() {
 			client->root->getPlayer()->handleSliding();
 		}
 		else {
-			client->root->getPlayer()->handleMovement('w');
+			if (curr_state != PhysicsStates::HoldingEdge) {
+				client->root->getPlayer()->handleMovement('w');
+			}
+			else {
+				client->root->getPlayer()->handleHoldingEdge('w');
+			}
 		}
 	}
 	else if (keyState['s']) {
-		client->root->getPlayer()->handleMovement('s');
+		if (curr_state != PhysicsStates::HoldingEdge) {
+			client->root->getPlayer()->handleMovement('s');
+		}
+		else {
+			client->root->getPlayer()->handleHoldingEdge('s');
+		}
 	}
 
 	// left + right
 	if (keyState['a']) {
-		client->root->getPlayer()->handleMovement('a');
+		if (curr_state != PhysicsStates::HoldingEdge) {
+			client->root->getPlayer()->handleMovement('a');
+		}
+		else {
+			client->root->getPlayer()->handleHoldingEdge('a');
+		}
 	}
 	else if (keyState['d']) {
-		client->root->getPlayer()->handleMovement('d');
+		if (curr_state != PhysicsStates::HoldingEdge) {
+			client->root->getPlayer()->handleMovement('d');
+		}
+		else {
+			client->root->getPlayer()->handleHoldingEdge('d');
+		}
 	}
 
 	if (keyState['u']) {
@@ -309,7 +334,12 @@ void Window::processKeys() {
 
 	// jump
 	if (keyState[' ']) {
-		client->root->getPlayer()->handleJump();
+		if (curr_state != PhysicsStates::HoldingEdge) {
+			client->root->getPlayer()->handleJump();
+		}
+		else {
+			client->root->getPlayer()->handleHoldingEdge(' ');
+		}
 	}
 
 	// trap

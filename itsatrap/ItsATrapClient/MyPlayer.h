@@ -45,9 +45,12 @@ class MyPlayer {
 		float m_zSlowWalkFactor;
 		float m_wallJumpFactor;
 		float m_wallJumpTime;
+		float m_holdingEdgeTime;
 		float m_teleportFactor;
 		float m_slideFactor;
 		float m_bounceFactor;
+
+		float m_miniJumpYVelocityThreshold;
 
 		int m_wallJumpingBuildingId;
 		int m_onTopOfBuildingId;
@@ -80,7 +83,8 @@ class MyPlayer {
 		void handleJump();
 		void applyClimbing();
 		void applyPullingUp();
-		
+		void handleHoldingEdge(unsigned char key);
+		void applyHoldingEdge();
 		void Unstuck();
 		
 		void updateModelViewMatrix();

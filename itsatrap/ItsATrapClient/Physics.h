@@ -29,7 +29,8 @@ enum PhysicsStates {
 	Climbing = 5,
 	Sliding = 6,
 	WallJumping = 7,
-	PullingUp = 8
+	PullingUp = 8,
+	HoldingEdge = 9
 };
 
 class Physics {
