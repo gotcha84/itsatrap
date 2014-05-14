@@ -54,9 +54,12 @@ void MyPlayer::initCommon() {
 	m_numKills = 0;
 	m_health = 100;
 	m_deathState = false;
+	m_timeUntilRespawn = 0;
+	m_resources = 0;
 
 	m_wallJumpingBuildingId = -1;
 	m_onTopOfBuildingId = -1;
+
 }
 
 void MyPlayer::setAABB(AABB *bbox) {

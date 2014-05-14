@@ -186,6 +186,9 @@ void Client::sendKnifeHitEvent(int targetId)
 
 void Client::updateHotSpot(int x, int y, int z)
 {
+	if (client == nullptr)
+		return;
+
 	if (client->hotSpot != nullptr)
 	{
 		client->root->removeChild(client->hotSpot);

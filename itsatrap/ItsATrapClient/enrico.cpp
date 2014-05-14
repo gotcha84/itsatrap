@@ -39,6 +39,7 @@ void handlePlayerUpdate(struct playerObject p)
 		// BUFFS
 		client->players[p.id]->m_player->m_stunDuration = p.stunDuration;
 		client->players[p.id]->m_player->m_slowDuration = p.slowDuration;
+		client->players[p.id]->m_player->m_timeUntilRespawn = p.timeUntilRespawn;
 
 		// RESOURCES
 		client->players[p.id]->m_player->m_resources = p.resources;

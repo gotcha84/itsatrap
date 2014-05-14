@@ -246,6 +246,7 @@ namespace sg {
 		p.yRotated = this->getCamera()->getYRotated();
 		p.stunDuration = m_player->m_stunDuration;
 		p.slowDuration = m_player->m_slowDuration;
+		p.timeUntilRespawn = m_player->m_timeUntilRespawn;
 		return p;
 	}
 
