@@ -275,9 +275,12 @@ int DynamicWorld::getNumPlayers()
 
 bool DynamicWorld::checkCollision(struct aabb a, struct aabb b)
 {
+	
 	return (a.maxX >= b.minX && a.minX <= b.maxX
 		&& a.maxY >= b.minY && a.minY <= b.maxY
 		&& a.maxZ >= b.minZ && a.minZ <= b.maxZ);
+
+	return false;
 }
 
 void DynamicWorld::addStaticObject(struct staticObject obj)
@@ -341,7 +344,7 @@ bool DynamicWorld::checkCollisionWithAllNonTraps(struct playerObject e)
 	for (int i = 0; i < staticObjects.size(); i++)
 	{
 		// Something wrong with building#40
-		if (i != 40 && checkCollision(e.aabb, staticObjects[i].aabb))
+		if (i != 40 && !(e.onTopOfBuildingId == i) && checkCollision(e.aabb, staticObjects[i].aabb))
 		{
 			printf("Collision: player %d with static object %d\n", e.id, i);
 			return true;

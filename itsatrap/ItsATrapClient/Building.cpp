@@ -215,6 +215,10 @@ namespace sg {
 		return (m_boundingBox.reflectionIntersection(from, goTo));
 	}
 
+	bool Building::onTopOf(AABB* other) {
+		return (m_boundingBox.onTopOf(other));
+	}
+
 	int Building::collidesWith(AABB* other) {
 		if (m_id == 40 || !m_boundingBox.collidesWithPointer(other)) {
 			return -1;

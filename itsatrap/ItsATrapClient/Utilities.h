@@ -36,6 +36,7 @@ class Utilities {
 		static vector<float> findMinsMaxsHelper(vector<float> vec);
 		static glm::vec3 findAverage(string inputfile);
 		static glm::mat4 rotateY(float theta);
+		static float degreesToRad(float deg);
 		//static int getMaxDepth(sg::Node *node);
 };
 

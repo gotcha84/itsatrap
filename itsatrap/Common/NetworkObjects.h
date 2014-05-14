@@ -25,6 +25,7 @@ struct playerObject {
 	int				stunDuration, slowDuration;
 	int				timeUntilRespawn;
 	int				resources;
+	int				onTopOfBuildingId;
 };
 
 struct trapObject {

@@ -86,9 +86,11 @@ void Camera::handleXRotation(float magnitude) {
 void Camera::handleYRotation(float magnitude) {
 	// TODO modify upvector too for confuse ray
 	if (!(m_yRotated > 80.0f && magnitude > 0) && !(m_yRotated < -80.0f && magnitude < 0)) {
-		m_camZ.y+=magnitude*m_yRotationAngle; // both this and the two lines below seem okay
-		//m_camZ = glm::rotate(m_camZ, magnitude*m_yRotationAngle, m_camX);
-		m_yRotated+=magnitude*m_yRotationAngle;
+		
+		//m_camZ.y+=magnitude*m_yRotationAngle; // both this and the two lines below seem okay
+		m_camZ = glm::rotate(m_camZ, glm::degrees(magnitude*m_yRotationAngle), m_camX);
+		m_yRotated+=glm::degrees(magnitude*m_yRotationAngle);
+		//cout << "ROTATING CAM: " << m_yRotated << ", " << glm::radians(80.0f) << endl;
 	}
 	//cout << "mcamX: " << glm::to_string(m_camX) << endl;
 	//cout << "before: " << glm::to_string(m_cameraLookAt) << endl;

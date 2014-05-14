@@ -40,6 +40,7 @@ void Physics::initCommon() {
 	m_slideDelay = 0.5f;
 
 	m_wallJumpLookUp = 70.0f;
+	//cout << "MwalljumP: " << glm::to_string(m_wallJumpLookUp) << endl;
 	m_wallJumpLookDown = -20.0f;
 	m_wallJumpLookUpIncrement = 10.0f;
 	m_wallJumpLookDownIncrement = -2.0f;
@@ -53,8 +54,8 @@ void Physics::initCommon() {
 }
 
 // TODO: check for collision detection, not just with heightmap
-bool Physics::applyGravity() {
-
+int Physics::applyGravity(AABB* player) {
+	int buildingId = -2;
 	if (m_currentState != Climbing && m_currentState != PullingUp) {
 	
 		int xIndex = Utilities::roundToInt(m_position.x+m_velocity.x);
@@ -65,7 +66,7 @@ bool Physics::applyGravity() {
 		///cout << "vs: " << m_position.y - m_gravityConstant << endl;*/
 		
 		m_velocity += m_gravity;
-
+		
 		// if landed on ground
 		if (World::m_heightMap[xIndex+World::m_heightMapXShift][zIndex+World::m_heightMapZShift] > m_position.y + m_velocity.y) {
 			m_position.y = World::m_heightMap[xIndex+World::m_heightMapXShift][zIndex+World::m_heightMapZShift];
@@ -75,13 +76,38 @@ bool Physics::applyGravity() {
 			if (m_currentState != PhysicsStates::Sliding) {
 				m_currentState = PhysicsStates::None;
 			}
-			if (m_position.y < 1.0f) {
-				return true;
+			sg::City* city;
+	
+			for (int i=0; i < client->root->getNumChildren(); i++) {
+				city = dynamic_cast<sg::City*>(client->root->m_child[i]);
+				if (city != nullptr) {
+					break;
+				}
+			}
+
+			bool tmp = false;
+			for (int i = 0; i < city->getNumChildren(); i++) {
+				sg::Building *b = dynamic_cast<sg::Building*>(city->m_child[i]);
+				if (b != nullptr) {
+					tmp = b->onTopOf(player);
+				}
+				if (tmp) {
+					cout << "landed on : " << i << endl;
+					if (i == 40) {
+						return -1;
+					}
+					//cout << "i: " << i << ", COLLISION DETECTED" << endl;
+					//cout << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minX << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minY << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_minZ << endl;
+					//cout << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxX << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxY << ", " << ((sg::Building*)city->m_child[i])->m_boundingBox.m_maxZ << endl;
+					//cout << "goTo: " << glm::to_string(goTo) << endl << endl;
+					
+					return i;
+				}	
 			}
 		
 		}
 	}
-	return false;
+	return buildingId;
 }
 
 bool Physics::atRest() {

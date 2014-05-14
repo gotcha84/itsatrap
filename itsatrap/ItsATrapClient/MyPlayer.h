@@ -80,8 +80,10 @@ class MyPlayer {
 		void handleJump();
 		void applyClimbing();
 		void applyPullingUp();
-		void updateModelViewMatrix();
 		
+		void Unstuck();
+		
+		void updateModelViewMatrix();
 		void setTransMatrix(glm::mat4 m);
 		void setModelMatrix(glm::mat4 m);
 		void setProjectionMatrix();

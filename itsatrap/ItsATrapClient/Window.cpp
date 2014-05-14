@@ -59,15 +59,20 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
 {	
-
+	float oldBuildingId = client->root->getPlayer()->m_onTopOfBuildingId;
 	float oldXRotated = client->root->getCamera()->getXRotated();
 	float oldYRotated = client->root->getCamera()->getYRotated();
-	PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState; 
+	PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState;
+	bool sendUpdate = false;
+
+	cout << "curr_state: " << curr_state << endl;
+
 	//cout << "position: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
 	processKeys();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	
+	// TODO: lock movement if looking up?
 	if (client->root->m_xAngleChange != 0.0f) {
 		client->root->handleXRotation(client->root->m_xAngleChange);
 		client->root->m_xAngleChange = 0.0f;
@@ -81,8 +86,13 @@ void Window::displayCallback(void)
 	}
 
 	if (oldXRotated != client->root->getCamera()->getXRotated() || oldYRotated != client->root->getCamera()->getYRotated()) {
-		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+		sendUpdate = true;
+		/*if (oldYRotated != client->root->getCamera()->getYRotated()) {
+			cout << "yrotated: " << client->root->getCamera()->getYRotated() << endl;
+		}*/
 	}
+
+	
 	
 	glm::vec3 oldPos = client->root->getPlayer()->getPosition();
 	if (curr_state == PhysicsStates::Sliding) {
@@ -97,12 +107,18 @@ void Window::displayCallback(void)
 		client->root->getPlayer()->applyPullingUp();
 	}
 
-	bool onGround = client->root->getPlayer()->getPhysics()->applyGravity();
+	int buildingId = client->root->getPlayer()->getPhysics()->applyGravity(client->root->getPlayer()->getAABB());
 
-	if (onGround) {
-		client->root->getPlayer()->m_onTopOfBuildingId = -1;
+	if (buildingId != -2) {
+		sendUpdate = true;
+		client->root->getPlayer()->m_onTopOfBuildingId = buildingId;
 	}
 
+	if (oldBuildingId != client->root->getPlayer()->m_onTopOfBuildingId) {
+		cout << "old building id: " << oldBuildingId << endl;
+		cout << "new building id:" << client->root->getPlayer()->m_onTopOfBuildingId << endl;
+	}
+	
 	client->root->getPlayer()->getPhysics()->m_velocity += client->root->getPlayer()->getPhysics()->m_velocityDiff;
 
 	
@@ -134,6 +150,10 @@ void Window::displayCallback(void)
 		client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
 		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position/* + client->root->getPlayer()->getPhysics()->m_velocity*/));
 		client->root->getPlayer()->updateBoundingBox();
+		sendUpdate = true;
+	}
+
+	if (sendUpdate) {
 		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	}
 
@@ -281,6 +301,10 @@ void Window::processKeys() {
 	}
 	else if (keyState['d']) {
 		client->root->getPlayer()->handleMovement('d');
+	}
+
+	if (keyState['u']) {
+		client->root->getPlayer()->Unstuck();
 	}
 
 	// jump

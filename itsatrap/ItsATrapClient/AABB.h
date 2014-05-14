@@ -39,6 +39,8 @@ class AABB {
 		bool inside(AABB other);
 		bool nearTop(glm::vec3 goTo);
 		bool clearedTop(AABB* other);
+		bool onTopOf(AABB* other);
+
 		glm::vec3 intersects(glm::vec3 from, glm::vec3 goTo);
 		int reflectionIntersection(glm::vec3 from, glm::vec3 goTo);
 		float angleIntersection(glm::vec3 from, glm::vec3 goTo);

@@ -48,7 +48,7 @@ void MyPlayer::initCommon() {
 	m_wallJumpTime = 1.0f;
 	m_teleportFactor = 100.0f;
 	m_slideFactor = 2.0f;
-	m_bounceFactor = 5.0f;
+	m_bounceFactor = 1.0f;
 
 	m_numDeaths = 0;
 	m_numKills = 0;
@@ -298,10 +298,12 @@ void MyPlayer::handleMovement(unsigned char key) {
 	m_physics->m_position = oldPos;
 
 	if (canMove != -1) {
+		int oldOnTopOfBuildingId = m_onTopOfBuildingId;
+		m_onTopOfBuildingId = -1;
 		// TODO: check guy is facing wall too
 		if (m_physics->m_currentState == PhysicsStates::Jumping && !(m_physics->atRest())) {
 			float angle = m_physics->handleAngleIntersection(oldPos, proposedNewPos, this->getAABB(), canMove);
-			if (abs(90.0f-angle) < 22.5f) {
+			if (abs(90.0f-angle) < 22.5f && m_physics->m_velocity.y >= -0.5f) {
 				newPos = oldPos;
 				cout << "starting the climb " << endl;
 				//m_cam->m_cameraLookAtWallJump = m_cam->m_cameraCenter - m_cam->m_camZ;
@@ -332,8 +334,8 @@ void MyPlayer::handleMovement(unsigned char key) {
 				m_wallJumpingBuildingId = canMove;
 			}
 			else {
-
-				if (m_onTopOfBuildingId == -1) {
+				if (oldOnTopOfBuildingId != canMove) {
+				//if (m_onTopOfBuildingId != -1) {
 					cout << "mini wall jump" << endl;
 					// 0,1 = x, -1 = y, 4,5 = z
 
@@ -458,8 +460,8 @@ void MyPlayer::applyPullingUp() {
 		m_cam->m_camX = m_cam->m_camXWallJump;
 		m_cam->m_camZ = m_cam->m_camZWallJump;
 		m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
-		m_physics->m_velocityDiff = m_physics->m_velocityDiffWallJump;
-		//m_physics->m_velocityDiff.y*=m_bounceFactor;
+		m_physics->m_velocityDiff = 15.0f*m_physics->m_velocityDiffWallJump;
+		m_physics->m_velocityDiff.y*=15.0f*m_bounceFactor;
 		//m_physics->m_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		m_physics->m_currentState = PhysicsStates::None;
@@ -542,6 +544,12 @@ void MyPlayer::applyPullingUp() {
 	}
 	m_cam->updateCameraMatrix();
 
+}
+
+// TODO: imp if needed
+void MyPlayer::Unstuck() {
+	/*glm::vec3 newPos = m_physics->handleUnstuck() {
+	}*/
 }
 
 void MyPlayer::updateModelViewMatrix() {

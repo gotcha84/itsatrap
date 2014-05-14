@@ -36,7 +36,7 @@ AABB::~AABB() {
 }
 
 void AABB::initCommon() {
-	m_nearTopFactor = 10.0f;
+	m_nearTopFactor = 15.0f;
 }
 
 void AABB::setAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
@@ -60,16 +60,32 @@ void AABB::setAABB(glm::vec3 pos, float rad) {
 
 	//Client::sendStaticObject(m_minX, m_minY, m_minZ, m_maxX, m_maxY, m_maxZ);
 }
-
+// this = obj ie building. other = player
 bool AABB::collidesWith(AABB other) {
-	return (other.m_maxX >= m_minX && other.m_minX <= m_maxX
+	bool tmp = (other.m_maxX >= m_minX && other.m_minX <= m_maxX
 		&& other.m_maxY >= m_minY && other.m_minY <= m_maxY
 		&& other.m_maxZ >= m_minZ && other.m_minZ <= m_maxZ);
+
+	if (tmp) {
+		return (!(other.m_maxY >= m_maxY));
+	}
+	return tmp;
 }
 
 bool AABB::collidesWithPointer(AABB* other) {
-	return (other->m_maxX >= m_minX && other->m_minX <= m_maxX
+	bool tmp = (other->m_maxX >= m_minX && other->m_minX <= m_maxX
 		&& other->m_maxY >= m_minY && other->m_minY <= m_maxY
+		&& other->m_maxZ >= m_minZ && other->m_minZ <= m_maxZ);
+
+	if (tmp) {
+		return (!(other->m_maxY >= m_maxY));
+	}
+	return tmp;
+}
+
+bool AABB::onTopOf(AABB* other) {
+	return (other->m_maxX >= m_minX && other->m_minX <= m_maxX
+		&& other->m_maxY >= m_maxY /*&& other->m_minY >= m_minY */
 		&& other->m_maxZ >= m_minZ && other->m_minZ <= m_maxZ);
 }
 

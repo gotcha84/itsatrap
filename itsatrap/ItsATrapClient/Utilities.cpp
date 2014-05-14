@@ -189,6 +189,10 @@ glm::mat4 Utilities::rotateY(float theta) { // theta = angle in degrees
 		));
 }
 
+float Utilities::degreesToRad(float deg) {
+	return (atan(1.0f)*4.0f)*deg/180.0f;
+}
+
 /*
 int Utilities::getMaxDepth(sg::Node *node) {
 	sg::Group *group = dynamic_cast<sg::Group*>(node);

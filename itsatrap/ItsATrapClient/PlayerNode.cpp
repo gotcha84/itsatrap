@@ -247,6 +247,7 @@ namespace sg {
 		p.stunDuration = m_player->m_stunDuration;
 		p.slowDuration = m_player->m_slowDuration;
 		p.timeUntilRespawn = m_player->m_timeUntilRespawn;
+		p.onTopOfBuildingId = m_player->m_onTopOfBuildingId;
 		return p;
 	}
 

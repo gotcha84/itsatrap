@@ -75,7 +75,7 @@ class Physics {
 
 		void initCommon();
 
-		bool applyGravity();
+		int applyGravity(AABB* player);
 
 		bool atRest();
 
