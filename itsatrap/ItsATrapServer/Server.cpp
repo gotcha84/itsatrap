@@ -100,6 +100,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	// TODO (ktngo): Bad practice. Move away from using structs
 	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
+	printPacket(p);
 	//printf("[SERVER]: Received a packet. eventId: %d\n", p->eventId);
 
 	// Some events can be processed immediately (like init request)
@@ -289,7 +290,7 @@ int Server::receiveMsg(char * msg, struct sockaddr_in *source) {
 
 	if (recvfrom(i_sockfd, msg, BUFSIZE, 0, (struct sockaddr *)source, &len) < 0) {
 		int error = WSAGetLastError();
-		//printf("[SERVER]: server.cpp - recvfrom failed with error code %d\n", error);
+		printf("[SERVER]: server.cpp - recvfrom failed with error code %d\n", error);
 		return 1;
 	}
 
@@ -300,7 +301,7 @@ int Server::receiveMsg(char * msg, struct sockaddr_in *source) {
 int Server::sendMsg(char * msg, int len, struct sockaddr_in *destination) {
 	if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *)destination, sizeof(struct sockaddr_in)) < 0) {
 		int error = WSAGetLastError();
-		//printf("[SERVER]: server.cpp - sendto failed with error code %d\n", error);
+		printf("[SERVER]: server.cpp - sendto failed with error code %d\n", error);
 		return 1;
 	}
 
@@ -350,4 +351,37 @@ void Server::sendHotSpotUpdate(int x, int y, int z)
 	for (int i = 0; i < playerCount; i++)
 		Server::sendMsg((char *) &p, sizeof(p), &players[i].clientAddress);
 
+}
+
+void Server::printPacket(struct packet *p)
+{
+	switch (p->eventId)
+	{
+		case INIT_REQUEST_EVENT:
+		{
+			printf("=====================================\n");
+			printf("INIT REQUEST PACKET\n");
+			printf("=====================================\n");
+			break;
+		}
+		case PLAYER_UPDATE_EVENT:
+		{
+			struct playerObject *player = &((struct playerUpdatePacket *)p)->playerObj;
+			printf("=====================================\n");
+			printf("PLAYER UPDATE PACKET\n");
+			printf("ID: %d\n", player->id);
+			printf("x: %.1f, y:%.1f, z:%.1f\n", player->x, player->y, player->z);
+			printf("look: %.1f %.1f %.1f ", player->lookX, player->lookY, player->lookZ);
+			printf("upVector: %.1f %.1f %.1f\n", player->upX, player->upY, player->upZ);
+			printf("=====================================\n");
+			break;
+		}
+		default:
+		{
+			printf("=====================================\n");
+			printf("Unknown eventId: %d\n", p->eventId);
+			printf("=====================================\n");
+			break;
+		}
+	}
 }

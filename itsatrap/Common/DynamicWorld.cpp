@@ -367,6 +367,7 @@ void DynamicWorld::updatePlayerBuffs(int timeDiff)
 
 		if (p.timeUntilRespawn > 0)
 		{
+			cout << "Decreasing ttr" << endl;
 			p.timeUntilRespawn -= timeDiff;
 			if (p.timeUntilRespawn < 0)
 				respawnPlayer(&p);
@@ -413,4 +414,5 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 	p->y = 0;
 	p->z = 0;
 	p->health = 100;
+	p->timeUntilRespawn = 0;
 }

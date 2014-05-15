@@ -46,7 +46,7 @@ void handlePlayerUpdate(struct playerObject p)
 		
 		if (p.xVel != 0 || p.yVel != 0 || p.zVel != 0)
 		{
-			cout << "Player " << p.id << " Velocity from server: " << glm::to_string(glm::vec3(p.xVel, p.yVel, p.zVel)) << endl;
+			//cout << "Player " << p.id << " Velocity from server: " << glm::to_string(glm::vec3(p.xVel, p.yVel, p.zVel)) << endl;
 			client->players[p.id]->getPlayer()->getPhysics()->m_velocity += glm::vec3(p.xVel, p.yVel, p.zVel);
 		}
 

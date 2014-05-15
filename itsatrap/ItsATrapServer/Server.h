@@ -65,6 +65,7 @@ private:
 	static void respawnPlayer(int id);
 	static void updateResources();
 	static void sendHotSpotUpdate(int x, int y, int z);
+	static void printPacket(struct packet *p);
 
 public:
 

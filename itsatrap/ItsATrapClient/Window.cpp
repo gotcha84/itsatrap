@@ -113,9 +113,11 @@ void Window::displayCallback(void)
 
 	int buildingId = client->root->getPlayer()->getPhysics()->applyGravity(client->root->getPlayer()->getAABB());
 
-	if (buildingId != -2) {
-		sendUpdate = true;
-		client->root->getPlayer()->m_onTopOfBuildingId = buildingId;
+	if (client->root->getPlayer()->m_timeUntilRespawn <= 0) {
+		if (buildingId != -2) {
+			sendUpdate = true;
+			client->root->getPlayer()->m_onTopOfBuildingId = buildingId;
+		}
 	}
 
 	if (oldBuildingId != client->root->getPlayer()->m_onTopOfBuildingId) {

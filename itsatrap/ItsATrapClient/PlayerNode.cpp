@@ -128,8 +128,15 @@ namespace sg {
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
 
-		for (int i=0; i<m_nChild; i++) {
-			m_child[i]->draw(glm::mat4(), this->getPlayer()->getCameraMatrix());
+		if (m_player->m_timeUntilRespawn <= 0)
+		{
+			for (int i=0; i<m_nChild; i++) {
+				m_child[i]->draw(glm::mat4(), this->getPlayer()->getCameraMatrix());
+			}
+		}
+		else
+		{
+			cout << "DEAD! Time till respawn " << m_player->m_timeUntilRespawn <<endl;
 		}
 
 		// draw player avatar
