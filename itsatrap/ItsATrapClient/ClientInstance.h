@@ -10,8 +10,13 @@
 
 #include "SceneGraph.h"
 
+#include "Mesh.h"
+
 class ClientInstance {
 	public:
+		Mesh test;
+		bool loaded;
+
 		unordered_map<int,sg::Player*> players;
 		unordered_map<int,sg::Trap*> traps;
 		unordered_map<int, sg::Node*> objects;

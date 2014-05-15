@@ -1,10 +1,12 @@
 #include "ClientInstance.h"
 
 ClientInstance::ClientInstance() {
-	cout << "DEFAULT CTOR - DO NOT USE" << endl;
+
 }
 
 ClientInstance::ClientInstance(int id) {
+	loaded = false;
+
 	m_xMouse = 0;
 	m_yMouse = 0;
 

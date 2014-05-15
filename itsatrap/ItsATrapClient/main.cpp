@@ -1,7 +1,12 @@
+// glut
+#include <GL/glew.h>
 #include <GL/glut.h>
+
+// glm
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+// c++
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -20,7 +25,6 @@ ClientInstance *client;
 Window *window;
 
 int main(int argc, char *argv[]) {
-
 	Sleep(1000);
 
 	ConfigSettings::getConfig()->loadSettingsFile();
@@ -91,6 +95,11 @@ int main(int argc, char *argv[]) {
 	// mouse input
 	glutMouseFunc(window->processMouseKeys);
 	glutPassiveMotionFunc(window->processMouseMove);
+
+	GLenum err = glewInit();
+	if (err != GLEW_OK) {
+	  cout << "[glewInit] Error : " << glewGetErrorString(err) << endl;
+	}
 
 	// hide mouse cursor
 	//glutSetCursor(GLUT_CURSOR_NONE);

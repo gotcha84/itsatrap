@@ -1,14 +1,17 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include <GL/glew.h>
+#include <GL/glut.h>
+
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
 #include <math.h>
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
-#include <GL/glut.h>
 
 using namespace std;
 

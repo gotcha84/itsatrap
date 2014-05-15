@@ -2,14 +2,15 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include <GL/glew.h>
+#include <GL/glut.h>
+
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-
-#include <GL/glut.h>
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
 
 //Since the tutorial I did used glext.h library, include it
 #include "glext.h"

@@ -2,11 +2,13 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <GL/glew.h>
 #include <GL/glut.h>
+
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-#include <vector>
 
+#include <vector>
 #include <ctime>
 #include <stdio.h>
 #include <stdlib.h>
