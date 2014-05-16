@@ -14,6 +14,10 @@
 #include "City.h"
 #include "Physics.h"
 
+#include "Texture.h"
+#include "Shader.h"
+#include "glext.h"
+
 using namespace std;
 
 namespace sg {
@@ -22,6 +26,15 @@ namespace sg {
 			int m_id;
 
 			Physics m_physics;
+			
+			// textures
+			Texture *texture;
+			GLuint texturePPM;
+			char* m_textureFilename;
+
+			// shaders
+			Shader *shader;
+			GLuint light;
 
 			Building(int id);
 			~Building();
@@ -34,7 +47,15 @@ namespace sg {
 			
 			virtual void calculateBoundingBox();
 			virtual bool isInside(glm::vec3 point);
-			bool collidesWith(Building* b); // make virtual if child classes
+			bool nearTop (glm::vec3 point);
+			bool clearedTop(AABB* other);
+			bool onTopOf(AABB* other);
+
+			virtual glm::vec3 intersects(glm::vec3 from, glm::vec3 goTo);
+			virtual float angleIntersection(glm::vec3 from, glm::vec3 goTo);
+			virtual int reflectionIntersection(glm::vec3 from, glm::vec3 goTo);
+			
+			int collidesWith(AABB* b); // make virtual if child classes
 			virtual void setMaterial();
 	};
 }

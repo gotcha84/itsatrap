@@ -68,6 +68,22 @@ vector<float> Utilities::modifyVec(vector<float> oldVec, float scale, float xTra
 	return vec;
 }
 
+vector<float> Utilities::modifyVec(vector<float> oldVec, glm::vec3 scale, float xTranslate, float yTranslate, float zTranslate) {
+	vector<float> vec;
+	for (int i = 0; i < oldVec.size(); i++) {
+		if (i % 3 == 0) {
+			vec.push_back((oldVec[i]*scale.x)+xTranslate);
+		}
+		else if (i % 3 == 1) {
+			vec.push_back((oldVec[i]*scale.y)+yTranslate);
+		}
+		else if (i % 3 == 2) {
+			vec.push_back((oldVec[i]*scale.z)+zTranslate);
+		}
+	}
+	return vec;
+}
+
 vector<float> Utilities::findMinsMaxs(string inputfile) {
 	
 	vector<tinyobj::shape_t> shapes;
@@ -178,6 +194,20 @@ glm::vec3 Utilities::findAverage(string inputfile) {
 	return returnMe;
 }
 
+glm::mat4 Utilities::rotateY(float theta) { // theta = angle in degrees
+	theta = glm::radians(theta);
+		
+	return glm::transpose(glm::mat4(
+		glm::cos(theta), 0, glm::sin(theta), 0,
+		0, 1, 0, 0,
+		-glm::sin(theta), 0, glm::cos(theta), 0, 
+		0, 0, 0, 1
+		));
+}
+
+float Utilities::degreesToRad(float deg) {
+	return (atan(1.0f)*4.0f)*deg/180.0f;
+}
 
 /*
 int Utilities::getMaxDepth(sg::Node *node) {

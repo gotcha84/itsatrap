@@ -13,12 +13,12 @@
 class ClientInstance {
 	public:
 		unordered_map<int,sg::Player*> players;
+		unordered_map<int,sg::Trap*> traps;
 		unordered_map<int, sg::Node*> objects;
 		sg::Player *root;
+		sg::MatrixTransform *hotSpot;
 
 		int m_xMouse, m_yMouse; // mouse position
-		float m_xAngleChange, m_yAngleChange;
-		float m_xAngleChangeFactor, m_yAngleChangeFactor;
 
 		ClientInstance();
 		ClientInstance(int id);

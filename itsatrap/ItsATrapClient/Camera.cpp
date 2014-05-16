@@ -6,40 +6,31 @@ using namespace std;
 extern ClientInstance *client;
 
 Camera::Camera() {
-	m_playerHeight = glm::vec3(0.0f, 4.0f, 0.0f);
-
-	m_xRotationAngle = 1.0f;
-	m_yRotationAngle = 1.0f;
-	m_camX = glm::vec3(1.0f, 0, 0);
-	m_camZ = glm::vec3(0, 0, -1.0f);
-
-	//m_cameraCenter = glm::vec3(75.0f, 4.0f, 0.0f);
-	//m_cameraLookAt = glm::vec3(75.0f, 4.0f, -1.0f);
-	m_playerCenter = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_cameraCenter = m_playerCenter;// + m_playerHeight;
-	m_cameraLookAt = m_cameraCenter + glm::vec3(0.0f, 0.0f, -1.0f);
-	m_cameraUp = glm::vec3(0, 1.0f, 0);
-
-	m_yRotated = 0.0f;
-
-	updateCameraMatrix();
+	m_cameraCenter = glm::vec3(0.0f, 0.0f, 0.0f);// + m_playerHeight;
+	initCommon();
 }
 
 Camera::Camera(glm::vec3 pos) {
+	m_cameraCenter = pos;// + m_playerHeight;
+	initCommon();
+}
+
+void Camera::initCommon() {
 	m_playerHeight = glm::vec3(0.0f, 4.0f, 0.0f);
+	m_slidingHeight = glm::vec3(0.0f, 2.0f, 0.0f);
 
 	m_xRotationAngle = 1.0f;
-	m_yRotationAngle = 1.0f;
+	m_yRotationAngle = 0.01f*1.0f;
 	m_camX = glm::vec3(1.0f, 0, 0);
 	m_camZ = glm::vec3(0, 0, -1.0f);
 
-	//m_cameraCenter = glm::vec3(75.0f, 4.0f, 0.0f);
-	//m_cameraLookAt = glm::vec3(75.0f, 4.0f, -1.0f);
-	//cout << "pos: " << glm::to_string(pos) << endl;
 	m_playerCenter = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_cameraCenter = pos;// + m_playerHeight;
+
 	m_cameraLookAt = m_cameraCenter + glm::vec3(0.0f, 0.0f, -1.0f);
 	m_cameraUp = glm::vec3(0, 1.0f, 0);
+
+	m_xRotated = 0.0f;
+	m_camZSliding = glm::vec3(0.0f, 10.0f, 0.0f);
 
 	m_yRotated = 0.0f;
 
@@ -62,8 +53,23 @@ glm::vec3 Camera::getCameraUp() {
 	return m_cameraUp;
 }
 
-void Camera::handleXRotation(float magnitude) {
+float Camera::getXRotated() {
+	return m_xRotated;
+}
 
+void Camera::setXRotated(float xrot) {
+	m_xRotated = xrot;
+}
+
+float Camera::getYRotated() {
+	return m_yRotated;
+}
+
+void Camera::setYRotated(float yrot) {
+	m_yRotated = yrot;
+}
+
+void Camera::handleXRotation(float magnitude) {
 	glm::vec3 tmp_camZ = glm::vec3(m_camZ.x, 0.0f, m_camZ.z);
 
 	tmp_camZ = glm::rotateY(tmp_camZ, magnitude*m_xRotationAngle);
@@ -72,15 +78,19 @@ void Camera::handleXRotation(float magnitude) {
 	m_camZ = glm::vec3(tmp_camZ.x, m_camZ.y, tmp_camZ.z);
 	m_cameraLookAt = m_cameraCenter + m_camZ;
 
+	m_xRotated+=magnitude*m_xRotationAngle;
+
 	updateCameraMatrix();
 }
 
 void Camera::handleYRotation(float magnitude) {
 	// TODO modify upvector too for confuse ray
 	if (!(m_yRotated > 80.0f && magnitude > 0) && !(m_yRotated < -80.0f && magnitude < 0)) {
-		m_camZ.y+=magnitude*0.01f*m_yRotationAngle; // both this and the two lines below seem okay
-		//m_camZ = glm::rotate(m_camZ, magnitude*m_yRotationAngle, m_camX);
-		//m_yRotated+=magnitude*m_yRotationAngle;
+		
+		//m_camZ.y+=magnitude*m_yRotationAngle; // both this and the two lines below seem okay
+		m_camZ = glm::rotate(m_camZ, glm::degrees(magnitude*m_yRotationAngle), m_camX);
+		m_yRotated+=glm::degrees(magnitude*m_yRotationAngle);
+		//cout << "ROTATING CAM: " << m_yRotated << ", " << glm::radians(80.0f) << endl;
 	}
 	//cout << "mcamX: " << glm::to_string(m_camX) << endl;
 	//cout << "before: " << glm::to_string(m_cameraLookAt) << endl;
@@ -101,6 +111,8 @@ void Camera::calculateAxis() {
 	// or is it radians
 	m_camX = glm::rotateY(m_camZ, -90.0f);
 	m_camX = glm::vec3(m_camX.x, oldmcamXY, m_camX.z);
+
+	updateCameraMatrix();
 }
 
 void Camera::updateCameraMatrix() {

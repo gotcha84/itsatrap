@@ -6,82 +6,129 @@ using namespace std;
 
 extern ClientInstance *client; // 'client' is a global var in main.cpp
 
-void testAddObject(int id, float x, float y, float z, int type)
+void handleNewPlayer(struct playerObject p)
 {
-	// MEMORY LEAK POSSIBILITY!
-	if (type == 0) {
-		sg::Player *player = new sg::Player(glm::vec3(x, y, z));
-		player->setPlayerID(id);
-		player->setColor(glm::vec3(1,1,1));
-		player->lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
-		client->addPlayer(player);
+	printf("[CLIENT]: New player (ID:%d) has joined!\n", p.id);
+	sg::Player *player = new sg::Player();
+	
+	player->setPlayerID(p.id);
+	player->moveTo(glm::vec3(p.x, p.y, p.z));
+	player->lookAt(glm::vec3(p.lookX, p.lookY, p.lookZ));
+	player->setUp(glm::vec3(p.upX, p.upY, p.upZ));
+	player->getCamera()->setXRotated(p.xRotated);
+	player->getCamera()->setYRotated(p.yRotated);
 
-		client->players[id] = player;
-		client->objects[id] = player;
-
-		client->printSceneGraph();
-	}
-	else if (type == 1)
-	{
-		// it's a trap!! (remember to add to map)
-	}
+	client->addPlayer(player);
+	client->players[p.id] = player;
+	client->objects[p.id] = player;
 }
 
-// Returns 0 if successful
-void testUpdate(int id, float x, float y, float z, int type)
+void handlePlayerUpdate(struct playerObject p)
 {
-	if (client->objects[id] == nullptr) {
-		// todo check type to add player vs trap
-		testAddObject(id, x, y, z, type);
-		cout << "player added with id " << id << endl;
-		cout << glm::to_string(client->root->getPosition()) << endl;
+	if (client->objects[p.id] == nullptr) {
+		handleNewPlayer(p);
 	}
+	else {
+		
+		// HEALTH
+		if (client->players[p.id]->m_player->m_health != p.health) {
+			cout << "[CLIENT]: HIT! Player " << p.id << "'s health is now " << p.health << endl;
+			client->players[p.id]->setHealth(p.health);
+		}
 
-	if (type == 0) {
-		if (glm::vec3(x,y,z) != client->players[id]->getPosition()) {
-			int collision = -1;
+		// BUFFS
+		client->players[p.id]->m_player->m_stunDuration = p.stunDuration;
+		client->players[p.id]->m_player->m_slowDuration = p.slowDuration;
+		client->players[p.id]->m_player->m_timeUntilRespawn = p.timeUntilRespawn;
 
-			for (unordered_map<int,sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
-				if (it->first != id) {
-					if (client->players[id]->collidesWith(it->second)) {
-						collision = it->first;
-						break;
-					}
-				}
+		// RESOURCES
+		client->players[p.id]->m_player->m_resources = p.resources;
+		
+		if (p.xVel != 0 || p.yVel != 0 || p.zVel != 0)
+		{
+			//cout << "Player " << p.id << " Velocity from server: " << glm::to_string(glm::vec3(p.xVel, p.yVel, p.zVel)) << endl;
+			client->players[p.id]->getPlayer()->getPhysics()->m_velocity += glm::vec3(p.xVel, p.yVel, p.zVel);
+		}
+
+		// POSITION & GRAPHIC
+		if (glm::vec3(p.x, p.y, p.z) != client->players[p.id]->getPosition()) {
+			client->players[p.id]->moveTo(glm::vec3(p.x, p.y, p.z));
+			Client::sendPlayerUpdate(client->players[p.id]->getPlayerObjectForNetworking());
+		}
+		if (client->root->getPlayerID() != p.id) {
+			glm::vec3 pCenter = glm::vec3(p.x, p.y, p.z);
+			glm::vec3 pLookAt = glm::vec3(p.lookX, p.lookY, p.lookZ);
+			glm::vec3 pLookIn = pLookAt - pCenter;
+
+			glm::vec3 clientLookIn = client->players[p.id]->getCamera()->getCameraLookAt() - client->players[p.id]->getCamera()->getCameraCenter();
+			
+			if (pLookIn != clientLookIn) {
+				client->players[p.id]->lookIn(pLookIn);
+				//cout << "[" << client->root->getPlayerID() << "] p" << p.id << " now looking in " << glm::to_string(pLookIn) << endl;
+			}
+
+			if (glm::vec3(p.upX, p.upY, p.upZ) != client->players[p.id]->getCamera()->getCameraUp()) {
+				client->players[p.id]->setUp(glm::vec3(p.upX, p.upY, p.upZ));
+			}
+
+			if (p.xRotated != client->players[p.id]->getCamera()->getXRotated()) {
+				client->players[p.id]->getCamera()->setXRotated(p.xRotated);
 			}
 			
-			client->players[id]->moveTo(glm::vec3(x,y,z));
-			if (collision != -1) {
-				cout << "p" << id << " collided with p" << collision << endl;
+			if (p.yRotated != client->players[p.id]->getCamera()->getYRotated()) {
+				client->players[p.id]->getCamera()->setYRotated(p.yRotated);
 			}
 		}
-	}
-	else if (type == 1) {
-		// ITS A TRAP!!
+
 	}
 }
 
-// The argument 'world' contains client->objects information, such as id, x, y, z.
-// This function works like this:
-// If the object's id exists, update its location
-// If the object's id doesn't exist, create a new one object with that id
-void testUpdateWorld(DynamicWorld *world)
+void handleAddTrap(struct trapObject t)
 {
-	//world->printWorld();
+	if (client->objects[t.id] != nullptr) {
+		return;
+	}
 
-	for (int i = 0; i < world->getSize(); i++)
+	sg::Trap *newTrap;
+	switch (t.type)
 	{
-		int id = world->getObjectAt(i).objectId;
-		float x = world->getObjectAt(i).x;
-		float y = world->getObjectAt(i).y;
-		float z = world->getObjectAt(i).z;
+	case TYPE_TRAMPOLINE_TRAP:
+		newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle, "Can.obj");
+		break;
+	case TYPE_FREEZE_TRAP:
+		newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle, "Polynoid.obj");
+		break;
+	default:
+		newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle, "Polynoid.obj");
+		break;
+	}
 
-		testUpdate(id, x, y, z, 0);
-		//{
-			// If the id is playerId, do not render because we don't want to render our own player.
-			// This is just temporary. playerId should not be used as objectId!
-			//if (id != Client::getPlayerId()) 
-				//testAddCube(id, x, y, z);
-		//}
+	client->root->addChild(newTrap);
+	client->objects[t.id] = newTrap;
+}
+
+void handleRemoveTrap(struct trapObject t)
+{
+	printf("[CLIENT]: Removing trap %d\n", t.id);
+	if (client->objects[t.id] != nullptr)
+	{
+		client->root->removeChild(client->objects[t.id]);
+		client->objects[t.id] = nullptr;
+	}
+}
+
+// This will get called everytime server sends an update
+void handleUpdateWorldFromServer(DynamicWorld *world)
+{
+	vector<struct playerObject> players = world->getAllPlayers();
+	for (int i = 0; i < players.size(); i++) {
+		handlePlayerUpdate(players[i]);
+	}
+
+	for (map<int, struct trapObject>::iterator it = world->trapMap.begin(); it != world->trapMap.end(); it++) {
+		if (it->second.eventCode == EVENT_ADD_TRAP)
+			handleAddTrap(it->second);
+		else if (it->second.eventCode == EVENT_REMOVE_TRAP)
+			handleRemoveTrap(it->second);
 	}
 }

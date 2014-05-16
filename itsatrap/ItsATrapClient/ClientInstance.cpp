@@ -1,37 +1,12 @@
 #include "ClientInstance.h"
 
-//ClientInstance::ClientInstance() {
-//	m_xMouse = 0;
-//	m_yMouse = 0;
-//
-//	m_xAngleChange = 0.0f;
-//	m_yAngleChange = 0.0f;
-//
-//	m_xAngleChangeFactor = 20.0f;
-//	m_yAngleChangeFactor = 20.0f;
-//
-//	players = unordered_map<int,sg::Player*>();
-//	objects = unordered_map<int,sg::Node*>();
-//
-//	root = new sg::Player();
-//	root->setPlayerID(0);
-//	root->setObjectID(0);
-//	this->addPlayer(root);
-//}
-
 ClientInstance::ClientInstance() {
-	cout << "DEFAULT CTOR" << endl;
+	cout << "DEFAULT CTOR - DO NOT USE" << endl;
 }
 
 ClientInstance::ClientInstance(int id) {
 	m_xMouse = 0;
 	m_yMouse = 0;
-
-	m_xAngleChange = 0.0f;
-	m_yAngleChange = 0.0f;
-
-	m_xAngleChangeFactor = 20.0f;
-	m_yAngleChangeFactor = 20.0f;
 
 	players = unordered_map<int,sg::Player*>();
 	objects = unordered_map<int,sg::Node*>();
@@ -39,8 +14,6 @@ ClientInstance::ClientInstance(int id) {
 	root = new sg::Player(glm::vec3(75.0f,0.0f,0.0f));
 	root->setPlayerID(id);
 	root->setObjectID(id);
-	cout << "pid: " << root->getPlayerID() << endl;
-	cout << "oid: " << root->getObjectID() << endl;
 
 	this->addPlayer(root);
 	objects[id] = root;

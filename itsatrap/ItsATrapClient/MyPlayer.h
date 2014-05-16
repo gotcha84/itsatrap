@@ -16,16 +16,21 @@
 
 #include "Camera.h"
 #include "Physics.h"
-#include "AABB.h"
+#include "NetworkObjects.h"
+#include "ConfigSettings.h"
 
 using namespace std;
 
+#define KNIFE_RANGE 15.0f
+
 class MyPlayer {
 	public:
+		int m_numKills, m_numDeaths, m_health, m_stunDuration, m_slowDuration, m_resources, m_timeUntilRespawn;
+		bool m_deathState;
+
 		Camera *m_cam;
 		Physics *m_physics;
 		AABB *m_boundingBox;
-		float m_yJumpFactor;
 
 		glm::mat4 m_transMatrix;
 
@@ -38,15 +43,32 @@ class MyPlayer {
 		float m_zWalkFactor;
 		float m_xSlowWalkFactor;
 		float m_zSlowWalkFactor;
+		float m_wallJumpFactor;
+		float m_pullingUpFactor;
+		float m_wallJumpTime;
+		float m_holdingEdgeTime;
+		float m_teleportFactor;
+		float m_slideFactor;
+		float m_bounceFactor;
+
+		float m_miniJumpYVelocityThreshold;
+
+		int m_wallJumpingBuildingId;
+		int m_onTopOfBuildingId;
 
 		MyPlayer();
 		MyPlayer(glm::vec3 pos);
 		~MyPlayer();
 
+		void initCommon();
+
 		Camera *getCamera();
 		glm::vec3 getPosition();
 		Physics *getPhysics();
+		
 		AABB *getAABB();
+		void setAABB(AABB *bbox);
+
 		glm::mat4 getTransMatrix();
 		glm::mat4 getModelMatrix();
 		glm::mat4 getCameraMatrix();
@@ -54,10 +76,20 @@ class MyPlayer {
 		glm::mat4 getProjectionMatrix();
 		glm::mat4 getViewPortMatrix();
 
+		void handleXRotation(float magnitude);
+		void handleYRotation(float magnitude);
+		void handleSliding();
+		void handleTeleport();
 		void handleMovement(unsigned char key);
 		void handleJump();
-		void updateModelViewMatrix();
+		void applyClimbing();
+		void applyPullingUp();
+		void applyWallRunning();
+		void handleHoldingEdge(unsigned char key);
+		void applyHoldingEdge();
+		void Unstuck(unsigned char key);
 		
+		void updateModelViewMatrix();
 		void setTransMatrix(glm::mat4 m);
 		void setModelMatrix(glm::mat4 m);
 		void setProjectionMatrix();
@@ -71,6 +103,13 @@ class MyPlayer {
 
 		void updateBoundingBox();
 		bool collidesWith(MyPlayer *other);
+		//bool knifeHitWith(MyPlayer *other);
+
+		int getHealth();
+		void setHealth(int health);
+		void damage(int dmg);
+		bool isDead();
+		bool isAlive();
 };
 
 #endif

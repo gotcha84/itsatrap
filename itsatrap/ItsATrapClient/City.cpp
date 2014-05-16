@@ -1,4 +1,5 @@
 #include "City.h"
+#include "Client.h"
 
 namespace sg {
 	
@@ -8,7 +9,7 @@ namespace sg {
 		m_maxArraySize = 10000;
 		m_cityScale = 0.1f;
 		m_canScale = 5.0f;
-		m_defaultScale = 1.0f;
+		m_defaultScale = glm::vec3(0.5f, 0.75f, 0.5f);
 		initArrays();
 	}
 
@@ -72,6 +73,7 @@ namespace sg {
 
 	void City::draw(glm::mat4 parent, glm::mat4 camera) {
 		int count = 0;
+
 		for (int i = 0; i < getNumChildren(); i++) {
 			//cout << "city count: " << count << endl;
 			//if (i == 2) {
@@ -81,6 +83,7 @@ namespace sg {
 			//((sg::Building*)m_child[i])->draw(parent, camera);
 			//}
 		}
+
 		
 		//glm::mat4 cam_inverse = glm::inverse(camera);
 		//glm::mat4 mv = cam_inverse * parent;
@@ -89,7 +92,7 @@ namespace sg {
 		//	glMatrixMode(GL_MODELVIEW);
 		//	glLoadMatrixf(glm::value_ptr(mv));
 
-		//	glColor3f(color.x, color.y, color.z);
+		//	glColor4f(color.r, color.g, color.b, color.a);
 		//	drawShape();
 		//glPopMatrix();
 	}
@@ -110,28 +113,9 @@ namespace sg {
 		float tmpmaxy = -1.0f*FLT_MAX;
 		float tmpmaxz = -1.0f*FLT_MAX;
 
-		//int arr[1][2] = {{0, 1}};
 		int arr[4][2] = {{0, 1}, {0, 3}, {1, 3}, {2, 3}};  
-		//int arr[5][2] = {{0, 1}, {0, 2}, {0, 3}, {1, 3}, {2, 3}};   
-		//if (!init_heightMap) {
-		/*
-		for (int k = 0; k < m_numBuildings; k++) {
-			for (int i = 0; i < m_nVertices[k]; i++) {
-				//m_vertices[k][i]*=m_canScale; // use only for can
-				//m_vertices[k][i]*=m_cityScale; // use only for city
-				
-				if (i % 3 == 1) {
-					m_vertices[k][i]-=1.0f;
-				}
-				
-			}
-		}
-		*/
-		//}
 
-		// TODO: fix min/max (only takes 2 args)
 		for (int l = 0; l < m_numBuildings; l++) {
-			//for (int i = 0; i < m_nVertices[l]-m_nVertices[l]%9; i+=9) { 
 			for (int i = 0; i < m_nVertices[l]-m_nVertices[l]%12; i+=12) { 
 
 				tmpminx = min(min(m_vertices[l][i], m_vertices[l][i+3]),  min(m_vertices[l][i+6], m_vertices[l][i+9]));
@@ -187,24 +171,12 @@ namespace sg {
 				for (int j = minx; j < maxx; j++) {
 					for (int k = minz; k < maxz; k++) {
 						if (maxy > World::m_heightMap[j+World::m_heightMapXShift][k+World::m_heightMapZShift]) {
-							//cout << "x: " << j+World::m_heightMapXShift << endl;
-							//cout << "z: " << k+World::m_heightMapZShift << endl;
 							World::m_heightMap[j+World::m_heightMapXShift][k+World::m_heightMapZShift] = maxy;
 						}
 					}
 				} 
 			}
 		}
-	
-		// player is 4 feet "tall"
-		/*for (int i = 0; i < 1019; i++) {
-			for (int j = 0; j < 787; j++) {
-					World::m_heightMap[i][j]+=4;
-					//cout << World::m_heightMap[i][j] << endl;
-			}
-		}*/
-
-	
 	}
 	
 
@@ -270,7 +242,7 @@ namespace sg {
 
 	}
 	*/
-
+	/* UNUSED
 	bool City::loadDataAtPlace(string inputfile, glm::vec3 position) {
 
 		vector<tinyobj::shape_t> shapes;
@@ -358,11 +330,7 @@ namespace sg {
 			m_numBuildings++;
 			added++;
 
-			/*ss.clear();
-			ss << j;
-			tmp = ss.str();
-			Utilities::writeFloatArrayToFile(m_vertices[j], shapes[j].mesh.indices.size(), "verts"+tmp+".txt");
-			*/
+
 
 			// TODO delete newchild
 		}
@@ -418,7 +386,7 @@ namespace sg {
 		}
 		return canPlace;
 	}
-
+	*/
 	void City::loadData(string inputfile) {
 
 		vector<tinyobj::shape_t> shapes;
@@ -507,8 +475,11 @@ namespace sg {
 		updateHeightMap();
 
 		for (int i = 0; i < added; i++) {
-			((sg::Building*)m_child[i+num_children])->calculateBoundingBox();
-			((sg::Building*)m_child[i+num_children])->setMaterial();
+			sg::Building *buildingPtr = ((sg::Building*)m_child[i+num_children]);
+			buildingPtr->calculateBoundingBox();
+			Client::sendStaticObject(buildingPtr->m_boundingBox.m_minX, buildingPtr->m_boundingBox.m_minY, buildingPtr->m_boundingBox.m_minZ, 
+				buildingPtr->m_boundingBox.m_maxX, buildingPtr->m_boundingBox.m_maxY, buildingPtr->m_boundingBox.m_maxZ);
+			buildingPtr->setMaterial();
 		}
 
 

@@ -11,8 +11,9 @@
 #include "Packet.h"
 #include "NetworkConfig.h"
 #include "DynamicWorld.h"
-#include "DynamicObject.h"
+#include "NetworkObjects.h"
 #include "enrico.h"
+#include "ClientInstance.h"
 
 /*
  * class Client
@@ -36,17 +37,21 @@ private:
 	static int receiveMsg(char *);
 	static int sendMsg(char *, int);
 	static DWORD WINAPI receiverThread(LPVOID);
+	static void updateHotSpot(int x, int y, int z);
 
 public:
 
 	// Functions
 	static int initializeClient();
 	static void startReceiverThread();
-	static void sendStateUpdate(int id, float x, float y, float z);
 	static int getPlayerId();
 	static void sendStaticObject(float, float, float, float, float, float);
+	static void sendPlayerUpdate(struct playerObject);
+	static void sendSpawnTrapEvent(struct trapObject);
+	static void sendKnifeHitEvent(int targetId);
+	static void sendReloadConfigFile();
 };
 
 
 
-#endif CLIENT_H
+#endif

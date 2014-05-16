@@ -32,9 +32,12 @@ class Utilities {
 		static void writeIntArrayToFile(int* arr, int size, string filename);
 		static void writeFloatArrayToFile(float* arr, int size, string filename);
 		static vector<float> modifyVec(vector<float> oldVec, float scale, float xTranslate, float yTranslate, float zTranslate);
+		static vector<float> modifyVec(vector<float> oldVec, glm::vec3 scale, float xTranslate, float yTranslate, float zTranslate);
 		static vector<float> findMinsMaxs(string inputfile);
 		static vector<float> findMinsMaxsHelper(vector<float> vec);
 		static glm::vec3 findAverage(string inputfile);
+		static glm::mat4 rotateY(float theta);
+		static float degreesToRad(float deg);
 		//static int getMaxDepth(sg::Node *node);
 };
 

@@ -19,6 +19,8 @@ using namespace std;
 class Camera {
 	public:
 		glm::vec3 m_playerHeight;
+		glm::vec3 m_slidingHeight;
+
 		glm::vec3 m_playerCenter;
 
 		glm::vec3 m_cameraCenter;
@@ -28,23 +30,49 @@ class Camera {
 		glm::vec3 m_camZ;
 		glm::vec3 m_camX;
 
+		glm::vec3 m_cameraCenterWallJump;
+		glm::vec3 m_cameraLookAtWallJump;
+		glm::vec3 m_cameraUpWallJump;
+
+		glm::vec3 m_camZWallJump;
+		glm::vec3 m_camXWallJump;
+
+		glm::vec3 m_cameraCenterWallRun;
+		glm::vec3 m_cameraLookAtWallRun;
+		glm::vec3 m_cameraUpWallRun;
+
+		glm::vec3 m_camZWallRun;
+		glm::vec3 m_camXWallRun;
+
+		glm::vec3 m_camZSliding;
+	
 		glm::mat4 m_cameraMatrix;
 
 		float m_xRotationAngle;
 		float m_yRotationAngle;
 
+		float m_xRotated;
 		float m_yRotated;
+		float m_xRotatedWallRun;
+		float m_yRotatedWallRun;
 
 		Camera();
 		Camera(glm::vec3 pos);
+
+		void initCommon();
 
 		glm::mat4 getCameraMatrix();
 		glm::vec3 getCameraCenter();
 		glm::vec3 getCameraLookAt();
 		glm::vec3 getCameraUp();
 
-		void handleXRotation(float);
-		void handleYRotation(float);
+		float getXRotated();
+		void setXRotated(float xrot);
+		float getYRotated();
+		void setYRotated(float yrot);
+
+		void handleXRotation(float magnitude);
+		void handleYRotation(float magnitude);
 		void calculateAxis();
 
 		void updateCameraMatrix();

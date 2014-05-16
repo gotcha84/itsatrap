@@ -1,12 +1,18 @@
 #ifndef DYNAMICWORLD_H
 #define DYNAMICWORLD_H
 
+#include <../glm/glm/glm.hpp>
+#include <../glm/glm/ext.hpp>
+
+#include <map>
 #include <vector>
 #include <stdio.h>
 #include <iostream>
 
-#include "DynamicObject.h"
+#include "NetworkObjects.h"
+#include "NetworkConfig.h"
 #include "Packet.h"
+#include "ConfigSettings.h"
 
 using namespace std;
 
@@ -20,20 +26,40 @@ class DynamicWorld {
 
 private:
 	// Variables
-    vector<struct dynamicObject>	objects; // This vector should contain information about objects
-	                                         // that are currently living in the world
-	
-public:
+	int								currentId;
+	vector<struct staticObject>		staticObjects;
+	bool							playerLock[MAX_PLAYERS];
+
 	// Functions
-	// NOTE: __declspec(dllexport) is used to export this function
-	
+	bool checkCollision(struct aabb a, struct aabb b);
+	bool checkCollisionWithAllNonTraps(struct playerObject e);
+	void addNewPlayer(struct playerObject p);
+	void respawnPlayer(struct playerObject *p);
+
+public:
+	// Variables
+	map<int, struct trapObject>		trapMap;
+	map<int, struct playerObject>	playerMap;
+
+	// Functions
 	__declspec(dllexport) DynamicWorld();
 	__declspec(dllexport) DynamicWorld(struct packet *packet);
-	__declspec(dllexport) int getSize();
 	__declspec(dllexport) int serialize(char **ptr);
 	__declspec(dllexport) void printWorld();
-	__declspec(dllexport) void updateObject(struct dynamicObject e);
-	__declspec(dllexport) struct dynamicObject getObjectAt(int i);
+
+	__declspec(dllexport) void updatePlayer(struct playerObject e);
+	__declspec(dllexport) int getNumPlayers();
+	__declspec(dllexport) vector<struct playerObject> getAllPlayers();
+	__declspec(dllexport) void updatePlayerBuffs(int timeDiff);
+
+	__declspec(dllexport) void addTrap(struct trapObject t);
+
+	__declspec(dllexport) void addStaticObject(struct staticObject);
+	__declspec(dllexport) int getNumStaticObjects();
+
+	__declspec(dllexport) void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
+
+	
 };
 
 #endif

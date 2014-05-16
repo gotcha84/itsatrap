@@ -9,13 +9,12 @@
 #include <stdlib.h>
 #include <iostream>
 
+#include "Stopwatch.h"
 #include "Packet.h"
 #include "NetworkConfig.h"
 #include "Player.h"
 #include "DynamicWorld.h"
-#include "DynamicObject.h"
-#include "StaticObject.h"
-#include "StaticWorld.h"
+#include "NetworkObjects.h"
 
 using namespace std;
 
@@ -44,7 +43,16 @@ private:
 	static struct bufferEntry	packetBuffer[PACKET_BUFFER_SIZE];
 	static int					packetBufferCount;
 	static DynamicWorld			dynamicWorld;
-	static StaticWorld			staticWorld;
+	static Stopwatch			stopwatch;
+	static int					timeUntilResourceBonus;
+	static int					timeUntilHotSpotChange;
+	static int					resourcePerInterval;
+	static int					resourceHotSpotBonusPerInterval;
+	static int					resourceInterval;
+	static int					hotSpotChangeInterval;
+	static vector<glm::vec3>	hotSpotLocations;
+	static glm::vec3			currentHotSpot;
+	static int					currentHotSpotIndex;
 
 	// Functions
 	static int initialize();
@@ -54,6 +62,10 @@ private:
 	static DWORD WINAPI bufferProcessorThread(LPVOID);
 	static void processBuffer();
 	static void broadcastDynamicWorld();
+	static void respawnPlayer(int id);
+	static void updateResources();
+	static void sendHotSpotUpdate(int x, int y, int z);
+	static void printPacket(struct packet *p);
 
 public:
 

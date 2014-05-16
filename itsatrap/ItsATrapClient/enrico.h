@@ -15,9 +15,10 @@
 // networking
 #include "Client.h"
 #include "DynamicWorld.h"
+#include "NetworkObjects.h"
 
-void testAddObject(int id, float x, float y, float z, int type);
-void testUpdate(int id, float x, float y, float z, int type);
-void testUpdateWorld(DynamicWorld *world);
+void handleNewObjectFromServer(int id, float x, float y, float z, int type);
+void handleUpdateObjectFromServer(int id, float x, float y, float z, int type);
+void handleUpdateWorldFromServer(DynamicWorld *world);
 
 #endif

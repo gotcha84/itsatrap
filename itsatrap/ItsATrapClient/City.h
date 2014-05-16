@@ -30,7 +30,7 @@ namespace sg {
 
 			float m_cityScale;
 			float m_canScale;
-			float m_defaultScale;
+			glm::vec3 m_defaultScale;
 
 			int* m_nVertices;
 			float** m_vertices;
@@ -49,7 +49,6 @@ namespace sg {
 			void initArrays();
 			void draw(glm::mat4 parent, glm::mat4 camera);
 
-			// TODO: figure out what it takes 
 			void updateHeightMap();
 			void loadData(string inputfile);
 			bool loadDataAtPlace(string inputfile, glm::vec3 position);
