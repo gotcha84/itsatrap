@@ -43,7 +43,10 @@ int Client::initializeClient() {
 	// Setting the server's address
 	memset(&serverAddress, 0, sizeof(serverAddress));
 	serverAddress.sin_family = AF_INET;
-	serverAddress.sin_addr.s_addr = inet_addr(SERVER_ADDRESS);
+	string serverIP;
+	ConfigSettings::getConfig()->getValue("ServerAddress", serverIP);
+	cout << "[CLIENT]: Server's IP address: " << serverIP << endl;
+	serverAddress.sin_addr.s_addr = inet_addr(serverIP.c_str());
 	serverAddress.sin_port = htons(SERVER_PORT);
 	
 	// Send init event

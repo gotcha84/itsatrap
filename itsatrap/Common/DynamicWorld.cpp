@@ -53,7 +53,7 @@ DynamicWorld::DynamicWorld(struct packet *packet)
 
 void DynamicWorld::addNewPlayer(struct playerObject p)
 {
-	while (checkCollisionWithAllNonTraps(p))
+	while (checkCollisionWithAllNonTraps(&p))
 	{
 		p.aabb.minX += 10;
 		p.aabb.maxX += 10;
@@ -82,7 +82,7 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	}
 
 	// You're dead, you shall not update yourself.
-	if (playerMap[p.id].timeUntilRespawn > 0)
+	if (playerMap[p.id].deathState)
 		return;
 
 	// Clients don't have full rights to update player objects. For example, client cannot update
@@ -94,7 +94,7 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	p.numDeaths = playerMap[p.id].numDeaths;
 	p.resources = playerMap[p.id].resources;
 
-	if (checkCollisionWithAllNonTraps(p))
+	if (checkCollisionWithAllNonTraps(&p))
 		return;
 	
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); it++)
@@ -330,23 +330,23 @@ void DynamicWorld::addTrap(struct trapObject t)
 	currentId++;
 }
 
-bool DynamicWorld::checkCollisionWithAllNonTraps(struct playerObject e)
+bool DynamicWorld::checkCollisionWithAllNonTraps(struct playerObject *e)
 {
 	vector<struct playerObject> players = getAllPlayers();
 	for (int i = 0; i < players.size(); i++)
 	{
-		if (players[i].id != e.id && checkCollision(e.aabb, players[i].aabb))
+		if (players[i].id != e->id && checkCollision(e->aabb, players[i].aabb))
 		{
-			printf("Collision: player %d with player %d\n", e.id, players[i].id);
+			printf("Collision: player %d with player %d\n", e->id, players[i].id);
 			return true;
 		}
 	}
 	for (int i = 0; i < staticObjects.size(); i++)
 	{
 		// Something wrong with building#40
-		if (i != 40 && !(e.onTopOfBuildingId == i) && checkCollision(e.aabb, staticObjects[i].aabb))
+		if (i != 40 && !(e->onTopOfBuildingId == i) && checkCollision(e->aabb, staticObjects[i].aabb))
 		{
-			printf("Collision: player %d with static object %d\n", e.id, i);
+			printf("Collision: player %d with static object %d\n", e->id, i);
 			return true;
 		}
 	}
@@ -367,7 +367,6 @@ void DynamicWorld::updatePlayerBuffs(int timeDiff)
 
 		if (p.timeUntilRespawn > 0)
 		{
-			cout << "Decreasing ttr" << endl;
 			p.timeUntilRespawn -= timeDiff;
 			if (p.timeUntilRespawn < 0)
 				respawnPlayer(&p);
@@ -380,7 +379,8 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 	playerLock[target->id] = true;
 	playerLock[attacker->id] = true;
 
-	if (target->timeUntilRespawn > 0)
+	// already dead
+	if (target->deathState)
 		return;
 
 	target->health -= damage;
@@ -401,6 +401,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		target->aabb.minX = 0;
 		target->aabb.minY = 0;
 		target->aabb.minZ = 0;
+		target->deathState = true;
 		attacker->numKills++;
 
 		int killBonusResource = 0;
@@ -413,6 +414,25 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 	p->x = 75;
 	p->y = 0;
 	p->z = 0;
+	computeTemporaryAABB(p);
+
+	while(checkCollisionWithAllNonTraps(p))
+	{
+		p->x += 10;
+		computeTemporaryAABB(p);
+	}
+
 	p->health = 100;
 	p->timeUntilRespawn = 0;
+	p->deathState = false;
+}
+
+void DynamicWorld::computeTemporaryAABB(struct playerObject *p)
+{
+	p->aabb.minX = p->x - 10;
+	p->aabb.maxX = p->x + 10;
+	p->aabb.minY = p->y - 10;
+	p->aabb.maxY = p->y + 10;
+	p->aabb.minZ = p->z - 10;
+	p->aabb.maxZ = p->z + 10;
 }

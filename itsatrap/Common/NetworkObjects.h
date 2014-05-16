@@ -27,6 +27,7 @@ struct playerObject {
 	int				timeUntilRespawn;
 	int				resources;
 	int				onTopOfBuildingId;
+	bool			deathState;
 };
 
 struct trapObject {

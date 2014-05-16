@@ -100,7 +100,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	// TODO (ktngo): Bad practice. Move away from using structs
 	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
-	printPacket(p);
+	//printPacket(p);
 	//printf("[SERVER]: Received a packet. eventId: %d\n", p->eventId);
 
 	// Some events can be processed immediately (like init request)

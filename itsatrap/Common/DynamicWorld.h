@@ -32,9 +32,10 @@ private:
 
 	// Functions
 	bool checkCollision(struct aabb a, struct aabb b);
-	bool checkCollisionWithAllNonTraps(struct playerObject e);
+	bool checkCollisionWithAllNonTraps(struct playerObject *e);
 	void addNewPlayer(struct playerObject p);
 	void respawnPlayer(struct playerObject *p);
+	void computeTemporaryAABB(struct playerObject *p);
 
 public:
 	// Variables

@@ -128,7 +128,7 @@ namespace sg {
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
 
-		if (m_player->m_timeUntilRespawn <= 0)
+		if (!m_player->m_deathState)
 		{
 			for (int i=0; i<m_nChild; i++) {
 				m_child[i]->draw(glm::mat4(), this->getPlayer()->getCameraMatrix());
@@ -258,6 +258,7 @@ namespace sg {
 		p.slowDuration = m_player->m_slowDuration;
 		p.timeUntilRespawn = m_player->m_timeUntilRespawn;
 		p.onTopOfBuildingId = m_player->m_onTopOfBuildingId;
+		p.deathState = m_player->m_deathState;
 		return p;
 	}
 

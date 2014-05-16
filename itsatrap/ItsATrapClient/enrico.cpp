@@ -35,6 +35,8 @@ void handlePlayerUpdate(struct playerObject p)
 			cout << "[CLIENT]: HIT! Player " << p.id << "'s health is now " << p.health << endl;
 			client->players[p.id]->setHealth(p.health);
 		}
+		client->players[p.id]->m_player->m_deathState = p.deathState;
+
 
 		// BUFFS
 		client->players[p.id]->m_player->m_stunDuration = p.stunDuration;
