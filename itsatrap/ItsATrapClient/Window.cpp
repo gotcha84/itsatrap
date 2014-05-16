@@ -111,19 +111,19 @@ void Window::displayCallback(void)
 		client->root->getPlayer()->applyHoldingEdge();
 	}
 
-	int buildingId = client->root->getPlayer()->getPhysics()->applyGravity(client->root->getPlayer()->getAABB());
+	//int buildingId = client->root->getPlayer()->getPhysics()->applyGravity(client->root->getPlayer()->getAABB());
 
-	if (client->root->getPlayer()->m_timeUntilRespawn <= 0) {
-		if (buildingId != -2) {
-			sendUpdate = true;
-			client->root->getPlayer()->m_onTopOfBuildingId = buildingId;
-		}
-	}
+	//if (client->root->getPlayer()->m_timeUntilRespawn <= 0) {
+	//	if (buildingId != -2) {
+	//		sendUpdate = true;
+	//		client->root->getPlayer()->m_onTopOfBuildingId = buildingId;
+	//	}
+	//}
 
-	if (oldBuildingId != client->root->getPlayer()->m_onTopOfBuildingId) {
-		cout << "old building id: " << oldBuildingId << endl;
-		cout << "new building id:" << client->root->getPlayer()->m_onTopOfBuildingId << endl;
-	}
+	//if (oldBuildingId != client->root->getPlayer()->m_onTopOfBuildingId) {
+	//	cout << "old building id: " << oldBuildingId << endl;
+	//	cout << "new building id:" << client->root->getPlayer()->m_onTopOfBuildingId << endl;
+	//}
 	
 	client->root->getPlayer()->getPhysics()->m_velocity += client->root->getPlayer()->getPhysics()->m_velocityDiff;
 
@@ -203,7 +203,7 @@ void Window::displayCallback(void)
 	m_fpsCounter+=1;
 				
 	if (clock()-m_timer > 1000) {
-		cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
+		//cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
 		m_timer = clock();
 		m_fpsCounter = 0;
 	}

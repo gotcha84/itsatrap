@@ -95,12 +95,14 @@
     <ClCompile Include="Geode.cpp" />
     <ClCompile Include="Group.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MatrixTransform.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MyPlayer.cpp" />
     <ClCompile Include="ObjModel.cpp" />
+    <ClCompile Include="ObjNode.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PlayerNode.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -116,8 +118,10 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="HUD.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="ObjModel.h" />
+    <ClInclude Include="ObjNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Camera.h" />

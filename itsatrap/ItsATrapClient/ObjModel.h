@@ -10,8 +10,6 @@
 
 #include "tiny_obj_loader.h"
 #include "Geode.h"
-//#include "Utilities.h"
-#include "Physics.h"
 
 using namespace std;
 
@@ -26,7 +24,8 @@ class ObjModel : public sg::Geode {
 		glm::vec3 m_position;
 
 		int m_id;
-		string m_filename;
+		string m_objFilename;
+		string m_mtlFilename;
 
 		//Physics m_physics;
 
@@ -39,9 +38,12 @@ class ObjModel : public sg::Geode {
 			
 		ObjModel();
 		ObjModel(int id);
-		ObjModel(std::string filename);
-		ObjModel(std::string filename, glm::vec3 currPos);
-		ObjModel(int id, std::string filename);
+		ObjModel(string objFilename);
+		ObjModel(string objFilename, string mtlFilename);
+		ObjModel(string objFilename, glm::vec3 currPos);
+		ObjModel(string objFilename, string mtlFilename, glm::vec3 currPos);
+		ObjModel(int id, string objFilename);
+		ObjModel(int id, string objFilename, string mtlFilename);
 		~ObjModel();
 
 		void initScales();
@@ -56,8 +58,10 @@ class ObjModel : public sg::Geode {
 		void draw(glm::mat4 parent, glm::mat4 cam);
 		void drawModel();
 
-		void loadFilename(std::string filename);
-		void loadModel(std::string filename);
+		void loadFilename(string objFilename);
+		void loadFilename(string objFilename, string mtlFilename);
+		void loadModel(string objFilename);
+		void loadModel(string objFilename, string mtlFilename);
 		void loadModel();
 
 		void print();
