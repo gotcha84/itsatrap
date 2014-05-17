@@ -12,8 +12,12 @@ int Window::m_heightMapXShift = 278;
 int Window::m_heightMapZShift = 463;
 
 bool *Window::keyState = new bool[256];
+bool *Window::keyEventTriggered = new bool[256];
+char Window::trapKey = 0;
 bool *Window::specialKeyState = new bool[256];
+bool *Window::specialKeyEventTriggered = new bool[256];
 int Window::modifierKey = 0;
+
 Sound *walk		  = new Sound("footstep.wav");
 Sound *jumpSound  = new Sound("jump.wav");
 Sound *knifeSound = new Sound("knife.wav");
@@ -26,10 +30,10 @@ Sound *lightningSound = new Sound("lightning.wav");
 Window::Window() {
 	for (int i=0; i<256; i++) {
 		keyState[i] = false;
+		keyEventTriggered[i] = false;
 		specialKeyState[i] = false;
-	}
-
-	
+		specialKeyEventTriggered[i] = false;
+	}	
 }
 
 Window::~Window() {
@@ -67,8 +71,8 @@ void Window::reshapeCallback(int w, int h)
 //----------------------------------------------------------------------------
 // Callback method called when window readraw is necessary or
 // when glutPostRedisplay() was called.
-void Window::displayCallback(void)
-{	
+void Window::displayCallback(void) 
+{
 	processKeys();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
@@ -156,48 +160,20 @@ void Window::displayCallback(void)
 void Window::keyDown(unsigned char key, int x, int y)
 {
 	keyState[key] = true;
-	//cout << key << " down" << endl;
-	if (key >= '1' && key <= '9') {
-		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated);
-		struct trapObject t = trap->getTrapObjectForNetworking();
-		switch (key)
-		{
-		case '1':
-			t.type = TYPE_FREEZE_TRAP;
-			freezeTrapSound->playMusic(true,false,true);
-			break;
-		case '2':
-			t.type = TYPE_TRAMPOLINE_TRAP;
-			tramSound->playMusic(true,false,true);
-			break;
-		case '3':
-			t.type = TYPE_SLOW_TRAP;
-			slowSound->playMusic(true,false,true);
-			break;
-		case '4':
-			t.type = TYPE_PUSH_TRAP;
-			pushSound->playMusic(true,false,true);
-			break;
-		case '5':
-			t.type = TYPE_LIGHTNING_TRAP;
-			lightningSound->playMusic(true,false,true);
-			break;
-		default:
-			t.type = TYPE_FREEZE_TRAP;
-			freezeTrapSound->playMusic(true,false,true);
-			break;
-		}
 
-		cout << glm::to_string(client->root->getCamera()->getCameraLookAt() - client->root->getCamera()->getCameraCenter()) << endl;
-		
-		Client::sendSpawnTrapEvent(t);
-		delete trap;
+	if (key >= '1' && key <= '9') {
+		trapKey = key;
 	}
+	//cout << key << " down" << endl;
+	cout << key << " : " << keyEventTriggered[key] << endl;
 }
 
 void Window::keyUp(unsigned char key, int x, int y) {
 	keyState[key] = false;
+	keyEventTriggered[key] = false;
+	trapKey = 0;
 	//cout << key << " up" << endl;
+	cout << key << " : " << keyEventTriggered[key] << endl;
 }
 
 void Window::specialKeyDown(int key, int x, int y) {
@@ -211,6 +187,7 @@ void Window::specialKeyUp(int key, int x, int y) {
 	modifierKey = glutGetModifiers();
 
 	specialKeyState[key] = false;
+	specialKeyEventTriggered[key] = false;
 	//cout << "special " << key << " up" << endl;
 }
 
@@ -244,28 +221,43 @@ void Window::processKeys() {
 		}
 		else {
 			client->root->getPlayer()->handleMovement('w');
-			walk->playMusic(true, false, true);
+			if (!keyEventTriggered['w']) {
+				walk->playMusic(false, false, true);
+				keyEventTriggered['w'] = true;
+			}
 		}
 	}
 	else if (keyState['s']) {
 		client->root->getPlayer()->handleMovement('s');
-		walk->playMusic(true, false, true);
+		if (!keyEventTriggered['s']) {
+			walk->playMusic(false, false, true);
+			keyEventTriggered['s'] = true;
+		}
 	}
 
 	// left + right
 	if (keyState['a']) {
 		client->root->getPlayer()->handleMovement('a');
-		walk->playMusic(true, false, true);
+		if (!keyEventTriggered['a']) {
+			walk->playMusic(false, false, true);
+			keyEventTriggered['a'] = true;
+		}
 	}
 	else if (keyState['d']) {
 		client->root->getPlayer()->handleMovement('d');
-		walk->playMusic(true, false, true);
+		if (!keyEventTriggered['d']) {
+			walk->playMusic(false, false, true);
+			keyEventTriggered['d'] = true;
+		}
 	}
 
 	// jump
 	if (keyState[' ']) {
 		client->root->getPlayer()->handleJump();
-		jumpSound->playMusic(false, false, true);
+		if (!keyEventTriggered[' ']) {
+			jumpSound->playMusic(false, false, true);
+			keyEventTriggered[' '] = true;
+		}
 	}
 
 	// trap
@@ -284,10 +276,44 @@ void Window::processKeys() {
 		ConfigSettings::getConfig()->reloadSettingsFile();
 	}
 
-	//case 9: // TAB
-		//client->toggleCurrentPlayer();
-		//client->printSceneGraph();
-		//break;
+	if (trapKey >= '1' && trapKey <= '9' && !keyEventTriggered[trapKey]) {
+		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated);
+		struct trapObject t = trap->getTrapObjectForNetworking();
+		
+		switch (trapKey) {
+			case '1':
+				t.type = TYPE_FREEZE_TRAP;
+				freezeTrapSound->playMusic(false,false,true);
+				break;
+			case '2':
+				t.type = TYPE_TRAMPOLINE_TRAP;
+				tramSound->playMusic(false,false,true);
+				break;
+			case '3':
+				t.type = TYPE_SLOW_TRAP;
+				slowSound->playMusic(false,false,true);
+				break;
+			case '4':
+				t.type = TYPE_PUSH_TRAP;
+				pushSound->playMusic(false,false,true);
+				break;
+			case '5':
+				t.type = TYPE_LIGHTNING_TRAP;
+				lightningSound->playMusic(false,false,true);
+				break;
+			default:
+				t.type = TYPE_FREEZE_TRAP;
+				freezeTrapSound->playMusic(false,false,true);
+				break;
+		}
+
+		keyEventTriggered[trapKey] = true;
+		trapKey = 0;
+		
+		Client::sendSpawnTrapEvent(t);
+		delete trap;
+		trap = nullptr;
+	}
 }
 
 void Window::processMouseKeys(int button, int state, int x, int y)

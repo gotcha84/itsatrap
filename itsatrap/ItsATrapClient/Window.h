@@ -11,10 +11,9 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "Sound.h"
-
 #include "MyPlayer.h"
 #include "SceneGraph.h"
+#include "Sound.h"
 
 class Window {
 	public:
@@ -22,7 +21,10 @@ class Window {
 		static int m_heightMapXShift, m_heightMapZShift;
 
 		static bool *keyState;
+		static bool *keyEventTriggered;
+		static char trapKey;
 		static bool *specialKeyState;
+		static bool *specialKeyEventTriggered;
 		static int modifierKey;
 		//Sound *sound;
 
