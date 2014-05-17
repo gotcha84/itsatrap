@@ -203,7 +203,7 @@ void Window::displayCallback(void)
 	m_fpsCounter+=1;
 				
 	if (clock()-m_timer > 1000) {
-		cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
+		//cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
 		m_timer = clock();
 		m_fpsCounter = 0;
 	}
@@ -216,32 +216,44 @@ void Window::keyDown(unsigned char key, int x, int y)
 {
 	keyState[key] = true;
 	if (key >= '1' && key <= '9') {
-		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated);
+		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->getXRotated());
+		if (key == '2') {
+			trap->loadModel("../Models/Can.obj", "../Models/");
+		}
+		else {
+			trap->loadModel("../Models/Polynoid.obj", "../Models/");
+		}
+		
 		struct trapObject t = trap->getTrapObjectForNetworking();
-		switch (key)
-		{
-		case '1':
-			t.type = TYPE_FREEZE_TRAP;
-			break;
-		case '2':
-			t.type = TYPE_TRAMPOLINE_TRAP;
-			break;
-		case '3':
-			t.type = TYPE_SLOW_TRAP;
-			break;
-		case '4':
-			t.type = TYPE_PUSH_TRAP;
-			break;
-		case '5':
-			t.type = TYPE_LIGHTNING_TRAP;
-			break;
-		default:
-			t.type = TYPE_FREEZE_TRAP;
-			break;
+		switch (key) {
+			case '1':
+				cout << "TRAP 1" << endl;
+				t.type = TYPE_FREEZE_TRAP;
+				break;
+			case '2':
+				cout << "TRAP 2" << endl;
+				t.type = TYPE_TRAMPOLINE_TRAP;
+				break;
+			case '3':
+				cout << "TRAP 3" << endl;
+				t.type = TYPE_SLOW_TRAP;
+				break;
+			case '4':
+				cout << "TRAP 4" << endl;
+				t.type = TYPE_PUSH_TRAP;
+				break;
+			case '5':
+				cout << "TRAP 5" << endl;
+				t.type = TYPE_LIGHTNING_TRAP;
+				break;
+			default:
+				t.type = TYPE_FREEZE_TRAP;
+				break;
 		}
 
 		Client::sendSpawnTrapEvent(t);
 		delete trap;
+		trap = nullptr;
 	}
 	else if (key == 'r') {
 		ConfigSettings::getConfig()->reloadSettingsFile();
@@ -344,16 +356,17 @@ void Window::processKeys() {
 		}
 	}
 
-	// trap
-	/*
-	if (keyState['1']) {
-		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition());
-		struct trapObject t = trap->getTrapObjectForNetworking();
-		t.type = TYPE_FREEZE_TRAP;
-		Client::sendSpawnTrapEvent(t);
-		delete trap;
-	}
-	*/
+	// trap	
+	//if (keyState['t']) {
+	//	cout << "'t' trap pressed" << endl;
+	//	sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->getXRotated());
+	//	trap->loadModel("../Models/Polynoid.obj", "../Models/");
+	//	struct trapObject t = trap->getTrapObjectForNetworking();
+	//	t.type = TYPE_FREEZE_TRAP;
+	//	Client::sendSpawnTrapEvent(t);
+	//	delete trap;
+	//}
+	
 
 	//case 9: // TAB
 		//client->toggleCurrentPlayer();

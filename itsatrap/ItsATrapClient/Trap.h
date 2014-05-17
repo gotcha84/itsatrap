@@ -23,13 +23,13 @@ namespace sg {
 
 			Trap();
 			Trap(int, glm::vec3 pos, float rotationAngle);
-			Trap(int, glm::vec3 pos, float rotationAngle, string filename);
 			Trap(glm::vec3);
 			Trap(glm::vec3 currPos, int type);
 
 			~Trap();
 
-			void initModel(std::string filename);
+			void loadModel(std::string filename);
+			void loadModel(std::string objFilename, std::string mtlFilename);
 			//void loadData();
 			//void setBoundingBox(AABB box);
 			//AABB getBoundingBox();

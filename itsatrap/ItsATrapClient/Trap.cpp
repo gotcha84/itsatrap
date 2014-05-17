@@ -8,18 +8,6 @@ namespace sg {
 		m_position = currPos;
 		m_model = glm::translate(currPos);
 		this->setColor(glm::vec4(1,0,0,1));
-
-		this->initModel("../Models/Polynoid.obj");
-	}
-
-	Trap::Trap(int ownerId, glm::vec3 currPos, float rotationAngle, string filename) {
-		m_ownerId = ownerId;
-		m_position = currPos;
-		m_model = glm::translate(currPos);
-		this->rotationAngle = rotationAngle;
-		this->setColor(glm::vec4(1,0,0,1));
-
-		this->initModel(filename);
 	}
 
 	Trap::Trap(int ownerId, glm::vec3 currPos, float rotationAngle) {
@@ -28,8 +16,6 @@ namespace sg {
 		m_model = glm::translate(currPos);
 		this->rotationAngle = rotationAngle;
 		this->setColor(glm::vec4(1,0,0,1));
-
-		this->initModel("../Models/Polynoid.obj");
 	}
 	
 	// TODO - implement when traps have different types
@@ -42,8 +28,13 @@ namespace sg {
 		m_model1 = nullptr;
 	}
 	
-	void Trap::initModel(std::string filename) {
-		m_model1 = new ObjModel(filename, m_position);
+	void Trap::loadModel(std::string objFilename) {
+		m_model1 = new ObjModel(objFilename, m_position);
+		m_model1->setColor(this->getColor());
+	}
+
+	void Trap::loadModel(std::string objFilename, std::string mtlFilename) {
+		m_model1 = new ObjModel(objFilename, mtlFilename, m_position);
 		m_model1->setColor(this->getColor());
 	}
 

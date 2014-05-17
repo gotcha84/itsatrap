@@ -92,17 +92,15 @@ void handleAddTrap(struct trapObject t)
 	}
 
 	sg::Trap *newTrap;
-	switch (t.type)
-	{
-	case TYPE_TRAMPOLINE_TRAP:
-		newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle, "../Models/Can.obj");
-		break;
-	case TYPE_FREEZE_TRAP:
-		newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle, "../Models/Polynoid.obj");
-		break;
-	default:
-		newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle, "../Models/Polynoid.obj");
-		break;
+	newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle);
+	
+	switch (t.type) {
+		case TYPE_TRAMPOLINE_TRAP:
+			newTrap->loadModel("../Models/Can.obj", "../Models/");
+			break;
+		default:
+			newTrap->loadModel("../Models/Polynoid.obj", "../Models/");
+			break;
 	}
 
 	client->root->addChild(newTrap);

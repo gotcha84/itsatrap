@@ -95,49 +95,6 @@ int main(int argc, char *argv[]) {
 	// hide mouse cursor
 	//glutSetCursor(GLUT_CURSOR_NONE);
 
-	// player 1
-	//sg::Player *p1 = client->root;
-	//client->root->setColor(glm::vec3(1,0,0));
-	//client->root->moveTo(glm::vec3(80.0f, 0.0f, 100.0f));
-	//client->root->lookIn(glm::vec3(0.0f, 0.0f, -1.0f));
-
-	//// player 2
-	//sg::Player p2 = sg::Player();
-	//p2.setPlayerID(2);
-	//p2.setColor(glm::vec3(0,1,0));
-	//p2.moveTo(glm::vec3(90.0f, 4.0f, 0.0f));
-	//p2.lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
-
-	//// player 3
-	//sg::Player p3 = sg::Player();
-	//p3.setPlayerID(3);
-	//p3.setColor(glm::vec3(0,0,1));
-	//p3.moveTo(glm::vec3(100.0f, 4.0f, 50.0f));
-	//p3.lookIn(glm::vec3(0.0f, 0.0f, 1.0f));
-
-	// add players	
-	//client->addPlayer(&p2);
-	//client->addPlayer(&p3);
-
-	// ground nodes
-	sg::MatrixTransform ground = sg::MatrixTransform();
-	ground.setName("ground");
-	//client->root->addChild(&ground);
-	sg::Cube groundShape = sg::Cube();
-	groundShape.setName("ground");
-	ground.addChild(&groundShape);
-	ground.setMatrix(glm::translate(glm::vec3(0,-10,0)) * glm::scale(glm::vec3(100,0.1,100)));
-	groundShape.m_color = glm::vec4(0,1,0,1);
-
-	// cube nodes
-	sg::MatrixTransform obj1 = sg::MatrixTransform();
-	obj1.setName("cube");
-	//client->root->addChild(&obj1);
-	sg::Cube obj1Shape = sg::Cube();
-	obj1Shape.setName("cube");
-	obj1.addChild(&obj1Shape);
-	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));
-
 	sg::City city = sg::City();
 	city.loadData("../Models/city.obj");
 	//city.loadData("Can.obj");

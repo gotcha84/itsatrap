@@ -15,34 +15,59 @@ ObjModel::ObjModel(int id) {
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
-ObjModel::ObjModel(std::string filename) {
+ObjModel::ObjModel(string objFilename) {
 	this->initScales();
 
-	this->loadFilename(filename);
-	this->loadModel();
+	this->loadModel(objFilename);
 
 	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
-ObjModel::ObjModel(std::string filename, glm::vec3 currPos) {
+ObjModel::ObjModel(string objFilename, string mtlFilename) {
+	this->initScales();
+
+	this->loadModel(objFilename, mtlFilename);
+
+	//m_physics = Physics();
+	this->setColor(glm::vec4(1,0,0,1));
+}
+
+ObjModel::ObjModel(string objFilename, glm::vec3 currPos) {
 	this->initScales();
 
 	m_position = currPos;
-
-	this->loadFilename(filename);
-	this->loadModel();
+	this->loadModel(objFilename);
 
 	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
-ObjModel::ObjModel(int id, std::string filename) {
+ObjModel::ObjModel(string objFilename, string mtlFilename, glm::vec3 currPos) {
+	this->initScales();
+
+	m_position = currPos;
+	this->loadModel(objFilename, mtlFilename);
+
+	//m_physics = Physics();
+	this->setColor(glm::vec4(1,0,0,1));
+}
+
+ObjModel::ObjModel(int id, string objFilename) {
 	this->initScales();
 
 	m_id = id;
-	this->loadFilename(filename);
-	this->loadModel();
+	this->loadModel(objFilename);
+
+	//m_physics = Physics();
+	this->setColor(glm::vec4(1,0,0,1));
+}
+
+ObjModel::ObjModel(int id, string objFilename, string mtlFilename) {
+	this->initScales();
+
+	m_id = id;
+	this->loadModel(objFilename, mtlFilename);
 
 	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
@@ -86,7 +111,6 @@ void ObjModel::setNIndices(int ele) {
 	//cout << glm::to_string(this->getMatrix()) << endl;
 }
 
-
 void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
 	this->setMatrix(glm::translate(this->getPosition()) * glm::scale(m_scaleVec));
 	glm::mat4 new_model = parent * this->getMatrix();
@@ -102,10 +126,11 @@ void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
 }
 
 void ObjModel::drawModel() {
+
 	glEnable(GL_TEXTURE_2D);
 
 	// change order of vertices for backface culling for can
-	if (this->m_filename == "../Models/Can.obj") {
+	if (this->m_objFilename == "../Models/Can.obj") {
 		glFrontFace(GL_CW);
 	}
 
@@ -152,10 +177,10 @@ void ObjModel::drawModel() {
 	glFrontFace(GL_CCW);
 }
 
-void ObjModel::loadFilename(std::string filename) {
-	m_filename = filename;
+void ObjModel::loadFilename(string objFilename) {
+	m_objFilename = objFilename;
 
-	if (m_filename == "../Models/Can.obj") {
+	if (m_objFilename == "../Models/Can.obj") {
 		m_scaleVec = glm::vec3(m_canScale);
 	}
 	else {
@@ -163,16 +188,49 @@ void ObjModel::loadFilename(std::string filename) {
 	}
 }
 
-void ObjModel::loadModel(std::string filename) {
-	this->loadFilename(filename);
+void ObjModel::loadFilename(string objFilename, string mtlFilename) {
+	m_objFilename = objFilename;
+	m_mtlFilename = mtlFilename;
+
+	if (m_objFilename == "../Models/Can.obj") {
+		m_scaleVec = glm::vec3(m_canScale);
+	}
+	else {
+		m_scaleVec = glm::vec3(m_defaultScale);
+	}
+}
+
+void ObjModel::loadModel(string objFilename) {
+	this->loadFilename(objFilename);
+	this->loadModel();
+}
+
+void ObjModel::loadModel(string objFilename, string mtlFilename) {
+	this->loadFilename(objFilename, mtlFilename);
 	this->loadModel();
 }
 
 void ObjModel::loadModel() {
 	vector<tinyobj::shape_t> shapes;
-  
-	string err = tinyobj::LoadObj(shapes, m_filename.c_str());
-	cout << "[tinyobj] " << err << endl;
+
+	string err;
+	if (!m_objFilename.empty() && !m_mtlFilename.empty()) {
+		cout << "[ObjModel] loading obj : " << m_objFilename << endl;
+		cout << "[ObjModel] loading mtl : " << m_mtlFilename << endl;
+		err = tinyobj::LoadObj(shapes, m_objFilename.c_str(), m_mtlFilename.c_str());
+	}
+	else if (!m_objFilename.empty()) {
+		cout << "[ObjModel] loading obj : " << m_objFilename << endl;
+		err = tinyobj::LoadObj(shapes, m_objFilename.c_str());
+	}
+	else {
+		cout << "[ObjModel] ERROR : no obj file specified" << endl;
+		return;
+	}
+
+	if (!err.empty()) {
+		cout << "\t[tinyobj] " << err << endl;
+	}
 
 	int indicesCount = 0;
 	int verticesCount = 0;
@@ -181,7 +239,7 @@ void ObjModel::loadModel() {
 	int max_ele = -1;
 	int added = 0;
 	//int added = 0;
-	//std::string tmp;
+	//string tmp;
 	//stringstream ss;
 		
 	for (int j = 0; j < shapes.size(); j++) {
