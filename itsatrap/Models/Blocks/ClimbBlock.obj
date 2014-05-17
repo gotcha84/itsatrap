@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib Caltrop.mtl
+mtllib ClimbBlock.mtl
 g default
 v -11.997173 0.062737 11.997747
 v 12.002827 0.062737 11.997747

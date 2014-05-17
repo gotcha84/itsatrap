@@ -7,6 +7,18 @@
 
 #include "SceneGraph.h"
 
+#define UNIT_SIZE		27
+#define BLOCKS			"../Models/Blocks/"
+#define POLYNOIDS		"../Models/Polynoids/"
+#define CLIMBBLOCK		"../Models/Blocks/ClimbBlock.obj"
+#define CROSSBAR		"../Models/Blocks/CrossBar.obj"
+#define LARGERAMP		"../Models/Blocks/LargeRamp.obj"
+#define RESOURCETOWER	"../Models/Blocks/ResourceTower.obj"
+#define SMALLBLOCK		"../Models/Blocks/SmallBlock.obj"
+#define SMALLRAMP		"../Models/Blocks/SmallRamp.obj"
+#define POLYNOID		"../Models/Polynoids/Polynoid.obj"
+
+
 class Level {
 	public:
 		sg::MatrixTransform *root;

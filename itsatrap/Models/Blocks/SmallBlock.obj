@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib HipWall.mtl
+mtllib SmallBlock.mtl
 g default
 v 12.022910 -0.022960 5.992880
 v 12.022910 -0.022960 -6.007120

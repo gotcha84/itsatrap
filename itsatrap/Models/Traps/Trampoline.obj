@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib SuperJumpTrap.mtl
+mtllib Trampoline.mtl
 g default
 v -6.054714 1.515098 6.008484
 v 6.035580 1.515098 6.008484

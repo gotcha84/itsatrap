@@ -40,8 +40,10 @@ void MyPlayer::initCommon() {
 	setProjectionMatrix();
 	setViewportMatrix();
 
-	m_xWalkFactor = 0.05f;
-	m_zWalkFactor = 0.05f;
+	//m_xWalkFactor = 0.05f;
+	//m_zWalkFactor = 0.05f;
+	m_xWalkFactor = 1.5f;
+	m_zWalkFactor = 1.5f;
 	m_xSlowWalkFactor = 0.0025f;
 	m_zSlowWalkFactor = 0.0025f;
 	m_wallJumpFactor = 0.5f;
