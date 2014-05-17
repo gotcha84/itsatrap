@@ -273,9 +273,9 @@ void Level::initLevel() {
 	building18->setColor(glm::vec4(1, 0, 0, 1));
 	building18_XForm->addChild(building18);
 
-	// Building 19: (12, 16, 19)
+	// Building 19: (14, 16, 19)
 	sg::MatrixTransform *building19_XForm = new sg::MatrixTransform();
-	building19_XForm->setMatrix(glm::translate(glm::vec3(12 * UNIT_SIZE, UNIT_16 / 2, 19 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_12, UNIT_16, UNIT_2)));
+	building19_XForm->setMatrix(glm::translate(glm::vec3(14 * UNIT_SIZE, UNIT_16 / 2, 19 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_8, UNIT_16, UNIT_2)));
 	root->addChild(building19_XForm);
 
 	sg::Cube *building19 = new sg::Cube();
@@ -384,9 +384,9 @@ void Level::initLevel() {
 	ramp1->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	ramp1_XForm->addChild(ramp1);
 
-	// Ramp 2: (-7, 0, 7)	TODO (ktngo): Rotations
+	// Ramp 2: (-7, 0, 7)	
 	sg::MatrixTransform *ramp2_XForm = new sg::MatrixTransform();
-	ramp2_XForm->setMatrix(glm::translate(glm::vec3(-7 * UNIT_SIZE, 0, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 24, .55 * 6)));
+	ramp2_XForm->setMatrix(glm::translate(glm::vec3(-7 * UNIT_SIZE, 0, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 24, .55 * 6)) * Utilities::rotateY(180));
 	root->addChild(ramp2_XForm);
 
 	sg::ObjNode *ramp2 = new sg::ObjNode(SMALLRAMP, BLOCKS);
@@ -394,9 +394,9 @@ void Level::initLevel() {
 	ramp2->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	ramp2_XForm->addChild(ramp2);
 
-	// Ramp 3: (-12, 0, 14)
+	// Ramp 3: (-12, 0, -14)
 	sg::MatrixTransform *ramp3_XForm = new sg::MatrixTransform();
-	ramp3_XForm->setMatrix(glm::translate(glm::vec3(-12 * UNIT_SIZE, 0, 14 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 4, 0.45 * 8, .55 * 4)));
+	ramp3_XForm->setMatrix(glm::translate(glm::vec3(-12 * UNIT_SIZE, 0, -14 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 4, 0.45 * 8, .55 * 4)));
 	root->addChild(ramp3_XForm);
 
 	sg::ObjNode *ramp3 = new sg::ObjNode(SMALLRAMP, BLOCKS);
@@ -406,7 +406,7 @@ void Level::initLevel() {
 
 	// Ramp 4: (-19, 8, 0)
 	sg::MatrixTransform *ramp4_XForm = new sg::MatrixTransform();
-	ramp4_XForm->setMatrix(glm::translate(glm::vec3(-19 * UNIT_SIZE, 8 * UNIT_SIZE, 0)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 16, .55 * 4)));
+	ramp4_XForm->setMatrix(glm::translate(glm::vec3(-19 * UNIT_SIZE, 8 * UNIT_SIZE, 0)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 16, .55 * 6)));
 	root->addChild(ramp4_XForm);
 
 	sg::ObjNode *ramp4 = new sg::ObjNode(SMALLRAMP, BLOCKS);
@@ -416,7 +416,7 @@ void Level::initLevel() {
 
 	// Ramp 5: (5, 0, 15)
 	sg::MatrixTransform *ramp5_XForm = new sg::MatrixTransform();
-	ramp5_XForm->setMatrix(glm::translate(glm::vec3(5 * UNIT_SIZE, 0, 15 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 6, 0.45 * 8, .55 * 2)));
+	ramp5_XForm->setMatrix(glm::translate(glm::vec3(5 * UNIT_SIZE, 0, 15 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 6, 0.45 * 8, .55 * 2)) * Utilities::rotateY(90));
 	root->addChild(ramp5_XForm);
 
 	sg::ObjNode *ramp5 = new sg::ObjNode(SMALLRAMP, BLOCKS);
@@ -426,7 +426,7 @@ void Level::initLevel() {
 
 	// Ramp 6: (5, 0, 19)
 	sg::MatrixTransform *ramp6_XForm = new sg::MatrixTransform();
-	ramp6_XForm->setMatrix(glm::translate(glm::vec3(5 * UNIT_SIZE, 0, 19 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 4, 0.45 * 32, .55 * 2)));
+	ramp6_XForm->setMatrix(glm::translate(glm::vec3(5 * UNIT_SIZE, 0, 19 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 10, 0.45 * 32, .55 * 2)) * Utilities::rotateY(90));
 	root->addChild(ramp6_XForm);
 
 	sg::ObjNode *ramp6 = new sg::ObjNode(SMALLRAMP, BLOCKS);
@@ -434,9 +434,9 @@ void Level::initLevel() {
 	ramp6->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	ramp6_XForm->addChild(ramp6);
 
-	// Ramp 7: (17, 0, 6)
+	// Ramp 7: (17, 0, 8)
 	sg::MatrixTransform *ramp7_XForm = new sg::MatrixTransform();
-	ramp7_XForm->setMatrix(glm::translate(glm::vec3(17 * UNIT_SIZE, 0, 6 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 16, .55 * 4)));
+	ramp7_XForm->setMatrix(glm::translate(glm::vec3(17 * UNIT_SIZE, 0, 7.95 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 16, .55 * 8)) * Utilities::rotateY(180));
 	root->addChild(ramp7_XForm);
 
 	sg::ObjNode *ramp7 = new sg::ObjNode(SMALLRAMP, BLOCKS);
