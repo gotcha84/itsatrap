@@ -188,8 +188,8 @@ void Window::displayCallback(void)
 	//	m_fpsCounter = 0;
 	//}
 
-	//glFlush();  
-	//glutSwapBuffers();
+	glFlush();  
+	glutSwapBuffers();
 }
 
 void Window::keyDown(unsigned char key, int x, int y)

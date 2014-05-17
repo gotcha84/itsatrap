@@ -48,6 +48,12 @@ int main(int argc, char *argv[]) {
 	glutCreateWindow("It's a Trap!");           // open window and set window title
 	//glutFullScreen();
 
+	// init glew
+	GLenum err = glewInit();
+	if (err != GLEW_OK) {
+	  cout << "[glewInit] Error : " << glewGetErrorString(err) << endl;
+	}
+
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
 	glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
 	glClearColor(0.0, 0.0, 0.0, 0.0);           // set clear color to black
@@ -95,11 +101,6 @@ int main(int argc, char *argv[]) {
 	// mouse input
 	glutMouseFunc(window->processMouseKeys);
 	glutPassiveMotionFunc(window->processMouseMove);
-
-	GLenum err = glewInit();
-	if (err != GLEW_OK) {
-	  cout << "[glewInit] Error : " << glewGetErrorString(err) << endl;
-	}
 
 	// hide mouse cursor
 	//glutSetCursor(GLUT_CURSOR_NONE);

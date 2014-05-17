@@ -276,6 +276,8 @@ void ObjModel::calculateBoundingBox() {
 	}
 				
 	m_boundingBox.setAABB(minx+m_position.x, miny+m_position.y, minz+m_position.z, maxx+m_position.x, maxy+m_position.y, maxz+m_position.z);
+
+	m_boundingBox.print();
 }
 
 bool ObjModel::isInside(glm::vec3 point) {		

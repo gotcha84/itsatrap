@@ -1,23 +1,23 @@
-#define INVALID_VALUE 0xffffffff
-
 #include "Mesh.h"
 
 #include <assert.h>
 
 Mesh::MeshEntry::MeshEntry() {
-    VB = INVALID_VALUE;
-    IB = INVALID_VALUE;
+    VB = -1;
+    IB = -1;
     NumIndices  = 0;
-    MaterialIndex = INVALID_VALUE;
+    MaterialIndex = -1;
 };
 
 Mesh::MeshEntry::~MeshEntry() {
-    if (VB != INVALID_VALUE) {
+    if (VB != -1) {
         glDeleteBuffers(1, &VB);
+		VB = -1;
     }
 
-    if (IB != INVALID_VALUE) {
+    if (IB != -1) {
         glDeleteBuffers(1, &IB);
+		IB = -1;
     }
 }
 
@@ -37,9 +37,8 @@ Mesh::Mesh() {
 
 }
 
-
 Mesh::~Mesh() {
-    Clear();
+	Clear();
 }
 
 void Mesh::Clear() {
@@ -187,7 +186,7 @@ void Mesh::Render() {
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Entries[i].IB);
 
-        const unsigned int MaterialIndex = m_Entries[i].MaterialIndex;
+        //const unsigned int MaterialIndex = m_Entries[i].MaterialIndex;
 
         //if (MaterialIndex < m_Textures.size() && m_Textures[MaterialIndex]) {
         //    m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
