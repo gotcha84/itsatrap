@@ -102,13 +102,10 @@ void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
 }
 
 void ObjModel::drawModel() {
-
-	
-
 	glEnable(GL_TEXTURE_2D);
 
 	// change order of vertices for backface culling for can
-	if (this->m_filename == "Can.obj") {
+	if (this->m_filename == "../Models/Can.obj") {
 		glFrontFace(GL_CW);
 	}
 
@@ -158,7 +155,7 @@ void ObjModel::drawModel() {
 void ObjModel::loadFilename(std::string filename) {
 	m_filename = filename;
 
-	if (m_filename == "Can.obj") {
+	if (m_filename == "../Models/Can.obj") {
 		m_scaleVec = glm::vec3(m_canScale);
 	}
 	else {
@@ -175,6 +172,7 @@ void ObjModel::loadModel() {
 	vector<tinyobj::shape_t> shapes;
   
 	string err = tinyobj::LoadObj(shapes, m_filename.c_str());
+	cout << "[tinyobj] " << err << endl;
 
 	int indicesCount = 0;
 	int verticesCount = 0;

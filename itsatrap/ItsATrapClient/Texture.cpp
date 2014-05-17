@@ -5,7 +5,7 @@
 GLuint buildingTexture1;
 
 Texture::Texture(){
-	texture_building = "building1.ppm";
+	texture_building = "../Models/building1.ppm";
 }
 			
 Texture::~Texture(){}

@@ -141,25 +141,21 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\phong.frag" />
-    <None Include="..\..\phong.vert" />
-    <None Include="can.frag">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="can.vert">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="gouraud.frag" />
-    <None Include="gouraud.vert" />
-    <None Include="phongandtexture.frag" />
-    <None Include="phongandtexture.vert" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Shaders\can.frag" />
+    <None Include="..\Shaders\can.vert" />
+    <None Include="..\Shaders\gouraud.frag" />
+    <None Include="..\Shaders\gouraud.vert" />
+    <None Include="..\Shaders\phongandtexture.frag" />
+    <None Include="..\Shaders\phongandtexture.vert" />
+    <None Include="..\Shaders\simple.frag" />
+    <None Include="..\Shaders\simple.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

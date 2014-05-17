@@ -425,10 +425,10 @@ namespace sg {
 		
 			vector<float> tmpArr;
 
-			if (inputfile == "city.obj") {
+			if (inputfile == "../Models/city.obj") {
 				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_cityScale, 0.0f, -1.0f, 0.0f);
 			}
-			else if (inputfile == "Can.obj") {
+			else if (inputfile == "../Models/Can.obj") {
 				tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_canScale, 0.0f, 0.0f, 0.0f);
 			}
 			else {

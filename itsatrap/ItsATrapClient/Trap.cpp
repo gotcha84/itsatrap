@@ -9,7 +9,7 @@ namespace sg {
 		m_model = glm::translate(currPos);
 		this->setColor(glm::vec4(1,0,0,1));
 
-		this->initModel("Polynoid.obj");
+		this->initModel("../Models/Polynoid.obj");
 	}
 
 	Trap::Trap(int ownerId, glm::vec3 currPos, float rotationAngle, string filename) {
@@ -29,7 +29,7 @@ namespace sg {
 		this->rotationAngle = rotationAngle;
 		this->setColor(glm::vec4(1,0,0,1));
 
-		this->initModel("Polynoid.obj");
+		this->initModel("../Models/Polynoid.obj");
 	}
 	
 	// TODO - implement when traps have different types

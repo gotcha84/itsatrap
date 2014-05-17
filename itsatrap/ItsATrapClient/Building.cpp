@@ -10,15 +10,15 @@ namespace sg {
 		
 		if (ENABLE_SHADER) {
 			shader = new Shader();
-			light = shader->lightShader("phongandtexture.frag", "phongandtexture.vert");
+			light = shader->lightShader("../Shaders/phongandtexture.frag", "../Shaders/phongandtexture.vert");
 		}
 
 		//this let the shaders on texture, so when you try to use shader on texture you add this on eline of a code
 		texture = new Texture();
 		if (ENABLE_SHADER) {
-			glUniform1i(glGetUniformLocation(light, "building1.ppm"), 0);
+			glUniform1i(glGetUniformLocation(light, "../Models/building1.ppm"), 0);
 		}
-		texturePPM = texture->loadTexture("building1.ppm");
+		texturePPM = texture->loadTexture("../Models/building1.ppm");
 	}
 
 	/*Building::Building(string filename) {

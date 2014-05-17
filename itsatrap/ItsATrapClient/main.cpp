@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
 	obj1.setMatrix(glm::translate(glm::vec3(0,-5,0)) * glm::scale(glm::vec3(10,10,10)));
 
 	sg::City city = sg::City();
-	city.loadData("city.obj");
+	city.loadData("../Models/city.obj");
 	//city.loadData("Can.obj");
 	client->root->addChild(&city);
 

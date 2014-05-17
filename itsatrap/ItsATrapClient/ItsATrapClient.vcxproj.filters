@@ -28,8 +28,8 @@
     <Filter Include="Header Files\SceneGraph">
       <UniqueIdentifier>{f018f9e0-9e2c-4cdd-b8f9-a875dc9919b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{0c02ee5e-d511-4c42-b3b7-fc0802a54304}</UniqueIdentifier>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{b9bbe3db-19a9-404e-b5f5-087bce953cf5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -196,29 +196,29 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="can.frag">
-      <Filter>Shader</Filter>
+    <None Include="..\Shaders\can.frag">
+      <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="can.vert">
-      <Filter>Shader</Filter>
+    <None Include="..\Shaders\can.vert">
+      <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="..\..\phong.frag">
-      <Filter>Shader</Filter>
+    <None Include="..\Shaders\gouraud.frag">
+      <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="..\..\phong.vert">
-      <Filter>Shader</Filter>
+    <None Include="..\Shaders\gouraud.vert">
+      <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="phongandtexture.frag">
-      <Filter>Shader</Filter>
+    <None Include="..\Shaders\phongandtexture.frag">
+      <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="phongandtexture.vert">
-      <Filter>Shader</Filter>
+    <None Include="..\Shaders\phongandtexture.vert">
+      <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="gouraud.frag">
-      <Filter>Shader</Filter>
+    <None Include="..\Shaders\simple.frag">
+      <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="gouraud.vert">
-      <Filter>Shader</Filter>
+    <None Include="..\Shaders\simple.vert">
+      <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>
