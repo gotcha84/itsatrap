@@ -94,6 +94,9 @@ int Physics::applyGravity(AABB* player) {
 			m_feetPlanted = true;
 			m_canJump = true;
 			m_velocity.y = 0.0f; /* = glm::vec3(m_velocity.x, 0.0f, m_velocity.z); */
+			
+			// maybe remove
+			m_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 			m_velocityDiff.y = 0.0f;
 			if (m_currentState != PhysicsStates::Sliding) {
 				m_currentState = PhysicsStates::None;

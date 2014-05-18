@@ -90,6 +90,7 @@ class MyPlayer {
 		void applyPullingUp();
 
 		void startWallRunning(int direction, glm::vec3 toAdd, float angle);
+		void handleWallRunning(unsigned char key);
 		void applyWallRunning();
 		void applyCamAdjustments();
 		void applyWallRunningYAdjustLook();

@@ -295,6 +295,9 @@ void Window::processKeys() {
 		//if (curr_state != PhysicsStates::HoldingEdge) {
 			client->root->getPlayer()->handleJump();
 		}
+		else if (curr_state == PhysicsStates::WallRunning) {
+			client->root->getPlayer()->handleWallRunning(' ');
+		}
 		else if (curr_state == PhysicsStates::HoldingEdge) {
 			client->root->getPlayer()->handleHoldingEdge(' ');
 		}

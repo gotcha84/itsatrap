@@ -496,9 +496,13 @@ void MyPlayer::handleHoldingEdge(unsigned char key) {
 			break;
 
 		case ' ':
-			/*cout << "started pulling up" << endl;
-			m_physics->m_currentState = PhysicsStates::PullingUp;*/
-			return;
+			toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
+			cout << "jumping off holding" << endl;
+			m_physics->m_currentState = PhysicsStates::None;
+			m_cam->m_camX = -1.0f*m_cam->m_camXClimb;
+			m_cam->m_camZ = -1.0f*m_cam->m_camZClimb;
+			m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
+			m_physics->m_velocityDiff = -1.0f*m_physics->m_velocityDiffWallJump;
 			break;
 
 	}
@@ -733,6 +737,24 @@ void MyPlayer::startWallRunning(int newDirection, glm::vec3 toAdd, float angle) 
 	m_physics->m_currentState = PhysicsStates::WallRunning;
 	m_physics->m_canJump = false;
 	m_physics->m_feetPlanted = false;
+}
+
+void MyPlayer::handleWallRunning(unsigned char key) {
+	if (key == ' ') {
+		m_physics->m_velocity += m_bounceFactor*m_physics->m_velocityDiffWallRun;
+		m_physics->m_velocity.y += m_bounceFactor;
+		//m_cam->m_xRotated = m_cam->m_xRotatedWallRunHolder;
+		m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
+		//m_cam->m_cameraUp = m_cam->m_cameraUpWallRunHolder;
+		//m_cam->m_cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+		m_cam->calculateAxis();
+		m_cam->updateCameraMatrix();
+		m_physics->m_currentState = PhysicsStates::None;
+		m_physics->m_currentWallRunningYState = WallRunningYStates::WRY_Readjusting;
+		m_physics->m_currentWallRunningXState = WallRunningXStates::WRX_Readjusting;
+		m_physics->m_canJump = false;
+		m_physics->m_feetPlanted = false;
+	}
 }
 
 void MyPlayer::applyWallRunning() {
