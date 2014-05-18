@@ -39,26 +39,43 @@ void Physics::initCommon() {
 	m_teleportDelay = 5.0f;
 	m_slideDelay = 0.5f;
 
-	m_wallJumpLookUp = 70.0f;
-	//cout << "MwalljumP: " << glm::to_string(m_wallJumpLookUp) << endl;
-	m_wallJumpLookDown = -20.0f;
-	m_wallJumpLookUpIncrement = 2.5f;
-	m_wallJumpLookDownIncrement = -0.5f;
-	m_wallJumpLookReadjustIncrement = 1.0f;
-	m_wallJumpLookedDown = false;
+	m_climbLookUp = 70.0f;
+	//cout << "MwalljumP: " << glm::to_string(m_climbLookUp) << endl;
+	m_climbLookDown = -20.0f;
+	m_climbLookUpDownNumFrames = 28.0f;
+	m_climbLookDownReadjustNumFrames = 60.0f;
+	m_climbLookDownNumFramesFraction = 0.3f;
+	m_climbLookReadjustNumFramesFraction = 0.7f;
+	m_climbLookUpIncrement = m_climbLookUp/m_climbLookUpDownNumFrames;
+	m_climbLookDownIncrement = m_climbLookDown*2.0f/(m_climbLookDownReadjustNumFrames*m_climbLookDownNumFramesFraction);
+	m_climbLookReadjustIncrement = -1.0f*m_climbLookDown*2.0f/(m_climbLookDownReadjustNumFrames*m_climbLookReadjustNumFramesFraction);
+	m_climbLookedDown = false;
 
-	m_wallJumpLookXHolder = 0.0f;
-	m_wallJumpLookRight = 45.0f;
-	m_wallJumpLookXIncrement = 0.45f;
-	m_wallJumpLookBackXIncrement = 0.45f;
-	m_wallJumpLookedRight = false;
+	m_climbLookXHolder = 0.0f;
+	m_climbLookRight = 45.0f;
+	m_climbLookXsNumFrames = 200.0f;
+	m_climbLookXNumFramesFraction = 0.5f;
+	m_climbLookBackXNumFramesFraction = 0.5f;
+	m_climbLookXIncrement = m_climbLookRight/(m_climbLookXsNumFrames*m_climbLookXNumFramesFraction);
+	m_climbLookBackXIncrement = -1.0f*m_climbLookRight/(m_climbLookXsNumFrames*m_climbLookBackXNumFramesFraction);;
+	m_climbLookedRight = false;
 
 	m_triedToRun = false;
+
+	m_wallRunLookUpAdjustNumFrames = 40.0f;
+	m_wallRunLookUpReadjustNumFrames = 20.0f;
+
+	m_wallRunLookXAdjustNumFrames = 40.0f;
+	m_wallRunLookXReadjustNumFrames = 20.0f;
+
+	m_wallRunAdjustedLookUp = false;
+	m_wallRunReadjustedLookUp = false;
 }
 
 // TODO: check for collision detection, not just with heightmap
 // TODO: check player center vs player feet
 int Physics::applyGravity(AABB* player) {
+	m_feetPlanted = false;
 	int buildingId = -2;
 	if (m_currentState != PhysicsStates::Climbing && m_currentState != PhysicsStates::PullingUp && m_currentState != PhysicsStates::HoldingEdge  && m_currentState != PhysicsStates::WallRunning) {
 	
@@ -74,7 +91,8 @@ int Physics::applyGravity(AABB* player) {
 		// if landed on ground
 		if (World::m_heightMap[xIndex+World::m_heightMapXShift][zIndex+World::m_heightMapZShift] > m_position.y + m_velocity.y) {
 			m_position.y = World::m_heightMap[xIndex+World::m_heightMapXShift][zIndex+World::m_heightMapZShift];
-			
+			m_feetPlanted = true;
+			m_canJump = true;
 			m_velocity.y = 0.0f; /* = glm::vec3(m_velocity.x, 0.0f, m_velocity.z); */
 			m_velocityDiff.y = 0.0f;
 			if (m_currentState != PhysicsStates::Sliding) {
@@ -166,13 +184,13 @@ float Physics::handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, AABB* oth
 		}
 	}
 
-	bool tmp = false;
+	int tmp = false;
 	sg::Building *b = dynamic_cast<sg::Building*>(city->m_child[buildingId]);
 	if (b != nullptr) {
 		tmp = b->collidesWith(other);
 	}
 		
-	if (tmp) {
+	if (tmp != -1) {
 
 		float angle = b->angleIntersection(from, goTo);
 		return angle;

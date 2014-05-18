@@ -242,7 +242,8 @@ void MyPlayer::handleMovement(unsigned char key) {
 
 	if (this->getPhysics()->m_currentState == PhysicsStates::Climbing || 
 		this->getPhysics()->m_currentState == PhysicsStates::Sliding ||
-		this->getPhysics()->m_currentState == PhysicsStates::PullingUp) {
+		this->getPhysics()->m_currentState == PhysicsStates::PullingUp ||
+		this->getPhysics()->m_currentState == PhysicsStates::HoldingEdge) {
 		return;
 	}
 
@@ -260,7 +261,7 @@ void MyPlayer::handleMovement(unsigned char key) {
 		speedMultiplier = slowFactor;
 	}
 
-	if (m_physics->m_currentState == PhysicsStates::Jumping || m_physics->m_currentState == PhysicsStates::Falling || m_physics->m_currentState == PhysicsStates::Climbing) {
+	if (!m_physics->m_feetPlanted) {
 		xWalkFactor = m_xSlowWalkFactor * speedMultiplier;
 		zWalkFactor = m_zSlowWalkFactor * speedMultiplier;
 	}
@@ -305,106 +306,23 @@ void MyPlayer::handleMovement(unsigned char key) {
 		int oldOnTopOfBuildingId = m_onTopOfBuildingId;
 		m_onTopOfBuildingId = -1;
 		// TODO: check guy is facing wall too
-		if (m_physics->m_currentState == PhysicsStates::Jumping && !(m_physics->atRest())) {
+		if (!m_physics->m_feetPlanted && !(m_physics->atRest()) && key == 'w') {
 			float angle = m_physics->handleAngleIntersection(oldPos, proposedNewPos, this->getAABB(), canMove);
 			if (abs(90.0f-angle) < 22.5f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
 				newPos = oldPos;
 				cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << canMove << endl;
 				//m_cam->m_cameraLookAtWallJump = m_cam->m_cameraCenter - m_cam->m_camZ;
-				
-				m_cam->m_camZWallJump = m_cam->m_camZ;
-				m_cam->m_camXWallJump = m_cam->m_camX;
-				m_physics->m_velocityDiffWallJump = (m_physics->m_velocityDiff+toAdd) /* *-1.0f*/;
-
-				m_physics->m_stateStart = clock();		
-	
-				m_physics->m_wallJumpLookedDown = false;
-				m_physics->m_wallJumpLookedRight = false;
-
-				// technically dont need below commented lines as they will be executed regardless
-				/*m_cam->m_camZ = glm::rotate(m_cam->m_camZ, m_physics->m_wallJumpLookUpIncrement, m_cam->m_camX);
-				m_cam->m_yRotated+=m_physics->m_wallJumpLookUpIncrement;
-				m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;*/
-			
-				m_physics->m_wallJumpLookXHolder = m_cam->m_xRotated;
-
-				//float newXRotated = m_cam->getXRotated() + 180.0f;
-				//this->getCamera()->setXRotated(newXRotated);
-				
-				//toAdd*=-1.0f;
-			
-				//m_cam->updateCameraMatrix();
-				m_physics->m_currentState = PhysicsStates::Climbing;
+				startClimbing(toAdd);
 				m_wallJumpingBuildingId = canMove;
 			}
 			else {
 				if (oldOnTopOfBuildingId != canMove) {
 				//if (m_onTopOfBuildingId != -1) {
-					cout << "starting the minijump with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << canMove << endl;
+					cout << "starting the wallrunning with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << canMove << endl;
 					// 0,1 = x, -1 = y, 4,5 = z
-					m_physics->m_triedToRun = true;
-					m_cam->m_cameraUpWallRun = glm::vec3(0.0f, 1.0f, 0.0f);
-				
 					int newDirection = m_physics->handleReflectionIntersection(oldPos, proposedNewPos, this->getAABB(), canMove);
-					if (newDirection == 0 || newDirection == 1) {
-						m_cam->m_camZWallRun = glm::vec3(m_cam->m_camZ.x*-1.0f, m_cam->m_camZ.y, m_cam->m_camZ.z);
-						toAdd.z*=-1.0f;
-						m_physics->m_velocityDiffWallRun = glm::vec3(m_physics->m_velocityDiff.x*-1.0f, m_physics->m_velocityDiff.y, m_physics->m_velocityDiff.z);
-						m_physics->m_velocityDiffWallRun+=toAdd;
-						// TODO: change mcamx, z, lookat,
-
-						// 0 45
-						m_cam->m_camZ = glm::vec3(0.0f, 0.0f, 1.0f);
-						m_cam->m_camX = glm::vec3(0.0f, -1.0f, 0.0f);
-						m_cam->m_cameraUp = glm::vec3(-1.0f, 0.0f, 0.0f);
+					startWallRunning(newDirection, toAdd, angle);
 					
-					}
-					if (newDirection == 4 || newDirection == 5) {
-						m_cam->m_camZWallRun = glm::vec3(m_cam->m_camZ.x, m_cam->m_camZ.y, m_cam->m_camZ.z*-1.0f);
-						toAdd.z*=-1.0f;
-						m_physics->m_velocityDiffWallRun = glm::vec3(m_physics->m_velocityDiff.x, m_physics->m_velocityDiff.y, m_physics->m_velocityDiff.z*-1.0f);
-						m_physics->m_velocityDiffWallRun+=toAdd;
-
-						// 4 45
-						m_cam->m_camZ = glm::vec3(1.0f, 0.0f, 0.0f);
-						m_cam->m_camX = glm::vec3(0.0f, 1.0f, 0.0f);
-						m_cam->m_cameraUp = glm::vec3(-1.0f, 0.0f, -1.0f);
-						
-					}
-
-					if (newDirection % 2 == 1) {
-						m_cam->m_camX*=-1.0f;
-						m_cam->m_cameraUp*=-1.0f;
-					}
-					/*	1 +,-
-					2 -,+
-					3 -,+
-					4 +,-*/
-					if (angle < 90.0f) {
-						if (newDirection == 0 || newDirection == 5) {
-							m_cam->m_xRotatedWallRun = m_cam->m_xRotated-(2.0f*angle);
-						}
-						if (newDirection == 1 || newDirection == 4) {
-							m_cam->m_xRotatedWallRun = m_cam->m_xRotated-(2.0f*(180.0f-angle));
-						}
-					}
-					if (angle > 90.0f) {
-						if (newDirection == 0 || newDirection == 5) {
-							m_cam->m_xRotatedWallRun = m_cam->m_xRotated+(2.0f*(180.0f-angle));
-						}
-						if (newDirection == 1 || newDirection == 4) {
-							m_cam->m_xRotatedWallRun = m_cam->m_xRotated+(2.0f*angle);
-						}
-						m_cam->m_camZ*=-1.0f;
-						m_cam->m_camX*=-1.0f;
-					}
-					
-					m_physics->m_wallRunForward = m_cam->m_camZ;
-					cout << "wallrunforward = " << glm::to_string(m_physics->m_wallRunForward) << endl;
-					m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
-					m_cam->calculateAxis();
-					m_cam->updateCameraMatrix();
-					m_physics->m_currentState = PhysicsStates::WallRunning;
 				}
 				// TODO: need else?
 				/*else {
@@ -443,32 +361,74 @@ void MyPlayer::handleMovement(unsigned char key) {
 }
 
 void MyPlayer::handleJump() {
-	if(m_physics->m_currentState != PhysicsStates::Jumping && 
-		m_physics->m_currentState != PhysicsStates::Climbing) {
+	if(m_physics->m_canJump && m_physics->m_currentState != PhysicsStates::Climbing) {
 		
 		m_physics->m_velocity.y += m_physics->m_yJumpFactor;
-		m_physics->m_currentState = PhysicsStates::Jumping;
+		m_physics->m_canJump = false;
 	}
+}
+
+void MyPlayer::startClimbing(glm::vec3 toAdd) {
+
+	m_cam->m_camZClimb = m_cam->m_camZ;
+	m_cam->m_camXClimb = m_cam->m_camX;
+	m_physics->m_velocityDiffWallJump = (m_physics->m_velocityDiff+toAdd) /* *-1.0f*/;
+
+	m_physics->m_stateStart = clock();		
+	
+	m_physics->m_climbLookedDown = false;
+	m_physics->m_climbLookedRight = false;
+
+	// technically dont need below commented lines as they will be executed regardless
+	/*m_cam->m_camZ = glm::rotate(m_cam->m_camZ, m_physics->m_climbLookUpIncrement, m_cam->m_camX);
+	m_cam->m_yRotated+=m_physics->m_climbLookUpIncrement;
+	m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;*/
+			
+	m_physics->m_climbLookXHolder = m_cam->m_xRotated;
+
+	//float newXRotated = m_cam->getXRotated() + 180.0f;
+	//this->getCamera()->setXRotated(newXRotated);
+				
+	//toAdd*=-1.0f;
+				
+	//m_cam->updateCameraMatrix();
+	m_physics->m_currentState = PhysicsStates::Climbing;
+	
+}
+
+void MyPlayer::handleClimbing(unsigned char key) {
+	if (key == 's') {
+		cout << "END CLIMB VOLUN " << endl;
+		m_physics->m_currentState = PhysicsStates::None;
+		m_cam->m_camX = m_cam->m_camXClimb;
+		m_cam->m_camZ = m_cam->m_camZClimb;
+		m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
+		//m_physics->m_velocityDiff = m_physics->m_velocityDiffWallJump;
+		m_wallJumpingBuildingId = -1;
+		m_cam->updateCameraMatrix();
+	}
+	
 }
 
 void MyPlayer::applyClimbing() {
 	clock_t end = clock();
 	if (((float)(end - m_physics->m_stateStart) / CLOCKS_PER_SEC) > m_wallJumpTime) {
 		cout << "END CLIMB " << endl;
-		m_physics->m_currentState = PhysicsStates::Falling;
-		m_cam->m_camX = m_cam->m_camXWallJump;
-		m_cam->m_camZ = m_cam->m_camZWallJump;
+		m_physics->m_currentState = PhysicsStates::None;
+		m_cam->m_camX = m_cam->m_camXClimb;
+		m_cam->m_camZ = m_cam->m_camZClimb;
 		m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
 		//m_physics->m_velocityDiff = m_physics->m_velocityDiffWallJump;
 		m_wallJumpingBuildingId = -1;
 	}
 	else {
+		//cout << "applying climbing" << endl;
 		m_physics->m_velocityDiff = glm::vec3(0.0f, m_wallJumpFactor, 0.0f);
 		m_physics->m_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 
-		if (m_cam->m_yRotated < m_physics->m_wallJumpLookUp) {
-			m_cam->m_camZ = glm::rotate(m_cam->m_camZ, m_physics->m_wallJumpLookUpIncrement, m_cam->m_camX);
-			m_cam->m_yRotated+=m_physics->m_wallJumpLookUpIncrement;
+		if (m_cam->m_yRotated < m_physics->m_climbLookUp) {
+			m_cam->m_camZ = glm::rotate(m_cam->m_camZ, m_physics->m_climbLookUpIncrement, m_cam->m_camX);
+			m_cam->m_yRotated+=m_physics->m_climbLookUpIncrement;
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 		}
 
@@ -499,7 +459,7 @@ void MyPlayer::handleHoldingEdge(unsigned char key) {
 		speedMultiplier = slowFactor;
 	}
 
-	if (m_physics->m_currentState == PhysicsStates::Jumping || m_physics->m_currentState == PhysicsStates::Falling || m_physics->m_currentState == PhysicsStates::Climbing) {
+	if (!m_physics->m_feetPlanted || m_physics->m_currentState == PhysicsStates::Climbing) {
 		xWalkFactor = m_xSlowWalkFactor * speedMultiplier;
 		zWalkFactor = m_zSlowWalkFactor * speedMultiplier;
 	}
@@ -517,9 +477,9 @@ void MyPlayer::handleHoldingEdge(unsigned char key) {
 
 		case 's':
 			cout << "decided to fall back down" << endl;
-			m_physics->m_currentState = PhysicsStates::Falling;
-			m_cam->m_camX = m_cam->m_camXWallJump;
-			m_cam->m_camZ = m_cam->m_camZWallJump;
+			m_physics->m_currentState = PhysicsStates::None;
+			m_cam->m_camX = m_cam->m_camXClimb;
+			m_cam->m_camZ = m_cam->m_camZClimb;
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
 			//m_physics->m_velocityDiff = m_physics->m_velocityDiffWallJump;
 			m_wallJumpingBuildingId = -1;
@@ -572,9 +532,9 @@ void MyPlayer::applyHoldingEdge() {
 	clock_t end = clock();
 	if (((float)(end - m_physics->m_stateStart) / CLOCKS_PER_SEC) > m_holdingEdgeTime) {
 		cout << "END HOLD " << endl;
-		m_physics->m_currentState = PhysicsStates::Falling;
-		m_cam->m_camX = m_cam->m_camXWallJump;
-		m_cam->m_camZ = m_cam->m_camZWallJump;
+		m_physics->m_currentState = PhysicsStates::None;
+		m_cam->m_camX = m_cam->m_camXClimb;
+		m_cam->m_camZ = m_cam->m_camZClimb;
 		m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
 		//m_physics->m_velocityDiff = m_physics->m_velocityDiffWallJump;
 		m_wallJumpingBuildingId = -1;
@@ -586,8 +546,8 @@ void MyPlayer::applyPullingUp() {
 
 	if (m_physics->handleClearedTop(m_boundingBox, m_wallJumpingBuildingId)) {
 		cout << "CLEARED" << endl;
-		m_cam->m_camX = m_cam->m_camXWallJump;
-		m_cam->m_camZ = m_cam->m_camZWallJump;
+		m_cam->m_camX = m_cam->m_camXClimb;
+		m_cam->m_camZ = m_cam->m_camZClimb;
 		m_cam->m_cameraLookAt = m_cam->m_cameraCenter+m_cam->m_camZ;
 		m_physics->m_velocityDiff = 15.0f*m_physics->m_velocityDiffWallJump;
 		m_physics->m_velocityDiff.y*=15.0f*m_bounceFactor;
@@ -600,18 +560,18 @@ void MyPlayer::applyPullingUp() {
 	}
 	else {
 
-		if (!m_physics->m_wallJumpLookedDown && m_cam->m_yRotated > m_physics->m_wallJumpLookDown) {
-			m_cam->m_camZ = glm::rotate(m_cam->m_camZ, m_physics->m_wallJumpLookDownIncrement, m_cam->m_camX);
-			m_cam->m_yRotated+=m_physics->m_wallJumpLookDownIncrement;
+		if (!m_physics->m_climbLookedDown && m_cam->m_yRotated > m_physics->m_climbLookDown) {
+			m_cam->m_camZ = glm::rotate(m_cam->m_camZ, m_physics->m_climbLookDownIncrement, m_cam->m_camX);
+			m_cam->m_yRotated+=m_physics->m_climbLookDownIncrement;
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 
-			if (m_cam->m_yRotated < m_physics->m_wallJumpLookDown) {
-				m_physics->m_wallJumpLookedDown = true;
+			if (m_cam->m_yRotated < m_physics->m_climbLookDown) {
+				m_physics->m_climbLookedDown = true;
 			}
 		}
-		else if (m_physics->m_wallJumpLookedDown && m_cam->m_yRotated < 0.0f) {
-			m_cam->m_camZ = glm::rotate(m_cam->m_camZ, m_physics->m_wallJumpLookReadjustIncrement, m_cam->m_camX);
-			m_cam->m_yRotated+=m_physics->m_wallJumpLookReadjustIncrement;
+		else if (m_physics->m_climbLookedDown && m_cam->m_yRotated < 0.0f) {
+			m_cam->m_camZ = glm::rotate(m_cam->m_camZ, m_physics->m_climbLookReadjustIncrement, m_cam->m_camX);
+			m_cam->m_yRotated+=m_physics->m_climbLookReadjustIncrement;
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 
 			// technically should never happen
@@ -624,43 +584,43 @@ void MyPlayer::applyPullingUp() {
 
 		}
 
-		if (!m_physics->m_wallJumpLookedRight && m_cam->m_xRotated < m_physics->m_wallJumpLookRight + m_physics->m_wallJumpLookXHolder) {
+		if (!m_physics->m_climbLookedRight && m_cam->m_xRotated < m_physics->m_climbLookRight + m_physics->m_climbLookXHolder) {
 			
 			glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
 
-			tmp_camZ = glm::rotate(tmp_camZ, m_physics->m_wallJumpLookXIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
-			m_cam->m_camX = glm::rotate(m_cam->m_camX, m_physics->m_wallJumpLookXIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
+			tmp_camZ = glm::rotate(tmp_camZ, m_physics->m_climbLookXIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
+			m_cam->m_camX = glm::rotate(m_cam->m_camX, m_physics->m_climbLookXIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
 
 			m_cam->m_camZ = glm::vec3(tmp_camZ.x, m_cam->m_camZ.y, tmp_camZ.z);
-			m_cam->m_xRotated+=m_physics->m_wallJumpLookXIncrement;
+			m_cam->m_xRotated+=m_physics->m_climbLookXIncrement;
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 
-			if (m_cam->m_xRotated > m_physics->m_wallJumpLookRight + m_physics->m_wallJumpLookXHolder) {
-				m_physics->m_wallJumpLookedRight = true;
+			if (m_cam->m_xRotated > m_physics->m_climbLookRight + m_physics->m_climbLookXHolder) {
+				m_physics->m_climbLookedRight = true;
 			}
 					
 		}
 
-		else if (m_physics->m_wallJumpLookedRight && m_cam->m_xRotated > m_physics->m_wallJumpLookXHolder) {
+		else if (m_physics->m_climbLookedRight && m_cam->m_xRotated > m_physics->m_climbLookXHolder) {
 			glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
 
-			tmp_camZ = glm::rotate(tmp_camZ, -1.0f*m_physics->m_wallJumpLookBackXIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
-			m_cam->m_camX = glm::rotate(m_cam->m_camX, -1.0f*m_physics->m_wallJumpLookBackXIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
+			tmp_camZ = glm::rotate(tmp_camZ, m_physics->m_climbLookBackXIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
+			m_cam->m_camX = glm::rotate(m_cam->m_camX, m_physics->m_climbLookBackXIncrement, glm::vec3(0.0f, 1.0f, 0.0f));
 				
 			m_cam->m_camZ = glm::vec3(tmp_camZ.x, m_cam->m_camZ.y, tmp_camZ.z);
-			m_cam->m_xRotated+= -1.0f*m_physics->m_wallJumpLookBackXIncrement;
+			m_cam->m_xRotated+= m_physics->m_climbLookBackXIncrement;
 			m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 
 			// technically should never happen
-			if (m_cam->m_xRotated < m_physics->m_wallJumpLookXHolder) {
+			if (m_cam->m_xRotated < m_physics->m_climbLookXHolder) {
 				cout << "readjusting x" << endl;
 				glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
 
-				tmp_camZ = glm::rotateY(tmp_camZ, m_physics->m_wallJumpLookXHolder-m_cam->m_xRotated);
-				m_cam->m_camX = glm::rotateY(m_cam->m_camX,m_physics->m_wallJumpLookXHolder-m_cam->m_xRotated);
+				tmp_camZ = glm::rotateY(tmp_camZ, m_physics->m_climbLookXHolder-m_cam->m_xRotated);
+				m_cam->m_camX = glm::rotateY(m_cam->m_camX,m_physics->m_climbLookXHolder-m_cam->m_xRotated);
 
 				m_cam->m_camZ = glm::vec3(tmp_camZ.x, m_cam->m_camZ.y, tmp_camZ.z);
-				m_cam->m_xRotated+=m_physics->m_wallJumpLookXHolder-m_cam->m_xRotated;
+				m_cam->m_xRotated+=m_physics->m_climbLookXHolder-m_cam->m_xRotated;
 				m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
 			}
 
@@ -673,9 +633,111 @@ void MyPlayer::applyPullingUp() {
 
 }
 
+void MyPlayer::startWallRunning(int newDirection, glm::vec3 toAdd, float angle) {
+	m_physics->m_triedToRun = true;
+	m_physics->m_currentWallRunningYState = WallRunningYStates::WRY_Adjusting;
+	m_physics->m_currentWallRunningXState = WallRunningXStates::WRX_Adjusting;
+	m_cam->m_cameraUpWallRunHolder = glm::vec3(0.0f, 1.0f, 0.0f);
+				
+	if (newDirection == 0 || newDirection == 1) {
+		m_cam->m_camZWallRunHolder = glm::vec3(m_cam->m_camZ.x*-1.0f, m_cam->m_camZ.y, m_cam->m_camZ.z);
+		toAdd.z*=-1.0f;
+		m_physics->m_velocityDiffWallRun = glm::vec3(m_physics->m_velocityDiff.x*-1.0f, m_physics->m_velocityDiff.y, m_physics->m_velocityDiff.z);
+		m_physics->m_velocityDiffWallRun+=toAdd;
+		// TODO: change mcamx, z, lookat,
+
+		// 0 45
+		m_cam->m_camZWallRun = glm::vec3(0.0f, 0.0f, 1.0f);
+		m_cam->m_camXWallRun = glm::vec3(0.0f, -1.0f, 0.0f);
+		m_cam->m_cameraUpWallRun = glm::vec3(-0.8f, 0.8f, 0.0f);
+					
+	}
+	if (newDirection == 4 || newDirection == 5) {
+		m_cam->m_camZWallRunHolder = glm::vec3(m_cam->m_camZ.x, m_cam->m_camZ.y, m_cam->m_camZ.z*-1.0f);
+		toAdd.z*=-1.0f;
+		m_physics->m_velocityDiffWallRun = glm::vec3(m_physics->m_velocityDiff.x, m_physics->m_velocityDiff.y, m_physics->m_velocityDiff.z*-1.0f);
+		m_physics->m_velocityDiffWallRun+=toAdd;
+
+		// 4 45
+		m_cam->m_camZWallRun = glm::vec3(1.0f, 0.0f, 0.0f);
+		m_cam->m_camXWallRun = glm::vec3(0.0f, 1.0f, 0.0f);
+		m_cam->m_cameraUpWallRun = glm::vec3(0.0f, 0.8f, -0.8f);
+						
+	}
+
+	if (newDirection % 2 == 1) {
+		m_cam->m_camXWallRun*=-1.0f;
+		m_cam->m_cameraUpWallRun.x*=-1.0f;
+		m_cam->m_cameraUpWallRun.z*=-1.0f;
+	}
+
+	m_physics->m_wallRunAdjustUpCounter = 0;
+	m_physics->m_wallRunReadjustUpCounter = 0;
+	m_physics->m_wallRunAdjustXCounter = 0;
+	m_physics->m_wallRunReadjustXCounter = 0;
+
+	m_physics->m_wallRunLookUpAdjustIncrement = glm::vec3((m_cam->m_cameraUpWallRun-m_cam->m_cameraUp).x/m_physics->m_wallRunLookUpAdjustNumFrames, 
+		(m_cam->m_cameraUpWallRun-m_cam->m_cameraUp).y/m_physics->m_wallRunLookUpAdjustNumFrames, 
+		(m_cam->m_cameraUpWallRun-m_cam->m_cameraUp).z/m_physics->m_wallRunLookUpAdjustNumFrames);
+	m_physics->m_wallRunLookUpReadjustIncrement = glm::vec3((m_cam->m_cameraUp-m_cam->m_cameraUpWallRun).x/m_physics->m_wallRunLookUpReadjustNumFrames, 
+		(m_cam->m_cameraUp-m_cam->m_cameraUpWallRun).y/m_physics->m_wallRunLookUpReadjustNumFrames, 
+		(m_cam->m_cameraUp-m_cam->m_cameraUpWallRun).z/m_physics->m_wallRunLookUpReadjustNumFrames);
+
+	/*	1 +,-
+	2 -,+
+	3 -,+
+	4 +,-*/
+	/*cout << "from: " << glm::to_string(m_cam->m_cameraUp) << endl;
+	cout << "get to: " << glm::to_string(m_cam->m_cameraUpWallRun) << endl;
+	cout << "with: " << glm::to_string(m_physics->m_wallRunLookUpReadjustIncrement) << endl;*/
+
+
+	if (angle < 90.0f) {
+		m_physics->m_wallRunLookXAdjustIncrement = -1.0f*angle/m_physics->m_wallRunLookXAdjustNumFrames;
+		m_physics->m_wallRunLookXReadjustIncrement = -1.0f*angle/m_physics->m_wallRunLookXReadjustNumFrames;
+		if (newDirection == 0 || newDirection == 5) {
+			m_cam->m_xRotatedWallRunHolder = m_cam->m_xRotated-(2.0f*angle);
+		}
+		if (newDirection == 1 || newDirection == 4) {
+			m_cam->m_xRotatedWallRunHolder = m_cam->m_xRotated-(2.0f*(180.0f-angle));
+			m_physics->m_wallRunLookXAdjustIncrement *= -1.0f;
+			m_physics->m_wallRunLookXReadjustIncrement *= -1.0f;
+		}
+	}
+	if (angle > 90.0f) {
+		m_physics->m_wallRunLookXAdjustIncrement = (abs(180.0f-angle))/m_physics->m_wallRunLookXAdjustNumFrames;
+		m_physics->m_wallRunLookXReadjustIncrement = (abs(180.0f-angle))/m_physics->m_wallRunLookXReadjustNumFrames;
+		if (newDirection == 0 || newDirection == 5) {
+			m_cam->m_xRotatedWallRunHolder = m_cam->m_xRotated+(2.0f*(180.0f-angle));
+		}
+		if (newDirection == 1 || newDirection == 4) {
+			m_cam->m_xRotatedWallRunHolder = m_cam->m_xRotated+(2.0f*angle);
+			m_physics->m_wallRunLookXAdjustIncrement *= -1.0f;
+			m_physics->m_wallRunLookXReadjustIncrement *= -1.0f;
+		}
+		m_cam->m_camZWallRun*=-1.0f;
+		m_cam->m_camXWallRun*=-1.0f;
+
+	}
+
+	cout << "zholder: " << glm::to_string(m_cam->m_camZWallRunHolder) << endl;
+
+	//cout << "lookxadjustinc: " << glm::to_string(m_physics->m_wallRunLookXAdjustIncrement) << endl;
+	//cout << "lookxreadjustinc: " << glm::to_string(m_physics->m_wallRunLookXReadjustIncrement) << endl;
+					
+	m_physics->m_wallRunForward = m_cam->m_camZWallRun;
+	cout << "wallrunforward = " << glm::to_string(m_physics->m_wallRunForward) << endl;
+	m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
+	m_cam->calculateAxis();
+	m_cam->updateCameraMatrix();
+	m_physics->m_currentState = PhysicsStates::WallRunning;
+	m_physics->m_canJump = false;
+	m_physics->m_feetPlanted = false;
+}
+
 void MyPlayer::applyWallRunning() {
 	if (m_physics->m_triedToRun) {
-		cout << "wallrunning in progress" << endl;
+		//cout << "wallrunning in progress with: " << glm::to_string(m_physics->m_wallRunForward) << endl;
 		glm::vec3 proposedNewPos = m_physics->m_position + m_zWalkFactor*m_physics->m_wallRunForward;
 		glm::vec3 toAdd = m_zWalkFactor*m_physics->m_wallRunForward;
 		m_physics->m_velocityDiff+=toAdd;
@@ -683,19 +745,106 @@ void MyPlayer::applyWallRunning() {
 
 	else {
 		cout << "ended wallrunning" << endl;
-		m_cam->m_camZ = m_cam->m_camZWallRun;
+		//m_cam->m_camZ = m_cam->m_camZWallRunHolder;
 		m_physics->m_velocityDiff = m_physics->m_velocityDiffWallRun;
-		m_cam->m_xRotated = m_cam->m_xRotatedWallRun;
+		//m_cam->m_xRotated = m_cam->m_xRotatedWallRunHolder;
 		m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
-		m_cam->m_cameraUp = m_cam->m_cameraUpWallRun;
+		//m_cam->m_cameraUp = m_cam->m_cameraUpWallRunHolder;
 		//m_cam->m_cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		m_cam->calculateAxis();
 		m_cam->updateCameraMatrix();
-		m_physics->m_currentState = PhysicsStates::Falling;
-
+		m_physics->m_currentState = PhysicsStates::None;
+		m_physics->m_currentWallRunningYState = WallRunningYStates::WRY_Readjusting;
+		m_physics->m_currentWallRunningXState = WallRunningXStates::WRX_Readjusting;
+		m_physics->m_canJump = false;
+		m_physics->m_feetPlanted = false;
 	}
 
 }
+
+void MyPlayer::applyCamAdjustments() {
+	if (m_physics->m_currentWallRunningYState == WallRunningYStates::WRY_Adjusting) {
+		applyWallRunningYAdjustLook();
+	}
+	else if (m_physics->m_currentWallRunningYState == WallRunningYStates::WRY_Readjusting) {
+		applyWallRunningYReadjustLook();
+	}
+	if (m_physics->m_currentWallRunningXState == WallRunningXStates::WRX_Adjusting) {
+		applyWallRunningXAdjustLook();
+	}
+	else if (m_physics->m_currentWallRunningXState == WallRunningXStates::WRX_Readjusting) {
+		applyWallRunningXReadjustLook();
+	}
+}
+
+void MyPlayer::applyWallRunningYAdjustLook() {
+	//cout << "looking to be at: " << glm::to_string(m_cam->m_cameraUpWallRun) << endl;
+	//cout << "currently at: " << glm::to_string(m_cam->m_cameraUp) << endl;
+	m_cam->m_cameraUp+=m_physics->m_wallRunLookUpAdjustIncrement;
+	m_physics->m_wallRunAdjustUpCounter++;
+	// hopefully doesnt overshoot
+	if (m_physics->m_wallRunAdjustUpCounter == m_physics->m_wallRunLookUpAdjustNumFrames/*m_cam->m_cameraUp == m_cam->m_cameraUpWallRun*/) {
+		m_physics->m_currentWallRunningYState = WallRunningYStates::WRY_Adjusted;
+	}
+}
+
+void MyPlayer::applyWallRunningYReadjustLook() {
+	//cout << "looking to be at: " << glm::to_string(m_cam->m_cameraUpWallRunHolder) << endl;
+	//cout << "currently at: " << glm::to_string(m_cam->m_cameraUp) << endl;
+	m_cam->m_cameraUp+=m_physics->m_wallRunLookUpReadjustIncrement;
+	m_physics->m_wallRunReadjustUpCounter++;
+	// hopefully doesnt overshoot
+	if (m_physics->m_wallRunReadjustUpCounter >= m_physics->m_wallRunAdjustUpCounter*(m_physics->m_wallRunLookUpReadjustNumFrames/m_physics->m_wallRunLookUpAdjustNumFrames)) {
+		m_physics->m_currentWallRunningYState = WallRunningYStates::WRY_Off;
+		m_cam->m_cameraUp = m_cam->m_cameraUpWallRunHolder;
+	}
+}
+
+void MyPlayer::applyWallRunningXAdjustLook() {
+
+	glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
+
+	tmp_camZ = glm::rotateY(tmp_camZ, m_physics->m_wallRunLookXAdjustIncrement);
+	m_cam->m_camX = glm::rotateY(m_cam->m_camX, m_physics->m_wallRunLookXAdjustIncrement);
+
+	m_cam->m_camZ = glm::vec3(tmp_camZ.x, m_cam->m_camZ.y/*-(m_cam->m_camZWallRun.y/(m_physics->m_wallRunLookXAdjustNumFrames))*/, tmp_camZ.z);
+	m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
+
+	m_cam->m_xRotated+=m_physics->m_wallRunLookXAdjustIncrement;
+	// TODO: y rotations
+	m_cam->updateCameraMatrix();
+
+	m_physics->m_wallRunAdjustXCounter++;
+	// hopefully doesnt overshoot
+	if (m_physics->m_wallRunAdjustXCounter == m_physics->m_wallRunLookXAdjustNumFrames/*m_cam->m_cameraUp == m_cam->m_cameraUpWallRun*/) {
+		m_physics->m_currentWallRunningXState = WallRunningXStates::WRX_Adjusted;
+	}
+}
+
+void MyPlayer::applyWallRunningXReadjustLook() {
+	glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
+
+	tmp_camZ = glm::rotateY(tmp_camZ, m_physics->m_wallRunLookXReadjustIncrement);
+	m_cam->m_camX = glm::rotateY(m_cam->m_camX, m_physics->m_wallRunLookXReadjustIncrement);
+
+	m_cam->m_camZ = glm::vec3(tmp_camZ.x, m_cam->m_camZ.y/*+(m_cam->m_camZWallRun.y/(m_physics->m_wallRunLookXReadjustNumFrames))*/, tmp_camZ.z);
+	m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
+
+	m_cam->m_xRotated+=m_physics->m_wallRunLookXReadjustIncrement;
+	// TODO: y rotations
+	m_cam->updateCameraMatrix();
+
+	m_physics->m_wallRunReadjustXCounter++;
+	// hopefully doesnt overshoot
+	if (m_physics->m_wallRunReadjustXCounter == m_physics->m_wallRunLookXReadjustNumFrames) {
+		m_physics->m_currentWallRunningXState = WallRunningXStates::WRX_Off;
+		m_cam->m_camZ = m_cam->m_camZWallRunHolder;
+		m_cam->calculateAxis();
+		m_cam->updateCameraMatrix();
+	}
+}
+
+
 
 // TODO: imp if needed
 //void MyPlayer::Unstuck() {

@@ -82,11 +82,21 @@ class MyPlayer {
 		void handleTeleport();
 		void handleMovement(unsigned char key);
 		void handleJump();
+		void startClimbing(glm::vec3 toAdd);
+		void handleClimbing(unsigned char key);
 		void applyClimbing();
-		void applyPullingUp();
-		void applyWallRunning();
 		void handleHoldingEdge(unsigned char key);
 		void applyHoldingEdge();
+		void applyPullingUp();
+
+		void startWallRunning(int direction, glm::vec3 toAdd, float angle);
+		void applyWallRunning();
+		void applyCamAdjustments();
+		void applyWallRunningYAdjustLook();
+		void applyWallRunningYReadjustLook();
+		void applyWallRunningXAdjustLook();
+		void applyWallRunningXReadjustLook();
+		
 		void Unstuck(unsigned char key);
 		
 		void updateModelViewMatrix();
