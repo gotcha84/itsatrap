@@ -18,6 +18,8 @@
 #include <vector>
 #include <iostream>
 
+using namespace std;
+
 struct Vertex {
     glm::vec3 m_pos;
     glm::vec2 m_tex;
@@ -37,21 +39,23 @@ class Mesh {
 		Mesh();
 		~Mesh();
 
-		bool LoadMesh(const std::string& Filename);
+		bool LoadMesh(const string& Filename);
 		void Render();
 
-	private:
-		bool InitFromScene(const aiScene* pScene, const std::string& Filename);
+	//private:
+		bool InitFromScene(const aiScene* pScene, const string& Filename);
 		void InitMesh(unsigned int Index, const aiMesh* paiMesh);
-		//bool InitMaterials(const aiScene* pScene, const std::string& Filename);
+		//bool InitMaterials(const aiScene* pScene, const string& Filename);
 		void Clear();
 
 		struct MeshEntry {
-			MeshEntry();
+			vector<float> verts;
+			vector<unsigned int> inds;
 
+			MeshEntry();
 			~MeshEntry();
 
-			void Init(const std::vector<Vertex> &Vertices, const std::vector<unsigned int> &Indices);
+			void Init(const vector<Vertex> &Vertices, const vector<unsigned int> &Indices);
 
 			GLuint VB;
 			GLuint IB;
@@ -59,8 +63,8 @@ class Mesh {
 			unsigned int MaterialIndex;
 		};
 
-		std::vector<MeshEntry> m_Entries;
-		//std::vector<Texture*> m_Textures;
+		vector<MeshEntry> m_Entries;
+		//vector<Texture*> m_Textures;
 };
 
 #endif

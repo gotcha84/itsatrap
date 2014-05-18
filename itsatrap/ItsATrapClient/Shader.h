@@ -110,11 +110,8 @@ extern PFNGLVERTEXATTRIB4USVPROC glVertexAttrib4usv;
 extern PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
 extern PFNGLACTIVETEXTUREPROC glActiveTexture;
 
-
-
-
-#endif
 using namespace std;
+
 class Shader
 {
 	public:
@@ -130,3 +127,5 @@ class Shader
 		void printProgramInfoLog(GLuint program);
 		GLuint lightShader(char* fragFile, char* vertFile);
 };
+
+#endif
