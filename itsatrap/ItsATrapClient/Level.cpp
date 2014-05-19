@@ -22,9 +22,12 @@ Level::~Level() {
 }
 
 void Level::initLevel() {
+	// Initialize height map
+	world.initializeHeightMap();
+
 	// add basic ground
 	sg::MatrixTransform *groundXForm = new sg::MatrixTransform();
-	groundXForm->setMatrix(glm::scale(glm::vec3(40 * UNIT_SIZE, 0.01f, 40 * UNIT_SIZE)));
+	groundXForm->setMatrix(glm::scale(glm::vec3(MAP_X_LENGTH * UNIT_SIZE, FLOOR_HEIGHT, MAP_Z_LENGTH * UNIT_SIZE)));
 	ground->addChild(groundXForm);
 
 	sg::Cube *groundCube = new sg::Cube();
@@ -42,6 +45,10 @@ void Level::initLevel() {
 	buildingResource1->setName("Building: Resource 1");
 	buildingResource1->setColor(glm::vec4(1, 0, 0, 1));
 	blockResource1_XForm->addChild(buildingResource1);
+	
+	world.updateHeightMap(buildingResource1->getBoundingBox());
+
+	//buildingResource1->getBoundingBox().print();
 
 	// Building: Arena w/ Resource Tower 2 (-15, 8, 7)
 	sg::MatrixTransform *blockResource2_XForm = new sg::MatrixTransform();
@@ -52,6 +59,8 @@ void Level::initLevel() {
 	buildingResource2->setName("Building: Resource 2");
 	buildingResource2->setColor(glm::vec4(1, 0, 0, 1));
 	blockResource2_XForm->addChild(buildingResource2);
+
+	//cout << "BOUNDING BOX: " << endl;
 
 	// Building: Arena w/ Resource Tower 3 (15, 8, -7)
 	sg::MatrixTransform *blockResource3_XForm = new sg::MatrixTransform();
@@ -443,6 +452,8 @@ void Level::initLevel() {
 	ramp7->setName("Ramp: 7");
 	ramp7->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	ramp7_XForm->addChild(ramp7);
+
+	ramp7->getBoundingBox().print();
 }
 
 void Level::destroyLevel() {

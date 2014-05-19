@@ -7,6 +7,9 @@
 
 #include "SceneGraph.h"
 
+#define FLOOR_HEIGHT	0.01f
+#define MAP_X_LENGTH	40
+#define MAP_Z_LENGTH	40
 #define UNIT_SIZE		27
 #define UNIT_2			UNIT_SIZE * 2
 #define UNIT_3			UNIT_SIZE * 3
@@ -37,6 +40,7 @@ class Level {
 	public:
 		sg::MatrixTransform *root;
 		sg::MatrixTransform *ground;
+		World world;
 
 		Level();
 		~Level();
