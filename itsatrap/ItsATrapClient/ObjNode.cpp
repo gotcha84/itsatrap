@@ -7,11 +7,13 @@ namespace sg {
 
 	ObjNode::ObjNode(std::string filename) {
 		m_model = new ObjModel();
+
 		m_model->loadModel(filename);
 	}
 
 	ObjNode::ObjNode(std::string objFilename, std::string mtlFilename) {
 		m_model = new ObjModel();
+
 		m_model->loadModel(objFilename, mtlFilename);
 	}
 
@@ -30,6 +32,15 @@ namespace sg {
 
 	ObjModel *ObjNode::getModel() {
 		return m_model;
+	}
+
+	AABB ObjNode::getBoundingBox() {
+		return m_model->getBoundingBox();
+	}
+
+	void ObjNode::calculateBoundingBox() {
+		m_model->calculateBoundingBox(this->getWorldTransformMatrix());
+		m_model->getBoundingBox().print();
 	}
 
 	void ObjNode::draw(glm::mat4 parent, glm::mat4 cam) {

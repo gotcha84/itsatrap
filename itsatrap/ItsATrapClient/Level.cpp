@@ -50,6 +50,9 @@ void Level::initLevel() {
 
 	//buildingResource1->getBoundingBox().print();
 
+	buildingResource1->calculateBoundingBox();
+	buildingResource1->getBoundingBox().print();
+
 	// Building: Arena w/ Resource Tower 2 (-15, 8, 7)
 	sg::MatrixTransform *blockResource2_XForm = new sg::MatrixTransform();
 	blockResource2_XForm->setMatrix(glm::translate(glm::vec3(-15 * UNIT_SIZE, UNIT_8 / 2, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_6, UNIT_8, UNIT_6)));
@@ -402,6 +405,9 @@ void Level::initLevel() {
 	ramp2->setName("Ramp: 2");
 	ramp2->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	ramp2_XForm->addChild(ramp2);
+
+	ramp2->calculateBoundingBox();
+	ramp2->getBoundingBox().print();
 
 	// Ramp 3: (-12, 0, -14)
 	sg::MatrixTransform *ramp3_XForm = new sg::MatrixTransform();

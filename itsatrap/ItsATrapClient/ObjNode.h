@@ -4,6 +4,7 @@
 
 #include "Geode.h"
 #include "ObjModel.h"
+#include "MatrixTransform.h"
 
 #include <string>
 
@@ -20,6 +21,9 @@ namespace sg {
 			void loadModel(std::string objFilename);
 			void loadModel(std::string objFilename, std::string mtlFilename);
 			ObjModel *getModel();
+
+			AABB getBoundingBox();
+			void calculateBoundingBox();
 
 			void draw(glm::mat4 parent, glm::mat4 cam);
 			void print();

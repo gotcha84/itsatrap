@@ -110,8 +110,8 @@ int main(int argc, char *argv[]) {
 	Level level = Level();
 	client->root->addChild(level.getRoot());
 
-	client->printPlayers();
-	client->printSceneGraph();
+	//client->printPlayers();
+	//client->printSceneGraph();
 
 	glutMainLoop();
 
