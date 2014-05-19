@@ -11,6 +11,11 @@
 #define MAP_X_LENGTH	40
 #define MAP_Z_LENGTH	40
 #define UNIT_SIZE		27
+
+#define NUM_BUILDINGS	31
+#define NUM_RESOURCES	3
+#define NUM_RAMPS		7
+
 #define UNIT_2			UNIT_SIZE * 2
 #define UNIT_3			UNIT_SIZE * 3
 #define UNIT_4			UNIT_SIZE * 4
@@ -38,9 +43,14 @@
 
 class Level {
 	public:
+		World world;
 		sg::MatrixTransform *root;
 		sg::MatrixTransform *ground;
-		World world;
+		vector<sg::Cube *> buildings;
+		//sg::Cube *buildings[NUM_BUILDINGS];
+		sg::ObjNode *resouces[NUM_RESOURCES];
+		sg::ObjNode *ramps[NUM_RAMPS];
+
 
 		Level();
 		~Level();

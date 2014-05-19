@@ -36,23 +36,16 @@ void Level::initLevel() {
 	groundXForm->addChild(groundCube);
 
 	// Add obstacles + buildings to level
-	// Building: Main Arena w/ Resource Tower
+	// Building 0: (0, 0, 0)
 	sg::MatrixTransform *blockResource1_XForm = new sg::MatrixTransform();
 	blockResource1_XForm->setMatrix(glm::translate(glm::vec3(0, UNIT_12/2, 0)) * glm::scale(glm::vec3(UNIT_16, UNIT_12, UNIT_8)));
 	root->addChild(blockResource1_XForm);
 
-	sg::Cube *buildingResource1 = new sg::Cube();
-	buildingResource1->setName("Building: Resource 1");
-	buildingResource1->setColor(glm::vec4(1, 0, 0, 1));
-	blockResource1_XForm->addChild(buildingResource1);
+	buildings.push_back(new sg::Cube());
+	buildings.back()->setName("Building 0: (0, 0, 0)");
+	buildings.back()->setColor(glm::vec4(1, 0, 0, 1));
+	blockResource1_XForm->addChild(buildings.back());
 	
-	world.updateHeightMap(buildingResource1->getBoundingBox());
-
-	//buildingResource1->getBoundingBox().print();
-
-	buildingResource1->calculateBoundingBox();
-	buildingResource1->getBoundingBox().print();
-
 	// Building: Arena w/ Resource Tower 2 (-15, 8, 7)
 	sg::MatrixTransform *blockResource2_XForm = new sg::MatrixTransform();
 	blockResource2_XForm->setMatrix(glm::translate(glm::vec3(-15 * UNIT_SIZE, UNIT_8 / 2, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_6, UNIT_8, UNIT_6)));
@@ -62,8 +55,6 @@ void Level::initLevel() {
 	buildingResource2->setName("Building: Resource 2");
 	buildingResource2->setColor(glm::vec4(1, 0, 0, 1));
 	blockResource2_XForm->addChild(buildingResource2);
-
-	//cout << "BOUNDING BOX: " << endl;
 
 	// Building: Arena w/ Resource Tower 3 (15, 8, -7)
 	sg::MatrixTransform *blockResource3_XForm = new sg::MatrixTransform();
@@ -75,7 +66,7 @@ void Level::initLevel() {
 	buildingResource3->setColor(glm::vec4(1, 0, 0, 1));
 	blockResource3_XForm->addChild(buildingResource3);
 
-	//// Resource Tower #1
+	// Resource Tower #1
 	sg::MatrixTransform *resourceTower1_XForm = new sg::MatrixTransform();
 	resourceTower1_XForm->setMatrix(glm::translate(glm::vec3(0, UNIT_12, 0)));
 	root->addChild(resourceTower1_XForm);
@@ -458,8 +449,6 @@ void Level::initLevel() {
 	ramp7->setName("Ramp: 7");
 	ramp7->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	ramp7_XForm->addChild(ramp7);
-
-	ramp7->getBoundingBox().print();
 }
 
 void Level::destroyLevel() {
