@@ -8,8 +8,8 @@
 #include <vector>
 #include <algorithm>
 #include <math.h>
+#include <fstream>
 #include "AABB.h"
-#include "Geode.h"
 
 // REFERENCE FROM Level.h
 // TODO (ktngo): Figure how to link the header file without crashing everything
@@ -30,6 +30,7 @@ class World{
 
 		void initializeHeightMap();
 		void updateHeightMap(AABB boundingBox);
+		void printHeightMapToFile(string file);
 };
 
 #endif

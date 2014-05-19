@@ -46,10 +46,10 @@ class Level {
 		World world;
 		sg::MatrixTransform *root;
 		sg::MatrixTransform *ground;
+		vector<sg::MatrixTransform *> xForms;
 		vector<sg::Cube *> buildings;
-		//sg::Cube *buildings[NUM_BUILDINGS];
-		sg::ObjNode *resouces[NUM_RESOURCES];
-		sg::ObjNode *ramps[NUM_RAMPS];
+		vector<sg::ObjNode *> resources;
+		vector<sg::ObjNode *> ramps;
 
 
 		Level();
