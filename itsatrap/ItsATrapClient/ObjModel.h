@@ -65,8 +65,9 @@ class ObjModel : public sg::Geode {
 		void loadModel();
 
 		void print();
-			
+		
 		void calculateBoundingBox();
+		void calculateBoundingBox(glm::mat4 model);
 		bool isInside(glm::vec3 point);
 		bool collidesWith(ObjModel* o);
 		void setMaterial();

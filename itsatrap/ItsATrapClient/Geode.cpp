@@ -1,3 +1,5 @@
+#define RAD 0.5f
+
 #include "Geode.h"
 
 namespace sg {
@@ -47,9 +49,67 @@ namespace sg {
 		cout << "(" << this->getObjectID() << " Geode: " << this->getName() << ")";
 	}
 
-	// TODO : implement base class
-	void Geode::calculateBoundingBox() {
+	glm::mat4 Geode::getWorldTransformMatrix() {
+		sg::MatrixTransform *curr;
+		std::vector<glm::mat4> mats;
 
+		bool parentIsMT = false;
+
+		// handle this node's parent
+		if (this->hasParent()) {
+			curr = dynamic_cast<sg::MatrixTransform*>(this->getParent());
+			if (curr != nullptr) {
+				mats.push_back(curr->getMatrix());
+				parentIsMT = true;
+			}
+		}
+
+		// check more parents only if this node's parent is MT
+		if (parentIsMT) {
+			// handle this node's grandparents and above
+			while (curr->hasParent()) {
+				curr = dynamic_cast<sg::MatrixTransform*>(curr->getParent());
+			
+				if (curr == nullptr) {
+					break;
+				}
+				else {
+					mats.push_back(curr->getMatrix());
+				}
+			}
+		}
+
+		glm::mat4 result = glm::mat4();
+		for (int i=0; i<mats.size(); i++) {
+			result = result * mats[i];
+		}
+
+		return result;
+	}
+
+	void Geode::calculateBoundingBox() {
+		calculateBoundingBox(this->getWorldTransformMatrix());
+	}
+
+	void Geode::calculateBoundingBox(glm::mat4 model) {
+		float minx = -RAD;
+		float miny = -RAD;
+		float minz = -RAD;
+		float maxx = RAD;
+		float maxy = RAD;
+		float maxz = RAD;
+
+		glm::vec4 minVec = model*glm::vec4(minx, miny, minz, 1);
+		glm::vec4 maxVec = model*glm::vec4(maxx, maxy, maxz, 1);
+
+		minx = minVec.x;
+		miny = minVec.y;
+		minz = minVec.z;
+		maxx = maxVec.x;
+		maxy = maxVec.y;
+		maxz = maxVec.z;
+
+		m_boundingBox.setAABB(minx, miny, minz, maxx, maxy, maxz);
 	}
 
 	// TODO : implement base class
