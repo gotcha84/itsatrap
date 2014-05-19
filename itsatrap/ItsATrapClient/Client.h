@@ -50,6 +50,8 @@ public:
 	static void sendSpawnTrapEvent(struct trapObject);
 	static void sendKnifeHitEvent(int targetId);
 	static void sendReloadConfigFile();
+	static void sendMoveEvent(Direction dir);
+	static void sendJumpEvent();
 };
 
 

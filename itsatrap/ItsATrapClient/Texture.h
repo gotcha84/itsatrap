@@ -13,6 +13,7 @@
 //Since the tutorial I did used glext.h library, include it
 #include "glext.h"
 
+
 using namespace std;
 
 class Texture {

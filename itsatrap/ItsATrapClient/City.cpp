@@ -9,7 +9,7 @@ namespace sg {
 		m_maxArraySize = 10000;
 		m_cityScale = 0.1f;
 		m_canScale = 5.0f;
-		m_defaultScale = 1.0f;
+		m_defaultScale = glm::vec3(0.5f, 0.75f, 0.5f);
 		initArrays();
 	}
 

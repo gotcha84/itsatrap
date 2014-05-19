@@ -44,6 +44,7 @@ class MyPlayer {
 		float m_xSlowWalkFactor;
 		float m_zSlowWalkFactor;
 		float m_wallJumpFactor;
+		float m_pullingUpFactor;
 		float m_wallJumpTime;
 		float m_holdingEdgeTime;
 		float m_teleportFactor;
@@ -81,11 +82,23 @@ class MyPlayer {
 		void handleTeleport();
 		void handleMovement(unsigned char key);
 		void handleJump();
+		void startClimbing(glm::vec3 toAdd);
+		void handleClimbing(unsigned char key);
 		void applyClimbing();
-		void applyPullingUp();
 		void handleHoldingEdge(unsigned char key);
 		void applyHoldingEdge();
-		void Unstuck();
+		void applyPullingUp();
+
+		void startWallRunning(int direction, glm::vec3 toAdd, float angle);
+		void handleWallRunning(unsigned char key);
+		void applyWallRunning();
+		void applyCamAdjustments();
+		void applyWallRunningYAdjustLook();
+		void applyWallRunningYReadjustLook();
+		void applyWallRunningXAdjustLook();
+		void applyWallRunningXReadjustLook();
+		
+		void Unstuck(unsigned char key);
 		
 		void updateModelViewMatrix();
 		void setTransMatrix(glm::mat4 m);

@@ -100,7 +100,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	// TODO (ktngo): Bad practice. Move away from using structs
 	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
-	//printPacket(p);
+	printPacket(p);
 	//printf("[SERVER]: Received a packet. eventId: %d\n", p->eventId);
 
 	// Some events can be processed immediately (like init request)
@@ -218,8 +218,10 @@ void Server::broadcastDynamicWorld()
 void Server::processBuffer()
 {
 	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
+	dynamicWorld.applyGravity();
+	dynamicWorld.applyPhysics();
 	updateResources();
-
+	
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
 	WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
 
@@ -237,6 +239,21 @@ void Server::processBuffer()
 				dynamicWorld.updatePlayer(updatePacket->playerObj);
 				break;
 			}
+
+			case MOVE_EVENT:
+			{
+				struct moveEventPacket *movePkt = (struct moveEventPacket *)p;
+				dynamicWorld.processMoveEvent(movePkt);
+				break;
+			}
+
+			case JUMP_EVENT:
+			{
+				struct jumpEventPacket *jumpPkt = (struct jumpEventPacket*)p;
+				dynamicWorld.processJumpEvent(jumpPkt);
+				break;
+			}
+
 			case SPAWN_TRAP_REQUEST:
 			{
 				struct spawnTrapPacket *trapPkt = (struct spawnTrapPacket *)p;
@@ -254,8 +271,8 @@ void Server::processBuffer()
 				float knifeRange = 0.0f;
 				ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
 
-				glm::vec3 lookAt = glm::vec3(player->lookX, player->lookY, player->lookZ);
-				glm::vec3 center = glm::vec3(player->centerX, player->centerY, player->centerZ);
+				glm::vec3 lookAt = player->lookAt;
+				glm::vec3 center = player->center;
 				glm::vec3 difVec = lookAt - center;
 				glm::vec3 hitPt = center + (knifeRange * difVec);
 
@@ -322,7 +339,8 @@ void Server::updateResources()
 			it->second.resources += resourcePerInterval;
 
 			// Hot spot bonus
-			glm::vec3 pos = glm::vec3(it->second.x, it->second.y, it->second.z);
+			glm::vec3 pos = it->second.position;
+
 			if (glm::distance(pos, currentHotSpot) < 10)
 				it->second.resources += resourceHotSpotBonusPerInterval;
 		}
@@ -367,12 +385,20 @@ void Server::printPacket(struct packet *p)
 		case PLAYER_UPDATE_EVENT:
 		{
 			struct playerObject *player = &((struct playerUpdatePacket *)p)->playerObj;
-			printf("=====================================\n");
+			/*printf("=====================================\n");
 			printf("PLAYER UPDATE PACKET\n");
 			printf("ID: %d\n", player->id);
-			printf("x: %.1f, y:%.1f, z:%.1f\n", player->x, player->y, player->z);
-			printf("look: %.1f %.1f %.1f ", player->lookX, player->lookY, player->lookZ);
-			printf("upVector: %.1f %.1f %.1f\n", player->upX, player->upY, player->upZ);
+			printf("x: %.1f, y:%.1f, z:%.1f\n", player->position.x, player->position.y, player->position.z);
+			printf("=====================================\n");*/
+			
+			break;
+		}
+		case MOVE_EVENT:
+		{
+			struct moveEventPacket *movePkt = (struct moveEventPacket *)p;
+			printf("=====================================\n");
+			printf("MOVE EVENT PACKET\n");
+			cout << "test: " << glm::to_string(movePkt->test) << endl;
 			printf("=====================================\n");
 			break;
 		}

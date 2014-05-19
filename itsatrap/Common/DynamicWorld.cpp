@@ -57,7 +57,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	{
 		p.aabb.minX += 10;
 		p.aabb.maxX += 10;
-		p.x += 10;
+		p.position.x += 10;
 	}
 
 	p.health = 100;
@@ -85,14 +85,17 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	if (playerMap[p.id].deathState)
 		return;
 
-	// Clients don't have full rights to update player objects. For example, client cannot update
-	// player's health.
+	// OVERRIDE STUFF FROM CLIENT
 	p.health = playerMap[p.id].health;
 	p.stunDuration = playerMap[p.id].stunDuration;
 	p.slowDuration = playerMap[p.id].slowDuration;
 	p.numKills = playerMap[p.id].numKills;
 	p.numDeaths = playerMap[p.id].numDeaths;
 	p.resources = playerMap[p.id].resources;
+	p.toAdd = playerMap[p.id].toAdd;
+	p.velDiff = playerMap[p.id].velDiff;
+	p.vel = playerMap[p.id].vel;
+
 
 	if (checkCollisionWithAllNonTraps(&p))
 		return;
@@ -116,9 +119,8 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 				{
 					int trampolinePower = 0;
 					ConfigSettings::getConfig()->getValue("TrampolinePower", trampolinePower);
-					p.xVel = 0;
-					p.yVel = trampolinePower;
-					p.zVel = 0;
+					p.velDiff = glm::vec3(0, trampolinePower, 0);
+
 					break;
 				}
 				case TYPE_SLOW_TRAP:
@@ -136,9 +138,7 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 					glm::vec3 force = glm::rotateY(glm::vec3(0, 0, -1), it->second.rotationAngle);
 					force*=pushPower;
 
-					p.xVel = force.x;
-					p.yVel = 0;
-					p.zVel = force.z;
+					p.velDiff = glm::vec3(force.x, 0, force.z);
 
 					break;
 				}
@@ -218,9 +218,7 @@ int DynamicWorld::serialize(char **ptr)
 	for(map<int,struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		memcpy(movingPtr, &it->second, sizeof(struct playerObject));
-		//it->second.xVel = 0; // reset velocity
-		//it->second.yVel = 0; // reset velocity
-		//it->second.zVel = 0; // reset velocity
+		//it->second.toAdd = glm::vec3(0, 0, 0);
 		movingPtr += sizeof(struct playerObject);
 	}
 	for (int i = 0; i < trapsToSend.size(); i++)
@@ -255,7 +253,7 @@ void DynamicWorld::printWorld()
 	vector<struct playerObject> vec = getAllPlayers();
 	for (int i = 0; i < vec.size(); i++)
 		printf("[COMMON]: playerObject %3d:   x:%4.1f   y:%4.1f   z:%4.1f\n", vec[i].id,
-			vec[i].x, vec[i].y, vec[i].z);
+			vec[i].position.x, vec[i].position.y, vec[i].position.z);
 }
 
 vector<struct playerObject> DynamicWorld::getAllPlayers()
@@ -344,7 +342,7 @@ bool DynamicWorld::checkCollisionWithAllNonTraps(struct playerObject *e)
 	for (int i = 0; i < staticObjects.size(); i++)
 	{
 		// Something wrong with building#40
-		if (i != 40 && !(e->onTopOfBuildingId == i) && checkCollision(e->aabb, staticObjects[i].aabb))
+		if (!(e->onTopOfBuildingId == i) && checkCollision(e->aabb, staticObjects[i].aabb))
 		{
 			printf("Collision: player %d with static object %d\n", e->id, i);
 			return true;
@@ -392,9 +390,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		target->timeUntilRespawn = respawnTime;
 
 		target->numDeaths++;
-		target->x = 0;
-		target->y = 0;
-		target->z = 0;
+		target->position = glm::vec3(0, 0, 0);
 		target->aabb.maxX = 0;
 		target->aabb.maxY = 0;
 		target->aabb.maxZ = 0;
@@ -402,6 +398,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		target->aabb.minY = 0;
 		target->aabb.minZ = 0;
 		target->deathState = true;
+
 		attacker->numKills++;
 
 		int killBonusResource = 0;
@@ -411,14 +408,12 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 }
 
 void DynamicWorld::respawnPlayer(struct playerObject *p) {
-	p->x = 75;
-	p->y = 0;
-	p->z = 0;
+	p->position = glm::vec3(75, 0, 0);
 	computeTemporaryAABB(p);
 
 	while(checkCollisionWithAllNonTraps(p))
 	{
-		p->x += 10;
+		p->position.x += 10;
 		computeTemporaryAABB(p);
 	}
 
@@ -429,10 +424,56 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 
 void DynamicWorld::computeTemporaryAABB(struct playerObject *p)
 {
-	p->aabb.minX = p->x - 10;
-	p->aabb.maxX = p->x + 10;
-	p->aabb.minY = p->y - 10;
-	p->aabb.maxY = p->y + 10;
-	p->aabb.minZ = p->z - 10;
-	p->aabb.maxZ = p->z + 10;
+	p->aabb.minX = p->position.x - 5;
+	p->aabb.maxX = p->position.x + 5;
+	p->aabb.minY = p->position.y - 5;
+	p->aabb.maxY = p->position.y + 5;
+	p->aabb.minZ = p->position.z - 5;
+	p->aabb.maxZ = p->position.z + 5;
+}
+
+void DynamicWorld::processMoveEvent(struct moveEventPacket *pkt)
+{
+	struct playerObject *p = &playerMap[pkt->playerId];
+	glm::vec3 proposedNewPos;
+	glm::vec3 tmp_camZ = glm::vec3(p->camZ.x, 0.0f, p->camZ.z);
+	
+	switch (pkt->direction)
+	{
+		case UP:
+		{
+			float ZWalkFactor;
+			ConfigSettings::getConfig()->getValue("ZWalkFactor", ZWalkFactor);
+			//proposedNewPos = glm::vec3(p.position) + ZWalkFactor*tmp_camZ;
+			p->toAdd = ZWalkFactor*tmp_camZ;
+			cout << "toadd: " << glm::to_string(p->toAdd) << endl;
+			break;
+		}
+		default:
+			break;
+	}
+	p->velDiff += p->toAdd;
+}
+
+void DynamicWorld::applyGravity()
+{
+	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
+	{
+		struct playerObject &p = it->second;
+		p.vel -= glm::vec3(0, 0.01, 0);
+	}
+}
+
+void DynamicWorld::applyPhysics()
+{
+	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
+	{
+		struct playerObject *p = &it->second;
+	}
+}
+
+void DynamicWorld::processJumpEvent(struct jumpEventPacket *pkt)
+{
+	struct playerObject *p = &playerMap[pkt->playerId];
+	// do stuff with p
 }

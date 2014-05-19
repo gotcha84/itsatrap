@@ -18,6 +18,7 @@ class ObjModel : public sg::Geode {
 		float m_cityScale;
 		float m_canScale;
 		float m_defaultScale;
+
 		float m_turtleScale;
 		glm::vec3 m_scaleVec;
 

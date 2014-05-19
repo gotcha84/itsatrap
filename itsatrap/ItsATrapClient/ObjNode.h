@@ -2,6 +2,7 @@
 #ifndef OBJNODE_H
 #define OBJNODE_H
 
+
 #include "Geode.h"
 #include "ObjModel.h"
 
@@ -27,3 +28,4 @@ namespace sg {
 }
 
 #endif
+

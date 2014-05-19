@@ -234,24 +234,16 @@ namespace sg {
 		
 		p.id = this->getPlayerID();
 		p.health = this->getHealth();
-		p.x = this->getPosition().x;
-		p.y = this->getPosition().y;
-		p.z = this->getPosition().z;
+		p.position = glm::vec3(this->getPosition());
 		p.aabb.minX = this->getPlayer()->getAABB()->m_minX;
 		p.aabb.minY = this->getPlayer()->getAABB()->m_minY;
 		p.aabb.minZ = this->getPlayer()->getAABB()->m_minZ;
 		p.aabb.maxX = this->getPlayer()->getAABB()->m_maxX;
 		p.aabb.maxY = this->getPlayer()->getAABB()->m_maxY;
 		p.aabb.maxZ = this->getPlayer()->getAABB()->m_maxZ;
-		p.lookX = this->getCamera()->getCameraLookAt().x;
-		p.lookY = this->getCamera()->getCameraLookAt().y;
-		p.lookZ = this->getCamera()->getCameraLookAt().z;
-		p.centerX = this->getCamera()->getCameraCenter().x;
-		p.centerY = this->getCamera()->getCameraCenter().y;
-		p.centerZ = this->getCamera()->getCameraCenter().z;
-		p.upX = this->getCamera()->getCameraUp().x;
-		p.upY = this->getCamera()->getCameraUp().y;
-		p.upZ = this->getCamera()->getCameraUp().z;
+		p.lookAt = this->getCamera()->getCameraLookAt();
+		p.center = this->getCamera()->getCameraCenter();
+		p.up = this->getCamera()->getCameraUp();
 		p.xRotated = this->getCamera()->getXRotated();
 		p.yRotated = this->getCamera()->getYRotated();
 		p.stunDuration = m_player->m_stunDuration;
@@ -259,6 +251,8 @@ namespace sg {
 		p.timeUntilRespawn = m_player->m_timeUntilRespawn;
 		p.onTopOfBuildingId = m_player->m_onTopOfBuildingId;
 		p.deathState = m_player->m_deathState;
+		p.camZ = m_player->getCamera()->m_camZ;
+
 		return p;
 	}
 

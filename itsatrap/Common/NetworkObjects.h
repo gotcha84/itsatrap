@@ -1,6 +1,9 @@
 #ifndef NETWORKOBJECTS_H
 #define NETWORKOBJECTS_H
 
+#include <../glm/glm/glm.hpp>
+#include <../glm/glm/ext.hpp>
+
 #define EVENT_ADD_TRAP 1
 #define EVENT_REMOVE_TRAP 2
 
@@ -16,13 +19,9 @@ struct aabb {
 
 struct playerObject {
     int				id, health, numKills, numDeaths;
-	float			x, y, z;
+	glm::vec3		position, lookAt, center, up, velDiff, vel, camZ, toAdd;
 	struct aabb		aabb;
-	float			lookX, lookY, lookZ;
-	float			centerX, centerY, centerZ;
-	float			upX, upY, upZ;
 	float			xRotated, yRotated;
-	float			xVel, yVel, zVel;
 	int				stunDuration, slowDuration;
 	int				timeUntilRespawn;
 	int				resources;

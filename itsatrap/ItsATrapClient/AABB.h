@@ -22,6 +22,8 @@ class AABB {
 		float m_maxZ;
 
 		float m_nearTopFactor;
+		float m_overTopFactor;
+
 
 		AABB();
 		AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);

@@ -11,6 +11,7 @@ namespace sg {
 		if (ENABLE_SHADER) {
 			shader = new Shader();
 			light = shader->lightShader("../Shaders/phongandtexture.frag", "../Shaders/phongandtexture.vert");
+
 		}
 
 		//this let the shaders on texture, so when you try to use shader on texture you add this on eline of a code
@@ -144,7 +145,7 @@ namespace sg {
 			}
 			glEnd();
 		}
-		
+
 		//cout << max_ele << endl;
 		glDisable(GL_TEXTURE_2D);
 	}

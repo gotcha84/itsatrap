@@ -37,6 +37,8 @@ AABB::~AABB() {
 
 void AABB::initCommon() {
 	m_nearTopFactor = 15.0f;
+	m_overTopFactor = 5.0f;
+
 }
 
 void AABB::setAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
@@ -107,7 +109,7 @@ bool AABB::nearTop(glm::vec3 goTo) {
 }
 
 bool AABB::clearedTop(AABB* other) {
-	return (other->m_minY >= m_maxY+m_nearTopFactor);
+	return (other->m_minY >= m_maxY+m_overTopFactor);
 }
 
 glm::vec3 AABB::intersects(glm::vec3 from, glm::vec3 goTo) {
@@ -210,12 +212,14 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 
 	if (coeff == xMinCoeff || coeff == xMaxCoeff) {
 		tmpAngle = 180.0f*(acos((direction.z*direction.z)/(glm::length(direction)*direction.z)))/(atan(1.0f)*4.0f);
-		/*if (coeff == xMinCoeff) {
+
+		if (coeff == xMinCoeff) {
 			cout << "tmpAngle1: " << tmpAngle << endl;
 		}
 		else {
 			cout << "tmpAngle2: " << tmpAngle << endl;
-		}*/
+		}
+
 		return tmpAngle;
 	}
 	else if (coeff == yMinCoeff || coeff == yMaxCoeff) {
@@ -223,12 +227,12 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 	}
 	else {
 		tmpAngle = 180.0f*(acos((direction.x*direction.x)/(glm::length(direction)*direction.x)))/(atan(1.0f)*4.0f);
-		/*if (coeff == zMinCoeff) {
+		if (coeff == zMinCoeff) {
 			cout << "tmpAngle3: " << tmpAngle << endl;
 		}
 		else {
 			cout << "tmpAngle4: " << tmpAngle << endl;
-		}*/
+		}
 		return tmpAngle;
 	}
 }

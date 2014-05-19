@@ -52,6 +52,8 @@ public:
 	__declspec(dllexport) int getNumPlayers();
 	__declspec(dllexport) vector<struct playerObject> getAllPlayers();
 	__declspec(dllexport) void updatePlayerBuffs(int timeDiff);
+	__declspec(dllexport) void processMoveEvent(struct moveEventPacket *pkt);
+	__declspec(dllexport) void processJumpEvent(struct jumpEventPacket *pkt);
 
 	__declspec(dllexport) void addTrap(struct trapObject t);
 
@@ -60,6 +62,8 @@ public:
 
 	__declspec(dllexport) void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
+	__declspec(dllexport) void applyGravity();
+	__declspec(dllexport) void applyPhysics();
 	
 };
 

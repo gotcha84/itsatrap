@@ -215,3 +215,22 @@ void Client::sendReloadConfigFile()
 
 	printf("[CLIENT]: Sent reload config file\n");
 }
+
+void Client::sendMoveEvent(Direction dir)
+{
+	struct moveEventPacket p = {};
+	p.eventId = MOVE_EVENT;
+	p.playerId = getPlayerId();
+	p.direction = dir;
+
+	sendMsg((char *)&p, sizeof(p));
+}
+
+void Client::sendJumpEvent()
+{
+	struct jumpEventPacket p = {};
+	p.eventId = JUMP_EVENT;
+	p.playerId = getPlayerId();
+
+	sendMsg((char *)&p, sizeof(p));
+}
