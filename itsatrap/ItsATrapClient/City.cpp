@@ -77,7 +77,7 @@ namespace sg {
 		for (int i = 0; i < getNumChildren(); i++) {
 			count++;
 			
-			//m_child[i]->draw(parent, camera);
+			m_child[i]->draw(parent, camera);
 		}
 
 		

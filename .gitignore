@@ -3,8 +3,4 @@ itsatrap/ItsATrapServer/Debug/
 itsatrap/Common/Debug/
 itsatrap/*.sdf
 itsatrap/ipch/
-*.tlog
-*.log
-*.pdb
-*.idb
 itsatrap/Common/ConfigSettings.ini
