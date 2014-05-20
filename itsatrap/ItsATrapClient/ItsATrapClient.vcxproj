@@ -99,6 +99,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MatrixTransform.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshNode.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MyPlayer.cpp" />
     <ClCompile Include="ObjModel.cpp" />
@@ -119,6 +120,7 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshNode.h" />
     <ClInclude Include="ObjModel.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Trap.h" />

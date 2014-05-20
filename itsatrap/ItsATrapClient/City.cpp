@@ -75,13 +75,9 @@ namespace sg {
 		int count = 0;
 
 		for (int i = 0; i < getNumChildren(); i++) {
-			//cout << "city count: " << count << endl;
-			//if (i == 2) {
 			count++;
-			//cout << "in loop: " << m_child[i]. << endl;
-			m_child[i]->draw(parent, camera);
-			//((sg::Building*)m_child[i])->draw(parent, camera);
-			//}
+			
+			//m_child[i]->draw(parent, camera);
 		}
 
 		

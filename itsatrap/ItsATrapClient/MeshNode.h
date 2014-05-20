@@ -8,14 +8,14 @@
 namespace sg {
 	class MeshNode : public Geode {
 		public:
-			Mesh *m_model;
+			Mesh *m_mesh;
 
 			MeshNode();
 			MeshNode(std::string filename);
 			~MeshNode();
 
-			void loadModel(std::string filename);
-			Mesh *loadModel();
+			Mesh *getMesh();
+			void loadMesh(std::string filename);
 
 			void draw(glm::mat4 parent, glm::mat4 cam);
 			void print();

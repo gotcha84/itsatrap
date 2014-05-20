@@ -14,6 +14,7 @@ ClientInstance::ClientInstance(int id) {
 	objects = unordered_map<int,sg::Node*>();
 
 	root = new sg::Player(glm::vec3(75.0f,0.0f,0.0f));
+	//root = new sg::Player(glm::vec3(0.0f,0.0f,0.0f));
 	root->setPlayerID(id);
 	root->setObjectID(id);
 

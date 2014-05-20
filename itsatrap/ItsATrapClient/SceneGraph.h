@@ -17,5 +17,6 @@
 #include "City.h"
 #include "Building.h"
 #include "Trap.h"
+#include "MeshNode.h"
 
 #endif

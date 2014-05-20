@@ -58,135 +58,128 @@ void Window::reshapeCallback(int w, int h)
 // Callback method called when window readraw is necessary or
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
-{	
-	if (!client->loaded) {
-		client->test.LoadMesh("duck.dae");
-		client->loaded = true;
+{
+	float oldXRotated = client->root->getCamera()->getXRotated();
+	float oldYRotated = client->root->getCamera()->getYRotated();
+	PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState; 
+	//cout << "position: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
+	processKeys();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
+	
+	if (client->root->m_xAngleChange != 0.0f) {
+		client->root->handleXRotation(client->root->m_xAngleChange);
+		client->root->m_xAngleChange = 0.0f;
+		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+	}
+	
+	if (client->root->m_yAngleChange != 0.0f) {
+		client->root->handleYRotation(client->root->m_yAngleChange);
+		client->root->m_yAngleChange = 0.0f;
+		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+	}
+
+	if (oldXRotated != client->root->getCamera()->getXRotated() || oldYRotated != client->root->getCamera()->getYRotated()) {
+		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+	}
+	
+	glm::vec3 oldPos = client->root->getPlayer()->getPosition();
+	if (curr_state == PhysicsStates::Sliding) {
+		client->root->getPlayer()->handleSliding();
+	}
+
+	if (curr_state == PhysicsStates::Climbing) {
+		client->root->getPlayer()->applyClimbing();
+	}
+
+	if (curr_state == PhysicsStates::PullingUp) {
+		client->root->getPlayer()->applyPullingUp();
+	}
+
+	bool onGround = client->root->getPlayer()->getPhysics()->applyGravity();
+
+	if (onGround) {
+		client->root->getPlayer()->m_onTopOfBuildingId = -1;
+	}
+
+	client->root->getPlayer()->getPhysics()->m_velocity += client->root->getPlayer()->getPhysics()->m_velocityDiff;
+
+	
+	/*if (curr_state == PhysicsStates::PullingUp || curr_state == PhysicsStates::Climbing) {
+		cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
+		cout << "velodiff: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocityDiff) << endl;
+	}*/
+
+	client->root->getPlayer()->getPhysics()->m_position += client->root->getPlayer()->getPhysics()->m_velocity;
+
+	/*if (client->root->getPlayer()->getPhysics()->m_velocity.x != client->root->getPlayer()->getPhysics()->m_velocityDiff.x || client->root->getPlayer()->getPhysics()->m_velocity.z != client->root->getPlayer()->getPhysics()->m_velocityDiff.z) {
+
+		cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
+		cout << "velodiff: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocityDiff) << endl;
+
+	}*/
+	
+	//client->root->getPlayer()->getPhysics()->m_velocity = glm::vec3(0.0f, client->root->getPlayer()->getPhysics()->m_velocity.y, 0.0f);
+	
+	client->root->getPlayer()->getPhysics()->m_velocity -= client->root->getPlayer()->getPhysics()->m_velocityDiff;
+	//client->root->getPlayer()->getPhysics()->m_velocity.x -= client->root->getPlayer()->getPhysics()->m_velocityDiff.x;
+	//client->root->getPlayer()->getPhysics()->m_velocity.z -= client->root->getPlayer()->getPhysics()->m_velocityDiff.z;
+
+	client->root->getPlayer()->getPhysics()->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	client->root->getPlayer()->getPhysics()->m_lastMoved = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	if (oldPos != client->root->getPlayer()->getPosition()) {		
+		client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
+		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position/* + client->root->getPlayer()->getPhysics()->m_velocity*/));
+		client->root->getPlayer()->updateBoundingBox();
+		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+	}
+
+	/*if (client->root->getPlayer()->getCamera()->m_cameraCenter != oldPos) {
+		cout << "oldpos: " << glm::to_string(oldPos) << endl;
+		cout << "cam center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;
+	}*/
+
+	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - /*oldPos */client->root->getPlayer()->getCamera()->m_cameraCenter;
+	
+	client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
+	client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
+	
+	if (curr_state == PhysicsStates::Sliding) {
+		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_slidingHeight;
+		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding;
 	}
 	else {
-		client->test.Render();
+		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_playerHeight;
+		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
 	}
-	//float oldXRotated = client->root->getCamera()->getXRotated();
-	//float oldYRotated = client->root->getCamera()->getYRotated();
-	//PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState; 
-	////cout << "position: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
-	//processKeys();
-
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
-	//
-	//if (client->root->m_xAngleChange != 0.0f) {
-	//	client->root->handleXRotation(client->root->m_xAngleChange);
-	//	client->root->m_xAngleChange = 0.0f;
-	//	//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-	//}
-	//
-	//if (client->root->m_yAngleChange != 0.0f) {
-	//	client->root->handleYRotation(client->root->m_yAngleChange);
-	//	client->root->m_yAngleChange = 0.0f;
-	//	//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-	//}
-
-	//if (oldXRotated != client->root->getCamera()->getXRotated() || oldYRotated != client->root->getCamera()->getYRotated()) {
-	//	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-	//}
-	//
-	//glm::vec3 oldPos = client->root->getPlayer()->getPosition();
-	//if (curr_state == PhysicsStates::Sliding) {
-	//	client->root->getPlayer()->handleSliding();
-	//}
-
-	//if (curr_state == PhysicsStates::Climbing) {
-	//	client->root->getPlayer()->applyClimbing();
-	//}
-
-	//if (curr_state == PhysicsStates::PullingUp) {
-	//	client->root->getPlayer()->applyPullingUp();
-	//}
-
-	//bool onGround = client->root->getPlayer()->getPhysics()->applyGravity();
-
-	//if (onGround) {
-	//	client->root->getPlayer()->m_onTopOfBuildingId = -1;
-	//}
-
-	//client->root->getPlayer()->getPhysics()->m_velocity += client->root->getPlayer()->getPhysics()->m_velocityDiff;
-
-	//
-	///*if (curr_state == PhysicsStates::PullingUp || curr_state == PhysicsStates::Climbing) {
-	//	cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
-	//	cout << "velodiff: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocityDiff) << endl;
-	//}*/
-
-	//client->root->getPlayer()->getPhysics()->m_position += client->root->getPlayer()->getPhysics()->m_velocity;
-
-	///*if (client->root->getPlayer()->getPhysics()->m_velocity.x != client->root->getPlayer()->getPhysics()->m_velocityDiff.x || client->root->getPlayer()->getPhysics()->m_velocity.z != client->root->getPlayer()->getPhysics()->m_velocityDiff.z) {
-
-	//	cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
-	//	cout << "velodiff: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocityDiff) << endl;
-
-	//}*/
-	//
-	////client->root->getPlayer()->getPhysics()->m_velocity = glm::vec3(0.0f, client->root->getPlayer()->getPhysics()->m_velocity.y, 0.0f);
-	//
-	//client->root->getPlayer()->getPhysics()->m_velocity -= client->root->getPlayer()->getPhysics()->m_velocityDiff;
-	////client->root->getPlayer()->getPhysics()->m_velocity.x -= client->root->getPlayer()->getPhysics()->m_velocityDiff.x;
-	////client->root->getPlayer()->getPhysics()->m_velocity.z -= client->root->getPlayer()->getPhysics()->m_velocityDiff.z;
-
-	//client->root->getPlayer()->getPhysics()->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-
-	//client->root->getPlayer()->getPhysics()->m_lastMoved = glm::vec3(0.0f, 0.0f, 0.0f);
-
-	//if (oldPos != client->root->getPlayer()->getPosition()) {		
-	//	client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
-	//	client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position/* + client->root->getPlayer()->getPhysics()->m_velocity*/));
-	//	client->root->getPlayer()->updateBoundingBox();
-	//	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-	//}
-
-	///*if (client->root->getPlayer()->getCamera()->m_cameraCenter != oldPos) {
-	//	cout << "oldpos: " << glm::to_string(oldPos) << endl;
-	//	cout << "cam center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;
-	//}*/
-
-	//glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - /*oldPos */client->root->getPlayer()->getCamera()->m_cameraCenter;
-	//
-	//client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
-	//client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
-	//
-	//if (curr_state == PhysicsStates::Sliding) {
-	//	client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_slidingHeight;
-	//	client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding;
-	//}
-	//else {
-	//	client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_playerHeight;
-	//	client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
-	//}
 
 
-	//// updates player view
-	//client->root->getPlayer()->getCamera()->updateCameraMatrix();
-	//client->root->getPlayer()->updateModelViewMatrix();
-	//client->root->draw();
+	// updates player view
+	client->root->getPlayer()->getCamera()->updateCameraMatrix();
+	client->root->getPlayer()->updateModelViewMatrix();
+	client->root->draw();
 
-	//if (curr_state == PhysicsStates::Sliding) {
-	//	client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_slidingHeight;
-	//	client->root->getPlayer()->getCamera()->m_cameraLookAt -= (client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding);
-	//}
-	//else {
-	//	client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_playerHeight;
-	//	client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
-	//}
+	if (curr_state == PhysicsStates::Sliding) {
+		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_slidingHeight;
+		client->root->getPlayer()->getCamera()->m_cameraLookAt -= (client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding);
+	}
+	else {
+		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_playerHeight;
+		client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
+	}
 
-	//client->root->getPlayer()->getCamera()->updateCameraMatrix();
-	//client->root->getPlayer()->updateModelViewMatrix();
+	client->root->getPlayer()->getCamera()->updateCameraMatrix();
+	client->root->getPlayer()->updateModelViewMatrix();
 
-	//m_fpsCounter+=1;
-	//			
-	//if (clock()-m_timer > 1000) {
-	//	cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
-	//	m_timer = clock();
-	//	m_fpsCounter = 0;
-	//}
+	m_fpsCounter+=1;
+				
+	if (clock()-m_timer > 1000) {
+		//cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
+		m_timer = clock();
+		m_fpsCounter = 0;
+	}
 
 	glFlush();  
 	glutSwapBuffers();

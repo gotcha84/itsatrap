@@ -40,7 +40,7 @@ class Mesh {
 		~Mesh();
 
 		bool LoadMesh(const string& Filename);
-		void Render();
+		void draw();
 
 	//private:
 		bool InitFromScene(const aiScene* pScene, const string& Filename);
