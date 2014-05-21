@@ -150,9 +150,9 @@ int main(int argc, char *argv[]) {
 
 	// setup background music and other player's footstep
 	otherPlayerSound = new Sound("footstep.wav");
-	sound = new Sound();
+	//sound = new Sound();
 	otherPlayerSound->playMusic(false,false,true);
-	sound->playMusic();
+	//sound->playMusic();
 	otherPlayerSound->setCenterPosition();
 	// hardcode the distance value for now, it will be the input from the server
 	otherPlayerSound->changePosition(-1.0f);

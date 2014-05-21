@@ -14,14 +14,16 @@ int Window::m_heightMapZShift = 463;
 bool *Window::keyState = new bool[256];
 bool *Window::specialKeyState = new bool[256];
 int Window::modifierKey = 0;
-Sound *walk		  = new Sound("footstep.wav");
-Sound *jumpSound  = new Sound("jump.wav");
-Sound *knifeSound = new Sound("knife.wav");
-Sound *freezeTrapSound  = new Sound("trap.wav");
-Sound *pushSound  = new Sound("push.wav");
-Sound *tramSound  = new Sound("tram.wav");
-Sound *slowSound  = new Sound("slow.wav");
-Sound *lightningSound = new Sound("lightning.wav");
+vec3df position(27,70,90);
+ISoundEngine *engine = createIrrKlangDevice();
+ISound *walk;
+ISound *jumpSound;
+ISound *knifeSound;
+ISound *freezeTrapSound;
+ISound *pushSound;
+ISound *tramSound;
+ISound *slowSound;
+ISound *lightningSound;
 
 Window::Window() {
 	for (int i=0; i<256; i++) {
@@ -164,27 +166,27 @@ void Window::keyDown(unsigned char key, int x, int y)
 		{
 		case '1':
 			t.type = TYPE_FREEZE_TRAP;
-			freezeTrapSound->playMusic(true,false,true);
+			freezeTrapSound = engine->play2D("trap.wav", false, false, true);
 			break;
 		case '2':
 			t.type = TYPE_TRAMPOLINE_TRAP;
-			tramSound->playMusic(true,false,true);
+			tramSound = engine->play2D("tram.wav", false, false, true);
 			break;
 		case '3':
 			t.type = TYPE_SLOW_TRAP;
-			slowSound->playMusic(true,false,true);
+			slowSound = engine->play2D("slow.wav", false, false, true);
 			break;
 		case '4':
 			t.type = TYPE_PUSH_TRAP;
-			pushSound->playMusic(true,false,true);
+			pushSound = engine->play2D("push.wav", false, false, true);
 			break;
 		case '5':
 			t.type = TYPE_LIGHTNING_TRAP;
-			lightningSound->playMusic(true,false,true);
+			lightningSound = engine->play2D("lightning.wav", false, false, true);
 			break;
 		default:
 			t.type = TYPE_FREEZE_TRAP;
-			freezeTrapSound->playMusic(true,false,true);
+			freezeTrapSound = engine->play2D("trap.wav", false, false, true);
 			break;
 		}
 
@@ -244,28 +246,28 @@ void Window::processKeys() {
 		}
 		else {
 			client->root->getPlayer()->handleMovement('w');
-			walk->playMusic(true, false, true);
+			walk = engine->play2D("footstep.wav", false, false, true);
 		}
 	}
 	else if (keyState['s']) {
 		client->root->getPlayer()->handleMovement('s');
-		walk->playMusic(true, false, true);
+		walk = engine->play2D("footstep.wav", false, false, true);
 	}
 
 	// left + right
 	if (keyState['a']) {
 		client->root->getPlayer()->handleMovement('a');
-		walk->playMusic(true, false, true);
+		walk = engine->play2D("footstep.wav", false, false, true);
 	}
 	else if (keyState['d']) {
 		client->root->getPlayer()->handleMovement('d');
-		walk->playMusic(true, false, true);
+		walk = engine->play2D("footstep.wav", false, false, true);
 	}
 
 	// jump
 	if (keyState[' ']) {
 		client->root->getPlayer()->handleJump();
-		jumpSound->playMusic(false, false, true);
+		jumpSound = engine->play2D("jump.wav", false, false, true);
 	}
 
 	// trap
@@ -301,7 +303,7 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 				{
 					// Needs to send a query to the server and check all of the players to see if client has hit anyone
 					printf("[Client]: Knife Swung!\n");
-					knifeSound->playMusic(false,false,true);
+					knifeSound = engine->play2D("knife.wav", false, false, true);
 					int numPlayers = client->players.size();
 					for (int i = 0; i < numPlayers; ++i)
 					{
