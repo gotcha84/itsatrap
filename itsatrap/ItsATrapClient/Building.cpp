@@ -189,7 +189,7 @@ namespace sg {
 
 		glm::vec3 tmpPos = glm::vec3((maxx-minx)/2, (maxy-miny)/2, (maxz-minz)/2);
 
-		m_physics = Physics(tmpPos, FLT_MAX);
+		//m_physics = Physics(tmpPos, FLT_MAX);
 	}
 
 	bool Building::isInside(glm::vec3 point) {		

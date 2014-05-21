@@ -8,7 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Node.h"
-#include "AABB.h"
+#include "../Common/AABB.h"
 #include "Material.h"
 
 namespace sg {

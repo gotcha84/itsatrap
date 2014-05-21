@@ -13,6 +13,7 @@
 #include "NetworkConfig.h"
 #include "Packet.h"
 #include "ConfigSettings.h"
+#include "Physics.h"
 
 using namespace std;
 
@@ -22,20 +23,30 @@ using namespace std;
  * This class contains information about the world.
  *
  */
-class DynamicWorld {
+class COMMON_API DynamicWorld {
 
 private:
 	// Variables
 	int								currentId;
 	vector<struct staticObject>		staticObjects;
 	bool							playerLock[MAX_PLAYERS];
+	vector<struct stateInfo>		stateInfos;
+	vector<int>						wallJumpingBuildingIds;						
 
-	// Functions
+
+
+	// 
+	void initStateInfo();
 	bool checkCollision(struct aabb a, struct aabb b);
-	bool checkCollisionWithAllNonTraps(struct playerObject *e);
+	int checkCollisionsWithAllNonTraps(struct playerObject *e);
+	int checkSideCollisionsWithAllNonTraps(struct playerObject *e);
 	void addNewPlayer(struct playerObject p);
 	void respawnPlayer(struct playerObject *p);
 	void computeTemporaryAABB(struct playerObject *p);
+
+	
+
+	//float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, struct aabb other, int buildingId);
 
 public:
 	// Variables
@@ -43,28 +54,41 @@ public:
 	map<int, struct playerObject>	playerMap;
 
 	// Functions
-	__declspec(dllexport) DynamicWorld();
-	__declspec(dllexport) DynamicWorld(struct packet *packet);
-	__declspec(dllexport) int serialize(char **ptr);
-	__declspec(dllexport) void printWorld();
+	DynamicWorld();
+	DynamicWorld(struct packet *packet);
+	int serialize(char **ptr);
+	void printWorld();
 
-	__declspec(dllexport) void updatePlayer(struct playerObject e);
-	__declspec(dllexport) int getNumPlayers();
-	__declspec(dllexport) vector<struct playerObject> getAllPlayers();
-	__declspec(dllexport) void updatePlayerBuffs(int timeDiff);
-	__declspec(dllexport) void processMoveEvent(struct moveEventPacket *pkt);
-	__declspec(dllexport) void processJumpEvent(struct jumpEventPacket *pkt);
+	void updatePlayer(struct playerObject e);
+	int getNumPlayers();
+	vector<struct playerObject> getAllPlayers();
+	void updatePlayerBuffs(int timeDiff);
+	void processMoveEvent(struct moveEventPacket *pkt);
+	void processJumpEvent(struct jumpEventPacket *pkt);
 
-	__declspec(dllexport) void addTrap(struct trapObject t);
+	void addTrap(struct trapObject t);
 
-	__declspec(dllexport) void addStaticObject(struct staticObject);
-	__declspec(dllexport) int getNumStaticObjects();
+	void addStaticObject(struct staticObject);
+	int getNumStaticObjects();
 
-	__declspec(dllexport) void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
+	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
-	__declspec(dllexport) void applyGravity();
-	__declspec(dllexport) void applyPhysics();
-	
+	void applyGravity();
+	void applyPhysics();
+
+	/*void noneMoveEvent(struct moveEventPacket *pkt);
+	void climbingMoveEvent(struct moveEventPacket *pkt);
+	void pullingUpMoveEvent(struct moveEventPacket *pkt);
+	void holdingEdgeMoveEvent(struct moveEventPacket *pkt);
+	void wallRunningMoveEvent(struct moveEventPacket *pkt);*/
+
+	void startClimbing(struct playerObject *e, int buildingId);
+	void startWallRunning(struct playerObject *e, int newDirection, glm::vec3 toAdd, float angle);
+	void noneMoveEvent(struct moveEventPacket *pkt);
+	void climbingMoveEvent(struct moveEventPacket *pkt);
+	void pullingUpMoveEvent(struct moveEventPacket *pkt);
+	void holdingEdgeMoveEvent(struct moveEventPacket *pkt);
+	void wallRunningMoveEvent(struct moveEventPacket *pkt);
 };
 
 #endif

@@ -218,8 +218,8 @@ void Server::broadcastDynamicWorld()
 void Server::processBuffer()
 {
 	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
-	dynamicWorld.applyGravity();
 	dynamicWorld.applyPhysics();
+	dynamicWorld.applyGravity();
 	updateResources();
 	
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
@@ -271,8 +271,8 @@ void Server::processBuffer()
 				float knifeRange = 0.0f;
 				ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
 
-				glm::vec3 lookAt = player->lookAt;
-				glm::vec3 center = player->center;
+				glm::vec3 lookAt = player->cameraObject.cameraLookAt;
+				glm::vec3 center = player->cameraObject.cameraCenter;
 				glm::vec3 difVec = lookAt - center;
 				glm::vec3 hitPt = center + (knifeRange * difVec);
 
@@ -405,7 +405,7 @@ void Server::printPacket(struct packet *p)
 		default:
 		{
 			printf("=====================================\n");
-			printf("Unknown eventId: %d\n", p->eventId);
+			printf("ANDREUnknown eventId: %d\n", p->eventId);
 			printf("=====================================\n");
 			break;
 		}

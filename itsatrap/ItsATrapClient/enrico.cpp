@@ -13,10 +13,10 @@ void handleNewPlayer(struct playerObject p)
 	
 	player->setPlayerID(p.id);
 	player->moveTo(p.position);
-	player->lookAt(p.lookAt);
-	player->setUp(p.up);
-	player->getCamera()->setXRotated(p.xRotated);
-	player->getCamera()->setYRotated(p.yRotated);
+	player->lookAt(p.cameraObject.cameraLookAt);
+	player->setUp(p.cameraObject.cameraUp);
+	player->getCamera()->setXRotated(p.cameraObject.xRotated);
+	player->getCamera()->setYRotated(p.cameraObject.yRotated);
 
 	client->addPlayer(player);
 	client->players[p.id] = player;
@@ -44,13 +44,6 @@ void handlePlayerUpdate(struct playerObject p)
 
 		// RESOURCES
 		client->players[p.id]->m_player->m_resources = p.resources;
-		
-		if (p.toAdd != glm::vec3(0,0,0))
-		{
-			cout << "toAdd: " << glm::to_string(p.toAdd) << endl;
-			client->players[p.id]->getPlayer()->getPhysics()->m_velocityDiff += p.toAdd;
-		}
-
 
 		// POSITION & GRAPHIC
 		if (p.position != client->players[p.id]->getPosition()) {
@@ -58,8 +51,8 @@ void handlePlayerUpdate(struct playerObject p)
 			Client::sendPlayerUpdate(client->players[p.id]->getPlayerObjectForNetworking());
 		}
 		if (client->root->getPlayerID() != p.id) {
-			glm::vec3 pCenter = p.center;
-			glm::vec3 pLookAt = p.lookAt;
+			glm::vec3 pCenter = p.cameraObject.cameraCenter;
+			glm::vec3 pLookAt = p.cameraObject.cameraLookAt;
 			glm::vec3 pLookIn = pLookAt - pCenter;
 
 			glm::vec3 clientLookIn = client->players[p.id]->getCamera()->getCameraLookAt() - client->players[p.id]->getCamera()->getCameraCenter();
@@ -69,16 +62,16 @@ void handlePlayerUpdate(struct playerObject p)
 				//cout << "[" << client->root->getPlayerID() << "] p" << p.id << " now looking in " << glm::to_string(pLookIn) << endl;
 			}
 
-			if (glm::vec3(p.up) != client->players[p.id]->getCamera()->getCameraUp()) {
-				client->players[p.id]->setUp(p.up);
+			if (glm::vec3(p.cameraObject.cameraUp) != client->players[p.id]->getCamera()->getCameraUp()) {
+				client->players[p.id]->setUp(p.cameraObject.cameraUp);
 			}
 
-			if (p.xRotated != client->players[p.id]->getCamera()->getXRotated()) {
-				client->players[p.id]->getCamera()->setXRotated(p.xRotated);
+			if (p.cameraObject.xRotated != client->players[p.id]->getCamera()->getXRotated()) {
+				client->players[p.id]->getCamera()->setXRotated(p.cameraObject.xRotated);
 			}
 			
-			if (p.yRotated != client->players[p.id]->getCamera()->getYRotated()) {
-				client->players[p.id]->getCamera()->setYRotated(p.yRotated);
+			if (p.cameraObject.yRotated != client->players[p.id]->getCamera()->getYRotated()) {
+				client->players[p.id]->getCamera()->setYRotated(p.cameraObject.yRotated);
 			}
 
 		}

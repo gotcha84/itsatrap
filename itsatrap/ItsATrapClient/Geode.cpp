@@ -135,13 +135,13 @@ namespace sg {
 		planes.push_back(left);
 		planes.push_back(right);
 		
-		float midX = (m_boundingBox.m_maxX+m_boundingBox.m_minX)/2;
-		float midY = (m_boundingBox.m_maxY+m_boundingBox.m_minY)/2;
-		float midZ = (m_boundingBox.m_maxZ+m_boundingBox.m_minZ)/2;
+		float midX = (m_boundingBox.maxX+m_boundingBox.minX)/2;
+		float midY = (m_boundingBox.maxY+m_boundingBox.minY)/2;
+		float midZ = (m_boundingBox.maxZ+m_boundingBox.minZ)/2;
 
-		float xLength = 2.0f*(m_boundingBox.m_maxX-m_boundingBox.m_minX);
-		float yLength = 2.0f*(m_boundingBox.m_maxY-m_boundingBox.m_minY);
-		float zLength = 2.0f*(m_boundingBox.m_maxZ-m_boundingBox.m_minZ);
+		float xLength = 2.0f*(m_boundingBox.maxX-m_boundingBox.minX);
+		float yLength = 2.0f*(m_boundingBox.maxY-m_boundingBox.minY);
+		float zLength = 2.0f*(m_boundingBox.maxZ-m_boundingBox.minZ);
 
 		//float maxLength = max(max(midX, midY), midZ);
 		//float maxLength = max(max(xLength, yLength), zLength);

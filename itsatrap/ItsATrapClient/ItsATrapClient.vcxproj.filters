@@ -42,19 +42,10 @@
     <ClCompile Include="MyPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ClientInstance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tiny_obj_loader.cc">
@@ -84,9 +75,6 @@
     <ClCompile Include="PlayerNode.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="City.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
@@ -95,9 +83,6 @@
     </ClCompile>
     <ClCompile Include="Building.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="AABB.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Trap.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
@@ -123,6 +108,15 @@
     <ClCompile Include="Level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -138,12 +132,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ClientInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="tiny_obj_loader.h">
@@ -170,14 +158,8 @@
     <ClInclude Include="Building.h">
       <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="City.h">
       <Filter>Header Files\SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Trap.h">
       <Filter>Header Files\SceneGraph</Filter>
@@ -206,6 +188,12 @@
     <ClInclude Include="Level.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Shaders\can.frag">
@@ -232,5 +220,13 @@
     <None Include="..\Shaders\simple.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="..\..\phong.frag" />
+    <None Include="..\..\phong.vert" />
+    <None Include="can.frag" />
+    <None Include="can.vert" />
+    <None Include="gouraud.frag" />
+    <None Include="gouraud.vert" />
+    <None Include="phongandtexture.frag" />
+    <None Include="phongandtexture.vert" />
   </ItemGroup>
 </Project>

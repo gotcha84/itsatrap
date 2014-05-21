@@ -87,12 +87,12 @@ namespace sg {
 		t.x = this->getPosition().x;
 		t.y = this->getPosition().y;
 		t.z = this->getPosition().z;
-		t.aabb.minX = this->m_model1->getBoundingBox().m_minX;
-		t.aabb.minY = this->m_model1->getBoundingBox().m_minY;
-		t.aabb.minZ = this->m_model1->getBoundingBox().m_minZ;
-		t.aabb.maxX = this->m_model1->getBoundingBox().m_maxX;
-		t.aabb.maxY = this->m_model1->getBoundingBox().m_maxY;
-		t.aabb.maxZ = this->m_model1->getBoundingBox().m_maxZ;
+		t.aabb.minX = this->m_model1->getBoundingBox().minX;
+		t.aabb.minY = this->m_model1->getBoundingBox().minY;
+		t.aabb.minZ = this->m_model1->getBoundingBox().minZ;
+		t.aabb.maxX = this->m_model1->getBoundingBox().maxX;
+		t.aabb.maxY = this->m_model1->getBoundingBox().maxY;
+		t.aabb.maxZ = this->m_model1->getBoundingBox().maxZ;
 		t.rotationAngle = rotationAngle;
 		return t;
 	}

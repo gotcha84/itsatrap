@@ -193,7 +193,7 @@ namespace sg {
 	}
 
 	void Player::handleMovement(unsigned char key) {
-		this->getPlayer()->handleMovement(key);
+		//this->getPlayer()->handleMovement(key);
 	}
 
 	void Player::move(glm::vec3 delta) {
@@ -235,23 +235,23 @@ namespace sg {
 		p.id = this->getPlayerID();
 		p.health = this->getHealth();
 		p.position = glm::vec3(this->getPosition());
-		p.aabb.minX = this->getPlayer()->getAABB()->m_minX;
-		p.aabb.minY = this->getPlayer()->getAABB()->m_minY;
-		p.aabb.minZ = this->getPlayer()->getAABB()->m_minZ;
-		p.aabb.maxX = this->getPlayer()->getAABB()->m_maxX;
-		p.aabb.maxY = this->getPlayer()->getAABB()->m_maxY;
-		p.aabb.maxZ = this->getPlayer()->getAABB()->m_maxZ;
-		p.lookAt = this->getCamera()->getCameraLookAt();
-		p.center = this->getCamera()->getCameraCenter();
-		p.up = this->getCamera()->getCameraUp();
-		p.xRotated = this->getCamera()->getXRotated();
-		p.yRotated = this->getCamera()->getYRotated();
+		p.aabb.minX = this->getPlayer()->getAABB()->minX;
+		p.aabb.minY = this->getPlayer()->getAABB()->minY;
+		p.aabb.minZ = this->getPlayer()->getAABB()->minZ;
+		p.aabb.maxX = this->getPlayer()->getAABB()->maxX;
+		p.aabb.maxY = this->getPlayer()->getAABB()->maxY;
+		p.aabb.maxZ = this->getPlayer()->getAABB()->maxZ;
+		p.cameraObject.cameraLookAt = this->getCamera()->getCameraLookAt();
+		p.cameraObject.cameraCenter = this->getCamera()->getCameraCenter();
+		p.cameraObject.cameraUp = this->getCamera()->getCameraUp();
+		p.cameraObject.xRotated = this->getCamera()->getXRotated();
+		p.cameraObject.yRotated = this->getCamera()->getYRotated();
 		p.stunDuration = m_player->m_stunDuration;
 		p.slowDuration = m_player->m_slowDuration;
 		p.timeUntilRespawn = m_player->m_timeUntilRespawn;
 		p.onTopOfBuildingId = m_player->m_onTopOfBuildingId;
 		p.deathState = m_player->m_deathState;
-		p.camZ = m_player->getCamera()->m_camZ;
+		p.cameraObject.camZ = m_player->getCamera()->m_camZ;
 
 		return p;
 	}

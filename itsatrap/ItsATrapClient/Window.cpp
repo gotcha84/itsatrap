@@ -59,19 +59,20 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
 {	
-	client->root->getPlayer()->getPhysics()->m_triedToRun = false;
 	float oldBuildingId = client->root->getPlayer()->m_onTopOfBuildingId;
 	float oldXRotated = client->root->getCamera()->getXRotated();
 	float oldYRotated = client->root->getCamera()->getYRotated();
 	
 	bool sendUpdate = false;
 
+	glm::vec3 oldPos = client->root->getPlayer()->getPosition();
+
 	//cout << "curr_state: " << curr_state << endl;
 
 	//cout << "position: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
 	processKeys();
 
-	PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState;
+	//PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState;
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	
@@ -95,30 +96,7 @@ void Window::displayCallback(void)
 		}*/
 	}
 	
-	glm::vec3 oldPos = client->root->getPlayer()->getPosition();
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
-		client->root->getPlayer()->handleSliding();
-	}
-
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Climbing) {
-		//ut << "applying climbing" << endl;
-		client->root->getPlayer()->applyClimbing();
-	}
-
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::PullingUp) {
-		client->root->getPlayer()->applyPullingUp();
-	}
-
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::HoldingEdge) {
-		client->root->getPlayer()->applyHoldingEdge();
-	}
-
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::WallRunning) {
-		//cout << "APPLY WALL RUNNING" << endl;
-		
-		client->root->getPlayer()->applyWallRunning();
-	}
-	client->root->getPlayer()->applyCamAdjustments();
+	//client->root->getPlayer()->applyCamAdjustments();
 	
 	int buildingId = -2; //client->root->getPlayer()->getPhysics()->applyGravity(client->root->getPlayer()->getAABB());
 
@@ -132,19 +110,6 @@ void Window::displayCallback(void)
 
 	}
 	
-	if (curr_state != client->root->getPlayer()->getPhysics()->m_currentState) {
-		cout << "state: " << client->root->getPlayer()->getPhysics()->m_currentState << endl;
-	}
-
-	client->root->getPlayer()->getPhysics()->m_velocity += client->root->getPlayer()->getPhysics()->m_velocityDiff;
-
-	
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::PullingUp || client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Climbing || client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::WallRunning) {
-		//cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
-		//cout << "velodiff: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocityDiff) << endl;
-	}
-
-	client->root->getPlayer()->getPhysics()->m_position += client->root->getPlayer()->getPhysics()->m_velocity;
 
 	/*if (client->root->getPlayer()->getPhysics()->m_velocity.x != client->root->getPlayer()->getPhysics()->m_velocityDiff.x || client->root->getPlayer()->getPhysics()->m_velocity.z != client->root->getPlayer()->getPhysics()->m_velocityDiff.z) {
 
@@ -155,17 +120,9 @@ void Window::displayCallback(void)
 	
 	//client->root->getPlayer()->getPhysics()->m_velocity = glm::vec3(0.0f, client->root->getPlayer()->getPhysics()->m_velocity.y, 0.0f);
 	
-	client->root->getPlayer()->getPhysics()->m_velocity -= client->root->getPlayer()->getPhysics()->m_velocityDiff;
-	//client->root->getPlayer()->getPhysics()->m_velocity.x -= client->root->getPlayer()->getPhysics()->m_velocityDiff.x;
-	//client->root->getPlayer()->getPhysics()->m_velocity.z -= client->root->getPlayer()->getPhysics()->m_velocityDiff.z;
-
-	client->root->getPlayer()->getPhysics()->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-
-	client->root->getPlayer()->getPhysics()->m_lastMoved = glm::vec3(0.0f, 0.0f, 0.0f);
-
 	if (oldPos != client->root->getPlayer()->getPosition()) {		
-		client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
-		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPhysics()->m_position/* + client->root->getPlayer()->getPhysics()->m_velocity*/));
+		//client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
+		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPosition()/* + client->root->getPlayer()->getPhysics()->m_velocity*/));
 		client->root->getPlayer()->updateBoundingBox();
 		sendUpdate = true;
 	}
@@ -180,19 +137,19 @@ void Window::displayCallback(void)
 	}*/
 
 	//cout << "m_position: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_position) << endl;
-	glm::vec3 moved = client->root->getPlayer()->getPhysics()->m_position - /*oldPos */client->root->getPlayer()->getCamera()->m_cameraCenter;
+	glm::vec3 moved = client->root->getPlayer()->getPosition() - /*oldPos */client->root->getPlayer()->getCamera()->m_cameraCenter;
 	
 	client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
 	client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
 	
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
+	/*if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
 		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_slidingHeight;
 		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding;
 	}
-	else {
+	else {*/
 		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_playerHeight;
 		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
-	}
+	//}
 
 
 	// updates player view
@@ -200,14 +157,14 @@ void Window::displayCallback(void)
 	client->root->getPlayer()->updateModelViewMatrix();
 	client->root->draw();
 
-	if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
+	/*if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
 		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_slidingHeight;
 		client->root->getPlayer()->getCamera()->m_cameraLookAt -= (client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding);
 	}
-	else {
+	else {*/
 		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_playerHeight;
 		client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
-	}
+	//}
 
 	client->root->getPlayer()->getCamera()->updateCameraMatrix();
 	client->root->getPlayer()->updateModelViewMatrix();
@@ -280,10 +237,10 @@ void Window::specialKeyUp(int key, int x, int y) {
 
 void Window::processKeys() {
 
-	client->root->m_player->getPhysics()->m_triedToRun = false;
+	//client->root->m_player->getPhysics()->m_triedToRun = false;
 
 	int count = 0;
-	PhysicsStates curr_state = client->root->m_player->getPhysics()->m_currentState;
+	//PhysicsStates curr_state = client->root->m_player->getPhysics()->m_currentState;
 	if (client->root->m_player->m_stunDuration > 0)
 	{
 		printf("[CLIENT]: Sorry, you are STUNNED! Remaining: %d\n", client->root->m_player->m_stunDuration);
@@ -292,16 +249,7 @@ void Window::processKeys() {
 
 	// jump
 	if (keyState[' ']) {
-		if (curr_state == PhysicsStates::None) {
-		//if (curr_state != PhysicsStates::HoldingEdge) {
-			client->root->getPlayer()->handleJump();
-		}
-		else if (curr_state == PhysicsStates::WallRunning) {
-			client->root->getPlayer()->handleWallRunning(' ');
-		}
-		else if (curr_state == PhysicsStates::HoldingEdge) {
-			client->root->getPlayer()->handleHoldingEdge(' ');
-		}
+		Client::sendJumpEvent();
 	}
 
 	// modifierKey = 
@@ -321,54 +269,18 @@ void Window::processKeys() {
 
 	// forward + backward
 	if (keyState['w']) {
-		if (modifierKey == GLUT_ACTIVE_SHIFT) {
-			client->root->getPlayer()->handleSliding();
-		}
-		else {
-			if (curr_state == PhysicsStates::HoldingEdge) {
-				client->root->getPlayer()->handleHoldingEdge('w');
-			}
-			else if (curr_state == PhysicsStates::WallRunning) {
-				client->root->getPlayer()->getPhysics()->toggleTriedToRun();
-			} 
-			else {
-
-				Client::sendMoveEvent(UP);
-			}
-		}
+		Client::sendMoveEvent(FORWARD);
 	}
 	else if (keyState['s']) {
-		if (curr_state == PhysicsStates::HoldingEdge) {
-			client->root->getPlayer()->handleHoldingEdge('s');
-		}
-		else if (curr_state == PhysicsStates::Climbing) {
-			client->root->getPlayer()->handleClimbing('s');
-		}
-		else if (curr_state != PhysicsStates::WallRunning) {
-			client->root->getPlayer()->handleMovement('s');
-		}
-		
-		//else {
-		//	
-		//}
+		Client::sendMoveEvent(BACKWARD);
 	}
 
 	// left + right
 	if (keyState['a']) {
-		if (curr_state == PhysicsStates::HoldingEdge) {
-			client->root->getPlayer()->handleHoldingEdge('a');
-		}
-		else if (curr_state != PhysicsStates::WallRunning) {
-			client->root->getPlayer()->handleMovement('a');
-		}
+		Client::sendMoveEvent(LEFT);
 	}
 	else if (keyState['d']) {
-		if (curr_state == PhysicsStates::HoldingEdge) {
-			client->root->getPlayer()->handleHoldingEdge('d');
-		}
-		else if (curr_state != PhysicsStates::WallRunning) {
-			client->root->getPlayer()->handleMovement('d');
-		}
+		Client::sendMoveEvent(RIGHT);
 	}
 
 	//if (keyState['u']) {

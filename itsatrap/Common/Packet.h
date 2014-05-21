@@ -67,7 +67,7 @@ struct hotSpotPacket
 };
 
 enum Direction {
-	UP, DOWN, LEFT, RIGHT
+	FORWARD, BACKWARD, LEFT, RIGHT
 };
 
 struct moveEventPacket

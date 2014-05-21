@@ -15,7 +15,7 @@
 #include <iomanip> // to round floats
 
 #include "Camera.h"
-#include "Physics.h"
+//#include "Physics.h"
 #include "NetworkObjects.h"
 #include "ConfigSettings.h"
 
@@ -29,8 +29,10 @@ class MyPlayer {
 		bool m_deathState;
 
 		Camera *m_cam;
-		Physics *m_physics;
+		//Physics *m_physics;
 		AABB *m_boundingBox;
+
+		glm::vec3 m_position;
 
 		glm::mat4 m_transMatrix;
 
@@ -64,7 +66,7 @@ class MyPlayer {
 
 		Camera *getCamera();
 		glm::vec3 getPosition();
-		Physics *getPhysics();
+		//Physics *getPhysics();
 		
 		AABB *getAABB();
 		void setAABB(AABB *bbox);
