@@ -215,7 +215,7 @@ void DynamicWorld::updatePlayer(struct playerObject p)
  *      12: playerObjects (not being serialized)
  *      ...: trapObjects (not being serialized)
  */
-int DynamicWorld::serialize(char **ptr)
+int DynamicWorld::serialize(char *ptr)
 {
 	vector<struct trapObject> trapsToSend;
 	vector<int> trapsToRemove;
@@ -241,7 +241,7 @@ int DynamicWorld::serialize(char **ptr)
 	int payloadSize = sizeof(struct playerObject)*playerMap.size() + sizeof(trapObject)*trapsToSend.size();
 	int totalSize = HEADER_SIZE + payloadSize;
 
-	char *buf = (char *) malloc(totalSize);
+	char *buf = ptr;
 	char *movingPtr = buf + HEADER_SIZE;
 
 	// HEADER
@@ -262,8 +262,6 @@ int DynamicWorld::serialize(char **ptr)
 		movingPtr += sizeof(struct trapObject);
 	}
 	
-
-	*ptr = buf;
 
 	if (trapsToSend.size() > 0)
 		printf("trapstosend: %d\n", ((int *)buf)[2]);
@@ -526,6 +524,7 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 	glm::vec3 proposedNewPos;
 	
 	glm::vec3 tmp_camZ = glm::vec3(p->cameraObject.camZ.x, 0.0f, p->cameraObject.camZ.z);
+	//cout << "tmp_camZ : " << glm::to_string(tmp_camZ) << endl;
 
 	float speedMultiplier = 1.0;
 	if (p->slowDuration > 0)
@@ -585,10 +584,12 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 	glm::vec3 oldPos = p->position;
 	glm::vec3 newPos;
 	
+	//cout << "pos: " << glm::to_string(p->position) << endl;
+	//cout << "newPos: " << glm::to_string(proposedNewPos) << endl;
 	p->position = proposedNewPos;
 	computeAABB(p);
 	int buildingId = checkSideCollisionsWithAllNonTraps(p);
-	p->position = oldPos;
+	//p->position = oldPos;
 
 	if (buildingId != -1) {
 		int oldOnTopOfBuildingId = p->onTopOfBuildingId;
@@ -713,6 +714,12 @@ void DynamicWorld::processJumpEvent(struct jumpEventPacket *pkt)
 	break;
 	}
 	*/
+}
+
+void DynamicWorld::processLookEvent(struct lookEventPacket *pkt)
+{
+	struct playerObject *p = &playerMap[pkt->playerId];
+	p->cameraObject = pkt->cam;
 }
 
 void DynamicWorld::noneJumpEvent(struct jumpEventPacket *pkt) {

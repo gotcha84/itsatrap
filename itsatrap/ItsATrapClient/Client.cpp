@@ -115,6 +115,7 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 
 void Client::sendPlayerUpdate(struct playerObject player)
 {
+	printf("[CLIENT]: WARNING! sendPlayerUpdate is called! This method is deprecated\n");
 	struct playerUpdatePacket p;
 	p.eventId = PLAYER_UPDATE_EVENT;
 	memcpy(&p.playerObj, &player, sizeof(struct playerObject));
@@ -236,5 +237,14 @@ void Client::sendJumpEvent()
 	p.eventId = JUMP_EVENT;
 	p.playerId = getPlayerId();
 
+	sendMsg((char *)&p, sizeof(p));
+}
+
+void Client::sendLookEvent(struct cameraObject cam)
+{
+	struct lookEventPacket p = {};
+	p.eventId = LOOK_EVENT;
+	p.playerId = getPlayerId();
+	p.cam = cam;
 	sendMsg((char *)&p, sizeof(p));
 }

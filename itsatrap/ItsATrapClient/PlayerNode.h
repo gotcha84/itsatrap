@@ -64,6 +64,7 @@ namespace sg {
 			//bool knifeHitWith(sg::Player *other);
 
 			struct playerObject getPlayerObjectForNetworking();
+			struct cameraObject getCameraObjectForNetworking();
 
 			int getHealth();
 			void setHealth(int health);

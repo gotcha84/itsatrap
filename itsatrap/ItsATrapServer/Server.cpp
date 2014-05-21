@@ -203,8 +203,9 @@ DWORD WINAPI Server::bufferProcessorThread(LPVOID param)
 
 void Server::broadcastDynamicWorld()
 {
-	char *buf;
-	int size = dynamicWorld.serialize(&buf);
+	char buf[BUFSIZE];
+	memset(buf, 0, BUFSIZE);
+	int size = dynamicWorld.serialize(buf);
 
 	for (int i = 0; i < playerCount; i++)
 	{
@@ -244,6 +245,12 @@ void Server::processBuffer()
 			{
 				struct moveEventPacket *movePkt = (struct moveEventPacket *)p;
 				dynamicWorld.processMoveEvent(movePkt);
+				break;
+			}
+			case LOOK_EVENT:
+			{
+				struct lookEventPacket *lookPkt = (struct lookEventPacket *)p;
+				dynamicWorld.processLookEvent(lookPkt);
 				break;
 			}
 

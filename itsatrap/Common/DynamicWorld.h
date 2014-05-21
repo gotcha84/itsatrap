@@ -58,7 +58,7 @@ public:
 	// Functions
 	DynamicWorld();
 	DynamicWorld(struct packet *packet);
-	int serialize(char **ptr);
+	int serialize(char *ptr);
 	void printWorld();
 
 	void updatePlayer(struct playerObject e);
@@ -67,6 +67,7 @@ public:
 	void updatePlayerBuffs(int timeDiff);
 	void processMoveEvent(struct moveEventPacket *pkt);
 	void processJumpEvent(struct jumpEventPacket *pkt);
+	void processLookEvent(struct lookEventPacket *pkt);
 
 	void addTrap(struct trapObject t);
 

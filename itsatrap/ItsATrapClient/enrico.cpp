@@ -48,9 +48,9 @@ void handlePlayerUpdate(struct playerObject p)
 		
 		// POSITION & GRAPHIC
 		if (p.position != client->players[p.id]->getPosition()) {
-			cout << "updating position in enrico.cpp\n";
+			//cout << "updating position in enrico.cpp\n";
 			client->players[p.id]->moveTo(p.position);
-			Client::sendPlayerUpdate(client->players[p.id]->getPlayerObjectForNetworking());
+			//Client::sendPlayerUpdate(client->players[p.id]->getPlayerObjectForNetworking());
 		}
 		if (client->root->getPlayerID() != p.id) {
 			glm::vec3 pCenter = p.cameraObject.cameraCenter;

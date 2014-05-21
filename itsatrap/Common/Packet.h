@@ -18,6 +18,7 @@
 #define RELOAD_CONFIG_FILE 9
 #define MOVE_EVENT 10
 #define JUMP_EVENT 11
+#define LOOK_EVENT 12
 
 
 // Superclass of all packets
@@ -83,6 +84,13 @@ struct jumpEventPacket
 {
 	int eventId;
 	int playerId;
+};
+
+struct lookEventPacket
+{
+	int eventId;
+	int playerId;
+	struct cameraObject cam;
 };
 
 #endif

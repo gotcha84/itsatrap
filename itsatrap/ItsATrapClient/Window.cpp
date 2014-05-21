@@ -63,7 +63,7 @@ void Window::displayCallback(void)
 	float oldXRotated = client->root->getCamera()->getXRotated();
 	float oldYRotated = client->root->getCamera()->getYRotated();
 	
-	bool sendUpdate = false;
+	bool sendUpdate = false, lookChanged = false;
 
 	glm::vec3 oldPos = client->root->getPlayer()->getPosition();
 
@@ -81,12 +81,15 @@ void Window::displayCallback(void)
 		client->root->handleXRotation(client->root->m_xAngleChange);
 		client->root->m_xAngleChange = 0.0f;
 		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+		lookChanged = true;
 	}
 	
 	if (client->root->m_yAngleChange != 0.0f) {
 		client->root->handleYRotation(client->root->m_yAngleChange);
 		client->root->m_yAngleChange = 0.0f;
 		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+
+		lookChanged = true;
 	}
 
 	if (oldXRotated != client->root->getCamera()->getXRotated() || oldYRotated != client->root->getCamera()->getYRotated()) {
@@ -128,9 +131,11 @@ void Window::displayCallback(void)
 		sendUpdate = true;
 	}
 
-	if (sendUpdate) {
-		Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-	}
+	//if (sendUpdate) {
+	//	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+	//}
+	if (lookChanged)
+		Client::sendLookEvent(client->root->getCameraObjectForNetworking());
 
 	/*if (client->root->getPlayer()->getCamera()->m_cameraCenter != oldPos) {
 		cout << "oldpos: " << glm::to_string(oldPos) << endl;
@@ -362,5 +367,4 @@ void Window::processMouseMove(int x, int y) {
 
 	client->m_xMouse = x;
 	client->m_yMouse = y;
-	
 }

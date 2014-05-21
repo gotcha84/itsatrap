@@ -256,6 +256,20 @@ namespace sg {
 		return p;
 	}
 
+	struct cameraObject Player::getCameraObjectForNetworking()
+	{
+		struct cameraObject cam = {};
+		cam.cameraCenter = this->getCamera()->getCameraCenter();
+		cam.cameraLookAt = this->getCamera()->getCameraLookAt();
+		cam.cameraUp = this->getCamera()->getCameraUp();
+		cam.camX = this->getCamera()->m_camX;
+		cam.camZ = this->getCamera()->m_camZ;
+		cam.xRotated = this->getCamera()->getXRotated();
+		cam.yRotated = this->getCamera()->getYRotated();
+
+		return cam;
+	}
+
 	int Player::getHealth() {
 		return this->getPlayer()->getHealth();
 	}

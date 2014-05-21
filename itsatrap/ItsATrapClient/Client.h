@@ -52,6 +52,7 @@ public:
 	static void sendReloadConfigFile();
 	static void sendMoveEvent(Direction dir);
 	static void sendJumpEvent();
+	static void sendLookEvent(struct cameraObject cam);
 };
 
 
