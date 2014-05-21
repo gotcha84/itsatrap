@@ -87,6 +87,7 @@
     <ClInclude Include="NetworkObjects.h" />
     <ClInclude Include="DynamicWorld.h" />
     <ClInclude Include="Stopwatch.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
@@ -94,6 +95,7 @@
     <ClCompile Include="DynamicWorld.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigSettings.ini" />

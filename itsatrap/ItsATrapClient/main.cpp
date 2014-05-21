@@ -6,11 +6,13 @@
 #include <stdlib.h>
 #include <iostream>
 
+#include "ConfigSettings.h"
+
 // graphics
 #include "ClientInstance.h"
 #include "Window.h"
 #include "SceneGraph.h"
-#include "ConfigSettings.h"
+#include "Level.h"
 
 // networking
 #include "Client.h"
@@ -18,6 +20,10 @@
 
 ClientInstance *client;
 Window *window;
+
+void initLevel() {
+
+}
 
 int main(int argc, char *argv[]) {
 
@@ -95,13 +101,16 @@ int main(int argc, char *argv[]) {
 	// hide mouse cursor
 	//glutSetCursor(GLUT_CURSOR_NONE);
 
-	sg::City city = sg::City();
-	city.loadData("../Models/city.obj");
-	//city.loadData("Can.obj");
-	client->root->addChild(&city);
 
-	client->printPlayers();
-	// client->printSceneGraph();
+	//sg::City city = sg::City();
+	//city.loadData("../Models/city.obj");
+	//client->root->addChild(&city);
+
+	Level level = Level();
+	client->root->addChild(level.getRoot());
+
+	//client->printPlayers();
+	//client->printSceneGraph();
 
 	glutMainLoop();
 
@@ -113,4 +122,3 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-

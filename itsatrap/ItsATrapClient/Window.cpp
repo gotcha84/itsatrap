@@ -109,6 +109,7 @@ void Window::displayCallback(void)
 		}
 
 	}
+
 	
 
 	/*if (client->root->getPlayer()->getPhysics()->m_velocity.x != client->root->getPlayer()->getPhysics()->m_velocityDiff.x || client->root->getPlayer()->getPhysics()->m_velocity.z != client->root->getPlayer()->getPhysics()->m_velocityDiff.z) {
@@ -172,7 +173,7 @@ void Window::displayCallback(void)
 	m_fpsCounter+=1;
 				
 	if (clock()-m_timer > 1000) {
-		cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
+		//cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
 		m_timer = clock();
 		m_fpsCounter = 0;
 	}

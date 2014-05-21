@@ -28,7 +28,7 @@ ObjModel::ObjModel(string objFilename, string mtlFilename) {
 	this->initScales();
 
 	this->loadModel(objFilename, mtlFilename);
-
+	
 	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
@@ -287,14 +287,19 @@ void ObjModel::loadModel() {
 		
 	//updateHeightMap();
 
-	calculateBoundingBox();
+	//calculateBoundingBox();
 	setMaterial();
+	//m_boundingBox.print();
 
 	// TODO: send new bounding box to server and see if can make trap at that location
 		
 }
 
 void ObjModel::calculateBoundingBox() {
+	this->calculateBoundingBox(glm::mat4());
+}
+
+void ObjModel::calculateBoundingBox(glm::mat4 model) {
 	float minx = FLT_MAX;
 	float miny = FLT_MAX;
 	float minz = FLT_MAX;
@@ -330,8 +335,18 @@ void ObjModel::calculateBoundingBox() {
 			}
 		}
 	}
-				
-	m_boundingBox.setAABB(minx+m_position.x, miny+m_position.y, minz+m_position.z, maxx+m_position.x, maxy+m_position.y, maxz+m_position.z);
+
+	glm::vec4 minVec = model*glm::vec4(minx, miny, minz, 1);
+	glm::vec4 maxVec = model*glm::vec4(maxx, maxy, maxz, 1);
+
+	minx = minVec.x;
+	miny = minVec.y;
+	minz = minVec.z;
+	maxx = maxVec.x;
+	maxy = maxVec.y;
+	maxz = maxVec.z;
+
+	m_boundingBox.setAABB(minx, miny, minz, maxx, maxy, maxz);
 }
 
 bool ObjModel::isInside(glm::vec3 point) {		

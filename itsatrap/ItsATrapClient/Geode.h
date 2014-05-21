@@ -10,6 +10,7 @@
 #include "Node.h"
 #include "../Common/AABB.h"
 #include "Material.h"
+#include "MatrixTransform.h"
 
 namespace sg {
 
@@ -41,7 +42,10 @@ namespace sg {
 
 			void draw(glm::mat4 parent, glm::mat4 cam) = 0;
 
+			glm::mat4 getWorldTransformMatrix();
 			virtual void calculateBoundingBox();
+			virtual void calculateBoundingBox(glm::mat4 model);
+			
 			virtual bool isInside(glm::vec3 point);
 			// virtual bool collidesWith(Geode b);
 			virtual void setMaterial();

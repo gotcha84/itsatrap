@@ -39,10 +39,14 @@
     <ClInclude Include="Exports.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Physics.h">
+=======
+    <ClInclude Include="World.h">
+>>>>>>> origin/levelbuilder
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,10 +60,14 @@
     <ClCompile Include="ConfigSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="AABB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Physics.cpp">
+=======
+    <ClCompile Include="World.cpp">
+>>>>>>> origin/levelbuilder
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

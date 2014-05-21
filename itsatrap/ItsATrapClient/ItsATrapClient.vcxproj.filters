@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{b9bbe3db-19a9-404e-b5f5-087bce953cf5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Animation">
+      <UniqueIdentifier>{99415b36-8c77-40a0-9cd9-273e3ff7eba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Animation">
+      <UniqueIdentifier>{77e422e3-fbc0-4459-8577-9f649facbd54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -102,6 +108,7 @@
     <ClCompile Include="enrico.cpp">
       <Filter>Source Files\Networking</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="ObjNode.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
@@ -116,6 +123,13 @@
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Source Files</Filter>
+=======
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjNode.cpp">
+      <Filter>Source Files\SceneGraph\Shapes</Filter>
+>>>>>>> origin/levelbuilder
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +196,7 @@
     <ClInclude Include="enrico.h">
       <Filter>Header Files\Networking</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="ObjNode.h">
       <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
@@ -192,6 +207,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
+=======
+    <ClInclude Include="Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjNode.h">
+>>>>>>> origin/levelbuilder
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
