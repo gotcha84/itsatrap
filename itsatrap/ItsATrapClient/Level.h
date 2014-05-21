@@ -6,6 +6,7 @@
 #include <glm/ext.hpp>
 
 #include "SceneGraph.h"
+#include "../Common/World.h"
 
 #define FLOOR_HEIGHT	0.01f
 #define MAP_X_LENGTH	40
@@ -50,7 +51,6 @@ class Level {
 		vector<sg::Cube *> buildings;
 		vector<sg::ObjNode *> resources;
 		vector<sg::ObjNode *> ramps;
-
 
 		Level();
 		~Level();

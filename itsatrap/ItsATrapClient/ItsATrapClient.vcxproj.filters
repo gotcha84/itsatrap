@@ -90,9 +90,6 @@
     <ClCompile Include="PlayerNode.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="City.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
@@ -175,9 +172,6 @@
     </ClInclude>
     <ClInclude Include="Building.h">
       <Filter>Header Files\SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="City.h">
       <Filter>Header Files\SceneGraph</Filter>

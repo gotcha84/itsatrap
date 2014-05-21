@@ -9,7 +9,9 @@
 #include <algorithm>
 #include <math.h>
 #include <fstream>
-#include "AABB.h"
+
+#include "Exports.h"
+#include "../ItsATrapClient/AABB.h"
 
 // REFERENCE FROM Level.h
 // TODO (ktngo): Figure how to link the header file without crashing everything
@@ -20,13 +22,12 @@
 
 using namespace std;
 
-class World{
+class COMMON_API World {
 	public:
 		static int m_heightMapXShift;
 		static int m_heightMapZShift;
 
 		static float m_heightMap[UNIT_SIZE * MAP_X_LENGTH][UNIT_SIZE * MAP_Z_LENGTH];
-		//static float m_heightMap[1019][787];
 
 		void initializeHeightMap();
 		void updateHeightMap(AABB boundingBox);

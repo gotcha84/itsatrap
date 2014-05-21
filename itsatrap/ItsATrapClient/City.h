@@ -14,7 +14,7 @@
 #include "Group.h"
 #include "Utilities.h"
 #include "tiny_obj_loader.h"
-#include "World.h"
+#include "../Common/World.h"
 #include "Building.h"
 
 using namespace std;

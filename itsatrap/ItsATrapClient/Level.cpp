@@ -461,7 +461,7 @@ void Level::initLevel() {
 		world.updateHeightMap(ramps[i]->getBoundingBox());
 	}
 
-	//world.printHeightMapToFile("heightMap.txt");
+	world.printHeightMapToFile("heightMap.txt");
 }
 
 void Level::destroyLevel() {
