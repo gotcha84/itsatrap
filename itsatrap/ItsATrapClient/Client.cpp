@@ -88,7 +88,6 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 		char buf[BUFSIZE];
 		if (Client::receiveMsg(buf) == 0)
 		{
-			cout << "HIHI\n";
 			struct packet *p = (struct packet *) buf;
 
 			if (p->eventId == WORLD_UPDATE_EVENT)
@@ -144,9 +143,11 @@ int Client::receiveMsg(char * msg) {
 int Client::sendMsg(char * msg, int len) {
 	if (sendto(i_sockfd, msg, len, 0, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0) {
 		int error = WSAGetLastError();
-		//printf("[CLIENT]: client.cpp - sendto failed with error code %d\n", error);
+		printf("[CLIENT]: client.cpp - sendto failed with error code %d\n", error);
 		return 1;
 	}
+
+	//printf("[CLIENT]: Message of length %d sent.\n", len);
 
 	return 0;
 }

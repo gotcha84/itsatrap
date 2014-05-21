@@ -100,7 +100,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	// TODO (ktngo): Bad practice. Move away from using structs
 	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
-	printPacket(p);
+	//printPacket(p);
 	//printf("[SERVER]: Received a packet. eventId: %d\n", p->eventId);
 
 	// Some events can be processed immediately (like init request)
@@ -186,7 +186,6 @@ DWORD WINAPI Server::bufferProcessorThread(LPVOID param)
 
 		processBuffer();
 
-
 		elapsed = MAX_SERVER_PROCESS_RATE - stopwatch.getElapsedMilliseconds();
 		if (elapsed >= 0)
 		{
@@ -243,7 +242,6 @@ void Server::processBuffer()
 
 			case MOVE_EVENT:
 			{
-				printf("HIHI\n");
 				struct moveEventPacket *movePkt = (struct moveEventPacket *)p;
 				dynamicWorld.processMoveEvent(movePkt);
 				break;
@@ -312,6 +310,8 @@ int Server::receiveMsg(char * msg, struct sockaddr_in *source) {
 		printf("[SERVER]: server.cpp - recvfrom failed with error code %d\n", error);
 		return 1;
 	}
+
+	//printf("[SERVER]: Message received.\n");
 
 	return 0;
 }
@@ -387,36 +387,34 @@ void Server::printPacket(struct packet *p)
 		case PLAYER_UPDATE_EVENT:
 		{
 			struct playerObject *player = &((struct playerUpdatePacket *)p)->playerObj;
-			/*printf("=====================================\n");
+			printf("=====================================\n");
 			printf("PLAYER UPDATE PACKET\n");
 			printf("ID: %d\n", player->id);
 			printf("x: %.1f, y:%.1f, z:%.1f\n", player->position.x, player->position.y, player->position.z);
-			printf("=====================================\n");*/
+			printf("=====================================\n");
 			
 			break;
 		}
 		case MOVE_EVENT:
 		{
 			struct moveEventPacket *movePkt = (struct moveEventPacket *)p;
-			//printf("=====================================\n");
-			//printf("MOVE EVENT PACKET\n");
-			//cout << "test: " << glm::to_string(movePkt->test) << endl;
-			//printf("=====================================\n");
+			printf("=====================================\n");
+			printf("MOVE EVENT PACKET\n");
+			printf("=====================================\n");
 			break;
 		}
 		case JUMP_EVENT: 
 		{
 			struct jumpEventPacket *jumpPkt = (struct jumpEventPacket *)p;
-			//printf("=====================================\n");
-			//printf("JUMP EVENT PACKET\n");
-			//cout << "test: " << glm::to_string(jumpPkt->test) << endl;
-			//printf("=====================================\n");
+			printf("=====================================\n");
+			printf("JUMP EVENT PACKET\n");
+			printf("=====================================\n");
 			break;
 		}
 		default:
 		{
 			printf("=====================================\n");
-			printf("ANDREUnknown eventId: %d\n", p->eventId);
+			printf("Unknown eventId: %d\n", p->eventId);
 			printf("=====================================\n");
 			break;
 		}

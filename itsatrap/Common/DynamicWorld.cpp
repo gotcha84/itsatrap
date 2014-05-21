@@ -90,13 +90,11 @@ void DynamicWorld::initStateInfo() {
 
 void DynamicWorld::addNewPlayer(struct playerObject p)
 {
-	while (checkCollisionsWithAllNonTraps(&p) == -1)
+	while (checkCollisionsWithAllNonTraps(&p) != -1)
 	{
-		p.aabb.minX += 10;
-		p.aabb.maxX += 10;
 		p.position.x += 10;
+		computeAABB(&p);
 	}
-
 	p.health = 100;
 	p.numKills = 0;
 	p.numDeaths = 0;
@@ -133,7 +131,6 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	p.resources = playerMap[p.id].resources;
 	p.velocityDiff = playerMap[p.id].velocityDiff;
 	p.velocity = playerMap[p.id].velocity;
-
 
 	if (checkCollisionsWithAllNonTraps(&p) == -1)
 		return;
@@ -475,7 +472,7 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 	p->position = glm::vec3(75, 0, 0);
 	computeAABB(p);
 
-	while(checkCollisionsWithAllNonTraps(p) == -1)
+	while(checkCollisionsWithAllNonTraps(p) != -1)
 	{
 		p->position.x += 10;
 		computeAABB(p);
@@ -498,8 +495,6 @@ void DynamicWorld::computeAABB(struct playerObject *p)
 
 void DynamicWorld::processMoveEvent(struct moveEventPacket *pkt)
 {
-
-	cout << "processing Move event\n";
 	struct playerObject *p = &playerMap[pkt->playerId];
 	noneMoveEvent(pkt);
 	/*
@@ -526,7 +521,6 @@ void DynamicWorld::processMoveEvent(struct moveEventPacket *pkt)
 
 void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 {
-	cout << "moving!";
 	struct playerObject *p = &playerMap[pkt->playerId];
 
 	glm::vec3 proposedNewPos;
@@ -698,7 +692,6 @@ void DynamicWorld::applyPhysics()
 
 void DynamicWorld::processJumpEvent(struct jumpEventPacket *pkt)
 {
-	cout << "processing Move event\n";
 	struct playerObject *p = &playerMap[pkt->playerId];
 	noneJumpEvent(pkt);
 	/*

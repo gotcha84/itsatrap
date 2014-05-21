@@ -25,7 +25,7 @@ void handleNewPlayer(struct playerObject p)
 
 void handlePlayerUpdate(struct playerObject p)
 {
-	cout << "handling player update\n";
+	//cout << "handling player update\n";
 	if (client->objects[p.id] == nullptr) {
 		handleNewPlayer(p);
 	}
