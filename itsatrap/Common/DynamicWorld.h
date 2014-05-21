@@ -7,6 +7,7 @@
 #include <map>
 #include <vector>
 #include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
 
 #include "NetworkObjects.h"
@@ -14,6 +15,7 @@
 #include "Packet.h"
 #include "ConfigSettings.h"
 #include "Physics.h"
+#include "World.h"
 
 using namespace std;
 
@@ -42,7 +44,7 @@ private:
 	int checkSideCollisionsWithAllNonTraps(struct playerObject *e);
 	void addNewPlayer(struct playerObject p);
 	void respawnPlayer(struct playerObject *p);
-	void computeTemporaryAABB(struct playerObject *p);
+	void computeAABB(struct playerObject *p);
 
 	
 
@@ -89,6 +91,14 @@ public:
 	void pullingUpMoveEvent(struct moveEventPacket *pkt);
 	void holdingEdgeMoveEvent(struct moveEventPacket *pkt);
 	void wallRunningMoveEvent(struct moveEventPacket *pkt);
+
+	void noneJumpEvent(struct jumpEventPacket *pkt);
+	void climbingJumpEvent(struct jumpEventPacket *pkt);
+	void pullingUpJumpEvent(struct jumpEventPacket *pkt);
+	void holdingEdgeJumpEvent(struct jumpEventPacket *pkt);
+	void wallRunningJumpEvent(struct jumpEventPacket *pkt);
+
+
 };
 
 #endif

@@ -473,12 +473,12 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 
 void DynamicWorld::respawnPlayer(struct playerObject *p) {
 	p->position = glm::vec3(75, 0, 0);
-	computeTemporaryAABB(p);
+	computeAABB(p);
 
 	while(checkCollisionsWithAllNonTraps(p) == -1)
 	{
 		p->position.x += 10;
-		computeTemporaryAABB(p);
+		computeAABB(p);
 	}
 
 	p->health = 100;
@@ -486,7 +486,7 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 	p->deathState = false;
 }
 
-void DynamicWorld::computeTemporaryAABB(struct playerObject *p)
+void DynamicWorld::computeAABB(struct playerObject *p)
 {
 	p->aabb.minX = p->position.x - 5;
 	p->aabb.maxX = p->position.x + 5;
@@ -499,12 +499,13 @@ void DynamicWorld::computeTemporaryAABB(struct playerObject *p)
 void DynamicWorld::processMoveEvent(struct moveEventPacket *pkt)
 {
 
-
+	cout << "processing Move event\n";
 	struct playerObject *p = &playerMap[pkt->playerId];
-
+	noneMoveEvent(pkt);
+	/*
 	switch (p->currState) {
 		case None:
-			noneMoveEvent(pkt);
+			Physics::noneMoveEvent(pkt);
 			break;
 		case Climbing:
 			//climbingMoveEvent(pkt);
@@ -519,14 +520,13 @@ void DynamicWorld::processMoveEvent(struct moveEventPacket *pkt)
 			//wallRunningMoveEvent(pkt);
 			break;
 	}
+	*/
 
-}
-
-void changeStates() {
 }
 
 void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 {
+	cout << "moving!";
 	struct playerObject *p = &playerMap[pkt->playerId];
 
 	glm::vec3 proposedNewPos;
@@ -592,7 +592,7 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 	glm::vec3 newPos;
 	
 	p->position = proposedNewPos;
-	computeTemporaryAABB(p);
+	computeAABB(p);
 	int buildingId = checkSideCollisionsWithAllNonTraps(p);
 	p->position = oldPos;
 
@@ -601,6 +601,13 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 		p->onTopOfBuildingId = -1;
 		// TODO: check guy is facing wall too, at rest
 		if (!p->feetPlanted /*&& !(m_physics->atRest()) */ && pkt->direction == FORWARD) {
+
+			if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
+				//TODO: startHoldingEdge();
+				return;
+			}
+
+			
 			float angle = Physics::handleAngleIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
 			if (abs(90.0f-angle) < 22.5f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
 				newPos = oldPos;
@@ -631,32 +638,52 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 			p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
 		}
 	}
-	else {
-		newPos = proposedNewPos;
-	}
 	p->velocityDiff+=toAdd;
 
 }
 
 void DynamicWorld::startClimbing(struct playerObject *e, int buildingId) {
+	/*
 	e->currState = PhysicsStates::Climbing;
 	e->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 	e->velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	e->interactingWithBuildingId = buildingId;
+	*/
 }
 
 void DynamicWorld::startWallRunning(struct playerObject *e, int newDirection, glm::vec3 toAdd, float angle) {
+	/*
 	e->currState = PhysicsStates::WallRunning;
-
+	*/
 }
 
 
+// TODO: check for feet?
 void DynamicWorld::applyGravity()
 {
+	cout << "checking for gravity\n";
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		struct playerObject &p = it->second;
-		p.velocity -= glm::vec3(0, 0.01, 0);
+		if (p.currState != PhysicsStates::Climbing && p.currState != PhysicsStates::HoldingEdge &&
+			p.currState != PhysicsStates::PullingUp && p.currState != PhysicsStates::WallRunning) {
+
+			float gravityConstant = 0;
+			ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
+
+
+			p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
+
+			int xIndex = (int)floor(p.position.x + p.velocity.x);
+			int zIndex = (int)floor(p.position.z + p.velocity.z);
+
+			if (World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] > p.position.y + p.velocity.y) {
+				//m_position.y = World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift]; // on ground
+				p.feetPlanted = true;
+				p.velocity.y = 0.0f;
+				p.velocityDiff.y = 0.0f;
+			}
+		}
 	}
 }
 
@@ -671,6 +698,68 @@ void DynamicWorld::applyPhysics()
 
 void DynamicWorld::processJumpEvent(struct jumpEventPacket *pkt)
 {
+	cout << "processing Move event\n";
 	struct playerObject *p = &playerMap[pkt->playerId];
-	// do stuff with p
+	noneJumpEvent(pkt);
+	/*
+	switch (p->currState) {
+	case None:
+	Physics::noneJumpEvent(pkt);
+	break;
+	case Climbing:
+	//climbingJumpEvent(pkt);
+	break;
+	case PullingUp:
+	//pullingUpJumpEvent(pkt);
+	break;
+	case HoldingEdge:
+	//holdingEdgeJumpEvent(pkt);
+	break;
+	case WallRunning:
+	//wallRunningJumpEvent(pkt);
+	break;
+	}
+	*/
+}
+
+void DynamicWorld::noneJumpEvent(struct jumpEventPacket *pkt) {
+	
+	float yJumpFactor = 0;
+	ConfigSettings::getConfig()->getValue("yJumpFactor", yJumpFactor);
+
+	struct playerObject *p = &playerMap[pkt->playerId];
+	p->velocity.y += yJumpFactor;
+	p->feetPlanted = false;
+
+}
+
+void DynamicWorld::wallRunningJumpEvent(struct jumpEventPacket *pkt) {
+	/*
+	struct playerObject *p = &playerMap[pkt->playerId];
+
+	float bounceFactor = 0;
+	ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
+
+	p->velocity += bounceFactor*p->m_velocityDiffWallRun;
+
+	//m_cam->m_xRotated = m_cam->m_xRotatedWallRunHolder;
+	m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
+	//m_cam->m_cameraUp = m_cam->m_cameraUpWallRunHolder;
+	//m_cam->m_cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+	m_cam->calculateAxis();
+	m_cam->updateCameraMatrix();
+	p->currState = PhysicsStates::None;
+	m_physics->m_currentWallRunningYState = WallRunningYStates::WRY_Readjusting;
+	m_physics->m_currentWallRunningXState = WallRunningXStates::WRX_Readjusting;
+	p->feetPlanted = false;
+	*/
+}
+
+void DynamicWorld::holdingEdgeJumpEvent(struct jumpEventPacket *pkt) {
+}
+
+void DynamicWorld::pullingUpJumpEvent(struct jumpEventPacket *pkt) {
+}
+
+void DynamicWorld::climbingJumpEvent(struct jumpEventPacket *pkt) {
 }

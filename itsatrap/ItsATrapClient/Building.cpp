@@ -200,9 +200,9 @@ namespace sg {
 		return (m_boundingBox.nearTop(point));
 	}
 
-	bool Building::clearedTop(AABB* other) {
+	/*bool Building::clearedTop(AABB* other) {
 		return (m_boundingBox.clearedTop(other));
-	}
+	}*/
 
 	glm::vec3 Building::intersects(glm::vec3 from, glm::vec3 goTo) {
 		return (m_boundingBox.intersects(from, goTo));

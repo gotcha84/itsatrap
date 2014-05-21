@@ -1,82 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="ConfigSettings.cpp" />
+    <ClCompile Include="DynamicWorld.cpp" />
+    <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="Stopwatch.cpp" />
+    <ClCompile Include="World.cpp" />
+    <ClCompile Include="StateLogic.cpp" />
+    <ClCompile Include="InputEvents.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NetworkConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkObjects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DynamicWorld.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Stopwatch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ConfigSettings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Exports.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="AABB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics.h">
-=======
-    <ClInclude Include="World.h">
->>>>>>> origin/levelbuilder
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="AABB.h" />
+    <ClInclude Include="ConfigSettings.h" />
+    <ClInclude Include="Exports.h" />
+    <ClInclude Include="NetworkConfig.h" />
+    <ClInclude Include="Packet.h" />
+    <ClInclude Include="Physics.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="NetworkObjects.h" />
+    <ClInclude Include="DynamicWorld.h" />
+    <ClInclude Include="Stopwatch.h" />
+    <ClInclude Include="World.h" />
+    <ClInclude Include="StateLogic.h" />
+    <ClInclude Include="InputEvents.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DynamicWorld.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Stopwatch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ConfigSettings.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="AABB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics.cpp">
-=======
-    <ClCompile Include="World.cpp">
->>>>>>> origin/levelbuilder
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ConfigSettings.ini">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="ConfigSettingsTemplate.ini">
-      <Filter>Resource Files</Filter>
-    </None>
+    <None Include="ConfigSettings.ini" />
+    <None Include="ConfigSettingsTemplate.ini" />
   </ItemGroup>
 </Project>

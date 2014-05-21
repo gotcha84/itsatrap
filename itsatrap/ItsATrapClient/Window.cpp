@@ -264,9 +264,9 @@ void Window::processKeys() {
 	}
 
 	// teleport
-	if (modifierKey == GLUT_ACTIVE_ALT) {
+	/*if (modifierKey == GLUT_ACTIVE_ALT) {
 		client->root->getPlayer()->handleTeleport();
-	}
+	}*/
 
 	// forward + backward
 	if (keyState['w']) {

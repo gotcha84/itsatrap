@@ -120,8 +120,8 @@ bool AABB::nearTop(glm::vec3 goTo) {
 	return (goTo.y >= maxY-m_nearTopFactor);
 }
 
-bool AABB::clearedTop(AABB* other) {
-	return (other->minY >= maxY+m_overTopFactor);
+bool AABB::clearedTop(AABB other) {
+	return (other.minY >= maxY+m_overTopFactor);
 }
 
 glm::vec3 AABB::intersects(glm::vec3 from, glm::vec3 goTo) {

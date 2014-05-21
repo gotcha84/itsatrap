@@ -80,12 +80,14 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="ConfigSettings.h" />
     <ClInclude Include="Exports.h" />
+    <ClInclude Include="InputEvents.h" />
     <ClInclude Include="NetworkConfig.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="NetworkObjects.h" />
     <ClInclude Include="DynamicWorld.h" />
+    <ClInclude Include="StateLogic.h" />
     <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
@@ -93,7 +95,9 @@
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="ConfigSettings.cpp" />
     <ClCompile Include="DynamicWorld.cpp" />
+    <ClCompile Include="InputEvents.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="StateLogic.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>

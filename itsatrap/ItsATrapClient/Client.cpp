@@ -81,16 +81,19 @@ void Client::startReceiverThread()
 
 DWORD WINAPI Client::receiverThread(LPVOID param)
 {
+	
 	printf("[CLIENT]: Receiver thread started\n");
 	while (1)
 	{
 		char buf[BUFSIZE];
 		if (Client::receiveMsg(buf) == 0)
 		{
+			cout << "HIHI\n";
 			struct packet *p = (struct packet *) buf;
 
 			if (p->eventId == WORLD_UPDATE_EVENT)
 			{
+				
 				// World update. 
 				// This variable 'world' is the world given by the server
 				DynamicWorld world(p);

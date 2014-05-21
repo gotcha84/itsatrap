@@ -25,6 +25,7 @@ void handleNewPlayer(struct playerObject p)
 
 void handlePlayerUpdate(struct playerObject p)
 {
+	cout << "handling player update\n";
 	if (client->objects[p.id] == nullptr) {
 		handleNewPlayer(p);
 	}
@@ -44,9 +45,10 @@ void handlePlayerUpdate(struct playerObject p)
 
 		// RESOURCES
 		client->players[p.id]->m_player->m_resources = p.resources;
-
+		
 		// POSITION & GRAPHIC
 		if (p.position != client->players[p.id]->getPosition()) {
+			cout << "updating position in enrico.cpp\n";
 			client->players[p.id]->moveTo(p.position);
 			Client::sendPlayerUpdate(client->players[p.id]->getPlayerObjectForNetworking());
 		}
@@ -114,6 +116,7 @@ void handleRemoveTrap(struct trapObject t)
 // This will get called everytime server sends an update
 void handleUpdateWorldFromServer(DynamicWorld *world)
 {
+
 	vector<struct playerObject> players = world->getAllPlayers();
 	for (int i = 0; i < players.size(); i++) {
 		handlePlayerUpdate(players[i]);

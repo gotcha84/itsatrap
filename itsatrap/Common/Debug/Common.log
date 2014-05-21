@@ -1,1 +1,87 @@
-﻿  Common.vcxproj -> C:\Users\alvin\Desktop\125\merging\itsatrap\Debug\Common.dll
+﻿  Physics.cpp
+  DynamicWorld.cpp
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>,
+              _Ax=std::allocator<char>
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>,
+              _Ax=std::allocator<char>
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>,
+              _Ax=std::allocator<char>
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<_Kty,_Ty>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+          with
+          [
+              _Kty=std::string,
+              _Ty=std::string
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>,
+              _Ax=std::allocator<char>
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+          with
+          [
+              _Elem=char,
+              _Traits=std::char_traits<char>,
+              _Ax=std::allocator<char>
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(33): warning C4251: 'DynamicWorld::staticObjects' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+          with
+          [
+              _Ty=staticObject
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(35): warning C4251: 'DynamicWorld::stateInfos' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+          with
+          [
+              _Ty=stateInfo
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(36): warning C4251: 'DynamicWorld::wallJumpingBuildingIds' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+          with
+          [
+              _Ty=int
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(55): warning C4251: 'DynamicWorld::trapMap' : class 'std::map<_Kty,_Ty>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+          with
+          [
+              _Kty=int,
+              _Ty=trapObject
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(56): warning C4251: 'DynamicWorld::playerMap' : class 'std::map<_Kty,_Ty>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+          with
+          [
+              _Kty=int,
+              _Ty=playerObject
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(188): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(241): warning C4018: '<' : signed/unsigned mismatch
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(262): warning C4018: '<' : signed/unsigned mismatch
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(292): warning C4018: '<' : signed/unsigned mismatch
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(374): warning C4018: '<' : signed/unsigned mismatch
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(382): warning C4018: '<' : signed/unsigned mismatch
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(398): warning C4018: '<' : signed/unsigned mismatch
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(406): warning C4018: '<' : signed/unsigned mismatch
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(668): warning C4482: nonstandard extension used: enum 'PhysicsStates' used in qualified name
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(668): warning C4482: nonstandard extension used: enum 'PhysicsStates' used in qualified name
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(669): warning C4482: nonstandard extension used: enum 'PhysicsStates' used in qualified name
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(669): warning C4482: nonstandard extension used: enum 'PhysicsStates' used in qualified name
+  GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  Generating Code...
+AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
+     Creating library C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.lib and object C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.exp
+  Common.vcxproj -> C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.dll

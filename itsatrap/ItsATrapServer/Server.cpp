@@ -217,9 +217,10 @@ void Server::broadcastDynamicWorld()
 
 void Server::processBuffer()
 {
+
 	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
-	dynamicWorld.applyPhysics();
-	dynamicWorld.applyGravity();
+	//dynamicWorld.applyPhysics();
+	//dynamicWorld.applyGravity();
 	updateResources();
 	
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
@@ -242,6 +243,7 @@ void Server::processBuffer()
 
 			case MOVE_EVENT:
 			{
+				printf("HIHI\n");
 				struct moveEventPacket *movePkt = (struct moveEventPacket *)p;
 				dynamicWorld.processMoveEvent(movePkt);
 				break;
@@ -396,10 +398,19 @@ void Server::printPacket(struct packet *p)
 		case MOVE_EVENT:
 		{
 			struct moveEventPacket *movePkt = (struct moveEventPacket *)p;
-			printf("=====================================\n");
-			printf("MOVE EVENT PACKET\n");
-			cout << "test: " << glm::to_string(movePkt->test) << endl;
-			printf("=====================================\n");
+			//printf("=====================================\n");
+			//printf("MOVE EVENT PACKET\n");
+			//cout << "test: " << glm::to_string(movePkt->test) << endl;
+			//printf("=====================================\n");
+			break;
+		}
+		case JUMP_EVENT: 
+		{
+			struct jumpEventPacket *jumpPkt = (struct jumpEventPacket *)p;
+			//printf("=====================================\n");
+			//printf("JUMP EVENT PACKET\n");
+			//cout << "test: " << glm::to_string(jumpPkt->test) << endl;
+			//printf("=====================================\n");
 			break;
 		}
 		default:
