@@ -1,5 +1,4 @@
 #include "AABB.h"
-//#include "Client.h"
 
 AABB::AABB() {
 	minX = 0;
@@ -12,12 +11,12 @@ AABB::AABB() {
 }
 
 AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
-	minX = minX;
-	minY = minY;
-	minZ = minZ;
-	maxX = maxX;
-	maxY = maxY;
-	maxZ = maxZ;
+	this->minX = minX;
+	this->minY = minY;
+	this->minZ = minZ;
+	this->maxX = maxX;
+	this->maxY = maxY;
+	this->maxZ = maxZ;
 	initCommon();
 }
 
@@ -42,12 +41,12 @@ void AABB::initCommon() {
 }
 
 void AABB::setAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
-	minX = minX;
-	minY = minY;
-	minZ = minZ;
-	maxX = maxX;
-	maxY = maxY;
-	maxZ = maxZ;
+	this->minX = minX;
+	this->minY = minY;
+	this->minZ = minZ;
+	this->maxX = maxX;
+	this->maxY = maxY;
+	this->maxZ = maxZ;
 
 	//Client::sendStaticObject(minX, minY, minZ, maxX, maxY, maxZ);
 }
@@ -194,7 +193,6 @@ int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
 	else {
 		return -1;
 	}
-
 }
 
 float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
