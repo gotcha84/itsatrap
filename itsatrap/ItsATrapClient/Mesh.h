@@ -19,6 +19,8 @@
 #include <assimp/scene.h> // Output data structure
 #include <assimp/postprocess.h> // Post processing flags
 
+#include "Utilities.h"
+
 #include <vector>
 #include <iostream>
 
@@ -45,7 +47,7 @@ class Mesh {
 		~Mesh();
 
 		bool LoadMesh(const string& Filename);
-		void draw();
+		void Render();
 		uint NumBones() const {
 			return m_NumBones;
 		}

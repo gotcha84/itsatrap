@@ -7,6 +7,8 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#include <assimp/matrix4x4.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -39,6 +41,7 @@ class Utilities {
 		static vector<float> findMinsMaxsHelper(vector<float> vec);
 		static glm::vec3 findAverage(string inputfile);
 		static glm::mat4 rotateY(float theta);
+		static glm::mat4 mat4FromAssimp(const aiMatrix4x4& AssimpMatrix)
 		//static int getMaxDepth(sg::Node *node);
 };
 
