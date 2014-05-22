@@ -13,26 +13,43 @@ void World::initializeHeightMap() {
 	}
 }
 
-void World::updateHeightMap(AABB boundingBox, float offset) {
+void World::updateHeightMap(AABB boundingBox) {
+	//float temp = 0;
 	for (int x = boundingBox.minX; x <= boundingBox.maxX; ++x) {
 		for (int z = boundingBox.minZ; z <= boundingBox.maxZ; ++z) {
-			if (m_heightMap[x + m_heightMapXShift][z + m_heightMapZShift] < (boundingBox.maxY + offset)) {
-				m_heightMap[x + m_heightMapXShift][z + m_heightMapZShift] = (boundingBox.maxY + offset);
+			//temp = m_heightMap[x + m_heightMapXShift][z + m_heightMapZShift];
+			if (m_heightMap[x + m_heightMapXShift][z + m_heightMapZShift] < boundingBox.maxY) {
+				m_heightMap[x + m_heightMapXShift][z + m_heightMapZShift] = boundingBox.maxY;
+				//temp = m_heightMap[x + m_heightMapXShift][z + m_heightMapZShift];
 			}
 		}
 	}
-}
-
-void World::updateHeightMap(AABB boundingBox) {
-	updateHeightMap(boundingBox, 0);
 }
 
 void World::printHeightMapToFile(string file) {
 	ofstream outputfile = ofstream(file);
 	for (int x = 0; x < UNIT_SIZE * MAP_X_LENGTH; ++x) {
 		for (int z = 0; z < UNIT_SIZE * MAP_Z_LENGTH; ++z) {
-			outputfile << "[" << x << "] [" << z << "]: " << m_heightMap[x][z] << endl;
+			outputfile << "[" << x << "] [" << z << "]:" << m_heightMap[x][z] << endl;
 		}
+	}
+}
+
+void World::readInHeightMapFromFile(string file) {
+	string line = "";
+	ifstream inputfile;
+	inputfile.open(file, std::ifstream::in);
+
+	if (inputfile.is_open()) {
+		while (getline(inputfile, line)) {
+			string x = line.substr(1, line.find_first_of(']') - 1);
+			string z = line.substr(line.find_last_of('[') + 1, line.find_last_of(']') - line.find_last_of('[') - 1);
+			string value = line.substr(line.find_first_of(':') + 1);
+			m_heightMap[stoi(x)][stoi(z)] = stof(value);
+		}
+		inputfile.close();
+	} else {
+		cout << "[ERR]: World.cpp - cannot find heightMap.txt!" << endl;
 	}
 }
 

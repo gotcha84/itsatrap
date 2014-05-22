@@ -595,43 +595,43 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 		int oldOnTopOfBuildingId = p->onTopOfBuildingId;
 		p->onTopOfBuildingId = -1;
 		// TODO: check guy is facing wall too, at rest
-		if (!p->feetPlanted /*&& !(m_physics->atRest()) */ && pkt->direction == FORWARD) {
+		//if (!p->feetPlanted /*&& !(m_physics->atRest()) */ && pkt->direction == FORWARD) {
 
-			if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
-				//TODO: startHoldingEdge();
-				return;
-			}
+		//	if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
+		//		//TODO: startHoldingEdge();
+		//		return;
+		//	}
 
-			
-			float angle = Physics::handleAngleIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
-			if (abs(90.0f-angle) < 22.5f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
-				newPos = oldPos;
-				//cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
-				//m_cam->m_cameraLookAtWallJump = m_cam->m_cameraCenter - m_cam->m_camZ;
-				startClimbing(p, buildingId);
-				return;
-			}
-			else {
-				//if (oldOnTopOfBuildingId != buildingId) {
-				//if (m_onTopOfBuildingId != -1) {
-					//cout << "starting the wallrunning with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
-				// 0,1 = x, -1 = y, 4,5 = z
-				int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
-				startWallRunning(p, newDirection, toAdd, angle);
-				return;
-					
-				//}
-				// TODO: need else?
-				/*else {
-				}*/
-			}
-		}
+		//	
+		//	float angle = Physics::handleAngleIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
+		//	if (abs(90.0f-angle) < 22.5f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
+		//		newPos = oldPos;
+		//		//cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
+		//		//m_cam->m_cameraLookAtWallJump = m_cam->m_cameraCenter - m_cam->m_camZ;
+		//		startClimbing(p, buildingId);
+		//		return;
+		//	}
+		//	else {
+		//		//if (oldOnTopOfBuildingId != buildingId) {
+		//		//if (m_onTopOfBuildingId != -1) {
+		//			//cout << "starting the wallrunning with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
+		//		// 0,1 = x, -1 = y, 4,5 = z
+		//		int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
+		//		startWallRunning(p, newDirection, toAdd, angle);
+		//		return;
+		//			
+		//		//}
+		//		// TODO: need else?
+		//		/*else {
+		//		}*/
+		//	}
+		//}
 	
-		else {
+		//else {
 			toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
 			p->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 			p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
-		}
+		//}
 	}
 	p->velocityDiff+=toAdd;
 
@@ -674,7 +674,6 @@ void DynamicWorld::applyGravity()
 			//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
 
 			if (World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] > p.position.y + p.velocity.y + p.velocityDiff.y - 5.0f) {
-				
 				cout << "landed: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
 				//cout << "landed\n";
 				//m_position.y = World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift]; // on ground

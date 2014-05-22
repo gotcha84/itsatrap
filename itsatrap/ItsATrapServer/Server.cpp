@@ -85,12 +85,18 @@ int Server::initialize() {
 	timeUntilResourceBonus = resourcePerInterval;
 	timeUntilHotSpotChange = hotSpotChangeInterval;
 
+	// Resource Locations
 	hotSpotLocations.push_back(glm::vec3(75, 0, 0));
 	hotSpotLocations.push_back(glm::vec3(35, 0, 0));
 	hotSpotLocations.push_back(glm::vec3(105, 0, 0));
 
 	currentHotSpotIndex = 0;
 	currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+
+	// Load Height Map
+	string heightMapFile;
+	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
+	World::readInHeightMapFromFile(heightMapFile);
 	
 	return 0;
 }
@@ -350,6 +356,7 @@ void Server::updateResources()
 			// Hot spot bonus
 			glm::vec3 pos = it->second.position;
 
+			// TODO: 
 			if (glm::distance(pos, currentHotSpot) < 10)
 				it->second.resources += resourceHotSpotBonusPerInterval;
 		}

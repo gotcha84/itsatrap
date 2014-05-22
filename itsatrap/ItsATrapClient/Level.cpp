@@ -21,7 +21,7 @@ Level::~Level() {
 
 void Level::initLevel() {
 	// Initialize height map
-	world.initializeHeightMap();
+	World::initializeHeightMap();
 
 	// add basic ground
 	sg::MatrixTransform *groundXForm = new sg::MatrixTransform();
@@ -37,7 +37,7 @@ void Level::initLevel() {
 	// Add obstacles + buildings to level
 	// Resource Tower #1
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_12, 0)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_12, 0)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
 	resources.push_back(new sg::ObjNode(RESOURCETOWER, BLOCKS));
@@ -47,7 +47,7 @@ void Level::initLevel() {
 
 	// Resource Tower #2
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(-15 * UNIT_SIZE, UNIT_8, 7 * UNIT_SIZE)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(-15 * UNIT_SIZE, UNIT_8, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
 	resources.push_back(new sg::ObjNode(RESOURCETOWER, BLOCKS));
@@ -57,7 +57,7 @@ void Level::initLevel() {
 
 	// Resource Tower #3
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(15 * UNIT_SIZE, UNIT_8, -7 * UNIT_SIZE)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(15 * UNIT_SIZE, UNIT_8, -7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
 	resources.push_back(new sg::ObjNode(RESOURCETOWER, BLOCKS));
@@ -450,7 +450,7 @@ void Level::initLevel() {
 	// Building Height Map
 	for (int i = 0; i < buildings.size(); ++i) {
 		buildings[i]->calculateBoundingBox();
-		world.updateHeightMap(buildings[i]->getBoundingBox());
+		World::updateHeightMap(buildings[i]->getBoundingBox());
 	}
 
 	// Ramp Height Map
@@ -458,12 +458,12 @@ void Level::initLevel() {
 	for (int i = 0; i < ramps.size(); ++i) {
 		// TODO (ktngo): If ramp (-19, 8, 0), must include the bottom height!
 		ramps[i]->calculateBoundingBox();
-		world.updateHeightMap(ramps[i]->getBoundingBox(), xForms[buildings.size() + resources.size() + i]->getMatrix()[3].y);
+		World::updateHeightMap(ramps[i]->getBoundingBox());
 		//cout << ramps[i]->getBoundingBox().maxY << endl;
 		//cout << xForms[buildings.size() + resources.size() + i]->getMatrix()[3].y << endl;
 	}
 
-	//world.printHeightMapToFile("heightMap.txt");
+	//World::printHeightMapToFile("heightMap.txt");
 }
 
 void Level::destroyLevel() {

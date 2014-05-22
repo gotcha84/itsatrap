@@ -30,12 +30,13 @@ class COMMON_API World {
 		static float m_heightMap[UNIT_SIZE * MAP_X_LENGTH][UNIT_SIZE * MAP_Z_LENGTH];
 		static vector<AABB> m_boundingBoxes;
 
-		void initializeHeightMap();
-		void updateHeightMap(AABB boundingBox, float offset);
-		void updateHeightMap(AABB boundingBox);
-		void printHeightMapToFile(string file);
+		static void initializeHeightMap();
+		static void updateHeightMap(AABB boundingBox, float offset);
+		static void updateHeightMap(AABB boundingBox);
+		static void printHeightMapToFile(string file);
+		static void readInHeightMapFromFile(string file);
 
-		void addBoundingBox(AABB boundingBox);
+		static void addBoundingBox(AABB boundingBox);
 };
 
 #endif
