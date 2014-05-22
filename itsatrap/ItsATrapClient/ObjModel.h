@@ -10,6 +10,7 @@
 
 #include "tiny_obj_loader.h"
 #include "Geode.h"
+#include "Texture.h"
 
 using namespace std;
 
@@ -26,6 +27,9 @@ class ObjModel : public sg::Geode {
 		int m_id;
 		string m_objFilename;
 		string m_mtlFilename;
+		
+		Texture *m_texture;
+		GLuint m_textureID;
 
 		//Physics m_physics;
 
@@ -46,7 +50,7 @@ class ObjModel : public sg::Geode {
 		ObjModel(int id, string objFilename, string mtlFilename);
 		~ObjModel();
 
-		void initScales();
+		void initCommon();
 
 		void setVertices(vector<float> arr);
 		void setNormals(vector<float> arr);

@@ -1,14 +1,14 @@
 #include "ObjModel.h"
 
 ObjModel::ObjModel() {
-	this->initScales();
+	this->initCommon();
 
 	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
 ObjModel::ObjModel(int id) {
-	this->initScales();
+	this->initCommon();
 	m_id = id;
 
 	//m_physics = Physics();
@@ -16,7 +16,7 @@ ObjModel::ObjModel(int id) {
 }
 
 ObjModel::ObjModel(string objFilename) {
-	this->initScales();
+	this->initCommon();
 
 	this->loadModel(objFilename);
 
@@ -25,7 +25,7 @@ ObjModel::ObjModel(string objFilename) {
 }
 
 ObjModel::ObjModel(string objFilename, string mtlFilename) {
-	this->initScales();
+	this->initCommon();
 
 	this->loadModel(objFilename, mtlFilename);
 
@@ -34,7 +34,7 @@ ObjModel::ObjModel(string objFilename, string mtlFilename) {
 }
 
 ObjModel::ObjModel(string objFilename, glm::vec3 currPos) {
-	this->initScales();
+	this->initCommon();
 
 	m_position = currPos;
 	this->loadModel(objFilename);
@@ -44,7 +44,7 @@ ObjModel::ObjModel(string objFilename, glm::vec3 currPos) {
 }
 
 ObjModel::ObjModel(string objFilename, string mtlFilename, glm::vec3 currPos) {
-	this->initScales();
+	this->initCommon();
 
 	m_position = currPos;
 	this->loadModel(objFilename, mtlFilename);
@@ -54,7 +54,7 @@ ObjModel::ObjModel(string objFilename, string mtlFilename, glm::vec3 currPos) {
 }
 
 ObjModel::ObjModel(int id, string objFilename) {
-	this->initScales();
+	this->initCommon();
 
 	m_id = id;
 	this->loadModel(objFilename);
@@ -64,7 +64,7 @@ ObjModel::ObjModel(int id, string objFilename) {
 }
 
 ObjModel::ObjModel(int id, string objFilename, string mtlFilename) {
-	this->initScales();
+	this->initCommon();
 
 	m_id = id;
 	this->loadModel(objFilename, mtlFilename);
@@ -74,14 +74,17 @@ ObjModel::ObjModel(int id, string objFilename, string mtlFilename) {
 }
 
 ObjModel::~ObjModel() {
-
+	delete m_texture;
+	m_texture = nullptr;
 }
 
-void ObjModel::initScales() {
+void ObjModel::initCommon() {
 	m_turtleScale = 0.01f;
 	m_cityScale = 0.1f;
 	m_canScale = 5.0f;
 	m_defaultScale = 1.0f;
+
+	m_texture = new Texture();
 }
 
 void ObjModel::setVertices(vector<float> arr) {
@@ -120,6 +123,7 @@ void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrixf(glm::value_ptr(mv));
 		glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
+
 		drawModel();
 	glPopMatrix();
 
@@ -143,7 +147,7 @@ void ObjModel::drawModel() {
 	int max_ele = 10000;
 			
 	// bind texture here
-	//glBindTexture(GL_TEXTURE_2D, texturePPM);
+	glBindTexture(GL_TEXTURE_2D, m_textureID);
 
 	// if city and want colorful ObjModels!
 	glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
@@ -161,9 +165,9 @@ void ObjModel::drawModel() {
 			for (int j = 0; j < 3; j++) {
 				//cout << i << ", " << j << ", " << k << endl;
 				//cout << "1 " << endl;
-				//glNormal3f(m_normals[k][3*m_indices[k][3*i+j]], m_normals[k][3*m_indices[k][3*i+j]+1], m_normals[k][3*m_indices[k][3*i+j]+2]);
+				glNormal3f(m_normals[k][3*m_indices[k][3*i+j]], m_normals[k][3*m_indices[k][3*i+j]+1], m_normals[k][3*m_indices[k][3*i+j]+2]);
 				//cout << "2 " << endl;
-				//glTexCoord2f(m_texcoords[k][2*m_indices[k][t]], m_texcoords[k][2*m_indices[k][t]+1]);
+				glTexCoord2f(m_texcoords[k][2*m_indices[k][t]], m_texcoords[k][2*m_indices[k][t]+1]);
 				//cout << "3 " << endl;
 				glVertex3f(m_vertices[k][3*m_indices[k][3*i+j]], m_vertices[k][3*m_indices[k][3*i+j]+1], m_vertices[k][3*m_indices[k][3*i+j]+2]);
 				t++;
@@ -232,6 +236,8 @@ void ObjModel::loadModel() {
 		cout << "\t[tinyobj] " << err << endl;
 	}
 
+	m_textureID = m_texture->loadTexture("../Models/Skybox/skybox.ppm");
+
 	int indicesCount = 0;
 	int verticesCount = 0;
 	int texturesCount = 0;
@@ -241,7 +247,7 @@ void ObjModel::loadModel() {
 	//int added = 0;
 	//string tmp;
 	//stringstream ss;
-		
+
 	for (int j = 0; j < shapes.size(); j++) {
 		/*
 		vector<float> tmpArr;

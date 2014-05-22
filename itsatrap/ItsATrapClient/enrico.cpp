@@ -96,7 +96,8 @@ void handleAddTrap(struct trapObject t)
 	
 	switch (t.type) {
 		case TYPE_TRAMPOLINE_TRAP:
-			newTrap->loadModel("../Models/Can.obj", "../Models/");
+			//newTrap->loadModel("../Models/Can.obj", "../Models/");
+			newTrap->loadModel("../Models/Traps/DeathTrap.obj", "../Models/Traps/");
 			break;
 		default:
 			newTrap->loadModel("../Models/Polynoid.obj", "../Models/");

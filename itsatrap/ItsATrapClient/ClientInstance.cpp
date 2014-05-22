@@ -127,8 +127,6 @@ void ClientInstance::printPlayers() {
 	for (unordered_map<int,sg::Player*>::iterator it = players.begin(); it != players.end(); it++) {
 		cout << "p" << it->first << " : " << glm::to_string(it->second->getPosition()) << endl;
 	}
-
-	cout << endl;
 }
 
 void ClientInstance::swapRootNode(int p) {
@@ -185,6 +183,4 @@ void ClientInstance::printSceneGraph() {
 			}
 		}
 	}
-
-	cout << endl;
 }

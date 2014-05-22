@@ -48,9 +48,6 @@ int main(int argc, char *argv[]) {
 	glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
 	glClearColor(0.0, 0.0, 0.0, 0.0);           // set clear color to black
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // set polygon drawing mode to fill front and back of each polygon
-	glEnable(GL_CULL_FACE);					// disable backface culling to render both sides of polygons
-	//glCullFace(GL_FRONT);
-	//glFrontFace(GL_CCW);
 	glShadeModel(GL_SMOOTH);                    // set shading to smooth
 
 	// backface culling to render front sides of polygons
@@ -59,10 +56,10 @@ int main(int argc, char *argv[]) {
 	glFrontFace(GL_CCW);
 	
 	// Generate material properties:
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	glEnable(GL_COLOR_MATERIAL);
+	//glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+	//glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	//glEnable(GL_COLOR_MATERIAL);
 	
 	// Generate light source:
 	glDisable(GL_LIGHTING);
@@ -93,15 +90,30 @@ int main(int argc, char *argv[]) {
 	glutPassiveMotionFunc(window->processMouseMove);
 
 	// hide mouse cursor
-	//glutSetCursor(GLUT_CURSOR_NONE);
+	glutSetCursor(GLUT_CURSOR_NONE);
 
 	sg::City city = sg::City();
 	city.loadData("../Models/city.obj");
-	//city.loadData("Can.obj");
 	client->root->addChild(&city);
 
+	sg::MatrixTransform sbXForm = sg::MatrixTransform();
+	glm::mat4 model = glm::mat4();
+	model = glm::rotate(model, 90.0f, glm::vec3(0, 1, 0));
+	model = glm::rotate(model, -45.0f, glm::vec3(1, 0, 0));
+	model = glm::rotate(model, 25.0f, glm::vec3(0, 0, 1));
+	sbXForm.setMatrix(model);
+	client->root->addChild(&sbXForm);
+
+	sg::ObjNode skybox = sg::ObjNode();
+	skybox.setName("skybox");
+	skybox.loadModel("../Models/Skybox/skybox.obj", "../Models/Skybox/");
+	skybox.getModel()->setColor(glm::vec4(1,1,1,1));
+	sbXForm.addChild(&skybox);
+
+	cout << "\n[PLAYERS]" << endl;
 	client->printPlayers();
-	// client->printSceneGraph();
+	cout << "\n[SCENE GRAPH]" << endl;
+	client->printSceneGraph();
 
 	glutMainLoop();
 

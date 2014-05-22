@@ -17,8 +17,7 @@ using namespace std;
 
 class Texture {
 	public:
-
-		string texture_building;
+		GLuint m_textureID;
 
 		Texture();
 		~Texture();

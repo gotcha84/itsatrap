@@ -1,11 +1,7 @@
 #include "Texture.h"
 
-
-	
-GLuint buildingTexture1;
-
 Texture::Texture(){
-	texture_building = "../Models/building1.ppm";
+	//texture_building = "../Models/building1.ppm";
 }
 			
 Texture::~Texture(){}
@@ -23,10 +19,10 @@ GLuint Texture::loadTexture(char* the_texture) {
 	if (tdata==NULL) return i;
 	//int num;
 	
-	glGenTextures(1, &buildingTexture1);   
+	glGenTextures(1, &m_textureID);   
 		
 	// Set this texture to be the one we are working with
-	glBindTexture(GL_TEXTURE_2D, buildingTexture1);
+	glBindTexture(GL_TEXTURE_2D, m_textureID);
 	
 	// Generate the texture
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, twidth, theight, 0, GL_RGB, GL_UNSIGNED_BYTE, tdata);
@@ -37,8 +33,7 @@ GLuint Texture::loadTexture(char* the_texture) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	return buildingTexture1;
-
+	return m_textureID;
 }
 
 

@@ -40,7 +40,25 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			m_model->drawModel();
+			if (this->getName() == "skybox") {
+				glPushAttrib(GL_ENABLE_BIT);
+					//glDisable(GL_DEPTH_TEST);
+					glDisable(GL_CULL_FACE);
+
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+					
+					m_model->drawModel();
+
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+					glEnable(GL_CULL_FACE);
+					//glEnable(GL_DEPTH_TEST);
+				glPopAttrib();
+			}
+			else {
+				m_model->drawModel();
+			}
 		glPopMatrix();
 	}
 

@@ -45,15 +45,10 @@ namespace sg {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
-			//glColor4f(color.r, color.g, color.b, color.a);
 			if (shouldDraw()) {
+				glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 				drawShape();
 			}
-			/*else {
-				cout << "didnt render: " << m_id << endl;
-			}*/
-
-			//drawShape();
 		glPopMatrix();
 
 	}
