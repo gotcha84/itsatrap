@@ -77,10 +77,9 @@ namespace sg {
 		for (int i = 0; i < getNumChildren(); i++) {
 			count++;
 			
-			m_child[i]->draw(parent, camera);
+			//m_child[i]->draw(parent, camera);
 		}
 
-		
 		//glm::mat4 cam_inverse = glm::inverse(camera);
 		//glm::mat4 mv = cam_inverse * parent;
 		////cout << "nverts is : " << m_nIndices[0] << endl;

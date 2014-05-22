@@ -119,10 +119,10 @@ int main(int argc, char *argv[]) {
 
 	sg::MatrixTransform meshXForm = sg::MatrixTransform();
 	//meshXForm.setMatrix(glm::translate(glm::vec3(75,0,0)));
-	//client->root->addChild(&meshXForm);
+	client->root->addChild(&meshXForm);
 
 	sg::MeshNode *mesh = new sg::MeshNode("test.dae");
-	//meshXForm.addChild(mesh);
+	meshXForm.addChild(mesh);
 
 	//client->printPlayers();
 	client->printSceneGraph();

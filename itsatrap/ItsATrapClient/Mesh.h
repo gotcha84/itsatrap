@@ -1,3 +1,7 @@
+#define NUM_BONES_PER_VEREX 4
+#define ZERO_MEM(a) memset(a, 0, sizeof(a))
+#define SAFE_DELETE(p) if (p) { delete p; p = nullptr; }
+
 #pragma once
 #ifndef MESH_H
 #define MESH_H
@@ -19,6 +23,7 @@
 #include <iostream>
 
 using namespace std;
+typedef unsigned int uint;
 
 struct Vertex {
     glm::vec3 m_pos;
@@ -41,30 +46,97 @@ class Mesh {
 
 		bool LoadMesh(const string& Filename);
 		void draw();
+		uint NumBones() const {
+			return m_NumBones;
+		}
+		void BoneTransform(float TimeInSeconds, vector<glm::mat4>& Transforms);
 
-	//private:
+		//private:
+		struct BoneInfo
+		{
+			glm::mat4 BoneOffset;
+			glm::mat4 FinalTransformation;        
+
+			BoneInfo() {
+				BoneOffset.SetZero();
+				FinalTransformation.SetZero();            
+			}
+		};
+    
+		struct VertexBoneData
+		{        
+			uint IDs[NUM_BONES_PER_VEREX];
+			float Weights[NUM_BONES_PER_VEREX];
+
+			VertexBoneData() {
+				Reset();
+			};
+        
+			void Reset() {
+				ZERO_MEM(IDs);
+				ZERO_MEM(Weights);        
+			}
+        
+			void AddBoneData(uint BoneID, float Weight);
+		};
+
+		void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+		void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+		void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);    
+		uint FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
+		uint FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
+		uint FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
+		const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const string NodeName);
+		void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm::mat4& ParentTransform);
 		bool InitFromScene(const aiScene* pScene, const string& Filename);
-		void InitMesh(unsigned int Index, const aiMesh* paiMesh);
-		//bool InitMaterials(const aiScene* pScene, const string& Filename);
+		void InitMesh(uint MeshIndex,
+					  const aiMesh* paiMesh,
+					  vector<glm::vec3>& Positions,
+					  vector<glm::vec3>& Normals,
+					  vector<glm::vec2>& TexCoords,
+					  vector<VertexBoneData>& Bones,
+					  vector<unsigned int>& Indices);
+		void LoadBones(uint MeshIndex, const aiMesh* paiMesh, vector<VertexBoneData>& Bones);
+		bool InitMaterials(const aiScene* pScene, const string& Filename);
 		void Clear();
 
+		enum VB_TYPES {
+			INDEX_BUFFER,
+			POS_VB,
+			NORMAL_VB,
+			TEXCOORD_VB,
+			BONE_VB,
+			NUM_VBs            
+		};
+
+			GLuint m_VAO;
+			GLuint m_Buffers[NUM_VBs];
+
 		struct MeshEntry {
-			vector<float> verts;
-			vector<unsigned int> inds;
-
-			MeshEntry();
-			~MeshEntry();
-
-			void Init(const vector<Vertex> &Vertices, const vector<unsigned int> &Indices);
-
-			GLuint VB;
-			GLuint IB;
+			MeshEntry()
+			{
+				NumIndices    = 0;
+				BaseVertex    = 0;
+				BaseIndex     = 0;
+				MaterialIndex = -1;
+			}
+        
 			unsigned int NumIndices;
+			unsigned int BaseVertex;
+			unsigned int BaseIndex;
 			unsigned int MaterialIndex;
 		};
 
 		vector<MeshEntry> m_Entries;
-		//vector<Texture*> m_Textures;
+		vector<Texture*> m_Textures;
+     
+		map<string,uint> m_BoneMapping; // maps a bone name to its index
+		uint m_NumBones;
+		vector<BoneInfo> m_BoneInfo;
+		Matrix4f m_GlobalInverseTransform;
+
+		const aiScene* m_pScene;
+		Assimp::Importer m_Importer;
 };
 
 #endif
