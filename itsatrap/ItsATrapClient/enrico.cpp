@@ -46,6 +46,11 @@ void handlePlayerUpdate(struct playerObject p)
 		// RESOURCES
 		client->players[p.id]->m_player->m_resources = p.resources;
 		
+		p.velocity += p.velocityDiff;
+		p.position += p.velocity;
+		p.velocity -= p.velocityDiff;
+		p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+
 		// POSITION & GRAPHIC
 		if (p.position != client->players[p.id]->getPosition()) {
 			//cout << "updating position in enrico.cpp\n";

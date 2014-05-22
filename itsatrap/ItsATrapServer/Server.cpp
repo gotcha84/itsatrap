@@ -220,7 +220,7 @@ void Server::processBuffer()
 
 	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
 	//dynamicWorld.applyPhysics();
-	//dynamicWorld.applyGravity();
+	dynamicWorld.applyGravity();
 	updateResources();
 	
 	// Lock Mutex: Process exisiting packet buf without adding more packets 

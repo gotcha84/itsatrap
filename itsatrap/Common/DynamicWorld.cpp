@@ -589,7 +589,7 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 	p->position = proposedNewPos;
 	computeAABB(p);
 	int buildingId = checkSideCollisionsWithAllNonTraps(p);
-	//p->position = oldPos;
+	p->position = oldPos;
 
 	if (buildingId != -1) {
 		int oldOnTopOfBuildingId = p->onTopOfBuildingId;
@@ -656,23 +656,27 @@ void DynamicWorld::startWallRunning(struct playerObject *e, int newDirection, gl
 // TODO: check for feet?
 void DynamicWorld::applyGravity()
 {
-	cout << "checking for gravity\n";
+	//cout << "checking for gravity\n";
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		struct playerObject &p = it->second;
 		if (p.currState != PhysicsStates::Climbing && p.currState != PhysicsStates::HoldingEdge &&
 			p.currState != PhysicsStates::PullingUp && p.currState != PhysicsStates::WallRunning) {
-
+			
 			float gravityConstant = 0;
 			ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
 
-
 			p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
 
-			int xIndex = (int)floor(p.position.x + p.velocity.x);
-			int zIndex = (int)floor(p.position.z + p.velocity.z);
+			int xIndex = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x + 0.5f);
+			int zIndex = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z + 0.5f);
 
-			if (World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] > p.position.y + p.velocity.y) {
+			//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
+
+			if (World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] > p.position.y + p.velocity.y + p.velocityDiff.y - 5.0f) {
+				
+				cout << "landed: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
+				//cout << "landed\n";
 				//m_position.y = World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift]; // on ground
 				p.feetPlanted = true;
 				p.velocity.y = 0.0f;
