@@ -20,8 +20,6 @@ Level::~Level() {
 }
 
 void Level::initLevel() {
-
-
 	// Initialize height map
 	world.initializeHeightMap();
 
@@ -458,12 +456,14 @@ void Level::initLevel() {
 	// Ramp Height Map
 	// TODO (ktngo): Figure out how to access the true max and mins of the ramp
 	for (int i = 0; i < ramps.size(); ++i) {
+		// TODO (ktngo): If ramp (-19, 8, 0), must include the bottom height!
 		ramps[i]->calculateBoundingBox();
-		world.updateHeightMap(ramps[i]->getBoundingBox());
+		world.updateHeightMap(ramps[i]->getBoundingBox(), xForms[buildings.size() + resources.size() + i]->getMatrix()[3].y);
+		//cout << ramps[i]->getBoundingBox().maxY << endl;
+		//cout << xForms[buildings.size() + resources.size() + i]->getMatrix()[3].y << endl;
 	}
 
 	//world.printHeightMapToFile("heightMap.txt");
-
 }
 
 void Level::destroyLevel() {
