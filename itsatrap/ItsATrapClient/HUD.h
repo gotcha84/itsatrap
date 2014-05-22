@@ -5,6 +5,7 @@
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include "FTGL/ftgl.h"
 
 #include <string>
 
@@ -14,6 +15,8 @@ class HUD {
 	public:
 		HUD();
 		~HUD();
+
+		//FTGLFont *font;
 
 		void draw(int health, int resources);
 		

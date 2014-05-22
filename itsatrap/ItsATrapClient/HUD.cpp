@@ -1,8 +1,9 @@
 #include "HUD.h"
-	
+#include <iostream>
+
 // default constructor
 HUD::HUD() {
-
+	
 }
 
 // destructor
@@ -23,6 +24,14 @@ void HUD::draw(int health, int resources) {
 			drawCrossHair();
 			drawHealthBar(health);
 			drawResource(resources);
+			glRasterPos2f(0.0f, 0.0f);
+			FTGLPixmapFont font("C:/Windows/Fonts/Arial.ttf");
+			if( font.Error() ) std::cout << "Font Error" << std::endl;
+			font.FaceSize(72);
+			font.CharMap(ft_encoding_symbol);
+			font.Render("|||||||||||||||||");
+			
+
 			//drawDeathTimer(5.0f);
 
 		glPopMatrix();

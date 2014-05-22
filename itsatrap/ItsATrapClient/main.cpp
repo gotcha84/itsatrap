@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include "FTGL\ftgl.h"
 
 // graphics
 #include "ClientInstance.h"
