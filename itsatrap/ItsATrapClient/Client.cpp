@@ -179,6 +179,8 @@ void Client::sendSpawnTrapEvent(struct trapObject t)
 	p.eventId = SPAWN_TRAP_REQUEST;
 	memcpy(&p.trap, &t, sizeof(struct trapObject));
 
+	printf("Sending trap with type %d\n", t.type);
+
 	sendMsg((char *)&p, sizeof(struct spawnTrapPacket));
 }
 

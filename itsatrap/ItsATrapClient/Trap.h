@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "ConfigSettings.h"
 #include "Geode.h"
 #include "ObjModel.h"
 #include "NetworkObjects.h"
@@ -22,7 +23,7 @@ namespace sg {
 			ObjModel *m_model1;
 
 			Trap();
-			Trap(int, glm::vec3 pos, float rotationAngle);
+			Trap(int, glm::vec3 pos, float rotationAngle, string filename);
 			Trap(glm::vec3);
 			Trap(glm::vec3 currPos, int type);
 

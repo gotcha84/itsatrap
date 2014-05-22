@@ -25,7 +25,6 @@ void handleNewPlayer(struct playerObject p)
 
 void handlePlayerUpdate(struct playerObject p)
 {
-	//cout << "handling player update\n";
 	if (client->objects[p.id] == nullptr) {
 		handleNewPlayer(p);
 	}
@@ -45,11 +44,6 @@ void handlePlayerUpdate(struct playerObject p)
 
 		// RESOURCES
 		client->players[p.id]->m_player->m_resources = p.resources;
-		
-		p.velocity += p.velocityDiff;
-		p.position += p.velocity;
-		p.velocity -= p.velocityDiff;
-		p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		// POSITION & GRAPHIC
 		if (p.position != client->players[p.id]->getPosition()) {
@@ -93,14 +87,14 @@ void handleAddTrap(struct trapObject t)
 	}
 
 	sg::Trap *newTrap;
-	newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x,t.y,t.z), t.rotationAngle);
+	newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x, t.y, t.z), t.rotationAngle, "../Models/Polynoid.obj");
 	
 	switch (t.type) {
 		case TYPE_TRAMPOLINE_TRAP:
-			newTrap->loadModel("../Models/Can.obj", "../Models/");
+			//newTrap->loadModel("../Models/Can.obj", "../Models/");
 			break;
 		default:
-			newTrap->loadModel("../Models/Polynoid.obj", "../Models/");
+			//newTrap->loadModel("../Models/Polynoid.obj", "../Models/");
 			break;
 	}
 

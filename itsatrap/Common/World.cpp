@@ -1,7 +1,7 @@
 #include "World.h"
 
-int World::m_heightMapXShift = UNIT_SIZE * MAP_X_LENGTH / 2;
-int World::m_heightMapZShift = UNIT_SIZE * MAP_Z_LENGTH / 2;
+int World::m_heightMapXShift = UNIT_SIZE * MAP_X_LENGTH / 2 -1;
+int World::m_heightMapZShift = UNIT_SIZE * MAP_Z_LENGTH / 2 -1;
 float World::m_heightMap[UNIT_SIZE * MAP_X_LENGTH][UNIT_SIZE * MAP_Z_LENGTH];
 vector<AABB> World::m_boundingBoxes;
 

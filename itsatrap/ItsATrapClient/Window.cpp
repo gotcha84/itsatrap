@@ -153,8 +153,9 @@ void Window::displayCallback(void)
 		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding;
 	}
 	else {*/
-		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_playerHeight;
-		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
+	// uncomment lower two for nonmidgets
+		//client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_playerHeight;
+		//client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
 	//}
 
 
@@ -168,8 +169,9 @@ void Window::displayCallback(void)
 		client->root->getPlayer()->getCamera()->m_cameraLookAt -= (client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding);
 	}
 	else {*/
-		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_playerHeight;
-		client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
+	// uncomment lower two for nonmidgets
+		//client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_playerHeight;
+		//client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
 	//}
 
 	client->root->getPlayer()->getCamera()->updateCameraMatrix();
@@ -191,30 +193,32 @@ void Window::keyDown(unsigned char key, int x, int y)
 {
 	keyState[key] = true;
 	if (key >= '1' && key <= '9') {
-		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated);
-		struct trapObject t = trap->getTrapObjectForNetworking();
+		string filename = "../Models/Polynoid.obj";
+		int type = 0;
 		switch (key)
 		{
 		case '1':
-			t.type = TYPE_FREEZE_TRAP;
+			type = TYPE_FREEZE_TRAP;
 			break;
 		case '2':
-			t.type = TYPE_TRAMPOLINE_TRAP;
+			type = TYPE_TRAMPOLINE_TRAP;
 			break;
 		case '3':
-			t.type = TYPE_SLOW_TRAP;
+			type = TYPE_SLOW_TRAP;
 			break;
 		case '4':
-			t.type = TYPE_PUSH_TRAP;
+			type = TYPE_PUSH_TRAP;
 			break;
 		case '5':
-			t.type = TYPE_LIGHTNING_TRAP;
+			type = TYPE_LIGHTNING_TRAP;
 			break;
 		default:
-			t.type = TYPE_FREEZE_TRAP;
+			type = TYPE_FREEZE_TRAP;
 			break;
 		}
-
+		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated, filename);
+		struct trapObject t = trap->getTrapObjectForNetworking();
+		t.type = type;
 		Client::sendSpawnTrapEvent(t);
 		delete trap;
 		trap = nullptr;
