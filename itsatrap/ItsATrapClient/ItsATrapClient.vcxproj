@@ -121,6 +121,7 @@
     <ClInclude Include="ObjModel.h" />
     <ClInclude Include="ObjNode.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="City.h" />
@@ -162,12 +163,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shaders\can.frag" />
-    <None Include="..\Shaders\can.vert" />
-    <None Include="..\Shaders\gouraud.frag" />
-    <None Include="..\Shaders\gouraud.vert" />
-    <None Include="..\Shaders\phongandtexture.frag" />
-    <None Include="..\Shaders\phongandtexture.vert" />
     <None Include="..\Shaders\simple.frag" />
     <None Include="..\Shaders\simple.vert" />
   </ItemGroup>
