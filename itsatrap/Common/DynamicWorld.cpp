@@ -73,7 +73,11 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.numDeaths = 0;
 	p.stunDuration = 0;
 	p.slowDuration = 0;
-
+	p.feetPlanted = true;
+	p.interactingWithBuildingId = -1;
+	p.interactingWIthBuildingFace = -1;
+	p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+	p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 	playerMap[p.id] = p; 
 
 	
@@ -104,7 +108,10 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	p.resources = playerMap[p.id].resources;
 	p.velocityDiff = playerMap[p.id].velocityDiff;
 	p.velocity = playerMap[p.id].velocity;
-
+	p.feetPlanted = playerMap[p.id].feetPlanted;
+	p.interactingWithBuildingId = playerMap[p.id].interactingWithBuildingId;
+	p.interactingWIthBuildingFace = playerMap[p.id].interactingWIthBuildingFace;
+	
 	if (checkCollisionsWithAllNonTraps(&p) == -1)
 		return;
 
@@ -503,40 +510,40 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 	computeAABB(p);
 
 	if (buildingId != -1) {
-		int oldOnTopOfBuildingId = p->onTopOfBuildingId;
-		p->onTopOfBuildingId = -1;
-		// TODO: check guy is facing wall too, at rest
+	//	int oldOnTopOfBuildingId = p->onTopOfBuildingId;
+	//	p->onTopOfBuildingId = -1;
+	//	// TODO: check guy is facing wall too, at rest
 
-		if (!p->feetPlanted /*&& !(m_physics->atRest()) */ && pkt->direction == FORWARD) {
-			
-			if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
-				//TODO: startHoldingEdge(p);
-				return;
-			}
+	//	if (!p->feetPlanted /*&& !(m_physics->atRest()) */ && pkt->direction == FORWARD) {
+	//		cout << "doing extra logic!" << endl;
+	//		if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
+	//			//TODO: startHoldingEdge(p);
+	//			return;
+	//		}
 
-			
-			float angle = Physics::handleAngleIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
-			//if (abs(90.0f-angle) < 22.5f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
-				newPos = oldPos;
-				//cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
-				//m_cam->m_cameraLookAtWallJump = m_cam->m_cameraCenter - m_cam->m_camZ;
-				startClimbing(p, buildingId);
-				return;
-			//}
-			/*
-			else {
-				//if (oldOnTopOfBuildingId != buildingId) {
-				//if (m_onTopOfBuildingId != -1) {
-					//cout << "starting the wallrunning with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
-				// 0,1 = x, -1 = y, 4,5 = z
-				int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
-				startWallRunning(p, newDirection, toAdd, angle);
-				return;
-					
-				//}
-	
-			}*/
-		}
+	//		
+	//		float angle = Physics::handleAngleIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
+	//		//if (abs(90.0f-angle) < 22.5f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
+	//			newPos = oldPos;
+	//			//cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
+	//			//m_cam->m_cameraLookAtWallJump = m_cam->m_cameraCenter - m_cam->m_camZ;
+	//			startClimbing(p, buildingId);
+	//			return;
+	//		//}
+	//		/*
+	//		else {
+	//			//if (oldOnTopOfBuildingId != buildingId) {
+	//			//if (m_onTopOfBuildingId != -1) {
+	//				//cout << "starting the wallrunning with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
+	//			// 0,1 = x, -1 = y, 4,5 = z
+	//			int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
+	//			startWallRunning(p, newDirection, toAdd, angle);
+	//			return;
+	//				
+	//			//}
+	//
+	//		}*/
+	//	}
 
 	
 		//else {
@@ -551,9 +558,24 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 }
 
 void DynamicWorld::climbingMoveEvent(struct moveEventPacket *pkt) {
+
+	struct playerObject *p = &playerMap[pkt->playerId];
+
 	// TODO: enable movement?
-	// 
-	return;
+	switch (pkt->direction)
+	{
+
+		case BACKWARD:
+			cout << "decided to fall back down from climbing" << endl;
+			p->currminiState = innerStates::Ending;
+			//TODO: maybe more, set Holders
+			return;
+			break;
+
+		default:
+			break;
+	}
+	
 }
 
 void DynamicWorld::holdingEdgeMoveEvent(struct moveEventPacket *pkt) {
@@ -584,31 +606,31 @@ void DynamicWorld::holdingEdgeMoveEvent(struct moveEventPacket *pkt) {
 	// TODO: depend on building face rather than where you looking at
 	switch (pkt->direction)
 	{
-	case FORWARD:
-		cout << "started pulling up" << endl;
-		startPullingUp(p);
-		return;
-		break;
+		case FORWARD:
+			cout << "started pulling up" << endl;
+			startPullingUp(p);
+			return;
+			break;
 
-	case BACKWARD:
-		cout << "decided to fall back down" << endl;
-		p->currminiState = -1;
-		//TODO: maybe more, set Holders
-		return;
-		break;
+		case BACKWARD:
+			cout << "decided to fall back down" << endl;
+			p->currminiState = -1;
+			//TODO: maybe more, set Holders
+			return;
+			break;
 
-	case LEFT:
-		proposedNewPos = p->position + -1.0f*xWalkFactor*p->cameraObject.camX;
-		toAdd = -1.0f*xWalkFactor*p->cameraObject.camX;
-		break;
+		case LEFT:
+			proposedNewPos = p->position + -1.0f*xWalkFactor*p->cameraObject.camX;
+			toAdd = -1.0f*xWalkFactor*p->cameraObject.camX;
+			break;
 
-	case RIGHT:
-		proposedNewPos = p->position + xWalkFactor*p->cameraObject.camX;
-		toAdd = xWalkFactor*p->cameraObject.camX;
-		break;
+		case RIGHT:
+			proposedNewPos = p->position + xWalkFactor*p->cameraObject.camX;
+			toAdd = xWalkFactor*p->cameraObject.camX;
+			break;
 
-	default:
-		break;
+		default:
+			break;
 	}
 	glm::vec3 oldPos = p->position;
 	glm::vec3 newPos;
@@ -650,7 +672,7 @@ void DynamicWorld::startClimbing(struct playerObject *e, int buildingId) {
 	float CLStartlookX = 0.0f-CLinitialX;
 	float CLStartlookY = 70.0f-CLinitialY;
 	
-	float CLStartfraction = 100.0f;
+	float CLStartfraction = 1.0f;
 
 	float CLStartlookXIncrement = 0.0f;
 	float CLStartlookYIncrement = CLStartlookY*CLStartfraction/CLnumFrames;
@@ -667,7 +689,7 @@ void DynamicWorld::startClimbing(struct playerObject *e, int buildingId) {
 	glm::vec3 CLMidvelocityDiff = glm::vec3(0.0f, climbFactor, 0.0f);
 
 	// End
-	float CLEndfraction = 10.0f;
+	float CLEndfraction = 0.1f;
 	float CLEndlookYIncrement = -70.0f*CLEndfraction / CLnumFrames;
 
 	int CLEndCounter = 0;
@@ -726,7 +748,7 @@ void DynamicWorld::startHoldingEdge(struct playerObject *e, int buildingId) {
 	// start
 	float HEStartlookY = 70.0f - HEinitialY;
 
-	float HEStartfraction = 100.0f;
+	float HEStartfraction = 1.0f;
 
 	float HEStartlookYIncrement = HEStartlookY*HEStartfraction / HEnumFrames;
 	glm::vec3 HEStartlookUpIncrement = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -737,12 +759,10 @@ void DynamicWorld::startHoldingEdge(struct playerObject *e, int buildingId) {
 	float HEEndlookX = 180.0f;// calculate
 	float HEEndlookY = -70.0f;
 
-	float HEEndfraction = 100.0f;
+	float HEEndfraction = 0.1f;
 
 	float HEEndlookXIncrement = HEEndlookX*HEEndfraction / HEnumFrames;
 	float HEEndlookYIncrement = HEEndlookY*HEEndfraction / HEnumFrames;
-	glm::vec3 HEEndlookUpIncrement = glm::vec3(0.0f, 0.0f, 0.0f);
-
 
 	float bounceFactor = 5.0f;
 	//ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
@@ -769,7 +789,6 @@ void DynamicWorld::startHoldingEdge(struct playerObject *e, int buildingId) {
 	statesInfo[e->id].End.fraction = HEEndfraction;
 	statesInfo[e->id].End.lookXIncrement = HEEndlookXIncrement;
 	statesInfo[e->id].End.lookYIncrement = HEEndlookYIncrement;
-	statesInfo[e->id].End.camUpIncrement = HEEndlookUpIncrement;
 	statesInfo[e->id].End.counter = HEEndCounter;
 
 	e->interactingWithBuildingId = buildingId;
@@ -779,6 +798,40 @@ void DynamicWorld::startHoldingEdge(struct playerObject *e, int buildingId) {
 
 void DynamicWorld::startPullingUp(struct playerObject *e) {
 	cout << "start pulling up\n";
+	float PUinitialX = e->cameraObject.xRotated;
+	float PUinitialY = e->cameraObject.yRotated;
+
+	float PUnumFrames = 30.0f;
+	//ConfigSettings::getConfig()->getValue("PUnumFrames", PUnumFrames);
+
+	// start
+	float PUStartlookX = 45.0f - PUinitialX;
+	float PUStartlookY = -20.0f - PUinitialY;
+
+	float PUStartfraction = 0.7f;
+
+	float PUStartlookXIncrement = PUStartlookX*PUStartfraction / PUnumFrames;
+	float PUStartlookYIncrement = PUStartlookY*PUStartfraction / PUnumFrames;
+
+	float pullingUpFactor = 3.0f;
+	//ConfigSettings::getConfig()->getValue("pullingUpFactor", pullingUpFactor);
+	glm::vec3 PUStartvelocityDiff = glm::vec3(0.0f, pullingUpFactor, 0.0f);
+
+	int PUStartCounter = 0;
+
+	// end
+	float PUEndlookX = -1.0f*PUEndlookX;
+	float PUEndlookY = -1.0f*PUEndlookY;
+
+	float PUEndfraction = 0.3f;
+
+	float PUEndlookXIncrement = PUEndlookX*PUEndfraction / PUnumFrames;
+	float PUEndlookYIncrement = PUEndlookY*PUEndfraction / PUnumFrames;
+
+	glm::vec3 PUEndvelocityDiff = glm::vec3(0.0f, pullingUpFactor, 0.0f);
+
+	int PUEndCounter = 0;
+
 	return;
 }
 
@@ -911,6 +964,13 @@ void DynamicWorld::applyGravity()
 		p.position += p.velocity;
 		p.velocity -= p.velocityDiff;
 		p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+
+		float playerHeight = 4.0f;
+		//ConfigSettings::getConfig()->getValue("playerHeight", playerHeight);
+
+		p.cameraObject.cameraCenter = p.position + playerHeight;
+		p.cameraObject.cameraLookAt = p.cameraObject.cameraCenter + p.cameraObject.camZ;
+		computeAABB(&p);
 	}
 
 }
@@ -955,6 +1015,7 @@ void DynamicWorld::applyClimbing(struct playerObject *p) {
 			p->velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 			break;
 		case innerStates::Ending:
+			p->interactingWithBuildingId = -1;
 			handleXRotation(p, statesInfo[p->currState].End.lookXIncrement);
 			handleYRotation(p, statesInfo[p->currState].End.lookYIncrement);
 			p->cameraObject.cameraUp += statesInfo[p->currState].End.camUpIncrement;
@@ -982,6 +1043,7 @@ void DynamicWorld::applyHoldingEdge(struct playerObject *p) {
 			}
 			break;
 		case innerStates::Ending:
+			p->interactingWithBuildingId = -1;
 			handleXRotation(p, statesInfo[p->currState].End.lookXIncrement);
 			handleYRotation(p, statesInfo[p->currState].End.lookYIncrement);
 			p->velocityDiff = statesInfo[p->currState].End.velocityDiff;
@@ -1009,6 +1071,7 @@ void DynamicWorld::applyPullingUp(struct playerObject *p) {
 			}
 			break;
 		case innerStates::Ending:
+			p->interactingWithBuildingId = -1;
 			handleXRotation(p, statesInfo[p->currState].End.lookXIncrement);
 			handleYRotation(p, statesInfo[p->currState].End.lookYIncrement);
 			p->velocityDiff = statesInfo[p->currState].End.velocityDiff;
@@ -1024,9 +1087,47 @@ void DynamicWorld::applyPullingUp(struct playerObject *p) {
 }
 
 void DynamicWorld::applyWallRunning(struct playerObject *p) {
+	
+	switch (p->currminiState) {
+		case innerStates::Starting:
+			if (triedToRun[p->id]) {
+				handleXRotation(p, statesInfo[p->currState].Start.lookXIncrement);
+				handleYRotation(p, statesInfo[p->currState].Start.lookYIncrement);
+				p->cameraObject.cameraUp += statesInfo[p->currState].Start.camUpIncrement;
+				p->velocityDiff = statesInfo[p->currState].Start.velocityDiff;
+				statesInfo[p->currState].Start.counter++;
+				if (statesInfo[p->currState].Start.counter >= statesInfo[p->currState].Start.fraction*statesInfo[p->currState].numFrames) {
+					p->currminiState = innerStates::Mid;
+				}
+			}
+			else {
+				p->currminiState = innerStates::Ending;
+			}
+			break;
+		case innerStates::Mid:
+			if (triedToRun[p->id]) {
+				p->velocityDiff = statesInfo[p->currState].Mid.velocityDiff;
+			}
+			else {
+				p->currminiState = innerStates::Ending;
+			}
+			break;
+		case innerStates::Ending:
+			p->interactingWithBuildingId = -1;
+			handleXRotation(p, statesInfo[p->currState].End.lookXIncrement);
+			handleYRotation(p, statesInfo[p->currState].End.lookYIncrement);
+			p->cameraObject.cameraUp += statesInfo[p->currState].End.camUpIncrement;
+			p->velocityDiff = statesInfo[p->currState].End.velocityDiff;
+			statesInfo[p->currState].End.counter++;
+			if (statesInfo[p->currState].End.counter >= statesInfo[p->currState].End.fraction*statesInfo[p->currState].numFrames) {
+				p->currminiState = innerStates::Off;
+				cout << "ended state: " << p->currState << endl;
+				p->currState = PhysicsStates::None;
+			}
+			break;
+	}
+
 }
-
-
 
 void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 	switch (p->currState) {
@@ -1036,7 +1137,7 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 				return;
 			}
 			//if (/* time elapsed > 3 seconds*/) {
-			//	p->currminiState = 5;
+			//	p->currminiState = innerStates::Ending;
 			//	return;
 			//}
 			break;
@@ -1045,9 +1146,13 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 				startPullingUp(p);
 				return;
 			}
+			else if (staticObjects[p->interactingWithBuildingId].aabb.fellOffSide(p->aabb)) {
+				p->currminiState = innerStates::Ending;
+				return;
+			}
 		case PhysicsStates::WallRunning:
 			if (staticObjects[p->interactingWithBuildingId].aabb.fellOffSide(p->aabb)) {
-				p->currminiState = 5;
+				p->currminiState = innerStates::Ending;
 				return;
 			}
 	}
@@ -1101,25 +1206,12 @@ void DynamicWorld::noneJumpEvent(struct jumpEventPacket *pkt) {
 
 void DynamicWorld::wallRunningJumpEvent(struct jumpEventPacket *pkt) {
 	cout << "wall running jump event" << endl;
-	/*
 	struct playerObject *p = &playerMap[pkt->playerId];
 
-	float bounceFactor = 0;
-	ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
-
-	p->velocity += bounceFactor*p->m_velocityDiffWallRun;
-
-	//m_cam->m_xRotated = m_cam->m_xRotatedWallRunHolder;
-	m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
-	//m_cam->m_cameraUp = m_cam->m_cameraUpWallRunHolder;
-	//m_cam->m_cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-	m_cam->calculateAxis();
-	m_cam->updateCameraMatrix();
-	p->currState = PhysicsStates::None;
-	m_physics->m_currentWallRunningYState = WallRunningYStates::WRY_Readjusting;
-	m_physics->m_currentWallRunningXState = WallRunningXStates::WRX_Readjusting;
-	p->feetPlanted = false;
-	*/
+	float bounceFactor = 5.0f;
+	//ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
+	statesInfo[p->id].End.velocityDiff *= bounceFactor;
+	p->currminiState = innerStates::Ending;
 }
 
 void DynamicWorld::holdingEdgeJumpEvent(struct jumpEventPacket *pkt) {
@@ -1131,11 +1223,18 @@ void DynamicWorld::holdingEdgeJumpEvent(struct jumpEventPacket *pkt) {
 }
 
 void DynamicWorld::pullingUpJumpEvent(struct jumpEventPacket *pkt) {
+	cout << "tried to jump while pulling up.. this wont do much" << endl;
 	return;
 }
 
 void DynamicWorld::climbingJumpEvent(struct jumpEventPacket *pkt) {
 	// TODO: disable climbing?
+	struct playerObject *p = &playerMap[pkt->playerId];
+
+	cout << "decided to jump back down from climbing" << endl;
+	p->currminiState = innerStates::Ending;
+	//TODO: maybe more, set Holders
+
 }
 
 

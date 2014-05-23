@@ -377,7 +377,7 @@ void Level::initLevel() {
 
 	// Note: Ramp needs to be reduced by 45% in the y-axis to match unit_size. 55% for other axis
 	// Note: COMMENT THESE FOLLOWING RAMPS TO GET RID OF THE RAMPS
-	// Ramp 0: (7, 0, -7)
+	// Ramp 0: (7, 0, -7) +z
 	xForms.push_back(new sg::MatrixTransform());
 	xForms.back()->setMatrix(glm::translate(glm::vec3(7 * UNIT_SIZE, 0, -7 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 24, .55 * 6)));
 	root->addChild(xForms.back());
@@ -387,7 +387,7 @@ void Level::initLevel() {
 	ramps.back()->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	xForms.back()->addChild(ramps.back());
 
-	// Ramp 1: (-7, 0, 7)	
+	// Ramp 1: (-7, 0, 7)	-z
 	xForms.push_back(new sg::MatrixTransform());
 	xForms.back()->setMatrix(glm::translate(glm::vec3(-7 * UNIT_SIZE, 0, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 24, .55 * 6)) * Utilities::rotateY(180));
 	root->addChild(xForms.back());
@@ -397,7 +397,7 @@ void Level::initLevel() {
 	ramps.back()->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	xForms.back()->addChild(ramps.back());
 
-	// Ramp 2: (-12, 0, -14)
+	// Ramp 2: (-12, 0, -14) +z
 	xForms.push_back(new sg::MatrixTransform());
 	xForms.back()->setMatrix(glm::translate(glm::vec3(-12 * UNIT_SIZE, 0, -14 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 4, 0.45 * 8, .55 * 4)));
 	root->addChild(xForms.back());
@@ -407,7 +407,7 @@ void Level::initLevel() {
 	ramps.back()->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	xForms.back()->addChild(ramps.back());
 
-	// Ramp 3: (-19, 8, 0)
+	// Ramp 3: (-19, 8, 0) +z
 	xForms.push_back(new sg::MatrixTransform());
 	xForms.back()->setMatrix(glm::translate(glm::vec3(-19 * UNIT_SIZE, 8 * UNIT_SIZE, 0)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 16, .55 * 6)));
 	root->addChild(xForms.back());
@@ -417,7 +417,7 @@ void Level::initLevel() {
 	ramps.back()->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	xForms.back()->addChild(ramps.back());
 
-	// Ramp 4: (5, 0, 15)
+	// Ramp 4: (5, 0, 15) +x
 	xForms.push_back(new sg::MatrixTransform());
 	xForms.back()->setMatrix(glm::translate(glm::vec3(5 * UNIT_SIZE, 0, 15 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 6, 0.45 * 8, .55 * 2)) * Utilities::rotateY(90));
 	root->addChild(xForms.back());
@@ -427,7 +427,7 @@ void Level::initLevel() {
 	ramps.back()->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	xForms.back()->addChild(ramps.back());
 
-	// Ramp 5: (5, 0, 19)
+	// Ramp 5: (5, 0, 19) +x
 	xForms.push_back(new sg::MatrixTransform());
 	xForms.back()->setMatrix(glm::translate(glm::vec3(5 * UNIT_SIZE, 0, 19 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 10, 0.45 * 32, .55 * 2)) * Utilities::rotateY(90));
 	root->addChild(xForms.back());
@@ -437,7 +437,7 @@ void Level::initLevel() {
 	ramps.back()->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	xForms.back()->addChild(ramps.back());
 
-	// Ramp 6: (17, 0, 8)
+	// Ramp 6: (17, 0, 8) -z
 	xForms.push_back(new sg::MatrixTransform());
 	xForms.back()->setMatrix(glm::translate(glm::vec3(17 * UNIT_SIZE, 0, 7.95 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 16, .55 * 8)) * Utilities::rotateY(180));
 	root->addChild(xForms.back());
