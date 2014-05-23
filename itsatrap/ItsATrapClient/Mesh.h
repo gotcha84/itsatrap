@@ -1,6 +1,7 @@
 #define NUM_BONES_PER_VEREX 4
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 #define SAFE_DELETE(p) if (p) { delete p; p = nullptr; }
+#define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
 
 #pragma once
 #ifndef MESH_H

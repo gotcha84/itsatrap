@@ -45,7 +45,8 @@ class Utilities {
 		static glm::vec3 findAverage(string inputfile);
 		static glm::mat4 rotateY(float theta);
 		static glm::mat4 mat4FromAssimp(const aiMatrix4x4& AssimpMatrix);
-		static long long Utilities::GetCurrentTimeMillis();
+		static long long GetCurrentTimeMillis();
+		static bool ReadFile(const char* pFileName, string& outFile);
 		//static int getMaxDepth(sg::Node *node);
 };
 
