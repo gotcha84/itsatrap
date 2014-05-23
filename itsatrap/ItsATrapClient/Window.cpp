@@ -193,7 +193,7 @@ void Window::keyDown(unsigned char key, int x, int y)
 {
 	keyState[key] = true;
 	if (key >= '1' && key <= '9') {
-		string filename = "../Models/Polynoid.obj";
+		string filename = TRAMPOLINE_TRAP_OBJ;
 		int type = 0;
 		switch (key)
 		{
@@ -202,6 +202,7 @@ void Window::keyDown(unsigned char key, int x, int y)
 			break;
 		case '2':
 			type = TYPE_TRAMPOLINE_TRAP;
+			filename = TRAMPOLINE_TRAP_OBJ;
 			break;
 		case '3':
 			type = TYPE_SLOW_TRAP;
@@ -211,12 +212,13 @@ void Window::keyDown(unsigned char key, int x, int y)
 			break;
 		case '5':
 			type = TYPE_LIGHTNING_TRAP;
+			filename = DEATH_TRAP_OBJ;
 			break;
 		default:
 			type = TYPE_FREEZE_TRAP;
 			break;
 		}
-		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated, filename);
+		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated, TRAP_DIR + filename);
 		struct trapObject t = trap->getTrapObjectForNetworking();
 		t.type = type;
 		Client::sendSpawnTrapEvent(t);

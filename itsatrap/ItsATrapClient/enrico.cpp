@@ -86,8 +86,27 @@ void handleAddTrap(struct trapObject t)
 		return;
 	}
 
+	string filename = TRAMPOLINE_TRAP_OBJ;
+	switch (t.type)
+	{
+	case TYPE_FREEZE_TRAP:
+		break;
+	case TYPE_TRAMPOLINE_TRAP:
+		filename = TRAMPOLINE_TRAP_OBJ;
+		break;
+	case TYPE_SLOW_TRAP:
+		break;
+	case TYPE_PUSH_TRAP:
+		break;
+	case TYPE_LIGHTNING_TRAP:
+		filename = DEATH_TRAP_OBJ;
+		break;
+	default:
+		break;
+	}
+
 	sg::Trap *newTrap;
-	newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x, t.y, t.z), t.rotationAngle, "../Models/Polynoid.obj");
+	newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x, t.y, t.z), t.rotationAngle, TRAP_DIR + filename);
 	
 	switch (t.type) {
 		case TYPE_TRAMPOLINE_TRAP:

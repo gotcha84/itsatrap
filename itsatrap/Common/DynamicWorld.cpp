@@ -526,7 +526,6 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 	//cout << "newPos: " << glm::to_string(proposedNewPos) << endl;
 	p->position = proposedNewPos;
 	computeAABB(p);
-	p->aabb.print();
 	int buildingId = checkCollisionsWithAllNonTraps(p);
 	p->position = oldPos;
 

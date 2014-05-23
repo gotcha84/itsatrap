@@ -11,6 +11,10 @@
 #include "NetworkObjects.h"
 #include "Utilities.h"
 
+#define TRAP_DIR "../Models/Traps/"
+#define TRAMPOLINE_TRAP_OBJ "Trampoline.obj"
+#define DEATH_TRAP_OBJ "Death_Trap.obj"
+
 namespace sg {
 	class Trap : public Geode {
 		public:

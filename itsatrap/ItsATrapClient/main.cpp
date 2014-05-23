@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 	client = new ClientInstance(Client::getPlayerId());
 	window = new Window();
 	glm::vec3 starting = client->root->getPosition();
-	starting = starting + glm::vec3(250, 0, 0);
+	starting = starting + glm::vec3(250, 25, 0);
 	client->root->moveTo(glm::vec3(starting.x, starting.y + 2, starting.z));
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 
