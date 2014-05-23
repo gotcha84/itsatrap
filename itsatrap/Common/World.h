@@ -27,15 +27,22 @@ class COMMON_API World {
 		static int m_heightMapXShift;
 		static int m_heightMapZShift;
 
-		static float m_heightMap[UNIT_SIZE * MAP_X_LENGTH][UNIT_SIZE * MAP_Z_LENGTH];
+		static float m_heightMap[UNIT_SIZE * MAP_X_LENGTH + 1][UNIT_SIZE * MAP_Z_LENGTH + 1];
 		static vector<AABB> m_boundingBoxes;
 
-		void initializeHeightMap();
-		void updateHeightMap(AABB boundingBox, float offset);
-		void updateHeightMap(AABB boundingBox);
-		void printHeightMapToFile(string file);
+		static void initializeHeightMap();
+		static void updateHeightMap(AABB boundingBox, float offset);
+		static void updateHeightMap(AABB boundingBox);
+		static void updateHeightMapRamp(AABB boundingBox, int rotation);
+		static void updateHeightMapRamp0(AABB boundingBox);
+		static void updateHeightMapRamp90(AABB boundingBox);
+		static void updateHeightMapRamp180(AABB boundingBox);
+		static void updateHeightMapRamp270(AABB boundingBox);
+		static void printHeightMapToFile(string file);
+		static void readInHeightMapFromFile(string file);
 
-		void addBoundingBox(AABB boundingBox);
+		static void addBoundingBox(AABB boundingBox);
+		static AABB* fixBoundingBox(AABB boundingBox);
 };
 
 #endif

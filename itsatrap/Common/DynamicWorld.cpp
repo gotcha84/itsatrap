@@ -107,67 +107,6 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 
 	if (checkCollisionsWithAllNonTraps(&p) == -1)
 		return;
-	
-	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); it++)
-	{
-		if (p.id != it->second.ownerId && it->second.aabb.collidesWith(p.aabb) && it->second.eventCode == 0)
-		{
-			printf("Collision: player %d with trap id %d\n", p.id, it->second.id);
-			playerLock[p.id] = true;
-			switch (it->second.type)
-			{
-				case TYPE_FREEZE_TRAP:
-				{
-					int stunDuration = 0;
-					ConfigSettings::getConfig()->getValue("StunTrapDuration", stunDuration);
-					p.stunDuration = stunDuration;
-					break;
-				}
-				case TYPE_TRAMPOLINE_TRAP:
-				{
-					int trampolinePower = 0;
-					ConfigSettings::getConfig()->getValue("TrampolinePower", trampolinePower);
-					p.velocityDiff = glm::vec3(0, trampolinePower, 0);
-
-					break;
-				}
-				case TYPE_SLOW_TRAP:
-				{
-					int slowDuration = 0;
-					ConfigSettings::getConfig()->getValue("SlowTrapDuration", slowDuration);
-					p.slowDuration = slowDuration;
-					break;
-				}
-				case TYPE_PUSH_TRAP:
-				{
-					float pushPower = 0;
-					ConfigSettings::getConfig()->getValue("PushTrapPower", pushPower);
-
-					glm::vec3 force = glm::rotateY(glm::vec3(0, 0, -1), it->second.rotationAngle);
-					force*=pushPower;
-
-					p.velocityDiff = glm::vec3(force.x, 0, force.z);
-
-					break;
-				}
-				case TYPE_LIGHTNING_TRAP:
-				{
-					float power = 0;
-					ConfigSettings::getConfig()->getValue("LightningTrapPower", power);
-
-					playerDamage(&playerMap[it->second.ownerId], &p, power);
-
-					break;
-				}
-				default:
-					break;
-			}
-
-			it->second.eventCode = EVENT_REMOVE_TRAP;
-
-			break;
-		}
-	}
 
 	playerMap[p.id] = p;
 }
@@ -349,8 +288,7 @@ int DynamicWorld::checkCollisionsWithAllNonTraps(struct playerObject *e)
 	}
 	for (int i = 0; i < staticObjects.size(); i++)
 	{
-		// Something wrong with building#40
-		if (!(e->onTopOfBuildingId == i) && e->aabb.collidesWith(staticObjects[i].aabb))
+		if (e->aabb.collidesWith(staticObjects[i].aabb))
 		{
 			printf("Collision: player %d with static object %d\n", e->id, i);
 			return i;
@@ -374,7 +312,7 @@ int DynamicWorld::checkSideCollisionsWithAllNonTraps(struct playerObject *e)
 	for (int i = 0; i < staticObjects.size(); i++)
 	{
 		// Something wrong with building#40
-		if (!(e->onTopOfBuildingId == i) && e->aabb.collidesWithSide(staticObjects[i].aabb))
+		if (e->aabb.collidesWithSide(staticObjects[i].aabb))
 		{
 			printf("Collision: player %d with static object %d\n", e->id, i);
 			return i;
@@ -560,7 +498,7 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 	//cout << "newPos: " << glm::to_string(proposedNewPos) << endl;
 	p->position = proposedNewPos;
 	computeAABB(p);
-	int buildingId = checkSideCollisionsWithAllNonTraps(p);
+	int buildingId = checkCollisionsWithAllNonTraps(p);
 	p->position = oldPos;
 	computeAABB(p);
 
@@ -568,6 +506,7 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 		int oldOnTopOfBuildingId = p->onTopOfBuildingId;
 		p->onTopOfBuildingId = -1;
 		// TODO: check guy is facing wall too, at rest
+
 		if (!p->feetPlanted /*&& !(m_physics->atRest()) */ && pkt->direction == FORWARD) {
 			
 			if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
@@ -598,13 +537,15 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 	
 			}*/
 		}
+
 	
-		else {
+		//else {
 			toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
 			p->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 			p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
-		}
+		//}
 	}
+
 	p->velocityDiff += toAdd;
 
 }
@@ -836,6 +777,11 @@ void DynamicWorld::startHoldingEdge(struct playerObject *e, int buildingId) {
 
 }
 
+void DynamicWorld::startPullingUp(struct playerObject *e) {
+	cout << "start pulling up\n";
+	return;
+}
+
 void DynamicWorld::startWallRunning(struct playerObject *e, int newDirection, glm::vec3 toAdd, float angle) {
 
 	// WallRunning
@@ -952,8 +898,7 @@ void DynamicWorld::applyGravity()
 			//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
 
 			if (World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] > p.position.y + p.velocity.y + p.velocityDiff.y - 5.0f) {
-				
-				cout << "landed: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
+				//cout << "landed: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
 				//cout << "landed\n";
 				//m_position.y = World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift]; // on ground
 				p.feetPlanted = true;
@@ -1151,6 +1096,7 @@ void DynamicWorld::noneJumpEvent(struct jumpEventPacket *pkt) {
 		p->velocity.y += yJumpFactor;
 		p->feetPlanted = false;
 	}
+
 }
 
 void DynamicWorld::wallRunningJumpEvent(struct jumpEventPacket *pkt) {
@@ -1235,4 +1181,71 @@ void DynamicWorld::calculateAxis(struct playerObject *e) {
 
 }
 
+void DynamicWorld::checkPlayersCollideWithTrap()
+{
+	for (map<int, struct playerObject>::iterator pit = playerMap.begin(); pit != playerMap.end(); pit++)
+	{
+		struct playerObject *p = &pit->second;
 
+		for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); it++)
+		{
+			if (p->id != it->second.ownerId && it->second.aabb.collidesWith(p->aabb) && it->second.eventCode == 0)
+			{
+				printf("Collision: player %d with trap id %d\n", p->id, it->second.id);
+				playerLock[p->id] = true;
+				switch (it->second.type)
+				{
+				case TYPE_FREEZE_TRAP:
+				{
+										 int stunDuration = 0;
+										 ConfigSettings::getConfig()->getValue("StunTrapDuration", stunDuration);
+										 p->stunDuration = stunDuration;
+										 break;
+				}
+				case TYPE_TRAMPOLINE_TRAP:
+				{
+											 int trampolinePower = 0;
+											 ConfigSettings::getConfig()->getValue("TrampolinePower", trampolinePower);
+											 p->velocityDiff = glm::vec3(0, trampolinePower, 0);
+
+											 break;
+				}
+				case TYPE_SLOW_TRAP:
+				{
+									   int slowDuration = 0;
+									   ConfigSettings::getConfig()->getValue("SlowTrapDuration", slowDuration);
+									   p->slowDuration = slowDuration;
+									   break;
+				}
+				case TYPE_PUSH_TRAP:
+				{
+									   float pushPower = 0;
+									   ConfigSettings::getConfig()->getValue("PushTrapPower", pushPower);
+
+									   glm::vec3 force = glm::rotateY(glm::vec3(0, 0, -1), it->second.rotationAngle);
+									   force *= pushPower;
+
+									   p->velocityDiff = glm::vec3(force.x, 0, force.z);
+
+									   break;
+				}
+				case TYPE_LIGHTNING_TRAP:
+				{
+											float power = 0;
+											ConfigSettings::getConfig()->getValue("LightningTrapPower", power);
+
+											playerDamage(&playerMap[it->second.ownerId], p, power);
+
+											break;
+				}
+				default:
+					break;
+				}
+
+				it->second.eventCode = EVENT_REMOVE_TRAP;
+
+				break;
+			}
+		}
+	}
+}

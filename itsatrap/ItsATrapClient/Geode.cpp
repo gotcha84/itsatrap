@@ -45,6 +45,10 @@ namespace sg {
 		m_boundingBox.setAABB(pos, rad);
 	}
 
+	void Geode::setBoundingBox(AABB boundingBox) {
+		m_boundingBox.setAABB(boundingBox.minX, boundingBox.minY, boundingBox.minZ, boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ);
+	}
+
 	void Geode::print() {
 		cout << "(" << this->getObjectID() << " Geode: " << this->getName() << ")";
 	}

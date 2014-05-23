@@ -67,9 +67,6 @@ bool AABB::collidesWith(AABB other) {
 		&& other.maxY >= minY && other.minY <= maxY
 		&& other.maxZ >= minZ && other.minZ <= maxZ);
 
-	if (tmp) {
-		return (!(other.maxY >= maxY));
-	}
 	return tmp;
 }
 

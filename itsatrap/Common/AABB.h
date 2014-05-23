@@ -9,6 +9,7 @@
 #include <math.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <algorithm>
 
 #include "Exports.h"
 

@@ -44,7 +44,7 @@
 
 class Level {
 	public:
-		World world;
+		//World world;
 		sg::MatrixTransform *root;
 		sg::MatrixTransform *ground;
 		vector<sg::MatrixTransform *> xForms;

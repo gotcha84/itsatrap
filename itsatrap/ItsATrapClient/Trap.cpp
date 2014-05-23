@@ -8,14 +8,19 @@ namespace sg {
 		m_position = currPos;
 		m_model = glm::translate(currPos);
 		this->setColor(glm::vec4(1,0,0,1));
+		// this->updateBoundingBox();
+		this->m_model1->calculateBoundingBox();
 	}
 
-	Trap::Trap(int ownerId, glm::vec3 currPos, float rotationAngle) {
+	Trap::Trap(int ownerId, glm::vec3 currPos, float rotationAngle, string filename) {
 		m_ownerId = ownerId;
 		m_position = currPos;
 		m_model = glm::translate(currPos);
 		this->rotationAngle = rotationAngle;
 		this->setColor(glm::vec4(1,0,0,1));
+		// this->updateBoundingBox();
+		this->m_model1 = new ObjModel(filename);
+		this->m_model1->calculateBoundingBox();
 	}
 	
 	// TODO - implement when traps have different types
@@ -60,7 +65,17 @@ namespace sg {
 	}
 
 	void Trap::draw(glm::mat4 parent, glm::mat4 cam) {
-		glm::mat4 new_model = glm::translate(this->getPosition()) * glm::scale(glm::vec3(1.0f, 0.5f, 1.0f)) * Utilities::rotateY(rotationAngle+180.0f);
+
+		float polyTrapScaleX = 0.0f;
+		ConfigSettings::getConfig()->getValue("polyTrapScaleX", polyTrapScaleX);
+
+		float polyTrapScaleY = 0.0f;
+		ConfigSettings::getConfig()->getValue("polyTrapScaleY", polyTrapScaleY);
+
+		float polyTrapScaleZ = 0.0f;
+		ConfigSettings::getConfig()->getValue("polyTrapScaleZ", polyTrapScaleZ);
+
+		glm::mat4 new_model = glm::translate(this->getPosition()) * glm::scale(glm::vec3(polyTrapScaleX, polyTrapScaleY, polyTrapScaleZ)) * Utilities::rotateY(rotationAngle + 180.0f);
 		this->setMatrix(new_model);
 
 		new_model = parent * this->getMatrix();
@@ -81,18 +96,28 @@ namespace sg {
 	}
 
 	struct trapObject Trap::getTrapObjectForNetworking() {
+
+		float polyTrapScaleX = 0.0f;
+		ConfigSettings::getConfig()->getValue("polyTrapScaleX", polyTrapScaleX);
+
+		float polyTrapScaleY = 0.0f;
+		ConfigSettings::getConfig()->getValue("polyTrapScaleY", polyTrapScaleY);
+
+		float polyTrapScaleZ = 0.0f;
+		ConfigSettings::getConfig()->getValue("polyTrapScaleZ", polyTrapScaleZ);
+
 		struct trapObject t = {};
 		t.ownerId = m_ownerId;
 		t.eventCode = 0;
 		t.x = this->getPosition().x;
 		t.y = this->getPosition().y;
 		t.z = this->getPosition().z;
-		t.aabb.minX = this->m_model1->getBoundingBox().minX;
-		t.aabb.minY = this->m_model1->getBoundingBox().minY;
-		t.aabb.minZ = this->m_model1->getBoundingBox().minZ;
-		t.aabb.maxX = this->m_model1->getBoundingBox().maxX;
-		t.aabb.maxY = this->m_model1->getBoundingBox().maxY;
-		t.aabb.maxZ = this->m_model1->getBoundingBox().maxZ;
+		t.aabb.minX = this->m_model1->getBoundingBox().minX*polyTrapScaleX + this->getPosition().x;
+		t.aabb.minY = this->m_model1->getBoundingBox().minY*polyTrapScaleY + this->getPosition().y;
+		t.aabb.minZ = this->m_model1->getBoundingBox().minZ*polyTrapScaleZ + this->getPosition().z;
+		t.aabb.maxX = this->m_model1->getBoundingBox().maxX*polyTrapScaleX + this->getPosition().x;
+		t.aabb.maxY = this->m_model1->getBoundingBox().maxY*polyTrapScaleY + this->getPosition().y;
+		t.aabb.maxZ = this->m_model1->getBoundingBox().maxZ*polyTrapScaleZ + this->getPosition().z;
 		t.rotationAngle = rotationAngle;
 		return t;
 	}

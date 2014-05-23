@@ -34,6 +34,7 @@ namespace sg {
 
 			AABB getBoundingBox();
 			void setBoundingBox(glm::vec3 pos, float rad);
+			void setBoundingBox(AABB boundingBox);
 
 			Geode();
 			~Geode();

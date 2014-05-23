@@ -85,20 +85,24 @@ int Server::initialize() {
 	timeUntilResourceBonus = resourcePerInterval;
 	timeUntilHotSpotChange = hotSpotChangeInterval;
 
+	// Resource Locations
 	hotSpotLocations.push_back(glm::vec3(75, 0, 0));
 	hotSpotLocations.push_back(glm::vec3(35, 0, 0));
 	hotSpotLocations.push_back(glm::vec3(105, 0, 0));
 
 	currentHotSpotIndex = 0;
 	currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+
+	// Load Height Map
+	string heightMapFile;
+	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
+	World::readInHeightMapFromFile(heightMapFile);
 	
 	return 0;
 }
 
 // Server processes a given message
 void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
-	// TODO (ktngo): Bad practice. Move away from using structs
-	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
 	//printPacket(p);
 	//printf("[SERVER]: Received a packet. eventId: %d\n", p->eventId);
@@ -144,6 +148,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticObject(tmp);
 			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			tmp.aabb.print();
 		}
 	}
 	else if (p->eventId == RELOAD_CONFIG_FILE)
@@ -221,6 +226,7 @@ void Server::processBuffer()
 	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
 	//dynamicWorld.applyPhysics();
 	dynamicWorld.applyGravity();
+	dynamicWorld.checkPlayersCollideWithTrap();
 	updateResources();
 	
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
@@ -350,6 +356,7 @@ void Server::updateResources()
 			// Hot spot bonus
 			glm::vec3 pos = it->second.position;
 
+			// TODO: 
 			if (glm::distance(pos, currentHotSpot) < 10)
 				it->second.resources += resourceHotSpotBonusPerInterval;
 		}

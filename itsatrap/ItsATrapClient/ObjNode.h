@@ -23,6 +23,7 @@ namespace sg {
 			ObjModel *getModel();
 
 			AABB getBoundingBox();
+			void setBoundingBox(AABB boundingBox);
 			void calculateBoundingBox();
 
 			void draw(glm::mat4 parent, glm::mat4 cam);

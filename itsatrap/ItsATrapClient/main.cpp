@@ -41,6 +41,7 @@ int main(int argc, char *argv[]) {
 	client = new ClientInstance(Client::getPlayerId());
 	window = new Window();
 	glm::vec3 starting = client->root->getPosition();
+	starting = starting + glm::vec3(250, 25, 0);
 	client->root->moveTo(glm::vec3(starting.x, starting.y + 2, starting.z));
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 
@@ -108,6 +109,8 @@ int main(int argc, char *argv[]) {
 
 	Level level = Level();
 	client->root->addChild(level.getRoot());
+	for (int i = 0; i < level.buildings.size(); i++)
+		Client::sendStaticObject(level.buildings[i]->getBoundingBox().minX, level.buildings[i]->getBoundingBox().minY, level.buildings[i]->getBoundingBox().minZ, level.buildings[i]->getBoundingBox().maxX, level.buildings[i]->getBoundingBox().maxY, level.buildings[i]->getBoundingBox().maxZ);
 
 	//client->printPlayers();
 	//client->printSceneGraph();

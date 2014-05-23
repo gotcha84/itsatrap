@@ -114,6 +114,9 @@ public:
 	void applyClimbing(struct playerObject *p);
 
 	void checkForStateChanges(struct playerObject *e);
+
+	void checkPlayersCollideWithTrap();
+
 };
 
 #endif
