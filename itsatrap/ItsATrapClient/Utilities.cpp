@@ -1,5 +1,7 @@
 #include "Utilities.h"
 
+long long Utilities::m_startTime = 0;
+
 // unused since glLoadMatrixf(glm::value_ptr(modelview)); modelview is a mat4 works apparently according to anurag
 GLfloat* Utilities::matrixToGLMatrix(glm::mat4 matrix) {
 
@@ -189,7 +191,7 @@ glm::mat4 Utilities::rotateY(float theta) { // theta = angle in degrees
 		));
 }
 
-glm::mat4 mat4FromAssimp(const aiMatrix4x4& AssimpMatrix)
+glm::mat4 Utilities::mat4FromAssimp(const aiMatrix4x4& AssimpMatrix)
 {
 	glm::mat4 m;
     m[0][0] = AssimpMatrix.a1; m[0][1] = AssimpMatrix.a2; m[0][2] = AssimpMatrix.a3; m[0][3] = AssimpMatrix.a4;
@@ -198,6 +200,19 @@ glm::mat4 mat4FromAssimp(const aiMatrix4x4& AssimpMatrix)
     m[3][0] = AssimpMatrix.d1; m[3][1] = AssimpMatrix.d2; m[3][2] = AssimpMatrix.d3; m[3][3] = AssimpMatrix.d4;
 
 	return m;
+}
+
+long long Utilities::GetCurrentTimeMillis()
+{
+#ifdef WIN32    
+	return GetTickCount();
+#else
+	timeval t;
+	gettimeofday(&t, NULL);
+
+	long long ret = t.tv_sec * 1000 + t.tv_usec / 1000;
+	return ret;
+#endif    
 }
 
 /*

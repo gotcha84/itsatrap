@@ -107,6 +107,7 @@
     <ClCompile Include="PlayerNode.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Technique.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="tiny_obj_loader.cc" />
     <ClCompile Include="Trap.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="MeshNode.h" />
     <ClInclude Include="ObjModel.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Technique.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="City.h" />

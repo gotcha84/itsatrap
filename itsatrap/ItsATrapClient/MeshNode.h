@@ -4,6 +4,7 @@
 
 #include "Geode.h"
 #include "Mesh.h"
+#include "Utilities.h"
 
 namespace sg {
 	class MeshNode : public Geode {

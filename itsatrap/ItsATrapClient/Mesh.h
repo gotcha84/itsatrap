@@ -60,8 +60,8 @@ class Mesh {
 			glm::mat4 FinalTransformation;        
 
 			BoneInfo() {
-				BoneOffset.SetZero();
-				FinalTransformation.SetZero();            
+				BoneOffset = glm::mat4(0);
+				FinalTransformation = glm::mat4(0);
 			}
 		};
     
@@ -130,12 +130,12 @@ class Mesh {
 		};
 
 		vector<MeshEntry> m_Entries;
-		vector<Texture*> m_Textures;
+		//vector<Texture*> m_Textures;
      
 		map<string,uint> m_BoneMapping; // maps a bone name to its index
 		uint m_NumBones;
 		vector<BoneInfo> m_BoneInfo;
-		Matrix4f m_GlobalInverseTransform;
+		glm::mat4 m_GlobalInverseTransform;
 
 		const aiScene* m_pScene;
 		Assimp::Importer m_Importer;

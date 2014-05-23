@@ -7,7 +7,9 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#include <assimp/matrix4x4.h>
+#include <assimp/Importer.hpp> // C++ importer interface
+#include <assimp/scene.h> // Output data structure
+#include <assimp/postprocess.h> // Post processing flags
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +29,7 @@ using namespace std;
 
 class Utilities {
 	public:
+		static long long m_startTime;
 
 		static GLfloat* matrixToGLMatrix(glm::mat4);
 
@@ -41,7 +44,8 @@ class Utilities {
 		static vector<float> findMinsMaxsHelper(vector<float> vec);
 		static glm::vec3 findAverage(string inputfile);
 		static glm::mat4 rotateY(float theta);
-		static glm::mat4 mat4FromAssimp(const aiMatrix4x4& AssimpMatrix)
+		static glm::mat4 mat4FromAssimp(const aiMatrix4x4& AssimpMatrix);
+		static long long Utilities::GetCurrentTimeMillis();
 		//static int getMaxDepth(sg::Node *node);
 };
 

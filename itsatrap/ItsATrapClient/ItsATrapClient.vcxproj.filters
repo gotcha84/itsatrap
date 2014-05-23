@@ -129,6 +129,9 @@
     <ClCompile Include="MeshNode.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="Technique.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="MeshNode.h">
       <Filter>Header Files\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Technique.h">
+      <Filter>Header Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

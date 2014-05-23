@@ -21,6 +21,8 @@
 #include "Client.h"
 #include "enrico.h"
 
+#include "Utilities.h"
+
 ClientInstance *client;
 Window *window;
 
@@ -126,6 +128,8 @@ int main(int argc, char *argv[]) {
 
 	//client->printPlayers();
 	client->printSceneGraph();
+
+	Utilities::m_startTime = Utilities::GetCurrentTimeMillis();
 
 	glutMainLoop();
 

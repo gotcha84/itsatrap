@@ -39,9 +39,9 @@ Mesh::~Mesh()
 
 void Mesh::Clear()
 {
-    for (uint i = 0 ; i < m_Textures.size() ; i++) {
-        SAFE_DELETE(m_Textures[i]);
-    }
+    //for (uint i = 0 ; i < m_Textures.size() ; i++) {
+        //SAFE_DELETE(m_Textures[i]);
+    //}
 
     if (m_Buffers[0] != 0) {
         glDeleteBuffers(ARRAY_SIZE_IN_ELEMENTS(m_Buffers), m_Buffers);
@@ -70,8 +70,8 @@ bool Mesh::LoadMesh(const string& Filename)
     m_pScene = m_Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     
     if (m_pScene) {  
-        m_GlobalInverseTransform = m_pScene->mRootNode->mTransformation;
-        m_GlobalInverseTransform.Inverse();
+        m_GlobalInverseTransform = Utilities::mat4FromAssimp(m_pScene->mRootNode->mTransformation);
+        m_GlobalInverseTransform = glm::inverse(m_GlobalInverseTransform);
         Ret = InitFromScene(m_pScene, Filename);
     }
     else {
@@ -87,7 +87,7 @@ bool Mesh::LoadMesh(const string& Filename)
 bool Mesh::InitFromScene(const aiScene* pScene, const string& Filename)
 {  
     m_Entries.resize(pScene->mNumMeshes);
-    m_Textures.resize(pScene->mNumMaterials);
+    //m_Textures.resize(pScene->mNumMaterials);
 
     vector<glm::vec3> Positions;
     vector<glm::vec3> Normals;
@@ -200,7 +200,7 @@ void Mesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexBoneData>
             m_NumBones++;            
 	        BoneInfo bi;			
 			m_BoneInfo.push_back(bi);
-            m_BoneInfo[BoneIndex].BoneOffset = pMesh->mBones[i]->mOffsetMatrix;            
+            m_BoneInfo[BoneIndex].BoneOffset = Utilities::mat4FromAssimp(pMesh->mBones[i]->mOffsetMatrix);
             m_BoneMapping[BoneName] = BoneIndex;
         }
         else {
@@ -216,8 +216,8 @@ void Mesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexBoneData>
 }
 
 // TODO
-//bool Mesh::InitMaterials(const aiScene* pScene, const string& Filename)
-//{
+bool Mesh::InitMaterials(const aiScene* pScene, const string& Filename)
+{
 //    // Extract the directory part from the file name
 //    string::size_type SlashIndex = Filename.find_last_of("/");
 //    string Dir;
@@ -268,7 +268,8 @@ void Mesh::LoadBones(uint MeshIndex, const aiMesh* pMesh, vector<VertexBoneData>
 //    }
 //
 //    return Ret;
-//}
+	return true;
+}
 
 void Mesh::Render()
 {
@@ -277,11 +278,11 @@ void Mesh::Render()
     for (uint i = 0 ; i < m_Entries.size() ; i++) {
         const uint MaterialIndex = m_Entries[i].MaterialIndex;
 
-        assert(MaterialIndex < m_Textures.size());
+        //assert(MaterialIndex < m_Textures.size());
         
-        if (m_Textures[MaterialIndex]) {
-            m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
-        }
+        //if (m_Textures[MaterialIndex]) {
+            //m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
+        //}
 
 		glDrawElementsBaseVertex(GL_TRIANGLES, 
                                  m_Entries[i].NumIndices, 
@@ -415,25 +416,23 @@ void Mesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm
         // Interpolate scaling and generate scaling transformation matrix
         aiVector3D Scaling;
         CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
-        Matrix4f ScalingM;
-        ScalingM.InitScaleTransform(Scaling.x, Scaling.y, Scaling.z);
+        glm::mat4 ScalingM = glm::scale(glm::vec3(Scaling.x, Scaling.y, Scaling.z));
         
         // Interpolate rotation and generate rotation transformation matrix
         aiQuaternion RotationQ;
         CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);        
-        Matrix4f RotationM = Matrix4f(RotationQ.GetMatrix());
+		glm::mat4 RotationM = glm::toMat4(glm::quat(RotationQ.w, RotationQ.x, RotationQ.y, RotationQ.z));
 
         // Interpolate translation and generate translation transformation matrix
         aiVector3D Translation;
         CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
-        Matrix4f TranslationM;
-        TranslationM.InitTranslationTransform(Translation.x, Translation.y, Translation.z);
+        glm::mat4 TranslationM = glm::translate(glm::vec3(Translation.x, Translation.y, Translation.z));
         
         // Combine the above transformations
         NodeTransformation = TranslationM * RotationM * ScalingM;
     }
        
-    Matrix4f GlobalTransformation = ParentTransform * NodeTransformation;
+    glm::mat4 GlobalTransformation = ParentTransform * NodeTransformation;
     
     if (m_BoneMapping.find(NodeName) != m_BoneMapping.end()) {
         uint BoneIndex = m_BoneMapping[NodeName];
@@ -446,10 +445,9 @@ void Mesh::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const glm
 }
 
 
-void Mesh::BoneTransform(float TimeInSeconds, vector<Matrix4f>& Transforms)
+void Mesh::BoneTransform(float TimeInSeconds, vector<glm::mat4>& Transforms)
 {
-    Matrix4f Identity;
-    Identity.InitIdentity();
+    glm::mat4 Identity = glm::mat4();
     
     float TicksPerSecond = (float)(m_pScene->mAnimations[0]->mTicksPerSecond != 0 ? m_pScene->mAnimations[0]->mTicksPerSecond : 25.0f);
     float TimeInTicks = TimeInSeconds * TicksPerSecond;

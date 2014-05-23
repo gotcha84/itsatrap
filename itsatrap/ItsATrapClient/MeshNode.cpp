@@ -31,7 +31,12 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			m_mesh->draw();
+
+			vector<glm::mat4> Transforms;
+			float RunningTime = (float)((double)Utilities::GetCurrentTimeMillis() - (double)Utilities::m_startTime) / 1000.0f;
+			m_mesh->BoneTransform(RunningTime, Transforms);
+			m_mesh->Render();
+
 		glPopMatrix();
 	}
 
