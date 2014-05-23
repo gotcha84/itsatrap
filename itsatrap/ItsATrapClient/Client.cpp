@@ -173,6 +173,21 @@ void Client::sendStaticObject(float minX, float minY, float minZ, float maxX, fl
 	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
 }
 
+void Client::sendStaticRampObject(AABB rampBB)
+{
+	struct staticRampObjectPacket packet = {};
+	packet.eventId = STATIC_RAMP_OBJECT_CREATION_EVENT;
+	packet.playerId = playerId;
+	packet.object.aabb.minX = rampBB.minX;
+	packet.object.aabb.minY = rampBB.minY;
+	packet.object.aabb.minZ = rampBB.minZ;
+	packet.object.aabb.maxX = rampBB.maxX;
+	packet.object.aabb.maxY = rampBB.maxY;
+	packet.object.aabb.maxZ = rampBB.maxZ;
+
+	sendMsg((char *)&packet, sizeof(struct staticRampObjectPacket));
+}
+
 void Client::sendSpawnTrapEvent(struct trapObject t)
 {
 	struct spawnTrapPacket p;

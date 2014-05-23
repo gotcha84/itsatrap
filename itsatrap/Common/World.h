@@ -41,7 +41,6 @@ class COMMON_API World {
 		static void printHeightMapToFile(string file);
 		static void readInHeightMapFromFile(string file);
 
-		static void addBoundingBox(AABB boundingBox);
 		static AABB* fixBoundingBox(AABB boundingBox);
 };
 

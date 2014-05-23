@@ -31,6 +31,7 @@ private:
 	// Variables
 	int								currentId;
 	vector<struct staticObject>		staticObjects;
+	vector<struct staticObject>		staticRampObjects;
 	bool							playerLock[MAX_PLAYERS];
 	struct stateInfo				statesInfo[MAX_PLAYERS];
 	vector<int>						wallJumpingBuildingIds;						
@@ -74,7 +75,9 @@ public:
 	void addTrap(struct trapObject t);
 
 	void addStaticObject(struct staticObject);
+	void addStaticRampObject(struct staticObject);
 	int getNumStaticObjects();
+	int getNumStaticRampObjects();
 
 	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 

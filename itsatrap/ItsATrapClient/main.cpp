@@ -112,6 +112,10 @@ int main(int argc, char *argv[]) {
 	for (int i = 0; i < level.buildings.size(); i++)
 		Client::sendStaticObject(level.buildings[i]->getBoundingBox().minX, level.buildings[i]->getBoundingBox().minY, level.buildings[i]->getBoundingBox().minZ, level.buildings[i]->getBoundingBox().maxX, level.buildings[i]->getBoundingBox().maxY, level.buildings[i]->getBoundingBox().maxZ);
 
+	for (int i = 0; i < level.ramps.size(); i++) {
+		Client::sendStaticRampObject(level.ramps[i]->getBoundingBox());
+	}
+
 	//client->printPlayers();
 	//client->printSceneGraph();
 

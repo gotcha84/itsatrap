@@ -19,6 +19,7 @@
 #define MOVE_EVENT 10
 #define JUMP_EVENT 11
 #define LOOK_EVENT 12
+#define STATIC_RAMP_OBJECT_CREATION_EVENT 13
 
 
 // Superclass of all packets
@@ -42,6 +43,13 @@ struct playerUpdatePacket
 };
 
 struct staticObjectPacket
+{
+	int eventId;
+	int playerId;
+	struct staticObject object;
+};
+
+struct staticRampObjectPacket
 {
 	int eventId;
 	int playerId;

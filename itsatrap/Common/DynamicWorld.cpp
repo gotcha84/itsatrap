@@ -240,9 +240,19 @@ void DynamicWorld::addStaticObject(struct staticObject obj)
 	staticObjects.push_back(obj);
 }
 
+void DynamicWorld::addStaticRampObject(struct staticObject obj)
+{
+	staticRampObjects.push_back(obj);
+}
+
 int DynamicWorld::getNumStaticObjects() 
 {
 	return staticObjects.size();
+}
+
+int DynamicWorld::getNumStaticRampObjects()
+{
+	return staticRampObjects.size();
 }
 
 void DynamicWorld::addTrap(struct trapObject t)

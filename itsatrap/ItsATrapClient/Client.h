@@ -46,6 +46,7 @@ public:
 	static void startReceiverThread();
 	static int getPlayerId();
 	static void sendStaticObject(float, float, float, float, float, float);
+	static void sendStaticRampObject(AABB rampBB);
 	static void sendPlayerUpdate(struct playerObject);
 	static void sendSpawnTrapEvent(struct trapObject);
 	static void sendKnifeHitEvent(int targetId);

@@ -134,10 +134,6 @@ void World::readInHeightMapFromFile(string file) {
 	}
 }
 
-void World::addBoundingBox(AABB boundingBox) {
-	m_boundingBoxes.push_back(boundingBox);
-}
-
 AABB* World::fixBoundingBox(AABB boundingBox) {
 	float minX = boundingBox.minX;
 	float minY = boundingBox.minY;

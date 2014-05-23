@@ -96,7 +96,7 @@ int Server::initialize() {
 	// Load Height Map
 	string heightMapFile;
 	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
-	World::readInHeightMapFromFile(heightMapFile);
+	//World::readInHeightMapFromFile(heightMapFile);
 	
 	return 0;
 }
@@ -148,6 +148,18 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticObject(tmp);
 			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			tmp.aabb.print();
+		}
+	}
+	else if (p->eventId == STATIC_RAMP_OBJECT_CREATION_EVENT)
+	{
+		struct staticRampObjectPacket *staticObjPkt = (struct staticRampObjectPacket *)p;
+		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
+		{
+			struct staticObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
+			dynamicWorld.addStaticRampObject(tmp);
+			printf("[SERVER]: Added a static ramp object. Now have %d static ramp objects\n", dynamicWorld.getNumStaticRampObjects());
 			tmp.aabb.print();
 		}
 	}
