@@ -96,15 +96,13 @@ int Server::initialize() {
 	// Load Height Map
 	string heightMapFile;
 	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
-	World::readInHeightMapFromFile(heightMapFile);
+	//World::readInHeightMapFromFile(heightMapFile);
 	
 	return 0;
 }
 
 // Server processes a given message
 void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
-	// TODO (ktngo): Bad practice. Move away from using structs
-	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
 	//printPacket(p);
 	//printf("[SERVER]: Received a packet. eventId: %d\n", p->eventId);

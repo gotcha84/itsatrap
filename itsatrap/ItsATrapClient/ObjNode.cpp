@@ -37,6 +37,10 @@ namespace sg {
 		return m_model->getBoundingBox();
 	}
 
+	void ObjNode::setBoundingBox(AABB boundingBox) {
+		m_model->setBoundingBox(boundingBox);
+	}
+
 	void ObjNode::calculateBoundingBox() {
 		m_model->calculateBoundingBox(this->getWorldTransformMatrix());
 		//m_model->getBoundingBox().print();
