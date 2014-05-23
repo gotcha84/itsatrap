@@ -57,7 +57,7 @@ typedef struct
 std::string LoadObj(
     std::vector<shape_t>& shapes,   // [output]
     const char* filename,
-    const char* mtl_basepath = NULL);
+    const char* mtl_basepath = "../Models/Traps/");
 
 };
 

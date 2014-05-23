@@ -99,7 +99,7 @@ public:
 	void holdingEdgeJumpEvent(struct jumpEventPacket *pkt);
 	void wallRunningJumpEvent(struct jumpEventPacket *pkt);
 
-
+	void checkPlayersCollideWithTrap();
 };
 
 #endif

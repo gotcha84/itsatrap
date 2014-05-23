@@ -148,6 +148,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticObject(tmp);
 			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			tmp.aabb.print();
 		}
 	}
 	else if (p->eventId == RELOAD_CONFIG_FILE)
@@ -225,6 +226,7 @@ void Server::processBuffer()
 	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
 	//dynamicWorld.applyPhysics();
 	dynamicWorld.applyGravity();
+	dynamicWorld.checkPlayersCollideWithTrap();
 	updateResources();
 	
 	// Lock Mutex: Process exisiting packet buf without adding more packets 

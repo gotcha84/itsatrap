@@ -28,8 +28,8 @@
     <Filter Include="Header Files\SceneGraph">
       <UniqueIdentifier>{f018f9e0-9e2c-4cdd-b8f9-a875dc9919b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Shaders">
-      <UniqueIdentifier>{b9bbe3db-19a9-404e-b5f5-087bce953cf5}</UniqueIdentifier>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{0c02ee5e-d511-4c42-b3b7-fc0802a54304}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Animation">
       <UniqueIdentifier>{99415b36-8c77-40a0-9cd9-273e3ff7eba1}</UniqueIdentifier>
@@ -48,10 +48,16 @@
     <ClCompile Include="MyPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ClientInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tiny_obj_loader.cc">
@@ -108,28 +114,11 @@
     <ClCompile Include="enrico.cpp">
       <Filter>Source Files\Networking</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="ObjNode.cpp">
-      <Filter>Source Files\SceneGraph\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Utilities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
-=======
     <ClCompile Include="Level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ObjNode.cpp">
-      <Filter>Source Files\SceneGraph\Shapes</Filter>
->>>>>>> origin/levelbuilder
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +135,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ClientInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="tiny_obj_loader.h">
@@ -196,58 +188,46 @@
     <ClInclude Include="enrico.h">
       <Filter>Header Files\Networking</Filter>
     </ClInclude>
-<<<<<<< HEAD
+    <ClInclude Include="Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ObjNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
       <Filter>Header Files\SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-=======
-    <ClInclude Include="Level.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjNode.h">
->>>>>>> origin/levelbuilder
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shaders\can.frag">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="can.frag">
+      <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shaders\can.vert">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="can.vert">
+      <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shaders\gouraud.frag">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="..\..\phong.frag">
+      <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shaders\gouraud.vert">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="..\..\phong.vert">
+      <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shaders\phongandtexture.frag">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="phongandtexture.frag">
+      <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shaders\phongandtexture.vert">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="phongandtexture.vert">
+      <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shaders\simple.frag">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="gouraud.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="gouraud.vert">
+      <Filter>Shader</Filter>
     </None>
     <None Include="..\Shaders\simple.vert">
-      <Filter>Source Files\Shaders</Filter>
+      <Filter>Shader</Filter>
     </None>
-    <None Include="..\..\phong.frag" />
-    <None Include="..\..\phong.vert" />
-    <None Include="can.frag" />
-    <None Include="can.vert" />
-    <None Include="gouraud.frag" />
-    <None Include="gouraud.vert" />
-    <None Include="phongandtexture.frag" />
-    <None Include="phongandtexture.vert" />
+    <None Include="..\Shaders\simple.frag">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
