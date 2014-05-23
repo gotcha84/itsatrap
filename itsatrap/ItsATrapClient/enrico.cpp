@@ -45,13 +45,13 @@ void handlePlayerUpdate(struct playerObject p)
 
 		// RESOURCES
 		client->players[p.id]->m_player->m_resources = p.resources;
-		
-		p.velocity += p.velocityDiff;
-		p.position += p.velocity;
-		p.velocity -= p.velocityDiff;
-		p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		// POSITION & GRAPHIC
+		client->players[p.id]->moveTo(p.position);
+		client->players[p.id]->getPlayer()->setAABB(&p.aabb);
+		cout << "pos: " << glm::to_string(p.position) << endl;
+
+		client->players[p.id]->getPlayer()->setAABB(&p.aabb);
 		if (p.position != client->players[p.id]->getPosition()) {
 			//cout << "updating position in enrico.cpp\n";
 			client->players[p.id]->moveTo(p.position);
@@ -121,7 +121,6 @@ void handleRemoveTrap(struct trapObject t)
 // This will get called everytime server sends an update
 void handleUpdateWorldFromServer(DynamicWorld *world)
 {
-
 	vector<struct playerObject> players = world->getAllPlayers();
 	for (int i = 0; i < players.size(); i++) {
 		handlePlayerUpdate(players[i]);
@@ -133,4 +132,6 @@ void handleUpdateWorldFromServer(DynamicWorld *world)
 		else if (it->second.eventCode == EVENT_REMOVE_TRAP)
 			handleRemoveTrap(it->second);
 	}
+
+	//Window::displayCallback();
 }

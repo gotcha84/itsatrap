@@ -47,7 +47,7 @@ class MyPlayer {
 		float m_zWalkFactor;
 		float m_xSlowWalkFactor;
 		float m_zSlowWalkFactor;
-		float m_wallJumpFactor;
+		float m_climbFactor;
 		float m_pullingUpFactor;
 		float m_wallJumpTime;
 		float m_holdingEdgeTime;
@@ -72,6 +72,7 @@ class MyPlayer {
 		
 		AABB *getAABB();
 		void setAABB(AABB *bbox);
+		//void setAABB(AABB bbox);
 
 		glm::mat4 getTransMatrix();
 		glm::mat4 getModelMatrix();
@@ -84,23 +85,6 @@ class MyPlayer {
 		void handleYRotation(float magnitude);
 		void handleSliding();
 		void handleTeleport();
-		void handleMovement(unsigned char key);
-		void handleJump();
-		void startClimbing(glm::vec3 toAdd);
-		void handleClimbing(unsigned char key);
-		void applyClimbing();
-		void handleHoldingEdge(unsigned char key);
-		void applyHoldingEdge();
-		void applyPullingUp();
-
-		void startWallRunning(int direction, glm::vec3 toAdd, float angle);
-		void handleWallRunning(unsigned char key);
-		void applyWallRunning();
-		void applyCamAdjustments();
-		void applyWallRunningYAdjustLook();
-		void applyWallRunningYReadjustLook();
-		void applyWallRunningXAdjustLook();
-		void applyWallRunningXReadjustLook();
 		
 		void Unstuck(unsigned char key);
 		

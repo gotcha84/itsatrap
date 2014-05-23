@@ -32,13 +32,13 @@ private:
 	int								currentId;
 	vector<struct staticObject>		staticObjects;
 	bool							playerLock[MAX_PLAYERS];
-	vector<struct stateInfo>		stateInfos;
+	struct stateInfo				statesInfo[MAX_PLAYERS];
 	vector<int>						wallJumpingBuildingIds;						
-
+	bool							triedToRun[MAX_PLAYERS];
 
 
 	// 
-	void initStateInfo();
+	
 	bool checkCollision(struct aabb a, struct aabb b);
 	int checkCollisionsWithAllNonTraps(struct playerObject *e);
 	int checkSideCollisionsWithAllNonTraps(struct playerObject *e);
@@ -60,6 +60,8 @@ public:
 	DynamicWorld(struct packet *packet);
 	int serialize(char *ptr);
 	void printWorld();
+
+	void cleanStateInfo(int id);
 
 	void updatePlayer(struct playerObject e);
 	int getNumPlayers();
@@ -86,7 +88,10 @@ public:
 	void wallRunningMoveEvent(struct moveEventPacket *pkt);*/
 
 	void startClimbing(struct playerObject *e, int buildingId);
+	void startHoldingEdge(struct playerObject *e, int buildingId);
+	void startPullingUp(struct playerObject *e);
 	void startWallRunning(struct playerObject *e, int newDirection, glm::vec3 toAdd, float angle);
+
 	void noneMoveEvent(struct moveEventPacket *pkt);
 	void climbingMoveEvent(struct moveEventPacket *pkt);
 	void pullingUpMoveEvent(struct moveEventPacket *pkt);
@@ -99,7 +104,16 @@ public:
 	void holdingEdgeJumpEvent(struct jumpEventPacket *pkt);
 	void wallRunningJumpEvent(struct jumpEventPacket *pkt);
 
+	void handleXRotation(struct playerObject *e, float angle);
+	void handleYRotation(struct playerObject *e, float angle);
+	void calculateAxis(struct playerObject *e);
 
+	void applyPullingUp(struct playerObject *p);
+	void applyHoldingEdge(struct playerObject *p);
+	void applyWallRunning(struct playerObject *p);
+	void applyClimbing(struct playerObject *p);
+
+	void checkForStateChanges(struct playerObject *e);
 };
 
 #endif

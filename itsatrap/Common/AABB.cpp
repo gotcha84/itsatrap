@@ -123,6 +123,12 @@ bool AABB::clearedTop(AABB other) {
 	return (other.minY >= maxY+m_overTopFactor);
 }
 
+bool AABB::fellOffSide(AABB other) {
+	// TODO: implement
+	return false;
+
+}
+
 glm::vec3 AABB::intersects(glm::vec3 from, glm::vec3 goTo) {
 	glm::vec3 direction = goTo-from;
 

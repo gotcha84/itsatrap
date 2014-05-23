@@ -46,6 +46,7 @@ class COMMON_API AABB {
 		bool nearTop(glm::vec3 goTo);
 		bool clearedTop(AABB other);
 		bool onTopOf(AABB* other);
+		bool fellOffSide(AABB other);
 
 		glm::vec3 intersects(glm::vec3 from, glm::vec3 goTo);
 		int reflectionIntersection(glm::vec3 from, glm::vec3 goTo);

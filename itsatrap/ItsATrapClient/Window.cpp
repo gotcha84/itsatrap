@@ -18,6 +18,7 @@ bool *Window::keyState = new bool[256];
 bool *Window::specialKeyState = new bool[256];
 int Window::modifierKey = 0;
 
+
 Window::Window() {
 	for (int i=0; i<256; i++) {
 		keyState[i] = false;
@@ -57,6 +58,10 @@ void Window::reshapeCallback(int w, int h)
 //----------------------------------------------------------------------------
 // Callback method called when window readraw is necessary or
 // when glutPostRedisplay() was called.
+void Window::displayCallback2(void) {
+
+}
+
 void Window::displayCallback(void)
 {	
 	float oldBuildingId = client->root->getPlayer()->m_onTopOfBuildingId;
@@ -118,7 +123,7 @@ void Window::displayCallback(void)
 	/*if (client->root->getPlayer()->getPhysics()->m_velocity.x != client->root->getPlayer()->getPhysics()->m_velocityDiff.x || client->root->getPlayer()->getPhysics()->m_velocity.z != client->root->getPlayer()->getPhysics()->m_velocityDiff.z) {
 
 		cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
-		cout << "velodiff: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocityDiff) << endl;
+		cout << "velocityDiff: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocityDiff) << endl;
 
 	}*/
 	
@@ -153,6 +158,7 @@ void Window::displayCallback(void)
 		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding;
 	}
 	else {*/
+
 		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_playerHeight;
 		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
 	//}

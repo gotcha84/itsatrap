@@ -35,7 +35,7 @@ class Window {
 		static void idleCallback();
 		static void reshapeCallback(int, int);
 		static void displayCallback();
-
+		static void displayCallback2();
 		static void keyDown(unsigned char, int, int);
 		static void keyUp(unsigned char key, int x, int y);
 		static void specialKeyDown(int key, int x, int y);

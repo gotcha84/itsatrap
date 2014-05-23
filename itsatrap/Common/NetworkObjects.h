@@ -29,24 +29,14 @@ enum PhysicsStates {
 };
 
 enum innerStates {
-	Off = 0, // same as readjusted
+	Off = -1, // same as readjusted
 
-	StartAdjusting = 1,
-	StartAdjusted = 2,
-	StartReadjusting = 3,
-	StartReadjusted = 4,
+	Starting = 1,
+	Mid = 2,
+	Waiting = 3,
+	Ending = 4,
 
-	MidAdjusting = 5,
-	MidAdjusted = 6,
-	MidReadjusting = 7,
-	MidReadjusted = 8,
-
-	EndAdjusting = 9,
-	EndAdjusted = 10,
-	EndReadjusting = 11,
-	EndReadjusted = 12,
-
-	Done = 13
+	Done = 5
 };
 
 //struct aabb {
@@ -54,35 +44,43 @@ enum innerStates {
 //};
 
 struct miniStateInfo {
+	glm::vec3 camZ;
+	glm::vec3 camX;
 	float lookX, lookY;
-	float lookXNumFramesFraction, lookYNumFramesFraction;
+	glm::vec3 camUp;
+	float fraction;
 	float lookXIncrement, lookYIncrement;
-	glm::vec3 veloDiff;
+	glm::vec3 camUpIncrement;
+	glm::vec3 velocityDiff;
 	int counter;
+
 
 };
 
-struct holderInfo {
-	glm::vec3		position, lookAt, center, up, velDiff, vel, xRotated, yRotated;
+struct HolderInfo {
+	float			xRotated, yRotated;
+	glm::vec3		position, cameraLookAt, cameraCenter, cameraUp, velocityDiff, velocity, camZ, camX;
 };
 
 struct stateInfo {
-	float initialX, intialY;
+	float initialX, initialY;
+	glm::vec3 initialUp;
 
-	float lookXNumFrames, lookYNumFrames;
+	float numFrames;
 
-	struct miniStateInfo start;
+	struct miniStateInfo Start;
 	//struct miniStateInfo startAdjust;
 	//struct miniStateInfo startReadjust;
-	struct miniStateInfo middle;
-	struct miniStateInfo end;
+	struct miniStateInfo Mid;
+	struct miniStateInfo End;
 	//struct miniStateInfo endAdjust;
 	//struct miniStateInfo readAjust;
 
 	float goalCamX, goalCamY;
+	glm::vec3 goalCamUp;
 	float goalVelo;
 
-	struct holderInfo holder;
+	struct HolderInfo Holder;
 
 	innerStates innerState;	
 };
@@ -134,6 +132,7 @@ struct playerObject {
 	int currState;
 	int currminiState;
 	int interactingWithBuildingId;
+	int interactingWIthBuildingFace; //-x = 0, +x = 1 etc
 };
 
 struct trapObject {
