@@ -236,7 +236,7 @@ void Server::processBuffer()
 {
 
 	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
-	//dynamicWorld.applyPhysics();
+	dynamicWorld.applyPhysics();
 	dynamicWorld.applyGravity();
 	dynamicWorld.checkPlayersCollideWithTrap();
 	updateResources();

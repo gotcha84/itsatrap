@@ -14,6 +14,8 @@
 #include <vector>
 #include <math.h>
 
+#include "ConfigSettings.h"
+#include "NetworkConfig.h"
 #include "NetworkObjects.h"
 //#include "World.h"
 
@@ -23,6 +25,22 @@ using namespace std;
 
 class COMMON_API StateLogic {
 public:
+
+	static struct stateInfo				statesInfo[MAX_PLAYERS];
+	
+	static void startClimbing(struct playerObject *e, int buildingId);
+	static void startHoldingEdge(struct playerObject *e, int buildingId);
+	static void startPullingUp(struct playerObject *e);
+	static void startWallRunning(struct playerObject *e, int newDirection, glm::vec3 toAdd, float angle);
+	
+	static void applyPullingUp(struct playerObject *p);
+	static void applyHoldingEdge(struct playerObject *p);
+	static void applyWallRunning(struct playerObject *p);
+	static void applyClimbing(struct playerObject *p);
+
+	static void handleXRotation(struct playerObject *e, float angle);
+	static void handleYRotation(struct playerObject *e, float angle);
+	static void calculateAxis(struct playerObject *e);
 
 };
 

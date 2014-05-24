@@ -50,7 +50,6 @@ void handlePlayerUpdate(struct playerObject p)
 		client->players[p.id]->getPlayer()->setAABB(&p.aabb);
 		//cout << "pos: " << glm::to_string(p.position) << endl;
 
-		client->players[p.id]->getPlayer()->setAABB(&p.aabb);
 		if (p.position != client->players[p.id]->getPosition()) {
 			//cout << "updating position in enrico.cpp\n";
 			client->players[p.id]->moveTo(p.position);

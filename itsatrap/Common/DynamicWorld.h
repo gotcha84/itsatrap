@@ -15,6 +15,7 @@
 #include "Packet.h"
 #include "ConfigSettings.h"
 #include "Physics.h"
+#include "StateLogic.h"
 #include "World.h"
 
 using namespace std;
@@ -33,7 +34,7 @@ private:
 	vector<struct staticObject>		staticObjects;
 	vector<struct staticObject>		staticRampObjects;
 	bool							playerLock[MAX_PLAYERS];
-	struct stateInfo				statesInfo[MAX_PLAYERS];
+	
 	vector<int>						wallJumpingBuildingIds;						
 	bool							triedToRun[MAX_PLAYERS];
 
@@ -84,11 +85,6 @@ public:
 	void applyGravity();
 	void applyPhysics();
 
-	void startClimbing(struct playerObject *e, int buildingId);
-	void startHoldingEdge(struct playerObject *e, int buildingId);
-	void startPullingUp(struct playerObject *e);
-	void startWallRunning(struct playerObject *e, int newDirection, glm::vec3 toAdd, float angle);
-
 	void noneMoveEvent(int playerId, Direction dir);
 	void climbingMoveEvent(int playerId, Direction dir);
 	void pullingUpMoveEvent(int playerId, Direction dir);
@@ -101,18 +97,9 @@ public:
 	void holdingEdgeJumpEvent(int playerId);
 	void wallRunningJumpEvent(int playerId);
 
-	void handleXRotation(struct playerObject *e, float angle);
-	void handleYRotation(struct playerObject *e, float angle);
-	void calculateAxis(struct playerObject *e);
-
-	void applyPullingUp(struct playerObject *p);
-	void applyHoldingEdge(struct playerObject *p);
-	void applyWallRunning(struct playerObject *p);
-	void applyClimbing(struct playerObject *p);
+	void checkPlayersCollideWithTrap();
 
 	void checkForStateChanges(struct playerObject *e);
-
-	void checkPlayersCollideWithTrap();
 
 };
 
