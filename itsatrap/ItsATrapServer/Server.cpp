@@ -259,23 +259,25 @@ void Server::processBuffer()
 				break;
 			}
 
-			case MOVE_EVENT:
+			case PLAYER_ACTION_EVENT:
 			{
-				struct moveEventPacket *movePkt = (struct moveEventPacket *)p;
-				dynamicWorld.processMoveEvent(movePkt);
-				break;
-			}
-			case LOOK_EVENT:
-			{
-				struct lookEventPacket *lookPkt = (struct lookEventPacket *)p;
-				dynamicWorld.processLookEvent(lookPkt);
-				break;
-			}
+				struct playerActionPacket *actPkt = (struct playerActionPacket *)p;
 
-			case JUMP_EVENT:
-			{
-				struct jumpEventPacket *jumpPkt = (struct jumpEventPacket*)p;
-				dynamicWorld.processJumpEvent(jumpPkt);
+				// Movements
+				for (int i = 0; i < NUM_DIRECTIONS; i++)
+				{
+					if (actPkt->moveEvents[i])
+						dynamicWorld.processMoveEvent(actPkt->playerId, (Direction)i);
+				}
+
+				// Jump
+				if (actPkt->jump)
+					dynamicWorld.processJumpEvent(actPkt->playerId);
+
+				// Camera
+				if (actPkt->cameraChanged)
+					dynamicWorld.processLookEvent(actPkt->playerId, &actPkt->cam);
+
 				break;
 			}
 
@@ -419,22 +421,6 @@ void Server::printPacket(struct packet *p)
 			printf("x: %.1f, y:%.1f, z:%.1f\n", player->position.x, player->position.y, player->position.z);
 			printf("=====================================\n");
 			
-			break;
-		}
-		case MOVE_EVENT:
-		{
-			struct moveEventPacket *movePkt = (struct moveEventPacket *)p;
-			printf("=====================================\n");
-			printf("MOVE EVENT PACKET\n");
-			printf("=====================================\n");
-			break;
-		}
-		case JUMP_EVENT: 
-		{
-			struct jumpEventPacket *jumpPkt = (struct jumpEventPacket *)p;
-			printf("=====================================\n");
-			printf("JUMP EVENT PACKET\n");
-			printf("=====================================\n");
 			break;
 		}
 		default:

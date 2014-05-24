@@ -68,9 +68,9 @@ public:
 	int getNumPlayers();
 	vector<struct playerObject> getAllPlayers();
 	void updatePlayerBuffs(int timeDiff);
-	void processMoveEvent(struct moveEventPacket *pkt);
-	void processJumpEvent(struct jumpEventPacket *pkt);
-	void processLookEvent(struct lookEventPacket *pkt);
+	void processMoveEvent(int playerId, Direction dir);
+	void processJumpEvent(int playerId);
+	void processLookEvent(int playerId, struct cameraObject *cam);
 
 	void addTrap(struct trapObject t);
 
@@ -84,28 +84,22 @@ public:
 	void applyGravity();
 	void applyPhysics();
 
-	/*void noneMoveEvent(struct moveEventPacket *pkt);
-	void climbingMoveEvent(struct moveEventPacket *pkt);
-	void pullingUpMoveEvent(struct moveEventPacket *pkt);
-	void holdingEdgeMoveEvent(struct moveEventPacket *pkt);
-	void wallRunningMoveEvent(struct moveEventPacket *pkt);*/
-
 	void startClimbing(struct playerObject *e, int buildingId);
 	void startHoldingEdge(struct playerObject *e, int buildingId);
 	void startPullingUp(struct playerObject *e);
 	void startWallRunning(struct playerObject *e, int newDirection, glm::vec3 toAdd, float angle);
 
-	void noneMoveEvent(struct moveEventPacket *pkt);
-	void climbingMoveEvent(struct moveEventPacket *pkt);
-	void pullingUpMoveEvent(struct moveEventPacket *pkt);
-	void holdingEdgeMoveEvent(struct moveEventPacket *pkt);
-	void wallRunningMoveEvent(struct moveEventPacket *pkt);
+	void noneMoveEvent(int playerId, Direction dir);
+	void climbingMoveEvent(int playerId, Direction dir);
+	void pullingUpMoveEvent(int playerId, Direction dir);
+	void holdingEdgeMoveEvent(int playerId, Direction dir);
+	void wallRunningMoveEvent(int playerId, Direction dir);
 
-	void noneJumpEvent(struct jumpEventPacket *pkt);
-	void climbingJumpEvent(struct jumpEventPacket *pkt);
-	void pullingUpJumpEvent(struct jumpEventPacket *pkt);
-	void holdingEdgeJumpEvent(struct jumpEventPacket *pkt);
-	void wallRunningJumpEvent(struct jumpEventPacket *pkt);
+	void noneJumpEvent(int playerId);
+	void climbingJumpEvent(int playerId);
+	void pullingUpJumpEvent(int playerId);
+	void holdingEdgeJumpEvent(int playerId);
+	void wallRunningJumpEvent(int playerId);
 
 	void handleXRotation(struct playerObject *e, float angle);
 	void handleYRotation(struct playerObject *e, float angle);

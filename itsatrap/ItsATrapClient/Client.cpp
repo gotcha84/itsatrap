@@ -9,6 +9,9 @@ int 				Client::i_sockfd;
 char 				Client::c_msg[BUFSIZE];
 WSADATA				Client::wsaData;
 int					Client::playerId;
+bool				Client::moveEvents[NUM_DIRECTIONS] = {};
+bool				Client::jumpEvent, Client::cameraChanged;
+cameraObject		Client::playerCam = {};
 
 int Client::initializeClient() {
 
@@ -68,6 +71,7 @@ int Client::initializeClient() {
 	}
 
 	Client::startReceiverThread();
+	Client::startSenderThread();
 
 	return 0;
 	
@@ -75,8 +79,14 @@ int Client::initializeClient() {
 
 void Client::startReceiverThread()
 {
-	DWORD tmp;
+	DWORD tmp = 0;
 	CreateThread(NULL, 0, Client::receiverThread, NULL, 0, &tmp);
+}
+
+void Client::startSenderThread()
+{
+	DWORD tmp = 0;
+	CreateThread(NULL, 0, Client::senderThread, NULL, 0, &tmp);
 }
 
 DWORD WINAPI Client::receiverThread(LPVOID param)
@@ -240,28 +250,55 @@ void Client::sendReloadConfigFile()
 
 void Client::sendMoveEvent(Direction dir)
 {
-	struct moveEventPacket p = {};
-	p.eventId = MOVE_EVENT;
-	p.playerId = getPlayerId();
-	p.direction = dir;
-
-	sendMsg((char *)&p, sizeof(p));
+	moveEvents[dir] = true;
 }
 
 void Client::sendJumpEvent()
 {
-	struct jumpEventPacket p = {};
-	p.eventId = JUMP_EVENT;
-	p.playerId = getPlayerId();
-
-	sendMsg((char *)&p, sizeof(p));
+	jumpEvent = true;
 }
 
 void Client::sendLookEvent(struct cameraObject cam)
 {
-	struct lookEventPacket p = {};
-	p.eventId = LOOK_EVENT;
-	p.playerId = getPlayerId();
-	p.cam = cam;
-	sendMsg((char *)&p, sizeof(p));
+	playerCam = cam;
+	cameraChanged = true;
+}
+
+DWORD WINAPI Client::senderThread(LPVOID)
+{
+	while (1)
+	{
+		int sleep = 33;
+		ConfigSettings::getConfig()->getValue("ClientSendRate", sleep);
+		Sleep(sleep);
+
+		bool sendUpdate = false;
+		for (int i = 0; i < NUM_DIRECTIONS; i++)
+		{
+			if (moveEvents[i])
+				sendUpdate = true;
+		}
+		if (jumpEvent)
+			sendUpdate = true;
+		if (cameraChanged)
+			sendUpdate = true;
+
+		if (sendUpdate)
+		{
+			// Send packet
+			struct playerActionPacket p = {};
+			p.eventId = PLAYER_ACTION_EVENT;
+			p.playerId = getPlayerId();
+			memcpy(p.moveEvents, moveEvents, sizeof(moveEvents));
+			p.jump = jumpEvent;
+			p.cameraChanged = cameraChanged;
+			p.cam = playerCam;
+			sendMsg((char *)&p, sizeof(p));
+		}
+
+		// Reset static vars
+		memset(moveEvents, 0, sizeof(moveEvents));
+		jumpEvent = false;
+		cameraChanged = false;
+	}
 }

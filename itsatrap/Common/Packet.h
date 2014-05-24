@@ -16,10 +16,8 @@
 #define KNIFE_HIT_EVENT 7
 #define HOT_SPOT_UPDATE 8
 #define RELOAD_CONFIG_FILE 9
-#define MOVE_EVENT 10
-#define JUMP_EVENT 11
-#define LOOK_EVENT 12
 #define STATIC_RAMP_OBJECT_CREATION_EVENT 13
+#define PLAYER_ACTION_EVENT 14
 
 
 // Superclass of all packets
@@ -75,29 +73,19 @@ struct hotSpotPacket
 	int x,y,z;
 };
 
+
+#define NUM_DIRECTIONS 4
 enum Direction {
-	FORWARD, BACKWARD, LEFT, RIGHT
+	// MUST BE 0,1,2,...
+	FORWARD = 0, BACKWARD = 1, LEFT= 2, RIGHT = 3
 };
 
-struct moveEventPacket
+struct playerActionPacket
 {
 	int eventId;
 	int playerId;
-	Direction direction;
-	float xRotation, yRotation;
-	glm::vec3 test;
-};
-
-struct jumpEventPacket
-{
-	int eventId;
-	int playerId;
-};
-
-struct lookEventPacket
-{
-	int eventId;
-	int playerId;
+	bool moveEvents[NUM_DIRECTIONS];
+	bool jump, cameraChanged;
 	struct cameraObject cam;
 };
 

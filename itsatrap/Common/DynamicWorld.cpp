@@ -419,10 +419,10 @@ void DynamicWorld::computeAABB(struct playerObject *p)
 	p->aabb.maxZ = p->position.z + 5;
 }
 
-void DynamicWorld::processMoveEvent(struct moveEventPacket *pkt)
+void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 {
-	struct playerObject *p = &playerMap[pkt->playerId];
-	noneMoveEvent(pkt);
+	struct playerObject *p = &playerMap[playerId];
+	noneMoveEvent(playerId, dir);
 	/*
 	switch (p->currState) {
 		case None:
@@ -445,9 +445,9 @@ void DynamicWorld::processMoveEvent(struct moveEventPacket *pkt)
 
 }
 
-void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
+void DynamicWorld::noneMoveEvent(int playerId, Direction dir)
 {
-	struct playerObject *p = &playerMap[pkt->playerId];
+	struct playerObject *p = &playerMap[playerId];
 
 	glm::vec3 proposedNewPos;
 	
@@ -483,7 +483,7 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 		zWalkFactor = zWalkFactor * speedMultiplier;
 	}
 	glm::vec3 toAdd;
-	switch (pkt->direction)
+	switch (dir)
 	{
 		case FORWARD:
 			proposedNewPos = p->position + zWalkFactor*tmp_camZ;
@@ -567,12 +567,12 @@ void DynamicWorld::noneMoveEvent(struct moveEventPacket *pkt)
 
 }
 
-void DynamicWorld::climbingMoveEvent(struct moveEventPacket *pkt) {
+void DynamicWorld::climbingMoveEvent(int playerId, Direction dir) {
 
-	struct playerObject *p = &playerMap[pkt->playerId];
+	struct playerObject *p = &playerMap[playerId];
 
 	// TODO: enable movement?
-	switch (pkt->direction)
+	switch (dir)
 	{
 
 		case BACKWARD:
@@ -588,8 +588,8 @@ void DynamicWorld::climbingMoveEvent(struct moveEventPacket *pkt) {
 	
 }
 
-void DynamicWorld::holdingEdgeMoveEvent(struct moveEventPacket *pkt) {
-	struct playerObject *p = &playerMap[pkt->playerId];
+void DynamicWorld::holdingEdgeMoveEvent(int playerId, Direction dir) {
+	struct playerObject *p = &playerMap[playerId];
 
 	glm::vec3 proposedNewPos;
 
@@ -614,7 +614,7 @@ void DynamicWorld::holdingEdgeMoveEvent(struct moveEventPacket *pkt) {
 	
 	glm::vec3 toAdd;
 	// TODO: depend on building face rather than where you looking at
-	switch (pkt->direction)
+	switch (dir)
 	{
 		case FORWARD:
 			cout << "started pulling up" << endl;
@@ -663,7 +663,7 @@ void DynamicWorld::holdingEdgeMoveEvent(struct moveEventPacket *pkt) {
 
 }
 
-void DynamicWorld::wallRunningMoveEvent(struct moveEventPacket *pkt) {
+void DynamicWorld::wallRunningMoveEvent(int playerId, Direction dir) {
 
 	cout << "why handling wallrunningmoveevent wtf??" << endl;
 	return;
@@ -1169,44 +1169,43 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 
 }
 
-void DynamicWorld::processJumpEvent(struct jumpEventPacket *pkt)
+void DynamicWorld::processJumpEvent(int playerId)
 {
-	cout << "process jump event" << endl;
-	struct playerObject *p = &playerMap[pkt->playerId];
+	struct playerObject *p = &playerMap[playerId];
 	//noneJumpEvent(pkt);
 	
 	switch (p->currState) {
 		case None:
-			noneJumpEvent(pkt);
+			noneJumpEvent(playerId);
 			break;
 		case Climbing:
-			climbingJumpEvent(pkt);
+			climbingJumpEvent(playerId);
 			break;
 		case PullingUp:
-			pullingUpJumpEvent(pkt);
+			pullingUpJumpEvent(playerId);
 			break;
 		case HoldingEdge:
-			holdingEdgeJumpEvent(pkt);
+			holdingEdgeJumpEvent(playerId);
 			break;
 		case WallRunning:
-			wallRunningJumpEvent(pkt);
+			wallRunningJumpEvent(playerId);
 			break;
 	}
 	
 }
 
-void DynamicWorld::processLookEvent(struct lookEventPacket *pkt)
+void DynamicWorld::processLookEvent(int playerId, struct cameraObject *cam)
 {
-	struct playerObject *p = &playerMap[pkt->playerId];
-	p->cameraObject = pkt->cam;
+	struct playerObject *p = &playerMap[playerId];
+	memcpy(&p->cameraObject, cam, sizeof(struct cameraObject));
 }
 
-void DynamicWorld::noneJumpEvent(struct jumpEventPacket *pkt) {
+void DynamicWorld::noneJumpEvent(int playerId) {
 	cout << "None jump event" << endl;
 	float yJumpFactor = 0;
 	ConfigSettings::getConfig()->getValue("yJumpFactor", yJumpFactor);
 
-	struct playerObject *p = &playerMap[pkt->playerId];
+	struct playerObject *p = &playerMap[playerId];
 	if (p->feetPlanted) {
 		p->velocity.y += yJumpFactor;
 		p->feetPlanted = false;
@@ -1214,9 +1213,9 @@ void DynamicWorld::noneJumpEvent(struct jumpEventPacket *pkt) {
 
 }
 
-void DynamicWorld::wallRunningJumpEvent(struct jumpEventPacket *pkt) {
+void DynamicWorld::wallRunningJumpEvent(int playerId) {
 	cout << "wall running jump event" << endl;
-	struct playerObject *p = &playerMap[pkt->playerId];
+	struct playerObject *p = &playerMap[playerId];
 
 	float bounceFactor = 5.0f;
 	//ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
@@ -1224,22 +1223,22 @@ void DynamicWorld::wallRunningJumpEvent(struct jumpEventPacket *pkt) {
 	p->currminiState = innerStates::Ending;
 }
 
-void DynamicWorld::holdingEdgeJumpEvent(struct jumpEventPacket *pkt) {
+void DynamicWorld::holdingEdgeJumpEvent(int playerId) {
 	cout << "decided to jump off while holding edge" << endl;
-	struct playerObject *p = &playerMap[pkt->playerId];
+	struct playerObject *p = &playerMap[playerId];
 	p->currminiState = innerStates::Ending;
 	//TODO: maybe more
 	return;
 }
 
-void DynamicWorld::pullingUpJumpEvent(struct jumpEventPacket *pkt) {
+void DynamicWorld::pullingUpJumpEvent(int playerId) {
 	cout << "tried to jump while pulling up.. this wont do much" << endl;
 	return;
 }
 
-void DynamicWorld::climbingJumpEvent(struct jumpEventPacket *pkt) {
+void DynamicWorld::climbingJumpEvent(int playerId) {
 	// TODO: disable climbing?
-	struct playerObject *p = &playerMap[pkt->playerId];
+	struct playerObject *p = &playerMap[playerId];
 
 	cout << "decided to jump back down from climbing" << endl;
 	p->currminiState = innerStates::Ending;

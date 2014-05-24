@@ -32,18 +32,23 @@ private:
 	static char 	c_msg[BUFSIZE];
 	static WSADATA	wsaData;
 	static int playerId;
+	static bool		moveEvents[NUM_DIRECTIONS]; // UP, DOWN, LEFT, RIGHT
+	static bool		jumpEvent, cameraChanged;
+	static cameraObject playerCam;
 
 	// Functions
 	static int receiveMsg(char *);
 	static int sendMsg(char *, int);
+	static void startReceiverThread();
+	static void startSenderThread();
 	static DWORD WINAPI receiverThread(LPVOID);
+	static DWORD WINAPI senderThread(LPVOID);
 	static void updateHotSpot(int x, int y, int z);
 
 public:
 
 	// Functions
 	static int initializeClient();
-	static void startReceiverThread();
 	static int getPlayerId();
 	static void sendStaticObject(float, float, float, float, float, float);
 	static void sendStaticRampObject(AABB rampBB);
