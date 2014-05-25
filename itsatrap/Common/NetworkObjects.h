@@ -149,6 +149,7 @@ struct playerObject {
 struct trapObject {
     int				id;
 	int				ownerId;
+	int				timeTillActive;
 	int				type;
 	int				eventCode;
 	float			x, y, z;

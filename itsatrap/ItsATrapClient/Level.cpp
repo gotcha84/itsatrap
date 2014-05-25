@@ -1,3 +1,5 @@
+#define NUMPARTICLES 500
+
 #include "Level.h"
 
 Level::Level() {
@@ -20,6 +22,8 @@ Level::~Level() {
 }
 
 void Level::initLevel() {
+	sg::ResourceNode *rs; // temp var to reference resource nodes
+
 	// Initialize height map
 	World::initializeHeightMap();
 
@@ -40,7 +44,9 @@ void Level::initLevel() {
 	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_12, 0)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
-	resources.push_back(new sg::ObjNode(RESOURCETOWER, BLOCKS));
+	rs = new sg::ResourceNode(NUMPARTICLES);
+	rs->loadModel(RESOURCETOWER, BLOCKS);
+	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 0: (0, 0, 0)");
 	resources.back()->getModel()->setColor(glm::vec4(0, 0, 1, 1));
 	xForms.back()->addChild(resources.back());
@@ -50,7 +56,9 @@ void Level::initLevel() {
 	xForms.back()->setMatrix(glm::translate(glm::vec3(-15 * UNIT_SIZE, UNIT_8, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
-	resources.push_back(new sg::ObjNode(RESOURCETOWER, BLOCKS));
+	rs = new sg::ResourceNode(NUMPARTICLES);
+	rs->loadModel(RESOURCETOWER, BLOCKS);
+	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 1: (-15, 8, 7)");
 	resources.back()->getModel()->setColor(glm::vec4(0, 0, 1, 1));
 	xForms.back()->addChild(resources.back());
@@ -60,7 +68,9 @@ void Level::initLevel() {
 	xForms.back()->setMatrix(glm::translate(glm::vec3(15 * UNIT_SIZE, UNIT_8, -7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
-	resources.push_back(new sg::ObjNode(RESOURCETOWER, BLOCKS));
+	rs = new sg::ResourceNode(NUMPARTICLES);
+	rs->loadModel(RESOURCETOWER, BLOCKS);
+	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 2: (-15, 8, 7)");
 	resources.back()->getModel()->setColor(glm::vec4(0, 0, 1, 1));
 	xForms.back()->addChild(resources.back());

@@ -282,6 +282,9 @@ void DynamicWorld::addTrap(struct trapObject t)
 {
 	t.eventCode = EVENT_ADD_TRAP;
 	t.id = currentId;
+	int timeTillActive = 0;
+	ConfigSettings::getConfig()->getValue("TrapInactivePeriod", timeTillActive);
+	t.timeTillActive = timeTillActive;
 	trapMap[currentId] = t;
 	
 	playerLock[t.ownerId] = true;
@@ -357,7 +360,7 @@ int DynamicWorld::checkSideCollisionsWithAllBuildings(struct playerObject *e)
 	return -1;
 }
 
-void DynamicWorld::updatePlayerBuffs(int timeDiff)
+void DynamicWorld::updateTimings(int timeDiff)
 {
 	for(map<int,struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
@@ -374,6 +377,14 @@ void DynamicWorld::updatePlayerBuffs(int timeDiff)
 			if (p.timeUntilRespawn < 0)
 				respawnPlayer(&p);
 		}
+	}
+
+	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); ++it)
+	{
+		struct trapObject *t = &it->second;
+
+		if (t->timeTillActive > 0)
+			t->timeTillActive -= timeDiff;
 	}
 }
 
@@ -947,57 +958,57 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 
 		for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); it++)
 		{
-			if (p->id != it->second.ownerId && it->second.aabb.collidesWith(p->aabb) && it->second.eventCode == 0)
+			if (it->second.timeTillActive <= 0 && it->second.aabb.collidesWith(p->aabb) && it->second.eventCode == 0)
 			{
 				printf("Collision: player %d with trap id %d\n", p->id, it->second.id);
 				playerLock[p->id] = true;
 				switch (it->second.type)
 				{
-				case TYPE_FREEZE_TRAP:
-				{
-										 int stunDuration = 0;
-										 ConfigSettings::getConfig()->getValue("StunTrapDuration", stunDuration);
-										 p->stunDuration = stunDuration;
-										 break;
-				}
-				case TYPE_TRAMPOLINE_TRAP:
-				{
-											 int trampolinePower = 0;
-											 ConfigSettings::getConfig()->getValue("TrampolinePower", trampolinePower);
-											 p->velocityDiff = glm::vec3(0, trampolinePower, 0);
+					case TYPE_FREEZE_TRAP:
+					{
+						int stunDuration = 0;
+						ConfigSettings::getConfig()->getValue("StunTrapDuration", stunDuration);
+						p->stunDuration = stunDuration;
+						break;
+					}
+					case TYPE_TRAMPOLINE_TRAP:
+					{
+						int trampolinePower = 0;
+						ConfigSettings::getConfig()->getValue("TrampolinePower", trampolinePower);
+						p->velocityDiff = glm::vec3(0, trampolinePower, 0);
 
-											 break;
-				}
-				case TYPE_SLOW_TRAP:
-				{
-									   int slowDuration = 0;
-									   ConfigSettings::getConfig()->getValue("SlowTrapDuration", slowDuration);
-									   p->slowDuration = slowDuration;
-									   break;
-				}
-				case TYPE_PUSH_TRAP:
-				{
-									   float pushPower = 0;
-									   ConfigSettings::getConfig()->getValue("PushTrapPower", pushPower);
+						break;
+					}
+					case TYPE_SLOW_TRAP:
+					{
+						int slowDuration = 0;
+						ConfigSettings::getConfig()->getValue("SlowTrapDuration", slowDuration);
+						p->slowDuration = slowDuration;
+						break;
+					}
+					case TYPE_PUSH_TRAP:
+					{
+						float pushPower = 0;
+						ConfigSettings::getConfig()->getValue("PushTrapPower", pushPower);
 
-									   glm::vec3 force = glm::rotateY(glm::vec3(0, 0, -1), it->second.rotationAngle);
-									   force *= pushPower;
+						glm::vec3 force = glm::rotateY(glm::vec3(0, 0, -1), it->second.rotationAngle);
+						force *= pushPower;
 
-									   p->velocityDiff = glm::vec3(force.x, 0, force.z);
+						p->velocityDiff = glm::vec3(force.x, 0, force.z);
 
-									   break;
-				}
-				case TYPE_LIGHTNING_TRAP:
-				{
-											float power = 0;
-											ConfigSettings::getConfig()->getValue("LightningTrapPower", power);
+						break;
+					}
+					case TYPE_LIGHTNING_TRAP:
+					{
+						float power = 0;
+						ConfigSettings::getConfig()->getValue("LightningTrapPower", power);
 
-											playerDamage(&playerMap[it->second.ownerId], p, power);
+						playerDamage(&playerMap[it->second.ownerId], p, power);
 
-											break;
-				}
-				default:
-					break;
+						break;
+					}
+					default:
+						break;
 				}
 
 				it->second.eventCode = EVENT_REMOVE_TRAP;

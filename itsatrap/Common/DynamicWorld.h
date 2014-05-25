@@ -61,7 +61,7 @@ public:
 	void updatePlayer(struct playerObject e);
 	int getNumPlayers();
 	vector<struct playerObject> getAllPlayers();
-	void updatePlayerBuffs(int timeDiff);
+	void updateTimings(int timeDiff);
 	void processMoveEvent(int playerId, Direction dir);
 	void processJumpEvent(int playerId);
 	void processLookEvent(int playerId, struct cameraObject *cam);

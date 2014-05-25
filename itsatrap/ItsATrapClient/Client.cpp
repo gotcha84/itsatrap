@@ -59,7 +59,7 @@ int Client::initializeClient() {
 	printf("[CLIENT]: Init request sent\n");
 	
 	// Receives Server response
-	Client::receiveMsg(c_msg); // TODO: what if server doesn't respond?
+	Client::receiveMsg(); // TODO: what if server doesn't respond?
 
 	struct packet *p = (struct packet *)c_msg;
 	if (p->eventId == INIT_RESPONSE_EVENT)
@@ -95,10 +95,9 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 	printf("[CLIENT]: Receiver thread started\n");
 	while (1)
 	{
-		char buf[BUFSIZE];
-		if (Client::receiveMsg(buf) == 0)
+		if (Client::receiveMsg() == 0)
 		{
-			struct packet *p = (struct packet *) buf;
+			struct packet *p = (struct packet *) c_msg;
 
 			if (p->eventId == WORLD_UPDATE_EVENT)
 			{
@@ -115,7 +114,7 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			}
 			else if (p->eventId == RELOAD_CONFIG_FILE)
 			{
-				printf("[CLIENT]: Reload config file packet received\n");
+				printf("[CLIENT]: Server told me to reload config file.\n");
 				ConfigSettings::getConfig()->reloadSettingsFile();
 			}
 		}
@@ -134,10 +133,12 @@ void Client::sendPlayerUpdate(struct playerObject player)
 
 
 // Client receives messages from the server
-int Client::receiveMsg(char * msg) {
+int Client::receiveMsg() {
+
+	char dummy[65536];
 
 	int bytesReceived = 0;
-	bytesReceived = recvfrom(i_sockfd, msg, BUFSIZE, 0, (struct sockaddr *) &serverAddress, &len);
+	bytesReceived = recvfrom(i_sockfd, c_msg, BUFSIZE, 0, (struct sockaddr *) &serverAddress, &len);
 
 	if (bytesReceived < 0) {
 		int error = WSAGetLastError();

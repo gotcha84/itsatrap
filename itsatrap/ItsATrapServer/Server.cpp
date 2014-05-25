@@ -234,8 +234,9 @@ void Server::broadcastDynamicWorld()
 
 void Server::processBuffer()
 {
+
+	dynamicWorld.updateTimings(MAX_SERVER_PROCESS_RATE);
 	dynamicWorld.resetWorldInfo();
-	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
 	dynamicWorld.applyPhysics();
 	dynamicWorld.applyGravity();
 	dynamicWorld.applyAdjustments();

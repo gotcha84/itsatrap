@@ -20,5 +20,7 @@
 void handleNewObjectFromServer(int id, float x, float y, float z, int type);
 void handleUpdateObjectFromServer(int id, float x, float y, float z, int type);
 void handleUpdateWorldFromServer(DynamicWorld *world);
+void handleNewPlayer(struct playerObject *p);
+void handlePlayerUpdate(struct playerObject *p);
 
 #endif

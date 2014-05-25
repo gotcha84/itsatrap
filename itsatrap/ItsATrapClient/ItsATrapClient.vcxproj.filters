@@ -117,8 +117,14 @@
     <ClCompile Include="Level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ObjNode.cpp">
+    <ClCompile Include="ParticleSystem.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceNode.cpp">
+      <Filter>Source Files\SceneGraph\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjNode.cpp">
+      <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -191,10 +197,16 @@
     <ClInclude Include="Level.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ObjNode.h">
+    <ClInclude Include="Sphere.h">
+      <Filter>Header Files\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.h">
+    <ClInclude Include="ResourceNode.h">
+      <Filter>Header Files\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjNode.h">
       <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
   </ItemGroup>
