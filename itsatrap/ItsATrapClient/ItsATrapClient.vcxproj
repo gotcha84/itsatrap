@@ -104,7 +104,9 @@
     <ClCompile Include="MyPlayer.cpp" />
     <ClCompile Include="ObjModel.cpp" />
     <ClCompile Include="ObjNode.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PlayerNode.cpp" />
+    <ClCompile Include="ResourceNode.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -120,6 +122,8 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="ObjModel.h" />
     <ClInclude Include="ObjNode.h" />
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="ResourceNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Trap.h" />
