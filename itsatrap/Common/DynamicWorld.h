@@ -15,6 +15,7 @@
 #include "Packet.h"
 #include "ConfigSettings.h"
 #include "Physics.h"
+#include "StateLogic.h"
 #include "World.h"
 
 using namespace std;
@@ -33,21 +34,14 @@ private:
 	vector<struct staticObject>		staticObjects;
 	vector<struct staticObject>		staticRampObjects;
 	bool							playerLock[MAX_PLAYERS];
-	struct stateInfo				statesInfo[MAX_PLAYERS];
-	vector<int>						wallJumpingBuildingIds;						
-	bool							triedToRun[MAX_PLAYERS];
-
-
-	// 
 	
+	// 
 	bool checkCollision(struct aabb a, struct aabb b);
 	int checkCollisionsWithAllNonTraps(struct playerObject *e);
-	int checkSideCollisionsWithAllNonTraps(struct playerObject *e);
+	int checkSideCollisionsWithAllBuildings(struct playerObject *e);
 	void addNewPlayer(struct playerObject p);
 	void respawnPlayer(struct playerObject *p);
 	void computeAABB(struct playerObject *p);
-
-	
 
 	//float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, struct aabb other, int buildingId);
 
@@ -67,10 +61,10 @@ public:
 	void updatePlayer(struct playerObject e);
 	int getNumPlayers();
 	vector<struct playerObject> getAllPlayers();
-	void updatePlayerBuffs(int timeDiff);
-	void processMoveEvent(struct moveEventPacket *pkt);
-	void processJumpEvent(struct jumpEventPacket *pkt);
-	void processLookEvent(struct lookEventPacket *pkt);
+	void updateTimings(int timeDiff);
+	void processMoveEvent(int playerId, Direction dir);
+	void processJumpEvent(int playerId);
+	void processLookEvent(int playerId, struct cameraObject *cam);
 
 	void addTrap(struct trapObject t);
 
@@ -81,44 +75,26 @@ public:
 
 	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
+	void resetWorldInfo();
 	void applyGravity();
 	void applyPhysics();
+	void applyAdjustments();
 
-	/*void noneMoveEvent(struct moveEventPacket *pkt);
-	void climbingMoveEvent(struct moveEventPacket *pkt);
-	void pullingUpMoveEvent(struct moveEventPacket *pkt);
-	void holdingEdgeMoveEvent(struct moveEventPacket *pkt);
-	void wallRunningMoveEvent(struct moveEventPacket *pkt);*/
+	void noneMoveEvent(int playerId, Direction dir);
+	void climbingMoveEvent(int playerId, Direction dir);
+	void pullingUpMoveEvent(int playerId, Direction dir);
+	void holdingEdgeMoveEvent(int playerId, Direction dir);
+	void wallRunningMoveEvent(int playerId, Direction dir);
 
-	void startClimbing(struct playerObject *e, int buildingId);
-	void startHoldingEdge(struct playerObject *e, int buildingId);
-	void startPullingUp(struct playerObject *e);
-	void startWallRunning(struct playerObject *e, int newDirection, glm::vec3 toAdd, float angle);
-
-	void noneMoveEvent(struct moveEventPacket *pkt);
-	void climbingMoveEvent(struct moveEventPacket *pkt);
-	void pullingUpMoveEvent(struct moveEventPacket *pkt);
-	void holdingEdgeMoveEvent(struct moveEventPacket *pkt);
-	void wallRunningMoveEvent(struct moveEventPacket *pkt);
-
-	void noneJumpEvent(struct jumpEventPacket *pkt);
-	void climbingJumpEvent(struct jumpEventPacket *pkt);
-	void pullingUpJumpEvent(struct jumpEventPacket *pkt);
-	void holdingEdgeJumpEvent(struct jumpEventPacket *pkt);
-	void wallRunningJumpEvent(struct jumpEventPacket *pkt);
-
-	void handleXRotation(struct playerObject *e, float angle);
-	void handleYRotation(struct playerObject *e, float angle);
-	void calculateAxis(struct playerObject *e);
-
-	void applyPullingUp(struct playerObject *p);
-	void applyHoldingEdge(struct playerObject *p);
-	void applyWallRunning(struct playerObject *p);
-	void applyClimbing(struct playerObject *p);
-
-	void checkForStateChanges(struct playerObject *e);
+	void noneJumpEvent(int playerId);
+	void climbingJumpEvent(int playerId);
+	void pullingUpJumpEvent(int playerId);
+	void holdingEdgeJumpEvent(int playerId);
+	void wallRunningJumpEvent(int playerId);
 
 	void checkPlayersCollideWithTrap();
+
+	void checkForStateChanges(struct playerObject *e);
 
 };
 

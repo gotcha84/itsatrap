@@ -50,7 +50,6 @@ void handlePlayerUpdate(struct playerObject p)
 		client->players[p.id]->getPlayer()->setAABB(&p.aabb);
 		//cout << "pos: " << glm::to_string(p.position) << endl;
 
-		client->players[p.id]->getPlayer()->setAABB(&p.aabb);
 		if (p.position != client->players[p.id]->getPosition()) {
 			//cout << "updating position in enrico.cpp\n";
 			client->players[p.id]->moveTo(p.position);
@@ -139,12 +138,11 @@ void handleRemoveTrap(struct trapObject t)
 // This will get called everytime server sends an update
 void handleUpdateWorldFromServer(DynamicWorld *world)
 {
-	vector<struct playerObject> players = world->getAllPlayers();
-	for (int i = 0; i < players.size(); i++) {
-		handlePlayerUpdate(players[i]);
+	for (map<int, struct playerObject>::iterator it = world->playerMap.begin(); it != world->playerMap.end(); ++it) {
+		handlePlayerUpdate(it->second);
 	}
 
-	for (map<int, struct trapObject>::iterator it = world->trapMap.begin(); it != world->trapMap.end(); it++) {
+	for (map<int, struct trapObject>::iterator it = world->trapMap.begin(); it != world->trapMap.end(); ++it) {
 		if (it->second.eventCode == EVENT_ADD_TRAP)
 			handleAddTrap(it->second);
 		else if (it->second.eventCode == EVENT_REMOVE_TRAP)
