@@ -23,15 +23,17 @@
 
 using namespace std;
 
-class COMMON_API StateLogic {
+static class COMMON_API StateLogic {
 public:
 
-	static struct stateInfo				statesInfo[MAX_PLAYERS];
+	static struct stateInfo			statesInfo[MAX_PLAYERS];
 	
+	static void clearStateInfo(int id);
+
 	static void startClimbing(struct playerObject *e, int buildingId);
 	static void startHoldingEdge(struct playerObject *e, int buildingId);
-	static void startPullingUp(struct playerObject *e);
-	static void startWallRunning(struct playerObject *e, int newDirection, glm::vec3 toAdd, float angle);
+	static void startPullingUp(struct playerObject *e, int buildingId);
+	static void startWallRunning(struct playerObject *e, int newDirection, glm::vec3 toAdd, float angle, int buildingId);
 	
 	static void applyPullingUp(struct playerObject *p);
 	static void applyHoldingEdge(struct playerObject *p);

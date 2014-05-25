@@ -236,13 +236,20 @@ void Server::processBuffer()
 {
 
 	dynamicWorld.updateTimings(MAX_SERVER_PROCESS_RATE);
+	dynamicWorld.resetWorldInfo();
 	dynamicWorld.applyPhysics();
 	dynamicWorld.applyGravity();
+	dynamicWorld.applyAdjustments();
 	dynamicWorld.checkPlayersCollideWithTrap();
 	updateResources();
-	
+
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
 	WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
+
+	for (int i = 0; i < playerCount; i++) {
+		
+	}
+
 
 	for (int i = 0; i < packetBufferCount; i++)
 	{

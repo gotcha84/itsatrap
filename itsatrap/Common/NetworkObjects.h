@@ -5,6 +5,7 @@
 #include <../glm/glm/ext.hpp>
 
 #include "AABB.h"
+#include "Stopwatch.h"
 
 #define EVENT_ADD_TRAP 1
 #define EVENT_REMOVE_TRAP 2
@@ -81,8 +82,6 @@ struct stateInfo {
 	float goalVelo;
 
 	struct HolderInfo Holder;
-
-	innerStates innerState;	
 };
 
 struct physicsObject {
@@ -123,16 +122,19 @@ struct playerObject {
 	int				onTopOfBuildingId;
 	bool			deathState;
 	AABB			aabb;
+	Stopwatch		stopwatch;
 
 	struct cameraObject			cameraObject;
+
 	glm::vec3 position;
 	glm::vec3 velocity;
 	glm::vec3 velocityDiff;
 	bool feetPlanted;
+	bool triedToRun;
 	int currState;
 	int currminiState;
 	int interactingWithBuildingId;
-	int interactingWIthBuildingFace; //-x = 0, +x = 1 etc
+	int interactingWIthBuildingFace; //-x = 0, +x = 1 etc. will be used for ramps
 };
 
 struct trapObject {
