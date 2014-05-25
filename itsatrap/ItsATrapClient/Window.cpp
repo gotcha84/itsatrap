@@ -15,7 +15,9 @@ int Window::m_fpsCounter = 0;
 clock_t Window::m_timer = clock();
 
 bool *Window::keyState = new bool[256];
+bool *Window::keyEventTriggered = new bool[256];
 bool *Window::specialKeyState = new bool[256];
+bool *Window::specialKeyEventTriggered = new bool[256];
 int Window::modifierKey = 0;
 
 
@@ -99,6 +101,7 @@ void Window::displayCallback(void)
 
 	if (oldXRotated != client->root->getCamera()->getXRotated() || oldYRotated != client->root->getCamera()->getYRotated()) {
 		sendUpdate = true;
+		lookChanged = true;
 		/*if (oldYRotated != client->root->getCamera()->getYRotated()) {
 			cout << "yrotated: " << client->root->getCamera()->getYRotated() << endl;
 		}*/
@@ -108,7 +111,7 @@ void Window::displayCallback(void)
 	
 	int buildingId = -2; //client->root->getPlayer()->getPhysics()->applyGravity(client->root->getPlayer()->getAABB());
 
-	if (client->root->getPlayer()->m_timeUntilRespawn <= 0) {
+	/*if (client->root->getPlayer()->m_timeUntilRespawn <= 0) {
 		if (buildingId != -2 && oldBuildingId != buildingId) {
 			sendUpdate = true;
 			client->root->getPlayer()->m_onTopOfBuildingId = buildingId;
@@ -116,7 +119,7 @@ void Window::displayCallback(void)
 			cout << "new building id:" << client->root->getPlayer()->m_onTopOfBuildingId << endl;
 		}
 
-	}
+	}*/
 
 	
 
@@ -148,10 +151,10 @@ void Window::displayCallback(void)
 	}*/
 
 	//cout << "m_position: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_position) << endl;
-	glm::vec3 moved = client->root->getPlayer()->getPosition() - /*oldPos */client->root->getPlayer()->getCamera()->m_cameraCenter;
+	//glm::vec3 moved = client->root->getPlayer()->getPosition() - /*oldPos */client->root->getPlayer()->getCamera()->m_cameraCenter;
 	
-	client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
-	client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
+	//client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
+	//client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
 	
 	/*if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
 		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_slidingHeight;
@@ -159,8 +162,8 @@ void Window::displayCallback(void)
 	}
 	else {*/
 
-		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_playerHeight;
-		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
+		//client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_playerHeight;
+		//client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
 	//}
 
 
@@ -175,12 +178,12 @@ void Window::displayCallback(void)
 	}
 	else {*/
 	// uncomment lower two for nonmidgets
-		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_playerHeight;
-		client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
+		//client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_playerHeight;
+		//client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
 	//}
 
-	client->root->getPlayer()->getCamera()->updateCameraMatrix();
-	client->root->getPlayer()->updateModelViewMatrix();
+	//client->root->getPlayer()->getCamera()->updateCameraMatrix();
+	//client->root->getPlayer()->updateModelViewMatrix();
 
 	m_fpsCounter+=1;
 				
@@ -238,6 +241,7 @@ void Window::keyDown(unsigned char key, int x, int y)
 
 void Window::keyUp(unsigned char key, int x, int y) {
 	keyState[key] = false;
+	keyEventTriggered[key] = false;
 }
 
 void Window::specialKeyDown(int key, int x, int y) {
@@ -250,6 +254,7 @@ void Window::specialKeyUp(int key, int x, int y) {
 	modifierKey = glutGetModifiers();
 
 	specialKeyState[key] = false;
+	specialKeyEventTriggered[key] = false;
 }
 
 void Window::processKeys() {
@@ -267,6 +272,10 @@ void Window::processKeys() {
 	// jump
 	if (keyState[' ']) {
 		Client::sendJumpEvent();
+		if (!keyEventTriggered[' ']) {
+			
+			keyEventTriggered[' '] = true;
+		}
 	}
 
 	// modifierKey = 
@@ -287,17 +296,33 @@ void Window::processKeys() {
 	// forward + backward
 	if (keyState['w']) {
 		Client::sendMoveEvent(FORWARD);
+		if (!keyEventTriggered['w']) {
+			
+			keyEventTriggered['w'] = true;
+		}
 	}
 	else if (keyState['s']) {
 		Client::sendMoveEvent(BACKWARD);
+		if (!keyEventTriggered['s']) {
+			
+			keyEventTriggered['s'] = true;
+		}
 	}
 
 	// left + right
 	if (keyState['a']) {
 		Client::sendMoveEvent(LEFT);
+		if (!keyEventTriggered['a']) {
+			
+			keyEventTriggered['a'] = true;
+		}
 	}
 	else if (keyState['d']) {
 		Client::sendMoveEvent(RIGHT);
+		if (!keyEventTriggered['d']) {
+			
+			keyEventTriggered['d'] = true;
+		}
 	}
 
 	//if (keyState['u']) {

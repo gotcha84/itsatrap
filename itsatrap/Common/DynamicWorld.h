@@ -35,20 +35,13 @@ private:
 	vector<struct staticObject>		staticRampObjects;
 	bool							playerLock[MAX_PLAYERS];
 	
-	vector<int>						wallJumpingBuildingIds;						
-	bool							triedToRun[MAX_PLAYERS];
-
-
 	// 
-	
 	bool checkCollision(struct aabb a, struct aabb b);
 	int checkCollisionsWithAllNonTraps(struct playerObject *e);
-	int checkSideCollisionsWithAllNonTraps(struct playerObject *e);
+	int checkSideCollisionsWithAllBuildings(struct playerObject *e);
 	void addNewPlayer(struct playerObject p);
 	void respawnPlayer(struct playerObject *p);
 	void computeAABB(struct playerObject *p);
-
-	
 
 	//float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, struct aabb other, int buildingId);
 
@@ -82,8 +75,10 @@ public:
 
 	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
+	void resetWorldInfo();
 	void applyGravity();
 	void applyPhysics();
+	void applyAdjustments();
 
 	void noneMoveEvent(int playerId, Direction dir);
 	void climbingMoveEvent(int playerId, Direction dir);

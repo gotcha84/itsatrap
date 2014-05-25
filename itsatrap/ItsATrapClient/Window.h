@@ -23,7 +23,9 @@ class Window {
 		static clock_t m_timer;
 
 		static bool *keyState;
+		static bool *keyEventTriggered;
 		static bool *specialKeyState;
+		static bool *specialKeyEventTriggered;
 		static int modifierKey;
 
 		Window();

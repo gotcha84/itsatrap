@@ -10,10 +10,11 @@ c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(56): warnin
           ]
 c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
 c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+c:\users\alvin\desktop\125\working2\itsatrap\common\statelogic.h(47): warning C4091: 'static ' : ignored on left of 'StateLogic' when no variable is declared
   GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
   GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
-c:\users\alvin\desktop\125\working2\itsatrap\common\statelogic.cpp(166): warning C4700: uninitialized local variable 'PUEndlookX' used
-c:\users\alvin\desktop\125\working2\itsatrap\common\statelogic.cpp(167): warning C4700: uninitialized local variable 'PUEndlookY' used
+c:\users\alvin\desktop\125\working2\itsatrap\common\statelogic.cpp(218): warning C4700: uninitialized local variable 'PUEndlookX' used
+c:\users\alvin\desktop\125\working2\itsatrap\common\statelogic.cpp(219): warning C4700: uninitialized local variable 'PUEndlookY' used
 AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
      Creating library C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.lib and object C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.exp
   Common.vcxproj -> C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.dll
