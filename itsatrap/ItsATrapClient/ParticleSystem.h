@@ -23,6 +23,9 @@ struct Particle
 	int m_age;
 	int m_life;
 
+	float m_rad;
+	float m_theta;
+
 	Particle();
 	Particle(glm::vec3 origin);
 	Particle(glm::vec3 origin, int life);

@@ -35,6 +35,9 @@ void Particle::init() {
 	m_color = glm::vec4(1, 1, 1, 1);
 	m_age = 0;
 	m_life = 100;
+	
+	m_rad = 0.1f;
+	m_theta = 0;
 }
 
 void Particle::initAge() {
@@ -52,10 +55,19 @@ void Particle::step() {
 	if (m_age > m_life) {
 		m_age = 0;
 		m_pos = m_origin;
+
+		m_rad = 1.0f;
+		m_theta = 0;
 	}
 	else {
-		m_vel = glm::vec3(0,0.5f,0);
+		float x = m_rad * glm::cos(m_theta);
+		float z = m_rad * glm::sin(m_theta);
+
+		m_vel = glm::vec3(x, 0.01f, z);
+
 		m_pos += m_vel;
+		//m_rad += 0.5f;
+		m_theta += 0.1f;
 	}
 }
 

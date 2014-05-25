@@ -58,6 +58,7 @@ void Level::initLevel() {
 
 	rs = new sg::ResourceNode(NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
+	rs->getParticleSystem()->disable();
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 1: (-15, 8, 7)");
 	resources.back()->getModel()->setColor(glm::vec4(0, 0, 1, 1));
@@ -70,6 +71,7 @@ void Level::initLevel() {
 
 	rs = new sg::ResourceNode(NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
+	rs->getParticleSystem()->disable();
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 2: (-15, 8, 7)");
 	resources.back()->getModel()->setColor(glm::vec4(0, 0, 1, 1));
