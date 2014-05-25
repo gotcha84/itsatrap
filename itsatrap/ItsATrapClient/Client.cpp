@@ -135,6 +135,8 @@ void Client::sendPlayerUpdate(struct playerObject player)
 // Client receives messages from the server
 int Client::receiveMsg() {
 
+	char dummy[65536];
+
 	int bytesReceived = 0;
 	bytesReceived = recvfrom(i_sockfd, c_msg, BUFSIZE, 0, (struct sockaddr *) &serverAddress, &len);
 
