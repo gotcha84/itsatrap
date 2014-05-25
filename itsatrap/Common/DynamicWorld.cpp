@@ -82,11 +82,12 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 	p.feetPlanted = true;
 	p.triedToRun = false;
-	p.currState = PhysicsStates::None;
-	p.currminiState = innerStates::Off;
+	p.currPhysState = PhysicsStates::None;
+	p.currInnerState = innerStates::Off;
+	p.currCamState = CameraStates::Client;
 	playerMap[p.id] = p;
 	p.stopwatch = Stopwatch();
-	
+	p.canClimb = true;
 
 }
 
@@ -119,8 +120,9 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	p.triedToRun = playerMap[p.id].triedToRun;
 	p.interactingWithBuildingId = playerMap[p.id].interactingWithBuildingId;
 	p.interactingWIthBuildingFace = playerMap[p.id].interactingWIthBuildingFace;
-	p.currminiState = playerMap[p.id].currminiState;
-	p.currminiState = playerMap[p.id].currState;
+	p.currInnerState = playerMap[p.id].currInnerState;
+	p.currPhysState = playerMap[p.id].currPhysState;
+	p.currCamState = playerMap[p.id].currCamState;
 	p.aabb = playerMap[p.id].aabb;
 	p.position = playerMap[p.id].position;
 	p.stopwatch = playerMap[p.id].stopwatch;
@@ -320,7 +322,7 @@ int DynamicWorld::checkCollisionsWithAllNonTraps(struct playerObject *e)
 	{
 		if (players[i].id != e->id && e->aabb.collidesWith(players[i].aabb))
 		{
-			printf("Collision: player %d with player %d\n", e->id, players[i].id);
+			//printf("Collision: player %d with player %d\n", e->id, players[i].id);
 			return true;
 		}
 	}
@@ -328,7 +330,7 @@ int DynamicWorld::checkCollisionsWithAllNonTraps(struct playerObject *e)
 	{
 		if (e->aabb.collidesWith(staticObjects[i].aabb))
 		{
-			printf("Collision: player %d with static object %d\n", e->id, i);
+			//printf("Collision: player %d with static object %d\n", e->id, i);
 			return i;
 		}
 	}
@@ -347,6 +349,10 @@ int DynamicWorld::checkSideCollisionsWithAllBuildings(struct playerObject *e)
 			return i;
 		}
 	}
+
+	//if (e->aabb.collidesWithSide(staticObjects[18].aabb)) {
+	//	return 18;
+	//}
 
 	return -1;
 }
@@ -434,8 +440,9 @@ void DynamicWorld::computeAABB(struct playerObject *p)
 void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 {
 	struct playerObject *p = &playerMap[playerId];
+	cout << "processing move event, curr_state is: " << p->currPhysState << endl;
 	//noneMoveEvent(playerId, dir);
-	switch (p->currState) {
+	switch (p->currPhysState) {
 		case None:
 			noneMoveEvent(playerId, dir);
 			break;
@@ -526,13 +533,20 @@ void DynamicWorld::noneMoveEvent(int playerId, Direction dir)
 	//cout << "pos: " << glm::to_string(p->position) << endl;
 	//cout << "newPos: " << glm::to_string(proposedNewPos) << endl;
 	p->position = proposedNewPos;
+	p->position.y += 5.0f;
 	computeAABB(p);
 	int collisionId = checkCollisionsWithAllNonTraps(p);
 	p->position = oldPos;
 	computeAABB(p);
-
+	//cout << "collision id: " << collisionId << endl;
 	if (collisionId != -1) {
+		p->position = proposedNewPos;
+		p->position.y += 5.0f;
+		computeAABB(p);
 		int buildingId = checkSideCollisionsWithAllBuildings(p);
+		p->position = oldPos;
+		computeAABB(p);
+		cout << "buildingId: " << buildingId << endl;
 		if (buildingId != -1) {
 			cout << "collided with building" << endl;
 			// TODO: check guy is facing wall too, at rest
@@ -595,7 +609,7 @@ void DynamicWorld::climbingMoveEvent(int playerId, Direction dir) {
 
 		case BACKWARD:
 			cout << "decided to fall back down from climbing" << endl;
-			p->currminiState = innerStates::Ending;
+			p->currInnerState = innerStates::Ending;
 			//TODO: maybe more, set Holders
 			return;
 			break;
@@ -643,7 +657,7 @@ void DynamicWorld::holdingEdgeMoveEvent(int playerId, Direction dir) {
 
 		case BACKWARD:
 			cout << "decided to fall back down" << endl;
-			p->currminiState = -1;
+			p->currInnerState = innerStates::Off;
 			//TODO: maybe more, set Holders
 			return;
 			break;
@@ -727,8 +741,8 @@ void DynamicWorld::applyGravity()
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		struct playerObject &p = it->second;
-		if (p.currState != PhysicsStates::Climbing && p.currState != PhysicsStates::HoldingEdge &&
-			p.currState != PhysicsStates::PullingUp && p.currState != PhysicsStates::WallRunning) {
+		if (p.currPhysState != PhysicsStates::Climbing && p.currPhysState != PhysicsStates::HoldingEdge &&
+			p.currPhysState != PhysicsStates::PullingUp && p.currPhysState != PhysicsStates::WallRunning) {
 			
 			float gravityConstant = 0;
 			ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
@@ -747,6 +761,7 @@ void DynamicWorld::applyGravity()
 				p.feetPlanted = true;
 				p.velocity.y = 0.0f;
 				p.velocityDiff.y = 0.0f;
+				p.canClimb = true;
 			}
 		}
 
@@ -777,7 +792,7 @@ void DynamicWorld::applyPhysics()
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		struct playerObject *p = &it->second;
-		switch (p->currState) {
+		switch (p->currPhysState) {
 			case PhysicsStates::Climbing:
 				StateLogic::applyClimbing(p);
 				break;
@@ -796,22 +811,28 @@ void DynamicWorld::applyPhysics()
 }
 
 void DynamicWorld::checkForStateChanges(struct playerObject *p) {
-	switch (p->currState) {
+	float climbingMaxDuration = 3000.0f;
+	//ConfigSettings::getConfig()->getValue("climbingMaxDuration", climbingMaxDuration);
+	float holdingEdgeMaxDuration = 3000.0f;
+	//ConfigSettings::getConfig()->getValue("holdingEdgeMaxDuration", climbMaxDuration);
+	switch (p->currPhysState) {
 	case PhysicsStates::Climbing:
+		
 		if (staticObjects[p->interactingWithBuildingId].aabb.nearTop(p->position)) {
 			StateLogic::startHoldingEdge(p, p->interactingWithBuildingId);
 			return;
-		}
-		if (p->stopwatch.getElapsedMilliseconds() > 3000.0) {
+		}		
+		if (p->stopwatch.getElapsedMilliseconds() > climbingMaxDuration) {
 			cout << "took too long to climb " << endl;
 			// technically below two lines dont do anything
 			/*p->stopwatch.stop();
 			p->stopwatch.reset();*/
-			p->currminiState = innerStates::Ending;
+			p->currInnerState = innerStates::Ending;
 			return;
 		}
 		break;
 	case PhysicsStates::HoldingEdge:
+		
 		if (staticObjects[p->interactingWithBuildingId].aabb.clearedTop(p->aabb)) {
 			cout << "cleared top" << endl;
 			StateLogic::startPullingUp(p, p->interactingWithBuildingId);
@@ -820,13 +841,21 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 		// not sure if needed. also in holdingedgemoveevent but commented
 		else if (staticObjects[p->interactingWithBuildingId].aabb.fellOffSide(p->aabb)) {
 			cout << "fell off side while holding edge" << endl;
-			p->currminiState = innerStates::Ending;
+			p->currInnerState = innerStates::Ending;
+			return;
+		}
+		else if (p->stopwatch.getElapsedMilliseconds() > holdingEdgeMaxDuration) {
+			cout << "took too long while holding edge " << endl;
+			// technically below two lines dont do anything
+			/*p->stopwatch.stop();
+			p->stopwatch.reset();*/
+			p->currInnerState = innerStates::Ending;
 			return;
 		}
 	case PhysicsStates::WallRunning:
 		if (staticObjects[p->interactingWithBuildingId].aabb.fellOffSide(p->aabb)) {
 			cout << "fell off edge while wallrunning" << endl;
-			p->currminiState = innerStates::Ending;
+			p->currInnerState = innerStates::Ending;
 			return;
 		}
 	}
@@ -838,7 +867,7 @@ void DynamicWorld::processJumpEvent(int playerId)
 	struct playerObject *p = &playerMap[playerId];
 	//noneJumpEvent(pkt);
 	
-	switch (p->currState) {
+	switch (p->currPhysState) {
 		case None:
 			noneJumpEvent(playerId);
 			break;
@@ -884,13 +913,13 @@ void DynamicWorld::wallRunningJumpEvent(int playerId) {
 	//float bounceFactor = 5.0f;
 	////ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
 	//StateLogic::statesInfo[p->id].End.velocityDiff *= bounceFactor;
-	p->currminiState = innerStates::Ending;
+	p->currInnerState = innerStates::Ending;
 }
 
 void DynamicWorld::holdingEdgeJumpEvent(int playerId) {
 	cout << "decided to jump off while holding edge" << endl;
 	struct playerObject *p = &playerMap[playerId];
-	p->currminiState = innerStates::Ending;
+	p->currInnerState = innerStates::Ending;
 	//TODO: maybe more
 	return;
 }
@@ -905,7 +934,7 @@ void DynamicWorld::climbingJumpEvent(int playerId) {
 	struct playerObject *p = &playerMap[playerId];
 
 	cout << "decided to jump back down from climbing" << endl;
-	p->currminiState = innerStates::Ending;
+	p->currInnerState = innerStates::Ending;
 	//TODO: maybe more, set Holders
 
 }

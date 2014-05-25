@@ -41,7 +41,7 @@ void MyPlayer::initCommon() {
 	//m_xWalkFactor = 0.05f;
 	//m_zWalkFactor = 0.05f;
 
-	m_currState = PhysicsStates::None;
+	m_currPhysState = PhysicsStates::None;
 
 	m_xWalkFactor = 1.5f;
 	m_zWalkFactor = 1.5f;

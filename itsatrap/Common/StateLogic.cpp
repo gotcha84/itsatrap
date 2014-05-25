@@ -52,6 +52,12 @@ void StateLogic::clearStateInfo(int id) {
 
 
 void StateLogic::startClimbing(struct playerObject *e, int buildingId) {
+
+	if (!e->canClimb) {
+		cout << "tried to climb but not allowed" << endl;
+		return;
+	}
+
 	cout << "started climbing" << endl;
 	StateLogic::clearStateInfo(e->id);
 	// CLIMBING
@@ -100,14 +106,15 @@ void StateLogic::startClimbing(struct playerObject *e, int buildingId) {
 	StateLogic::statesInfo[e->id].Start.counter = CLStartCounter;
 
 	StateLogic::statesInfo[e->id].Mid.velocityDiff = CLMidvelocityDiff;
-
+	//cout << "CLMidvelocityDiff: " << glm::to_string(StateLogic::statesInfo[e->id].Mid.velocityDiff) << endl;
+	
 	StateLogic::statesInfo[e->id].End.fraction = CLEndfraction;
 	StateLogic::statesInfo[e->id].End.lookYIncrement = CLEndlookYIncrement;
 	StateLogic::statesInfo[e->id].End.counter = CLEndCounter;
 
 	e->interactingWithBuildingId = buildingId;
-	e->currminiState = innerStates::Starting;
-	e->currState = PhysicsStates::Climbing;
+	e->currInnerState = innerStates::Starting;
+	e->currPhysState = PhysicsStates::Climbing;
 
 }
 
@@ -185,8 +192,8 @@ void StateLogic::startHoldingEdge(struct playerObject *e, int buildingId) {
 	StateLogic::statesInfo[e->id].End.counter = HEEndCounter;
 
 	e->interactingWithBuildingId = buildingId;
-	e->currminiState = innerStates::Starting;
-	e->currState = PhysicsStates::HoldingEdge;
+	e->currInnerState = innerStates::Starting;
+	e->currPhysState = PhysicsStates::HoldingEdge;
 
 }
 
@@ -215,15 +222,31 @@ void StateLogic::startPullingUp(struct playerObject *e, int buildingId) {
 	int PUStartCounter = 0;
 
 	// end
-	float PUEndlookX = -1.0f*PUEndlookX;
-	float PUEndlookY = -1.0f*PUEndlookY;
+	float PUEndlookX = -1.0f*PUStartlookX;
+	float PUEndlookY = -1.0f*PUStartlookY;
 
 	float PUEndfraction = 0.3f;
 
 	float PUEndlookXIncrement = PUEndlookX*PUEndfraction / PUnumFrames;
 	float PUEndlookYIncrement = PUEndlookY*PUEndfraction / PUnumFrames;
 
-	glm::vec3 PUEndvelocityDiff = glm::vec3(0.0f, pullingUpFactor, 0.0f);
+	// instead of below.., see TODO
+	float tmpX;
+	float tmpZ;
+
+	if (abs(e->cameraObject.camZ.x) > abs(e->cameraObject.camZ.z)) {
+		tmpX = e->cameraObject.camZ.x;
+		tmpZ = 0.0f;
+	}
+	else {
+		tmpX = 0.0f;
+		tmpZ = e->cameraObject.camZ.z;
+	}
+
+	glm::vec3 PUEndvelocityDiff = glm::vec3(pullingUpFactor*tmpX, pullingUpFactor, pullingUpFactor*tmpZ);
+
+	// TODO: change based on face proper way
+	//glm::vec3 PUEndvelocityDiff = glm::vec3(0.0f, pullingUpFactor, 0.0f);
 
 	int PUEndCounter = 0;
 
@@ -248,8 +271,8 @@ void StateLogic::startPullingUp(struct playerObject *e, int buildingId) {
 	statesInfo[e->id].End.counter = PUEndCounter;
 
 	e->interactingWithBuildingId = buildingId;
-	e->currminiState = innerStates::Starting;
-	e->currState = PhysicsStates::PullingUp;
+	e->currInnerState = innerStates::Starting;
+	e->currPhysState = PhysicsStates::PullingUp;
 
 	return;
 }
@@ -385,40 +408,45 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 
 	e->feetPlanted = true; // not sure if makes a dfference
 	e->interactingWithBuildingId = buildingId;
-	e->currminiState = innerStates::Starting;
-	e->currState = PhysicsStates::WallRunning;
+	e->currInnerState = innerStates::Starting;
+	e->currPhysState = PhysicsStates::WallRunning;
 }
 
 void StateLogic::applyClimbing(struct playerObject *p) {
 
-	switch (p->currminiState) {
+	switch (p->currInnerState) {
 	case innerStates::Starting:
-		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->currState].Start.lookXIncrement);
-		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->currState].Start.lookYIncrement);
-		p->velocityDiff = StateLogic::statesInfo[p->currState].Start.velocityDiff;
+		cout << "climbing start lookXincrement: " << StateLogic::statesInfo[p->id].Start.lookXIncrement << endl;
+		cout << "climbing start lookYincrement: " << StateLogic::statesInfo[p->id].Start.lookYIncrement << endl;
+
+		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Start.lookXIncrement);
+		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Start.lookYIncrement);
+		p->velocityDiff = StateLogic::statesInfo[p->id].Start.velocityDiff;
 		p->velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-		StateLogic::statesInfo[p->currState].Start.counter++;
-		if (StateLogic::statesInfo[p->currState].Start.counter >= StateLogic::statesInfo[p->currState].Start.fraction*StateLogic::statesInfo[p->currState].numFrames) {
-			p->currminiState = innerStates::Mid;
+		StateLogic::statesInfo[p->id].Start.counter++;
+		if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
+			p->currInnerState = innerStates::Mid;
 		}
 		break;
 	case innerStates::Mid:
-		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->currState].Mid.lookXIncrement);
-		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->currState].Mid.lookYIncrement);
-		p->velocityDiff = StateLogic::statesInfo[p->currState].Mid.velocityDiff;
+		cout << "StateLogic::statesInfo[p->id].Mid.velocityDiff: " << glm::to_string(StateLogic::statesInfo[p->id].Mid.velocityDiff) << endl;
+		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Mid.lookXIncrement);
+		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Mid.lookYIncrement);
+		p->velocityDiff = StateLogic::statesInfo[p->id].Mid.velocityDiff;
 		p->velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 		break;
 	case innerStates::Ending:
-		p->interactingWithBuildingId = -1;
-		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->currState].End.lookXIncrement);
-		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->currState].End.lookYIncrement);
-		p->cameraObject.cameraUp += StateLogic::statesInfo[p->currState].End.camUpIncrement;
-		p->velocityDiff = StateLogic::statesInfo[p->currState].End.velocityDiff;
-		StateLogic::statesInfo[p->currState].End.counter++;
-		if (StateLogic::statesInfo[p->currState].End.counter >= StateLogic::statesInfo[p->currState].End.fraction*StateLogic::statesInfo[p->currState].numFrames) {
-			p->currminiState = innerStates::Off;
-			cout << "ended state: " << p->currState << endl;
-			p->currState = PhysicsStates::None;
+		
+		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].End.lookXIncrement);
+		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].End.lookYIncrement);
+		p->velocityDiff = StateLogic::statesInfo[p->id].End.velocityDiff;
+		StateLogic::statesInfo[p->id].End.counter++;
+		if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
+			p->currInnerState = innerStates::Off;
+			p->interactingWithBuildingId = -1;
+			cout << "ended state: " << p->currPhysState << endl;
+			p->currPhysState = PhysicsStates::None;
+			p->canClimb = false;
 		}
 		break;
 	}
@@ -427,25 +455,26 @@ void StateLogic::applyClimbing(struct playerObject *p) {
 
 void StateLogic::applyHoldingEdge(struct playerObject *p) {
 
-	switch (p->currminiState) {
+	switch (p->currInnerState) {
 	case innerStates::Starting:
-		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->currState].Start.lookXIncrement);
-		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->currState].End.lookYIncrement);
-		StateLogic::statesInfo[p->currState].Start.counter++;
-		if (StateLogic::statesInfo[p->currState].Start.counter >= StateLogic::statesInfo[p->currState].Start.fraction*StateLogic::statesInfo[p->currState].numFrames) {
-			p->currminiState = innerStates::Mid;
+		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Start.lookXIncrement);
+		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].End.lookYIncrement);
+		StateLogic::statesInfo[p->id].Start.counter++;
+		if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
+			p->currInnerState = innerStates::Mid;
 		}
 		break;
 	case innerStates::Ending:
-		p->interactingWithBuildingId = -1;
-		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->currState].End.lookXIncrement);
-		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->currState].End.lookYIncrement);
-		p->velocityDiff = StateLogic::statesInfo[p->currState].End.velocityDiff;
-		StateLogic::statesInfo[p->currState].End.counter++;
-		if (StateLogic::statesInfo[p->currState].End.counter >= StateLogic::statesInfo[p->currState].End.fraction*StateLogic::statesInfo[p->currState].numFrames) {
-			p->currminiState = innerStates::Off;
-			cout << "ended state: " << p->currState << endl;
-			p->currState = PhysicsStates::None;
+		
+		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].End.lookXIncrement);
+		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].End.lookYIncrement);
+		p->velocityDiff = StateLogic::statesInfo[p->id].End.velocityDiff;
+		StateLogic::statesInfo[p->id].End.counter++;
+		if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
+			p->currInnerState = innerStates::Off;
+			p->interactingWithBuildingId = -1;
+			cout << "ended state: " << p->currPhysState << endl;
+			p->currPhysState = PhysicsStates::None;
 		}
 		break;
 	}
@@ -454,26 +483,27 @@ void StateLogic::applyHoldingEdge(struct playerObject *p) {
 
 void StateLogic::applyPullingUp(struct playerObject *p) {
 
-	switch (p->currminiState) {
+	switch (p->currInnerState) {
 	case innerStates::Starting:
-		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->currState].Start.lookXIncrement);
-		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->currState].Start.lookYIncrement);
-		p->velocityDiff = StateLogic::statesInfo[p->currState].Start.velocityDiff;
-		StateLogic::statesInfo[p->currState].Start.counter++;
-		if (StateLogic::statesInfo[p->currState].Start.counter >= StateLogic::statesInfo[p->currState].Start.fraction*StateLogic::statesInfo[p->currState].numFrames) {
-			p->currminiState = innerStates::Ending;
+		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Start.lookXIncrement);
+		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Start.lookYIncrement);
+		p->velocityDiff = StateLogic::statesInfo[p->id].Start.velocityDiff;
+		StateLogic::statesInfo[p->id].Start.counter++;
+		if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
+			p->currInnerState = innerStates::Ending;
 		}
 		break;
 	case innerStates::Ending:
-		p->interactingWithBuildingId = -1;
-		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->currState].End.lookXIncrement);
-		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->currState].End.lookYIncrement);
-		p->velocityDiff = StateLogic::statesInfo[p->currState].End.velocityDiff;
-		StateLogic::statesInfo[p->currState].End.counter++;
-		if (StateLogic::statesInfo[p->currState].End.counter >= StateLogic::statesInfo[p->currState].End.fraction*StateLogic::statesInfo[p->currState].numFrames) {
-			p->currminiState = innerStates::Off;
-			cout << "ended state: " << p->currState << endl;
-			p->currState = PhysicsStates::None;
+		cout << "ending pulling up with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].End.velocityDiff) << endl;
+		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].End.lookXIncrement);
+		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].End.lookYIncrement);
+		p->velocityDiff = StateLogic::statesInfo[p->id].End.velocityDiff;
+		StateLogic::statesInfo[p->id].End.counter++;
+		if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
+			p->currInnerState = innerStates::Off;
+			p->interactingWithBuildingId = -1;
+			cout << "ended state: " << p->currPhysState << endl;
+			p->currPhysState = PhysicsStates::None;
 		}
 		break;
 	}
@@ -482,41 +512,42 @@ void StateLogic::applyPullingUp(struct playerObject *p) {
 
 void StateLogic::applyWallRunning(struct playerObject *p) {
 
-	switch (p->currminiState) {
+	switch (p->currInnerState) {
 	case innerStates::Starting:
 		if (p->triedToRun) {
-			StateLogic::handleXRotation(p, StateLogic::statesInfo[p->currState].Start.lookXIncrement);
-			StateLogic::handleYRotation(p, StateLogic::statesInfo[p->currState].Start.lookYIncrement);
-			p->cameraObject.cameraUp += StateLogic::statesInfo[p->currState].Start.camUpIncrement;
-			p->velocityDiff = StateLogic::statesInfo[p->currState].Start.velocityDiff;
-			StateLogic::statesInfo[p->currState].Start.counter++;
-			if (StateLogic::statesInfo[p->currState].Start.counter >= StateLogic::statesInfo[p->currState].Start.fraction*StateLogic::statesInfo[p->currState].numFrames) {
-				p->currminiState = innerStates::Mid;
+			StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Start.lookXIncrement);
+			StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Start.lookYIncrement);
+			p->cameraObject.cameraUp += StateLogic::statesInfo[p->id].Start.camUpIncrement;
+			p->velocityDiff = StateLogic::statesInfo[p->id].Start.velocityDiff;
+			StateLogic::statesInfo[p->id].Start.counter++;
+			if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
+				p->currInnerState = innerStates::Mid;
 			}
 		}
 		else {
-			p->currminiState = innerStates::Ending;
+			p->currInnerState = innerStates::Ending;
 		}
 		break;
 	case innerStates::Mid:
 		if (p->triedToRun) {
-			p->velocityDiff = StateLogic::statesInfo[p->currState].Mid.velocityDiff;
+			p->velocityDiff = StateLogic::statesInfo[p->id].Mid.velocityDiff;
 		}
 		else {
-			p->currminiState = innerStates::Ending;
+			p->currInnerState = innerStates::Ending;
 		}
 		break;
 	case innerStates::Ending:
-		p->interactingWithBuildingId = -1;
-		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->currState].End.lookXIncrement);
-		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->currState].End.lookYIncrement);
-		p->cameraObject.cameraUp += StateLogic::statesInfo[p->currState].End.camUpIncrement;
-		p->velocityDiff = StateLogic::statesInfo[p->currState].End.velocityDiff;
-		StateLogic::statesInfo[p->currState].End.counter++;
-		if (StateLogic::statesInfo[p->currState].End.counter >= StateLogic::statesInfo[p->currState].End.fraction*StateLogic::statesInfo[p->currState].numFrames) {
-			p->currminiState = innerStates::Off;
-			cout << "ended state: " << p->currState << endl;
-			p->currState = PhysicsStates::None;
+		
+		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].End.lookXIncrement);
+		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].End.lookYIncrement);
+		p->cameraObject.cameraUp += StateLogic::statesInfo[p->id].End.camUpIncrement;
+		p->velocityDiff = StateLogic::statesInfo[p->id].End.velocityDiff;
+		StateLogic::statesInfo[p->id].End.counter++;
+		if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
+			p->currInnerState = innerStates::Off;
+			p->interactingWithBuildingId = -1;
+			cout << "ended state: " << p->currPhysState << endl;
+			p->currPhysState = PhysicsStates::None;
 		}
 		break;
 	}

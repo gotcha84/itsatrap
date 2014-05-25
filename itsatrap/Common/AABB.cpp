@@ -82,14 +82,20 @@ bool AABB::collidesWithPointer(AABB* other) {
 }
 
 bool AABB::collidesWithSide(AABB other) {
+
+	/*cout << "this: ";
+	this->print();
+	cout << "other: ";
+	other.print();*/
+
 	return (other.maxX >= minX && other.minX <= maxX
-		&& other.maxY <= maxY - m_nearTopFactor
+		&& other.maxY - m_nearTopFactor >= maxY
 		&& other.maxZ >= minZ && other.minZ <= maxZ);
 }
 
 bool AABB::collidesWithSidePointer(AABB* other) {
 	return (other->maxX >= minX && other->minX <= maxX
-		&& other->maxY <= maxY - m_nearTopFactor
+		&& other->maxY - m_nearTopFactor >= maxY
 		&& other->maxZ >= minZ && other->minZ <= maxZ);
 }
 
