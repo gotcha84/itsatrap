@@ -197,6 +197,11 @@ void Window::displayCallback(void)
 void Window::keyDown(unsigned char key, int x, int y)
 {
 	keyState[key] = true;
+}
+
+void Window::keyUp(unsigned char key, int x, int y) {
+	keyState[key] = false;
+
 	if (key >= '1' && key <= '9') {
 		string filename = TRAMPOLINE_TRAP_OBJ;
 		int type = 0;
@@ -230,14 +235,11 @@ void Window::keyDown(unsigned char key, int x, int y)
 		delete trap;
 		trap = nullptr;
 	}
-	else if (key == 'r') {
+	else if (key == 'r') 
+	{
 		ConfigSettings::getConfig()->reloadSettingsFile();
 		Client::sendReloadConfigFile();
 	}
-}
-
-void Window::keyUp(unsigned char key, int x, int y) {
-	keyState[key] = false;
 }
 
 void Window::specialKeyDown(int key, int x, int y) {

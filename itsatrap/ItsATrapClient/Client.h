@@ -37,7 +37,7 @@ private:
 	static cameraObject playerCam;
 
 	// Functions
-	static int receiveMsg(char *);
+	static int receiveMsg();
 	static int sendMsg(char *, int);
 	static void startReceiverThread();
 	static void startSenderThread();
@@ -46,7 +46,6 @@ private:
 	static void updateHotSpot(int x, int y, int z);
 
 public:
-
 	// Functions
 	static int initializeClient();
 	static int getPlayerId();
