@@ -156,11 +156,12 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		struct staticRampObjectPacket *staticObjPkt = (struct staticRampObjectPacket *)p;
 		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
 		{
-			struct staticObject tmp;
-			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
+			struct staticRampObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticRampObject));
 			dynamicWorld.addStaticRampObject(tmp);
 			printf("[SERVER]: Added a static ramp object. Now have %d static ramp objects\n", dynamicWorld.getNumStaticRampObjects());
 			tmp.aabb.print();
+			printf("Slope: %f\n", tmp.slope);
 		}
 	}
 	else if (p->eventId == RELOAD_CONFIG_FILE)

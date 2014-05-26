@@ -23,29 +23,26 @@ void World::updateHeightMap(AABB boundingBox) {
 	}
 }
 
-void World::updateHeightMapRamp(AABB boundingBox, int rotation) {
+float World::updateHeightMapRamp(AABB boundingBox, int rotation) {
 	switch (rotation)
 	{
 	case 0:
-		updateHeightMapRamp0(boundingBox);
-		break;
+		return updateHeightMapRamp0(boundingBox);
 	case 90:
-		updateHeightMapRamp90(boundingBox);
-		break;
+		return updateHeightMapRamp90(boundingBox);
 	case 180:
-		updateHeightMapRamp180(boundingBox);
-		break;
+		return updateHeightMapRamp180(boundingBox);
 	case 270:
-		updateHeightMapRamp270(boundingBox);
-		break;
+		return updateHeightMapRamp270(boundingBox);
 	default:
 		cout << "[ERR]: World.cpp - Ramp Rotation not found!" << endl;
+		return 0;
 		break;
 	}
 }
 
 // Ramp inclines or declines along the z-axis (z, y)
-void World::updateHeightMapRamp0(AABB boundingBox) {
+float World::updateHeightMapRamp0(AABB boundingBox) {
 	float slope = (boundingBox.maxY - boundingBox.minY) / (boundingBox.maxZ - boundingBox.minZ);
 	float intercept = boundingBox.minY - (slope * boundingBox.minZ);
 
@@ -58,9 +55,11 @@ void World::updateHeightMapRamp0(AABB boundingBox) {
 			}
 		}
 	}
+
+	return slope;
 }
 
-void World::updateHeightMapRamp180(AABB boundingBox) {
+float World::updateHeightMapRamp180(AABB boundingBox) {
 	float slope = (boundingBox.maxY - boundingBox.minY) / (boundingBox.minZ - boundingBox.maxZ);
 	float intercept = boundingBox.minY - (slope * boundingBox.maxZ);
 
@@ -74,10 +73,12 @@ void World::updateHeightMapRamp180(AABB boundingBox) {
 			//cout << m_heightMap[x + m_heightMapXShift][z + m_heightMapZShift] << endl;
 		}
 	}
+
+	return slope;
 }
 
 // Ramp inclines or declines along the x-axis (x, y)
-void World::updateHeightMapRamp90(AABB boundingBox) {
+float World::updateHeightMapRamp90(AABB boundingBox) {
 	float slope = (boundingBox.maxY - boundingBox.minY) / (boundingBox.maxX - boundingBox.minX);
 	float intercept = boundingBox.minY - (slope * boundingBox.minX);
 
@@ -90,9 +91,11 @@ void World::updateHeightMapRamp90(AABB boundingBox) {
 			}
 		}
 	}
+
+	return slope;
 }
 
-void World::updateHeightMapRamp270(AABB boundingBox) {
+float World::updateHeightMapRamp270(AABB boundingBox) {
 	float slope = (boundingBox.maxY - boundingBox.minY) / (boundingBox.minX - boundingBox.maxX);
 	float intercept = boundingBox.minY - (slope * boundingBox.maxX);
 
@@ -105,6 +108,8 @@ void World::updateHeightMapRamp270(AABB boundingBox) {
 			}
 		}
 	}
+
+	return slope;
 }
 
 void World::printHeightMapToFile(string file) {

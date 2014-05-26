@@ -481,36 +481,39 @@ void Level::initLevel() {
 	// NOTE: COMMENT THIS OUT TO GET RID OF RAMPS
 	for (int i = 0; i < ramps.size(); ++i) {
 		int num = stoi(ramps[i]->getName().substr(5, 1));
+		float slope = 0.0f;
 		ramps[i]->calculateBoundingBox();
 		ramps[i]->setBoundingBox(*World::fixBoundingBox(ramps[i]->getBoundingBox()));
 
 		switch (num)
 		{
 		case 0:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
 			break;
 		case 1:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 180);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 180);
 			break;
 		case 2:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
 			break;
 		case 3:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
 			break;
 		case 4:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 90);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 90);
 			break;
 		case 5:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 90);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 90);
 			break;
 		case 6:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 180);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 180);
 			break;
 		default:
 			cout << "[ERR] Level.cpp - Unexpected Ramp Found!" << endl;
 			break;
 		}
+
+		rampSlopes.push_back(slope);
 	}
 
 	//World::printHeightMapToFile("heightMap.txt");

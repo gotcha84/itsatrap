@@ -32,7 +32,7 @@ private:
 	// Variables
 	int								currentId;
 	vector<struct staticObject>		staticObjects;
-	vector<struct staticObject>		staticRampObjects;
+	vector<struct staticRampObject>	staticRampObjects;
 	bool							playerLock[MAX_PLAYERS];
 	
 	// 
@@ -69,7 +69,7 @@ public:
 	void addTrap(struct trapObject t);
 
 	void addStaticObject(struct staticObject);
-	void addStaticRampObject(struct staticObject);
+	void addStaticRampObject(struct staticRampObject);
 	int getNumStaticObjects();
 	int getNumStaticRampObjects();
 

@@ -51,6 +51,7 @@ class Level {
 		vector<sg::Cube *> buildings;
 		vector<sg::ObjNode *> resources;
 		vector<sg::ObjNode *> ramps;
+		vector<float> rampSlopes;
 
 		Level();
 		~Level();
