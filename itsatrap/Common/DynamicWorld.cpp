@@ -77,7 +77,8 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.slowDuration = 0;
 	p.feetPlanted = true;
 	p.interactingWithBuildingId = -1;
-	p.interactingWIthBuildingFace = -1;
+	p.interactingWithBuildingFace = -1;
+	p.interactingWithRampId = -1;
 	p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 	p.feetPlanted = true;
@@ -119,7 +120,8 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	p.feetPlanted = playerMap[p.id].feetPlanted;
 	p.triedToRun = playerMap[p.id].triedToRun;
 	p.interactingWithBuildingId = playerMap[p.id].interactingWithBuildingId;
-	p.interactingWIthBuildingFace = playerMap[p.id].interactingWIthBuildingFace;
+	p.interactingWithBuildingFace = playerMap[p.id].interactingWithBuildingFace;
+	p.interactingWithRampId = playerMap[p.id].interactingWithRampId;
 	p.currInnerState = playerMap[p.id].currInnerState;
 	p.currPhysState = playerMap[p.id].currPhysState;
 	p.currCamState = playerMap[p.id].currCamState;
@@ -135,6 +137,7 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	p.cameraObject.xRotated = playerMap[p.id].cameraObject.xRotated;
 	p.cameraObject.yRotated = playerMap[p.id].cameraObject.yRotated;
 	
+	// ??
 	if (checkCollisionsWithAllNonTraps(&p) == -1)
 		return;
 
@@ -353,12 +356,99 @@ int DynamicWorld::checkSideCollisionsWithAllBuildings(struct playerObject *e)
 		}
 	}
 
-	//if (e->aabb.collidesWithSide(staticObjects[18].aabb)) {
-	//	return 18;
-	//}
+	return -1;
+}
+
+
+int DynamicWorld::checkCollisionsWithAllRamps(struct playerObject *e)
+{
+	/*if (staticRampObjects[4].aabb.collidesWithRampEntrance(e->position, e->aabb, 0)) {
+		return 4;
+	}
+	return -1;*/
+
+	int entrance;
+	for (int i = 0; i < staticRampObjects.size(); i++)
+	{
+		switch (i) {
+			case 0:
+				entrance = 4;
+				break;
+			case 1:
+				entrance = 5;
+				break;
+			case 2:
+				entrance = 4;
+				break;
+			case 3:
+				entrance = 4;
+				break;
+			case 4:
+				entrance = 0;
+				break;
+			case 5:
+				entrance = 0;
+				break;
+			case 6:
+				entrance = 5;
+				break;
+		}
+		
+		if (e->aabb.collidesWithRampEntrance(e->position, staticRampObjects[i].aabb, entrance))
+		{
+			printf("Collision: player %d with static object %d\n", e->id, i);
+			return i;
+		}
+	}
 
 	return -1;
 }
+
+int DynamicWorld::checkOnTopOfWithAllRamps(struct playerObject *e)
+{
+	/*if (staticRampObjects[4].aabb.collidesWithRampEntrance(e->position, e->aabb, 0)) {
+	return 4;
+	}
+	return -1;*/
+
+	int entrance;
+	for (int i = 0; i < staticRampObjects.size(); i++)
+	{
+		switch (i) {
+		case 0:
+			entrance = 4;
+			break;
+		case 1:
+			entrance = 5;
+			break;
+		case 2:
+			entrance = 4;
+			break;
+		case 3:
+			entrance = 4;
+			break;
+		case 4:
+			entrance = 0;
+			break;
+		case 5:
+			entrance = 0;
+			break;
+		case 6:
+			entrance = 5;
+			break;
+		}
+
+		if (e->aabb.onTopOfRamp(staticRampObjects[i].aabb))
+		{
+			printf("Collision: player %d with ramp static object %d\n", e->id, i);
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+
 
 void DynamicWorld::updateTimings(int timeDiff)
 {
@@ -451,8 +541,20 @@ void DynamicWorld::computeAABB(struct playerObject *p)
 void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 {
 	struct playerObject *p = &playerMap[playerId];
-	cout << "processing move event, curr_state is: " << p->currPhysState << endl;
+	//cout << "processing move event, curr_state is: " << p->currPhysState << endl;
 	//noneMoveEvent(playerId, dir);
+	switch (dir)
+	{
+	case FORWARD:
+		cout << "tried to run now true: " << endl;
+		p->triedToRun = true;
+		//return;
+		break;
+
+	default:
+		break;
+	}
+
 	switch (p->currPhysState) {
 		case None:
 			noneMoveEvent(playerId, dir);
@@ -476,8 +578,11 @@ void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 
 void DynamicWorld::noneMoveEvent(int playerId, Direction dir)
 {
-	cout << "handling none move event" << endl;
+	//cout << "handling none move event" << endl;
 	struct playerObject *p = &playerMap[playerId];
+
+	float rampFactor = 10.0f;
+	//ConfigSettings::getConfig()->getValue("rampFactor", rampFactor);
 
 	glm::vec3 proposedNewPos;
 	
@@ -546,50 +651,62 @@ void DynamicWorld::noneMoveEvent(int playerId, Direction dir)
 	p->position = proposedNewPos;
 	p->position.y += 5.0f;
 	computeAABB(p);
+	p->position = oldPos;
+	p->position.y += 5.0f;
 	int collisionId = checkCollisionsWithAllNonTraps(p);
+	int rampId;
+	if (p->interactingWithRampId == -1) {
+		rampId = checkCollisionsWithAllRamps(p);
+		p->interactingWithRampId = rampId;
+	}
+	else {
+		rampId = checkOnTopOfWithAllRamps(p);
+		p->interactingWithRampId = rampId;
+	}
 	p->position = oldPos;
 	computeAABB(p);
 	//cout << "collision id: " << collisionId << endl;
-	if (collisionId != -1) {
+	if (collisionId != -1 && rampId == -1) {
 		p->position = proposedNewPos;
 		p->position.y += 5.0f;
 		computeAABB(p);
+		p->position = oldPos;
+		p->position.y += 5.0f;
 		int buildingId = checkSideCollisionsWithAllBuildings(p);
 		p->position = oldPos;
 		computeAABB(p);
-		cout << "buildingId: " << buildingId << endl;
+		//cout << "buildingId: " << buildingId << endl;
 		if (buildingId != -1) {
-			cout << "collided with building" << endl;
+			//cout << "collided with building" << endl;
 			// TODO: check guy is facing wall too, at rest
 			if (!p->feetPlanted /*&& !(m_physics->atRest()) */ && dir == FORWARD) {
-				cout << "doing extra logic!" << endl;
+				//cout << "doing extra logic!" << endl;
 				if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
 					//TODO: startHoldingEdge(p);
 					//return;
 				}
 
 				float angle = Physics::handleAngleIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
-				//if (abs(90.0f-angle) < 22.5f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
-				newPos = oldPos;
-				//cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
-				//m_cam->m_cameraLookAtWallJump = m_cam->m_cameraCenter - m_cam->m_camZ;
-				StateLogic::startClimbing(p, buildingId);
-				p->stopwatch.start();
-				return;
-				//}
-				/*
+				if (abs(90.0f-angle) < 22.5f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
+					newPos = oldPos;
+					//cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
+					StateLogic::startClimbing(p, buildingId);
+					p->stopwatch.start();
+					return;
+				}
+				
 				else {
 				//if (oldOnTopOfBuildingId != buildingId) {
 				//if (m_onTopOfBuildingId != -1) {
 				//cout << "starting the wallrunning with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
 				// 0,1 = x, -1 = y, 4,5 = z
-				int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
-				startWallRunning(p, newDirection, toAdd, angle, buildingId);
-				return;
+					int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
+					StateLogic::startWallRunning(p, newDirection, toAdd, angle, buildingId);
+					return;
 
 				//}
 
-				}*/
+				}
 			}
 			else {
 				toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -605,7 +722,9 @@ void DynamicWorld::noneMoveEvent(int playerId, Direction dir)
 			p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
 		}
 	}
-
+	if (p->interactingWithRampId != -1) {
+		toAdd.y += rampFactor;
+	}
 	p->velocityDiff += toAdd;
 
 }
@@ -620,6 +739,8 @@ void DynamicWorld::climbingMoveEvent(int playerId, Direction dir) {
 
 		case BACKWARD:
 			cout << "decided to fall back down from climbing" << endl;
+			StateLogic::statesInfo->End.lookY = 0.0f - p->cameraObject.yRotated;
+			StateLogic::statesInfo->End.lookYIncrement = StateLogic::statesInfo->End.lookY / (StateLogic::statesInfo->End.fraction* StateLogic::statesInfo->numFrames);
 			p->currInnerState = innerStates::Ending;
 			//TODO: maybe more, set Holders
 			return;
@@ -742,6 +863,31 @@ void DynamicWorld::resetWorldInfo() {
 		struct playerObject &p = it->second;
 		// TODO: add more if needed
 		p.triedToRun = false;
+		p.currCamState = CameraStates::Client;
+		switch (p.currPhysState) {
+			case PhysicsStates::Climbing:
+				if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Mid || p.currInnerState == innerStates::Ending) {
+					p.currCamState = CameraStates::Server;
+				}
+				break;
+			case PhysicsStates::HoldingEdge:
+				if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Ending) {
+					p.currCamState = CameraStates::Server;
+				}
+				break;
+			case PhysicsStates::PullingUp:
+				if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Ending) {
+					p.currCamState = CameraStates::Server;
+				}
+				break;
+			case PhysicsStates::WallRunning:
+				if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Ending) {
+					p.currCamState = CameraStates::Server;
+				}
+				break;
+
+		}
+		
 	}
 }
 
@@ -773,6 +919,8 @@ void DynamicWorld::applyGravity()
 				p.velocity.y = 0.0f;
 				p.velocityDiff.y = 0.0f;
 				p.canClimb = true;
+				int rampId = checkOnTopOfWithAllRamps(&p);
+				p.interactingWithRampId = rampId;
 			}
 		}
 
@@ -942,10 +1090,10 @@ void DynamicWorld::pullingUpJumpEvent(int playerId) {
 
 void DynamicWorld::climbingJumpEvent(int playerId) {
 	// TODO: disable climbing?
-	struct playerObject *p = &playerMap[playerId];
+	//struct playerObject *p = &playerMap[playerId];
 
-	cout << "decided to jump back down from climbing" << endl;
-	p->currInnerState = innerStates::Ending;
+	//cout << "decided to jump back down from climbing" << endl;
+	//p->currInnerState = innerStates::Ending;
 	//TODO: maybe more, set Holders
 
 }

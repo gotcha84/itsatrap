@@ -26,6 +26,8 @@ class COMMON_API AABB {
 
 		float m_nearTopFactor;
 		float m_overTopFactor;
+		float m_onRampXZFactor;
+		float m_onRampYFactor;
 
 
 		AABB();
@@ -42,11 +44,14 @@ class COMMON_API AABB {
 		bool collidesWithPointer(AABB* other);
 		bool collidesWithSide(AABB other);
 		bool collidesWithSidePointer(AABB* other);
+		bool collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance); // 0 = -x, 1 = +x, 2 = -y, 3 = +y, 4 = -z, 5 = +z
+		bool collidesWithRampSide(glm::vec3 from, AABB other, int entrance);
 		bool inside(glm::vec3 goTo);
 		bool inside(AABB other);
 		bool nearTop(glm::vec3 goTo);
 		bool clearedTop(AABB other);
-		bool onTopOf(AABB* other);
+		bool onTopOfPointer(AABB* other);
+		bool onTopOfRamp(AABB other);
 		bool fellOffSide(AABB other);
 
 		glm::vec3 intersects(glm::vec3 from, glm::vec3 goTo);

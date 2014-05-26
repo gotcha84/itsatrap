@@ -39,6 +39,8 @@ private:
 	bool checkCollision(struct aabb a, struct aabb b);
 	int checkCollisionsWithAllNonTraps(struct playerObject *e);
 	int checkSideCollisionsWithAllBuildings(struct playerObject *e);
+	int checkCollisionsWithAllRamps(struct playerObject *e);
+	int checkOnTopOfWithAllRamps(struct playerObject *e);
 	void addNewPlayer(struct playerObject p);
 	void respawnPlayer(struct playerObject *p);
 	void computeAABB(struct playerObject *p);

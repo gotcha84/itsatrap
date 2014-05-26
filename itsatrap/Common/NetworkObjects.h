@@ -141,7 +141,8 @@ struct playerObject {
 	innerStates currInnerState;
 	CameraStates currCamState;
 	int interactingWithBuildingId;
-	int interactingWIthBuildingFace; //-x = 0, +x = 1 etc. will be used for ramps
+	int interactingWithBuildingFace; //-x = 0, +x = 1 etc. will be used for ramps
+	int interactingWithRampId;
 
 
 };

@@ -60,10 +60,6 @@ void Window::reshapeCallback(int w, int h)
 //----------------------------------------------------------------------------
 // Callback method called when window readraw is necessary or
 // when glutPostRedisplay() was called.
-void Window::displayCallback2(void) {
-
-}
-
 void Window::displayCallback(void)
 {	
 	float oldBuildingId = client->root->getPlayer()->m_onTopOfBuildingId;

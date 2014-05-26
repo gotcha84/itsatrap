@@ -74,8 +74,7 @@ void StateLogic::startClimbing(struct playerObject *e, int buildingId) {
 	float CLStartfraction = 1.0f;
 
 	float CLStartlookXIncrement = 0.0f;
-	float CLStartlookYIncrement = CLStartlookY*CLStartfraction / CLnumFrames;
-	glm::vec3 CLStartlookUpIncrement = glm::vec3(0.0f, 0.0f, 0.0f);
+	float CLStartlookYIncrement = CLStartlookY / (CLStartfraction*CLnumFrames);
 
 	float climbFactor = 3.0f;
 	//ConfigSettings::getConfig()->getValue("climbFactor", climbFactor);
@@ -89,7 +88,7 @@ void StateLogic::startClimbing(struct playerObject *e, int buildingId) {
 
 	// End
 	float CLEndfraction = 0.1f;
-	float CLEndlookYIncrement = -70.0f*CLEndfraction / CLnumFrames;
+	float CLEndlookYIncrement = -70.0f / (CLEndfraction*CLnumFrames);
 
 	int CLEndCounter = 0;
 
@@ -151,7 +150,7 @@ void StateLogic::startHoldingEdge(struct playerObject *e, int buildingId) {
 
 	float HEStartfraction = 1.0f;
 
-	float HEStartlookYIncrement = HEStartlookY*HEStartfraction / HEnumFrames;
+	float HEStartlookYIncrement = HEStartlookY / (HEStartfraction*HEnumFrames);
 	glm::vec3 HEStartlookUpIncrement = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	int HEStartCounter = 0;
@@ -162,8 +161,8 @@ void StateLogic::startHoldingEdge(struct playerObject *e, int buildingId) {
 
 	float HEEndfraction = 0.1f;
 
-	float HEEndlookXIncrement = HEEndlookX*HEEndfraction / HEnumFrames;
-	float HEEndlookYIncrement = HEEndlookY*HEEndfraction / HEnumFrames;
+	float HEEndlookXIncrement = HEEndlookX / (HEEndfraction*HEnumFrames);
+	float HEEndlookYIncrement = HEEndlookY / (HEEndfraction*HEnumFrames);
 
 	float bounceFactor = 5.0f;
 	//ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
@@ -207,13 +206,13 @@ void StateLogic::startPullingUp(struct playerObject *e, int buildingId) {
 	//ConfigSettings::getConfig()->getValue("PUnumFrames", PUnumFrames);
 
 	// start
-	float PUStartlookX = 45.0f - PUinitialX;
+	float PUStartlookX = 45.0f;
 	float PUStartlookY = -20.0f - PUinitialY;
 
 	float PUStartfraction = 0.7f;
 
-	float PUStartlookXIncrement = PUStartlookX*PUStartfraction / PUnumFrames;
-	float PUStartlookYIncrement = PUStartlookY*PUStartfraction / PUnumFrames;
+	float PUStartlookXIncrement = PUStartlookX / (PUStartfraction*PUnumFrames);
+	float PUStartlookYIncrement = PUStartlookY / (PUStartfraction*PUnumFrames);
 
 	float pullingUpFactor = 3.0f;
 	//ConfigSettings::getConfig()->getValue("pullingUpFactor", pullingUpFactor);
@@ -222,13 +221,16 @@ void StateLogic::startPullingUp(struct playerObject *e, int buildingId) {
 	int PUStartCounter = 0;
 
 	// end
-	float PUEndlookX = -1.0f*PUStartlookX;
-	float PUEndlookY = -1.0f*PUStartlookY;
+	/*float PUEndlookX = -1.0f*PUStartlookX;
+	float PUEndlookY = -1.0f*PUStartlookY;*/
+
+	float PUEndlookX = -45.0f;
+	float PUEndlookY = 20.0f;
 
 	float PUEndfraction = 0.3f;
 
-	float PUEndlookXIncrement = PUEndlookX*PUEndfraction / PUnumFrames;
-	float PUEndlookYIncrement = PUEndlookY*PUEndfraction / PUnumFrames;
+	float PUEndlookXIncrement = PUEndlookX / (PUEndfraction*PUnumFrames);
+	float PUEndlookYIncrement = PUEndlookY / (PUEndfraction*PUnumFrames);
 
 	// instead of below.., see TODO
 	float tmpX;
@@ -285,6 +287,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	float WRinitialX = e->cameraObject.xRotated;
 	float WRinitialY = e->cameraObject.yRotated;
 	glm::vec3 WRinitialcamUp = e->cameraObject.cameraUp;
+	cout << "wrinitialcamp: " << glm::to_string(WRinitialcamUp) << endl;
 
 	float WRnumFrames = 60.0f;
 	//ConfigSettings::getConfig()->getValue("WRnumFrames", WRnumFrames);
@@ -337,8 +340,8 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 		WRStartcamUp.z *= -1.0f;
 	}
 
-	WRStartcamUpIncrement = glm::vec3(WRStartcamUp - WRinitialcamUp)*WRStartfraction / WRnumFrames;
-	WREndcamUpIncrement = -1.0f*glm::vec3(WRStartcamUp - WRinitialcamUp)*WREndfraction / WRnumFrames;
+	WRStartcamUpIncrement = (WRStartcamUp - WRinitialcamUp) / (WRStartfraction*WRnumFrames);
+	WREndcamUpIncrement = -1.0f*(WRStartcamUp - WRinitialcamUp) / (WREndfraction*WRnumFrames);
 
 	/*	1 +,-
 	2 -,+
@@ -352,8 +355,8 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 
 	if (angle < 90.0f) {
 
-		WRStartlookXIncrement = -1.0f*angle*WRStartfraction / WRnumFrames;
-		WREndlookXIncrement = -1.0f*angle*WREndfraction / WRnumFrames;
+		WRStartlookXIncrement = -1.0f*angle / (WRStartfraction*WRnumFrames);
+		WREndlookXIncrement = -1.0f*angle / (WREndfraction*WRnumFrames);
 
 		if (newDirection == 0 || newDirection == 5) {
 			WRHolderxRotated = e->cameraObject.xRotated - (2.0f*angle);
@@ -366,8 +369,8 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	}
 	if (angle > 90.0f) {
 
-		WRStartlookXIncrement = (abs(180.0f - angle))*WRStartfraction / WRnumFrames;
-		WREndlookXIncrement = (abs(180.0f - angle))*WREndfraction / WRnumFrames;
+		WRStartlookXIncrement = (abs(180.0f - angle))/(WRStartfraction*WRnumFrames);
+		WREndlookXIncrement = (abs(180.0f - angle))/(WREndfraction*WRnumFrames);
 
 		if (newDirection == 0 || newDirection == 5) {
 			WRHolderxRotated = e->cameraObject.xRotated + (2.0f*(180.0f - angle));
@@ -399,12 +402,15 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	statesInfo[e->id].Start.camUp = WRStartcamUp;
 	statesInfo[e->id].Start.fraction = WRStartfraction;
 	statesInfo[e->id].Start.lookXIncrement = WRStartlookXIncrement;
+	cout << "wrstartcampincrment: " << glm::to_string(WRStartcamUpIncrement) << endl;
 	statesInfo[e->id].Start.camUpIncrement = WRStartcamUpIncrement;
 
 	statesInfo[e->id].Mid.velocityDiff = WRMidvelocityDiff;
 
 	statesInfo[e->id].End.fraction = WREndfraction;
 	statesInfo[e->id].End.lookXIncrement = WREndlookXIncrement;
+	cout << "wrendcampincrment: " << glm::to_string(WREndcamUpIncrement) << endl;
+	statesInfo[e->id].End.camUpIncrement = WREndcamUpIncrement;
 
 	e->feetPlanted = true; // not sure if makes a dfference
 	e->interactingWithBuildingId = buildingId;
@@ -458,7 +464,7 @@ void StateLogic::applyHoldingEdge(struct playerObject *p) {
 	switch (p->currInnerState) {
 	case innerStates::Starting:
 		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Start.lookXIncrement);
-		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].End.lookYIncrement);
+		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Start.lookYIncrement);
 		StateLogic::statesInfo[p->id].Start.counter++;
 		if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
 			p->currInnerState = innerStates::Mid;
@@ -485,6 +491,8 @@ void StateLogic::applyPullingUp(struct playerObject *p) {
 
 	switch (p->currInnerState) {
 	case innerStates::Starting:
+		//cout << "pullingup start lookXincrement: " << StateLogic::statesInfo[p->id].Start.lookXIncrement << endl;
+		//cout << "pullingup start lookYincrement: " << StateLogic::statesInfo[p->id].Start.lookYIncrement << endl;
 		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Start.lookXIncrement);
 		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Start.lookYIncrement);
 		p->velocityDiff = StateLogic::statesInfo[p->id].Start.velocityDiff;
@@ -494,7 +502,9 @@ void StateLogic::applyPullingUp(struct playerObject *p) {
 		}
 		break;
 	case innerStates::Ending:
-		cout << "ending pulling up with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].End.velocityDiff) << endl;
+		//cout << "pulling up ending lookXincrement: " << StateLogic::statesInfo[p->id].End.lookXIncrement << endl;
+		//cout << "pulling up ending lookYincrement: " << StateLogic::statesInfo[p->id].End.lookYIncrement << endl;
+		//cout << "ending pulling up with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].End.velocityDiff) << endl;
 		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].End.lookXIncrement);
 		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].End.lookYIncrement);
 		p->velocityDiff = StateLogic::statesInfo[p->id].End.velocityDiff;
@@ -514,7 +524,12 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 
 	switch (p->currInnerState) {
 	case innerStates::Starting:
+		cout << "TRIED TO RUN: " << p->triedToRun << endl;
 		if (p->triedToRun) {
+			cout << "wallrunning start lookXincrement: " << StateLogic::statesInfo[p->id].Start.lookXIncrement << endl;
+			cout << "wallrunning start lookYincrement: " << StateLogic::statesInfo[p->id].Start.lookYIncrement << endl;
+			cout << "wallrunning start camUpincrement: " << glm::to_string(StateLogic::statesInfo[p->id].Start.camUpIncrement) << endl;
+			cout << "starting wallrunning with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].Start.velocityDiff) << endl;
 			StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Start.lookXIncrement);
 			StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Start.lookYIncrement);
 			p->cameraObject.cameraUp += StateLogic::statesInfo[p->id].Start.camUpIncrement;
@@ -530,6 +545,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 		break;
 	case innerStates::Mid:
 		if (p->triedToRun) {
+			cout << "middle wallrunning with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].Start.velocityDiff) << endl;
 			p->velocityDiff = StateLogic::statesInfo[p->id].Mid.velocityDiff;
 		}
 		else {
@@ -537,7 +553,10 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 		}
 		break;
 	case innerStates::Ending:
-		
+		cout << "wallrunning End lookXincrement: " << StateLogic::statesInfo[p->id].End.lookXIncrement << endl;
+		cout << "wallrunning End lookYincrement: " << StateLogic::statesInfo[p->id].End.lookYIncrement << endl;
+		cout << "wallrunning End camUpincrement: " << glm::to_string(StateLogic::statesInfo[p->id].End.camUpIncrement) << endl;
+		cout << "Ending wallrunning with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].End.velocityDiff) << endl;
 		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].End.lookXIncrement);
 		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].End.lookYIncrement);
 		p->cameraObject.cameraUp += StateLogic::statesInfo[p->id].End.camUpIncrement;
