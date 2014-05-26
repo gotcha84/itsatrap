@@ -28,7 +28,7 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			//m_model->drawModel();
+			m_model->drawModel();
 			m_particles->draw();
 		glPopMatrix();
 	}

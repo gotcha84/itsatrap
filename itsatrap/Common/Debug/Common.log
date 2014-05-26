@@ -1,4 +1,4 @@
-﻿Build started 5/25/2014 4:04:02 PM.
+﻿Build started 5/25/2014 7:02:44 PM.
      1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Common.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -44,13 +44,13 @@
                      _Kty=int
          ,            _Ty=playerObject
                  ]
-     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(178): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(199): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(227): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(322): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(330): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(344): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(977): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(180): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(201): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(229): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(324): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(332): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(346): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\anurag\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1006): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
          GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\AABB.obj
@@ -71,4 +71,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.76
+Time Elapsed 00:00:02.57

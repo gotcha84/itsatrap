@@ -16,6 +16,10 @@
 #define TYPE_PUSH_TRAP 4
 #define TYPE_LIGHTNING_TRAP 5
 
+enum CameraStates {
+	Client = 0,
+	Server = 1
+};
 
 enum PhysicsStates {
 	None = 0,
@@ -95,8 +99,9 @@ struct physicsObject {
 	glm::vec3 lastMoved;
 
 	bool triedToRun;
-	bool canJump;
+	bool canJump; // not used, same purpose as below anyway
 	bool feetPlanted;
+	
 
 	PhysicsStates currentState;
 };
@@ -130,11 +135,15 @@ struct playerObject {
 	glm::vec3 velocity;
 	glm::vec3 velocityDiff;
 	bool feetPlanted;
+	bool canClimb;
 	bool triedToRun;
-	int currState;
-	int currminiState;
+	PhysicsStates currPhysState;
+	innerStates currInnerState;
+	CameraStates currCamState;
 	int interactingWithBuildingId;
 	int interactingWIthBuildingFace; //-x = 0, +x = 1 etc. will be used for ramps
+
+
 };
 
 struct trapObject {

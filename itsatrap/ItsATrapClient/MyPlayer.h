@@ -33,7 +33,7 @@ class MyPlayer {
 		AABB *m_boundingBox;
 
 		glm::vec3 m_position;
-		PhysicsStates m_currState;
+		PhysicsStates m_currPhysState;
 
 
 		glm::mat4 m_transMatrix;
