@@ -4,22 +4,33 @@
 
 #include "Geode.h"
 #include "Mesh.h"
+#include "Shader.h"
 #include "Utilities.h"
 
 namespace sg {
 	class MeshNode : public Geode {
 		public:
 			Mesh *m_mesh;
+			Shader *m_shader;
+			GLuint m_shaderID;
 
 			MeshNode();
 			MeshNode(std::string filename);
 			~MeshNode();
+
+			void initShader();
 
 			Mesh *getMesh();
 			void loadMesh(std::string filename);
 
 			void draw(glm::mat4 parent, glm::mat4 cam);
 			void print();
+
+
+
+			void SetWVP(const glm::mat4 &WVP);
+			void SetWorldMatrix(const glm::mat4 &WorldInverse);
+			GLint GetUniformLocation(const char* pUniformName);
 	};
 }
 

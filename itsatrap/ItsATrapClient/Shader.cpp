@@ -112,18 +112,66 @@ GLuint vertShader;
 GLuint fragShader;
 GLuint gl2Program;
 
-Shader::Shader(void)
+Shader::Shader()
 {
+	m_prog = 0;
 }
 
+Shader::Shader(string vertFile, string fragFile) {
+	shaderInit();
+	
+	// create vert+frag shaders
+	GLuint vert = glCreateShader(GL_VERTEX_SHADER);
+	GLuint frag = glCreateShader(GL_FRAGMENT_SHADER);
 
-Shader::~Shader(void)
+	// read source code
+	readShaderSource(vert, vertFile);
+	readShaderSource(frag, fragFile);
+
+	// compile shaders
+	GLint compiled;
+	glCompileShader(vert);
+	glGetShaderiv(vert, GL_COMPILE_STATUS, &compiled);
+	printShaderInfoLog(vert);
+	if (compiled == GL_FALSE) {
+		fprintf(stderr, "Compile error in vertex shader.\n");
+	}
+
+	glCompileShader(fragShader);
+	glGetShaderiv(fragShader, GL_COMPILE_STATUS, &compiled);
+	printShaderInfoLog(frag);
+	if (compiled == GL_FALSE) {
+		fprintf(stderr, "Compile error in fragment shader.\n");
+	}
+
+	// create program and attach shaders
+	GLuint prog = glCreateProgram();
+	glAttachShader(prog, vert);
+	glAttachShader(prog, frag);
+
+	// attached to program, don't need refs to shaders anymore
+	glDeleteShader(vert);
+	glDeleteShader(frag);
+
+	// link program
+	GLint linked;
+	glLinkProgram(prog);
+	glGetProgramiv(prog, GL_LINK_STATUS, &linked);
+	printProgramInfoLog(prog);
+	if (linked == GL_FALSE) {
+		fprintf(stderr, "Link error in shader program.\n");
+	}
+
+	m_prog = prog;
+}
+
+Shader::~Shader()
 {
 }
 
 
 //reseting GLSL()
-int Shader::shaderInit(void)
+int Shader::shaderInit()
 {
   int error = 0;
 
@@ -233,7 +281,7 @@ int Shader::shaderInit(void)
 /*
  *	Thies function reads a souce program of shader into memory 
  */
-int Shader::readShaderSource(GLuint shader, char *file)
+int Shader::readShaderSource(GLuint shader, string file)
 {
   FILE *fp;
   const GLchar *source;
@@ -241,9 +289,9 @@ int Shader::readShaderSource(GLuint shader, char *file)
   int ret;
 
   /* Opens input file */
-  fp = fopen(file, "rb");
+  fp = fopen(file.c_str(), "rb");
   if (fp == NULL) {
-    perror(file);
+    perror(file.c_str());
     return -1;
   }
 
@@ -398,3 +446,6 @@ GLuint Shader::lightShader(char* fragFile, char* vertFile){
   return gl2Program;
 }
 
+GLuint Shader::getShader() {
+	return m_prog;
+}

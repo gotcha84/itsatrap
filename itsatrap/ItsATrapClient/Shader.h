@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <string>
 
 //Since the tutorial I did used glext.h library, include it
 #include "glext.h"
@@ -116,16 +117,21 @@ class Shader
 {
 	public:
 		Shader();
+		Shader(string vertFile, string fragFile);
 		~Shader();
+
 		GLuint vertShader;
 		GLuint fragShader;
 		GLuint gl2Program;
 
-		int shaderInit(void);
-		int readShaderSource(GLuint shader, char *file);
+		GLuint m_prog;
+
+		int shaderInit();
+		int readShaderSource(GLuint shader, string file);
 		void printShaderInfoLog(GLuint shader);
 		void printProgramInfoLog(GLuint program);
 		GLuint lightShader(char* fragFile, char* vertFile);
+		GLuint getShader();
 };
 
 #endif
