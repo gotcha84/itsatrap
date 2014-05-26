@@ -9,6 +9,7 @@ namespace sg {
 	class ResourceNode : public ObjNode {
 		public:
 			ParticleSystem *m_particles;
+			ParticleSystem *m_particles2;
 
 			ResourceNode(int numParticles);
 			~ResourceNode();
@@ -18,7 +19,7 @@ namespace sg {
 
 			void draw(glm::mat4 parent, glm::mat4 cam);
 			void print();
-	};
+		};
 
 }
 

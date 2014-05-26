@@ -48,8 +48,11 @@ void Level::initLevel() {
 	rs = new sg::ResourceNode(NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
 	rs->getParticleSystem()->setColor(glm::vec4(1, 0, 0, 1));
+	rs->m_particles2->setColor(glm::vec4(1, 0, 0, 1));
+	rs->m_particles2->reverse();
 	if (!ENABLE_PARTICLES) {
 		rs->getParticleSystem()->disable();
+		rs->m_particles2->disable();
 	}
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 0: (0, 0, 0)");
@@ -64,8 +67,11 @@ void Level::initLevel() {
 	rs = new sg::ResourceNode(NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
 	rs->getParticleSystem()->setColor(glm::vec4(0, 1, 0, 1));
+	rs->m_particles2->setColor(glm::vec4(0, 1, 0, 1));
+	rs->m_particles2->reverse();
 	if (!ENABLE_PARTICLES) {
 		rs->getParticleSystem()->disable();
+		rs->m_particles2->disable();
 	}
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 1: (-15, 8, 7)");
@@ -80,8 +86,11 @@ void Level::initLevel() {
 	rs = new sg::ResourceNode(NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
 	rs->getParticleSystem()->setColor(glm::vec4(0, 0, 1, 1));
+	rs->m_particles2->setColor(glm::vec4(0, 0, 1, 1));
+	rs->m_particles2->reverse();
 	if (!ENABLE_PARTICLES) {
 		rs->getParticleSystem()->disable();
+		rs->m_particles2->disable();
 	}
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 2: (-15, 8, 7)");

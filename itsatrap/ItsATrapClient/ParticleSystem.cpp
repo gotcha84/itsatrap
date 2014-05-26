@@ -45,7 +45,8 @@ void Particle::init() {
 	m_color = glm::vec4(1, 1, 1, 1);
 	m_age = 0;
 	m_life = 1000;
-	
+	m_reversed = false;
+
 	reset();
 }
 
@@ -60,7 +61,12 @@ int Particle::getID() {
 void Particle::reset() {
 	m_age = 0;
 	m_theta = 0;
-	m_rad = (rand() % 100 + 1)/500.0f;
+	if (m_reversed) {
+		m_rad = -1 * (rand() % 100 + 1) / 500.0f;
+	}
+	else {
+		m_rad = (rand() % 100 + 1) / 500.0f;
+	}
 	m_pos = glm::vec3(m_rad, 0, 0);
 	m_vel = glm::vec3(0, 0.1f, 0.1f);
 	m_color.a = 1.0f;
@@ -68,7 +74,7 @@ void Particle::reset() {
 
 void Particle::step() {
 	m_age++; // happy birthday particle! age++
-	
+
 	if (m_age > m_life) {
 		reset();
 	}
@@ -79,8 +85,14 @@ void Particle::step() {
 		m_color.a = 1.0f - m_pos.y / (0.1f*m_life); // turn particles black toward the top
 
 		m_pos += m_vel;
-		m_rad += 0.5f/m_life;
-		m_theta += 1.0f;
+		if (m_reversed) {
+			m_theta -= 1.0f;
+			m_rad -= 0.5f / m_life;
+		}
+		else {
+			m_theta += 1.0f;
+			m_rad += 0.5f / m_life;
+		}
 	}
 }
 
@@ -90,7 +102,7 @@ void Particle::draw() {
 
 	glColor4f(m_color.r, m_color.g, m_color.b, m_color.a);
 	glBegin(GL_POINTS);
-		glVertex3f(m_pos.x, m_pos.y, m_pos.z);
+	glVertex3f(m_pos.x, m_pos.y, m_pos.z);
 	glEnd();
 
 	//glDisable(GL_POINT_SMOOTH);
@@ -177,4 +189,14 @@ void ParticleSystem::enable() {
 
 void ParticleSystem::disable() {
 	m_enabled = false;
+}
+
+void ParticleSystem::reverse() {
+	for (int i = 0; i < m_numParticles; i++) {
+		m_particles[i].m_reversed = !m_particles[i].m_reversed;
+	}
+}
+
+bool ParticleSystem::getReversed() {
+	return m_particles[0].m_reversed;
 }
