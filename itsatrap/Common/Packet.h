@@ -18,6 +18,7 @@
 #define RELOAD_CONFIG_FILE 9
 #define STATIC_RAMP_OBJECT_CREATION_EVENT 13
 #define PLAYER_ACTION_EVENT 14
+#define STATIC_RESOURCE_OBJECT_CREATION_EVENT 15
 
 
 // Superclass of all packets
@@ -52,6 +53,13 @@ struct staticRampObjectPacket
 	int eventId;
 	int playerId;
 	struct staticRampObject object;
+};
+
+struct staticResourceObjectPacket
+{
+	int eventId;
+	int playerId;
+	struct staticObject object;
 };
 
 struct spawnTrapPacket

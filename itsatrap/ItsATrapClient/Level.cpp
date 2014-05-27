@@ -486,6 +486,11 @@ void Level::initLevel() {
 		World::updateHeightMap(buildings[i]->getBoundingBox());
 	}
 
+	// Resource Nodes
+	for (int i = 0; i < resources.size(); ++i) {
+		resources[i]->calculateBoundingBox();
+	}
+
 	// Ramp Height Map
 	// NOTE: COMMENT THIS OUT TO GET RID OF RAMPS
 	for (int i = 0; i < ramps.size(); ++i) {

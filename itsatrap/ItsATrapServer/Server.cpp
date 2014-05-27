@@ -164,6 +164,19 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			printf("Slope: %f\n", tmp.slope);
 		}
 	}
+	else if (p->eventId == STATIC_RESOURCE_OBJECT_CREATION_EVENT)
+	{
+		struct staticResourceObjectPacket *staticObjPkt = (struct staticResourceObjectPacket *)p;
+		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
+		{
+			struct staticObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
+			dynamicWorld.addStaticResourceObject(tmp);
+			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
+			tmp.aabb.print();
+		}
+
+	}
 	else if (p->eventId == RELOAD_CONFIG_FILE)
 	{
 		ConfigSettings::getConfig()->reloadSettingsFile();

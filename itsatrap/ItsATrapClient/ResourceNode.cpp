@@ -6,6 +6,10 @@ namespace sg {
 		: ObjNode() {
 		m_particles = new ParticleSystem(numParticles);
 		m_particles2 = new ParticleSystem(numParticles);
+
+		owner = -1;
+		isActive = false;
+		isChanneling = false;
 	}
 
 	ResourceNode::~ResourceNode() {

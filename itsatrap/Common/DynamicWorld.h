@@ -33,6 +33,7 @@ private:
 	int								currentId;
 	vector<struct staticObject>		staticObjects;
 	vector<struct staticRampObject>	staticRampObjects;
+	vector<struct staticObject>		staticResourceObjects;
 	bool							playerLock[MAX_PLAYERS];
 	
 	// 
@@ -70,8 +71,10 @@ public:
 
 	void addStaticObject(struct staticObject);
 	void addStaticRampObject(struct staticRampObject);
+	void addStaticResourceObject(struct staticObject);
 	int getNumStaticObjects();
 	int getNumStaticRampObjects();
+	int getNumStaticResourceObjects();
 
 	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
