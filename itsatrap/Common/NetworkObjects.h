@@ -124,6 +124,7 @@ struct playerObject {
     int				id, health, numKills, numDeaths;
 	int				stunDuration, slowDuration;
 	int				timeUntilRespawn;
+	int				knifeDelay;
 	int				resources;
 	int				onTopOfBuildingId;
 	bool			deathState;
@@ -143,8 +144,6 @@ struct playerObject {
 	CameraStates currCamState;
 	int interactingWithBuildingId;
 	int interactingWIthBuildingFace; //-x = 0, +x = 1 etc. will be used for ramps
-
-
 };
 
 struct trapObject {

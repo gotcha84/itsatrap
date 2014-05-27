@@ -94,7 +94,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	playerMap[p.id] = p;
 	p.stopwatch = Stopwatch();
 	p.canClimb = true;
-
+	p.knifeDelay = 0;
 }
 
 
@@ -400,6 +400,10 @@ void DynamicWorld::updateTimings(int timeDiff)
 			if (p.timeUntilRespawn < 0)
 				respawnPlayer(&p);
 		}
+
+		if (p.knifeDelay > 0)
+			p.knifeDelay -= timeDiff;
+		
 	}
 
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); ++it)
