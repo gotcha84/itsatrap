@@ -109,8 +109,10 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			}
 			else if (p->eventId == HOT_SPOT_UPDATE)
 			{
-				struct hotSpotPacket *hsp = (struct hotSpotPacket *) p;
-				updateHotSpot(hsp->x, hsp->y, hsp->z);
+				//struct hotSpotPacket *hsp = (struct hotSpotPacket *) p;
+				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
+				//updateHotSpot(hsp->x, hsp->y, hsp->z);
+				updateActiveResourceNode(packet->id);
 			}
 			else if (p->eventId == RELOAD_CONFIG_FILE)
 			{
@@ -237,24 +239,36 @@ void Client::sendKnifeHitEvent(int targetId)
 	sendMsg((char *)&p, sizeof(struct knifeHitPacket));
 }
 
-void Client::updateHotSpot(int x, int y, int z)
+//void Client::updateHotSpot(int x, int y, int z)
+//{
+//	if (client == nullptr)
+//		return;
+//
+//	if (client->hotSpot != nullptr)
+//	{
+//		client->root->removeChild(client->hotSpot);
+//	}
+//
+//	// CONE node
+//	sg::MatrixTransform *mt = new sg::MatrixTransform();
+//	client->root->addChild(mt);
+//	client->hotSpot = mt;
+//
+//	sg::Cone *cone = new sg::Cone();
+//	mt->addChild(cone);
+//	mt->setMatrix(glm::translate(glm::vec3(x,y,z)) * glm::scale(glm::vec3(10,10,10)));
+//}
+
+void Client::updateActiveResourceNode(int id)
 {
 	if (client == nullptr)
-		return;
-
-	if (client->hotSpot != nullptr)
 	{
-		client->root->removeChild(client->hotSpot);
+		return;
 	}
 
-	// CONE node
-	sg::MatrixTransform *mt = new sg::MatrixTransform();
-	client->root->addChild(mt);
-	client->hotSpot = mt;
-
-	sg::Cone *cone = new sg::Cone();
-	mt->addChild(cone);
-	mt->setMatrix(glm::translate(glm::vec3(x,y,z)) * glm::scale(glm::vec3(10,10,10)));
+	// Shut down the old node that was active
+	client->level.disableCurrentResourceNode();
+	client->level.activateResourceNode(id);
 }
 
 void Client::sendReloadConfigFile()

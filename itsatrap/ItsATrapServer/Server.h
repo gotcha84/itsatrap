@@ -52,13 +52,13 @@ private:
 	static int					resourceInterval;
 	static int					hotSpotChangeInterval;
 
-	static vector<glm::vec3>	hotSpotLocations;
-	static glm::vec3			currentHotSpot;
-	static int					currentHotSpotIndex;
+	//static vector<glm::vec3>	hotSpotLocations;
+	//static glm::vec3			currentHotSpot;
+	//static int					currentHotSpotIndex;
 
 	static vector<int>			resourceNodeLocations;
-	static int					currentActiveResourceNode;
-	static int					resourceOwner;
+	static int					currentActiveResourceNodeIndex;
+	static int					currentResourceOwner;
 
 	// Functions
 	static int initialize();
@@ -70,7 +70,7 @@ private:
 	static void broadcastDynamicWorld();
 	static void respawnPlayer(int id);
 	static void updateResources();
-	static void sendHotSpotUpdate(int x, int y, int z);
+	//static void sendHotSpotUpdate(int x, int y, int z);
 	static void sendActiveNodeUpdate(int id);
 	static void printPacket(struct packet *p);
 

@@ -23,6 +23,7 @@ Level::~Level() {
 }
 
 void Level::initLevel() {
+	activeResourceNode = 0;
 	sg::ResourceNode *rs; // temp var to reference resource nodes
 
 	// Initialize height map
@@ -532,6 +533,7 @@ void Level::initLevel() {
 	}
 
 	//World::printHeightMapToFile("heightMap.txt");
+	disableAllResourceNodes();
 }
 
 void Level::destroyLevel() {
@@ -544,4 +546,29 @@ sg::MatrixTransform* Level::getRoot() {
 
 void Level::setRoot(sg::MatrixTransform *newRoot) {
 	root = newRoot;
+}
+
+void Level::disableAllResourceNodes() {
+	for (int i = 0; i < resources.size(); ++i) {
+		resources[i]->disableParticles();
+	}
+	activeResourceNode = -1;
+}
+
+void Level::disableCurrentResourceNode() {
+	for (int i = 0; i < resources.size(); ++i) {
+		if (resources[i]->getResourceId() == activeResourceNode) {
+			resources[i]->disableParticles();
+			activeResourceNode = -1;
+		}
+	}
+}
+
+void Level::activateResourceNode(int id) {
+	for (int i = 0; i < resources.size(); ++i) {
+		if (resources[i]->getResourceId() == id) {
+			activeResourceNode = id;
+			resources[i]->enableParticles();
+		}
+	}
 }

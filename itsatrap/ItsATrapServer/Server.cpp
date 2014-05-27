@@ -19,9 +19,13 @@ int					Server::resourcePerInterval;
 int					Server::resourceHotSpotBonusPerInterval;
 int					Server::resourceInterval;
 int					Server::hotSpotChangeInterval;
-vector<glm::vec3>	Server::hotSpotLocations;
-glm::vec3			Server::currentHotSpot;
-int					Server::currentHotSpotIndex;
+//vector<glm::vec3>	Server::hotSpotLocations;
+//glm::vec3			Server::currentHotSpot;
+//int					Server::currentHotSpotIndex;
+
+vector<int>			Server::resourceNodeLocations;
+int					Server::currentActiveResourceNodeIndex;
+int					Server::currentResourceOwner;
 
 // Private Vars
 HANDLE		packetBufMutex;
@@ -86,12 +90,15 @@ int Server::initialize() {
 	timeUntilHotSpotChange = hotSpotChangeInterval;
 
 	// Resource Locations
-	hotSpotLocations.push_back(glm::vec3(75, 0, 0));
-	hotSpotLocations.push_back(glm::vec3(35, 0, 0));
-	hotSpotLocations.push_back(glm::vec3(105, 0, 0));
+	//hotSpotLocations.push_back(glm::vec3(75, 0, 0));
+	//hotSpotLocations.push_back(glm::vec3(35, 0, 0));
+	//hotSpotLocations.push_back(glm::vec3(105, 0, 0));
 
-	currentHotSpotIndex = 0;
-	currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+	//currentHotSpotIndex = 0;
+	//currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+
+	currentActiveResourceNodeIndex = 0;
+	currentResourceOwner = -1;
 
 	// Load Height Map
 	string heightMapFile;
@@ -132,7 +139,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 				
 			playerCount++;
 
-			sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
+			//sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+			//sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
 		}
 		else
 		{
@@ -172,10 +180,12 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticResourceObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
 			dynamicWorld.addStaticResourceObject(tmp);
-			//resourceNodeLocations.push_back(tmp.id);
+			resourceNodeLocations.push_back(tmp.id);
 			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
 			tmp.aabb.print();
 			printf("ResourceId: %d\n", tmp.id);
+
+			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 		}
 
 	}
@@ -258,6 +268,7 @@ void Server::processBuffer()
 
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
 	WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
+		//World world;
 
 	for (int i = 0; i < playerCount; i++) {
 		
@@ -394,36 +405,42 @@ void Server::updateResources()
 			glm::vec3 pos = it->second.position;
 
 			// TODO: 
-			if (glm::distance(pos, currentHotSpot) < 10)
-				it->second.resources += resourceHotSpotBonusPerInterval;
+			//if (glm::distance(pos, currentHotSpot) < 10)
+				//it->second.resources += resourceHotSpotBonusPerInterval;
 		}
 	}
 
 	// Change the active node
 	if (timeUntilHotSpotChange < 0)
 	{
-		timeUntilHotSpotChange = hotSpotChangeInterval;
-		currentHotSpotIndex += 1; 
-		currentHotSpotIndex = currentHotSpotIndex % hotSpotLocations.size();
+		timeUntilHotSpotChange = hotSpotChangeInterval;		// Reset timer
 
-		currentHotSpot = hotSpotLocations[currentHotSpotIndex];
-		sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
+		++currentActiveResourceNodeIndex;
+		currentActiveResourceNodeIndex = currentActiveResourceNodeIndex % resourceNodeLocations.size();
+
+		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+
+		//currentHotSpotIndex += 1; 
+		//currentHotSpotIndex = currentHotSpotIndex % hotSpotLocations.size();
+
+		//currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+		//sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
 	}
 }
 
 // Sends messages to clients about location of resource node
-void Server::sendHotSpotUpdate(int x, int y, int z)
-{
-	struct hotSpotPacket p;
-	p.eventId = HOT_SPOT_UPDATE;
-	p.x = x;
-	p.y = y;
-	p.z = z;
-	
-	// Send Message
-	for (int i = 0; i < playerCount; i++)
-		Server::sendMsg((char *) &p, sizeof(p), &players[i].clientAddress);
-}
+//void Server::sendHotSpotUpdate(int x, int y, int z)
+//{
+//	struct hotSpotPacket p;
+//	p.eventId = HOT_SPOT_UPDATE;
+//	p.x = x;
+//	p.y = y;
+//	p.z = z;
+//	
+//	// Send Message
+//	for (int i = 0; i < playerCount; i++)
+//		Server::sendMsg((char *) &p, sizeof(p), &players[i].clientAddress);
+//}
 
 // Sends messages to clients about new location of resource node
 void Server::sendActiveNodeUpdate(int id)

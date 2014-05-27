@@ -44,6 +44,7 @@ private:
 	static DWORD WINAPI receiverThread(LPVOID);
 	static DWORD WINAPI senderThread(LPVOID);
 	static void updateHotSpot(int x, int y, int z);
+	static void updateActiveResourceNode(int id);
 
 public:
 	// Functions
