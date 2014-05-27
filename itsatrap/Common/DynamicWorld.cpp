@@ -329,6 +329,12 @@ void DynamicWorld::addTrap(struct trapObject t)
 		case TYPE_PORTAL_TRAP:
 		{
 			playerMap[t.ownerId].resources -= 10;
+
+			if (portalMap[t.ownerId] != nullptr)
+			{
+				portalMap[t.ownerId]->eventCode = EVENT_REMOVE_TRAP;
+				portalMap.erase(t.ownerId);
+			}
 			portalMap[t.ownerId] = &trapMap[t.id];
 			break;
 		}
