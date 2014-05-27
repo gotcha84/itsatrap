@@ -1,4 +1,5 @@
-#define NUMPARTICLES 500
+#define ENABLE_PARTICLES 1
+#define NUMPARTICLES 100
 
 #include "Level.h"
 
@@ -46,9 +47,13 @@ void Level::initLevel() {
 
 	rs = new sg::ResourceNode(NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
+	rs->getParticleSystem()->setColor(glm::vec4(1, 0, 0, 1));
+	if (!ENABLE_PARTICLES) {
+		rs->getParticleSystem()->disable();
+	}
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 0: (0, 0, 0)");
-	resources.back()->getModel()->setColor(glm::vec4(0, 0, 1, 1));
+	resources.back()->getModel()->setColor(glm::vec4(1, 1, 1, 1));
 	xForms.back()->addChild(resources.back());
 
 	// Resource Tower #2
@@ -58,9 +63,13 @@ void Level::initLevel() {
 
 	rs = new sg::ResourceNode(NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
+	rs->getParticleSystem()->setColor(glm::vec4(0, 1, 0, 1));
+	if (!ENABLE_PARTICLES) {
+		rs->getParticleSystem()->disable();
+	}
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 1: (-15, 8, 7)");
-	resources.back()->getModel()->setColor(glm::vec4(0, 0, 1, 1));
+	resources.back()->getModel()->setColor(glm::vec4(1, 1, 1, 1));
 	xForms.back()->addChild(resources.back());
 
 	// Resource Tower #3
@@ -70,9 +79,13 @@ void Level::initLevel() {
 
 	rs = new sg::ResourceNode(NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
+	rs->getParticleSystem()->setColor(glm::vec4(0, 0, 1, 1));
+	if (!ENABLE_PARTICLES) {
+		rs->getParticleSystem()->disable();
+	}
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 2: (-15, 8, 7)");
-	resources.back()->getModel()->setColor(glm::vec4(0, 0, 1, 1));
+	resources.back()->getModel()->setColor(glm::vec4(1, 1, 1, 1));
 	xForms.back()->addChild(resources.back());
 
 	// Building 0: (0, 0, 0)
@@ -468,36 +481,39 @@ void Level::initLevel() {
 	// NOTE: COMMENT THIS OUT TO GET RID OF RAMPS
 	for (int i = 0; i < ramps.size(); ++i) {
 		int num = stoi(ramps[i]->getName().substr(5, 1));
+		float slope = 0.0f;
 		ramps[i]->calculateBoundingBox();
 		ramps[i]->setBoundingBox(*World::fixBoundingBox(ramps[i]->getBoundingBox()));
 
 		switch (num)
 		{
 		case 0:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
 			break;
 		case 1:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 180);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 180);
 			break;
 		case 2:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
 			break;
 		case 3:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 0);
 			break;
 		case 4:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 90);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 90);
 			break;
 		case 5:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 90);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 90);
 			break;
 		case 6:
-			World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 180);
+			slope = World::updateHeightMapRamp(ramps[i]->getBoundingBox(), 180);
 			break;
 		default:
 			cout << "[ERR] Level.cpp - Unexpected Ramp Found!" << endl;
 			break;
 		}
+
+		rampSlopes.push_back(slope);
 	}
 
 	//World::printHeightMapToFile("heightMap.txt");

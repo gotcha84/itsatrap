@@ -266,7 +266,7 @@ void DynamicWorld::addStaticObject(struct staticObject obj)
 	staticObjects.push_back(obj);
 }
 
-void DynamicWorld::addStaticRampObject(struct staticObject obj)
+void DynamicWorld::addStaticRampObject(struct staticRampObject obj)
 {
 	staticRampObjects.push_back(obj);
 }
@@ -351,7 +351,7 @@ int DynamicWorld::checkSideCollisionsWithAllBuildings(struct playerObject *e)
 		// Something wrong with building#40
 		if (e->aabb.collidesWithSide(staticObjects[i].aabb))
 		{
-			printf("Collision: player %d with static object %d\n", e->id, i);
+			//printf("Collision: player %d with static object %d\n", e->id, i);
 			return i;
 		}
 	}
@@ -360,7 +360,7 @@ int DynamicWorld::checkSideCollisionsWithAllBuildings(struct playerObject *e)
 }
 
 
-int DynamicWorld::checkCollisionsWithAllRamps(struct playerObject *e)
+int DynamicWorld::checkCollisionsWithAllRampsEntrance(struct playerObject *e)
 {
 	/*if (staticRampObjects[4].aabb.collidesWithRampEntrance(e->position, e->aabb, 0)) {
 		return 4;
@@ -394,20 +394,24 @@ int DynamicWorld::checkCollisionsWithAllRamps(struct playerObject *e)
 				break;
 		}
 		
-		if (e->aabb.collidesWithRampEntrance(e->position, staticRampObjects[i].aabb, entrance))
+		if (staticRampObjects[i].aabb.collidesWithRampEntrance(e->position, e->aabb, entrance))
 		{
-			printf("Collision: player %d with static object %d\n", e->id, i);
+			//printf("Collision: player %d with static object %d\n", e->id, i);
 			return i;
 		}
+		
 	}
 
 	return -1;
 }
 
-int DynamicWorld::checkOnTopOfWithAllRamps(struct playerObject *e)
+int DynamicWorld::checkCollisionsWithAllRampsInside(struct playerObject *e)
 {
-	/*if (staticRampObjects[4].aabb.collidesWithRampEntrance(e->position, e->aabb, 0)) {
-	return 4;
+	
+	/*if (e->aabb.collidesWithRampInside(staticRampObjects[4].aabb, 0, staticRampObjects[4].slope))
+	{
+		printf("Collision: player %d with static ramp object %d\n", e->id, 4);
+		return 4;
 	}
 	return -1;*/
 
@@ -438,11 +442,12 @@ int DynamicWorld::checkOnTopOfWithAllRamps(struct playerObject *e)
 			break;
 		}
 
-		if (e->aabb.onTopOfRamp(staticRampObjects[i].aabb))
+		if (e->aabb.collidesWithRampInside(staticRampObjects[i].aabb, entrance, staticRampObjects[i].slope))
 		{
-			printf("Collision: player %d with ramp static object %d\n", e->id, i);
+			//printf("Collision: player %d with static object %d\n", e->id, i);
 			return i;
 		}
+
 	}
 
 	return -1;
@@ -529,13 +534,13 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 }
 
 void DynamicWorld::computeAABB(struct playerObject *p)
-{
-	p->aabb.minX = p->position.x - 5;
-	p->aabb.maxX = p->position.x + 5;
-	p->aabb.minY = p->position.y - 5;
-	p->aabb.maxY = p->position.y + 5;
-	p->aabb.minZ = p->position.z - 5;
-	p->aabb.maxZ = p->position.z + 5;
+{	
+	p->aabb.minX = p->position.x - 5.0f;
+	p->aabb.maxX = p->position.x + 5.0f;
+	p->aabb.minY = p->position.y - 5.0f;
+	p->aabb.maxY = p->position.y + 5.0f;
+	p->aabb.minZ = p->position.z - 5.0f;
+	p->aabb.maxZ = p->position.z + 5.0f;
 }
 
 void DynamicWorld::processMoveEvent(int playerId, Direction dir)
@@ -545,14 +550,14 @@ void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 	//noneMoveEvent(playerId, dir);
 	switch (dir)
 	{
-	case FORWARD:
-		cout << "tried to run now true: " << endl;
-		p->triedToRun = true;
-		//return;
-		break;
+		case FORWARD:
+			//cout << "tried to run now true: " << endl;
+			p->triedToRun = true;
+			//return;
+			break;
 
-	default:
-		break;
+		default:
+			break;
 	}
 
 	switch (p->currPhysState) {
@@ -573,16 +578,12 @@ void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 			break;
 	}
 	
-
 }
 
 void DynamicWorld::noneMoveEvent(int playerId, Direction dir)
 {
 	//cout << "handling none move event" << endl;
 	struct playerObject *p = &playerMap[playerId];
-
-	float rampFactor = 10.0f;
-	//ConfigSettings::getConfig()->getValue("rampFactor", rampFactor);
 
 	glm::vec3 proposedNewPos;
 	
@@ -655,12 +656,34 @@ void DynamicWorld::noneMoveEvent(int playerId, Direction dir)
 	p->position.y += 5.0f;
 	int collisionId = checkCollisionsWithAllNonTraps(p);
 	int rampId;
+	// if not on ramp
 	if (p->interactingWithRampId == -1) {
-		rampId = checkCollisionsWithAllRamps(p);
+
+		// check for entrance
+		rampId = checkCollisionsWithAllRampsEntrance(p);
+
+		// hit side of ramp
+		if (rampId == -1 && checkCollisionsWithAllRampsInside(p) != -1) {
+			cout << "not on ramp, found hit side" << endl;
+			toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
+			p->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+			p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
+			p->position = oldPos;
+			computeAABB(p);
+			return;
+		}
+		if (rampId == -1) {
+			cout << "not on ramp, did not find entrance. did not hit side" << endl;
+		}
+		else {
+			cout << "not no ramp, found entrance" << endl;
+		}
 		p->interactingWithRampId = rampId;
 	}
+	// if already on ramp
 	else {
-		rampId = checkOnTopOfWithAllRamps(p);
+		rampId = checkCollisionsWithAllRampsInside(p);
+		cout << "on ramp, checking: " << rampId << endl;
 		p->interactingWithRampId = rampId;
 	}
 	p->position = oldPos;
@@ -682,7 +705,9 @@ void DynamicWorld::noneMoveEvent(int playerId, Direction dir)
 			if (!p->feetPlanted /*&& !(m_physics->atRest()) */ && dir == FORWARD) {
 				//cout << "doing extra logic!" << endl;
 				if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
+					StateLogic::startHoldingEdge(p, buildingId);
 					//TODO: startHoldingEdge(p);
+					return;
 					//return;
 				}
 
@@ -722,9 +747,7 @@ void DynamicWorld::noneMoveEvent(int playerId, Direction dir)
 			p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
 		}
 	}
-	if (p->interactingWithRampId != -1) {
-		toAdd.y += rampFactor;
-	}
+
 	p->velocityDiff += toAdd;
 
 }
@@ -841,7 +864,7 @@ void DynamicWorld::pullingUpMoveEvent(int playerId, Direction dir) {
 
 void DynamicWorld::wallRunningMoveEvent(int playerId, Direction dir) {
 
-	cout << "handling wallrunningmoveevent" << endl;
+	//cout << "handling wallrunningmoveevent" << endl;
 	struct playerObject *p = &playerMap[playerId];
 	switch (dir)
 	{
@@ -881,6 +904,7 @@ void DynamicWorld::resetWorldInfo() {
 				}
 				break;
 			case PhysicsStates::WallRunning:
+				p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 				if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Ending) {
 					p.currCamState = CameraStates::Server;
 				}
@@ -898,7 +922,26 @@ void DynamicWorld::applyGravity()
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		struct playerObject &p = it->second;
-		if (p.currPhysState != PhysicsStates::Climbing && p.currPhysState != PhysicsStates::HoldingEdge &&
+
+		if (p.velocity != glm::vec3(0.0f, 0.0f, 0.0f) || p.velocityDiff != glm::vec3(0.0f, 0.0f, 0.0f)) {
+			cout << "pvelo: " << glm::to_string(p.velocity) << endl;
+			cout << "pvelodiff: " << glm::to_string(p.velocityDiff) << endl;
+		}
+
+
+		int xIndex = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x + 0.5f);
+		int zIndex = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z + 0.5f);
+		if (p.interactingWithRampId != -1) {
+			p.feetPlanted = true;
+			p.velocity.y = 0.0f;
+			p.velocityDiff.y = 0.0f;
+			p.canClimb = true;
+			p.position.y = World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] + 5.0f; // on ground
+			cout << "on ramp, adjusted to heightmap" << endl;
+			return;
+		}
+
+		else if (p.currPhysState != PhysicsStates::Climbing && p.currPhysState != PhysicsStates::HoldingEdge &&
 			p.currPhysState != PhysicsStates::PullingUp && p.currPhysState != PhysicsStates::WallRunning) {
 			
 			float gravityConstant = 0;
@@ -906,21 +949,24 @@ void DynamicWorld::applyGravity()
 
 			p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
 
-			int xIndex = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x + 0.5f);
-			int zIndex = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z + 0.5f);
-
 			//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
 
 			if (World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] > p.position.y + p.velocity.y + p.velocityDiff.y - 5.0f) {
 				//cout << "landed: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
 				//cout << "landed\n";
-				//m_position.y = World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift]; // on ground
+				p.position.y = World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift]+5.0f; // on ground
 				p.feetPlanted = true;
 				p.velocity.y = 0.0f;
 				p.velocityDiff.y = 0.0f;
 				p.canClimb = true;
-				int rampId = checkOnTopOfWithAllRamps(&p);
+				
+				int rampId = checkCollisionsWithAllRampsInside(&p);
+				//cout << "setting ramp id: " << rampId << endl;
+				int oldInteractingWithRampId = p.interactingWithRampId;
 				p.interactingWithRampId = rampId;
+				if (oldInteractingWithRampId != rampId) {
+					cout << "changed from: " << oldInteractingWithRampId << " to " << rampId << endl;
+				}
 			}
 		}
 
@@ -998,12 +1044,12 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 			return;
 		}
 		// not sure if needed. also in holdingedgemoveevent but commented
-		else if (staticObjects[p->interactingWithBuildingId].aabb.fellOffSide(p->aabb)) {
+		else if (p->currInnerState != innerStates::Ending && staticObjects[p->interactingWithBuildingId].aabb.fellOffSide(p->aabb)) {
 			cout << "fell off side while holding edge" << endl;
 			p->currInnerState = innerStates::Ending;
 			return;
 		}
-		else if (p->stopwatch.getElapsedMilliseconds() > holdingEdgeMaxDuration) {
+		else if (p->currInnerState != innerStates::Ending && p->stopwatch.getElapsedMilliseconds() > holdingEdgeMaxDuration) {
 			cout << "took too long while holding edge " << endl;
 			// technically below two lines dont do anything
 			/*p->stopwatch.stop();
@@ -1012,11 +1058,13 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 			return;
 		}
 	case PhysicsStates::WallRunning:
-		if (staticObjects[p->interactingWithBuildingId].aabb.fellOffSide(p->aabb)) {
+		if (p->currInnerState != innerStates::Ending && staticObjects[p->interactingWithBuildingId].aabb.fellOffSide(p->aabb)) {
 			cout << "fell off edge while wallrunning" << endl;
+			StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
 			p->currInnerState = innerStates::Ending;
 			return;
 		}
+		break;
 	}
 
 }
@@ -1053,26 +1101,37 @@ void DynamicWorld::processLookEvent(int playerId, struct cameraObject *cam)
 }
 
 void DynamicWorld::noneJumpEvent(int playerId) {
-	cout << "None jump event" << endl;
+	
 	float yJumpFactor = 0;
 	ConfigSettings::getConfig()->getValue("yJumpFactor", yJumpFactor);
 
 	struct playerObject *p = &playerMap[playerId];
 	if (p->feetPlanted) {
+		cout << "None jump event sucessful" << endl;
 		p->velocity.y += yJumpFactor;
 		p->feetPlanted = false;
 	}
+	else {
+		cout << "None jump event NOT sucessful" << endl;
+	}
 
+	return;
 }
 
 void DynamicWorld::wallRunningJumpEvent(int playerId) {
+
 	cout << "wall running jump event" << endl;
 	struct playerObject *p = &playerMap[playerId];
 
-	//float bounceFactor = 5.0f;
-	////ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
-	//StateLogic::statesInfo[p->id].End.velocityDiff *= bounceFactor;
-	p->currInnerState = innerStates::Ending;
+	if (p->currInnerState != innerStates::Ending) {
+		float bounceFactor = 2.0f;
+		//ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
+		StateLogic::statesInfo[p->id].End.velocityDiff *= bounceFactor;
+		StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
+		p->currInnerState = innerStates::Ending;
+	}
+
+	return;
 }
 
 void DynamicWorld::holdingEdgeJumpEvent(int playerId) {

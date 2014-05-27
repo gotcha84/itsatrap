@@ -32,15 +32,16 @@ private:
 	// Variables
 	int								currentId;
 	vector<struct staticObject>		staticObjects;
-	vector<struct staticObject>		staticRampObjects;
+	vector<struct staticRampObject>	staticRampObjects;
 	bool							playerLock[MAX_PLAYERS];
 	
 	// 
 	bool checkCollision(struct aabb a, struct aabb b);
 	int checkCollisionsWithAllNonTraps(struct playerObject *e);
 	int checkSideCollisionsWithAllBuildings(struct playerObject *e);
-	int checkCollisionsWithAllRamps(struct playerObject *e);
-	int checkOnTopOfWithAllRamps(struct playerObject *e);
+	int checkCollisionsWithAllRampsEntrance(struct playerObject *e);
+	//int checkOnTopOfWithAllRamps(struct playerObject *e);
+	int checkCollisionsWithAllRampsInside(struct playerObject *e);
 	void addNewPlayer(struct playerObject p);
 	void respawnPlayer(struct playerObject *p);
 	void computeAABB(struct playerObject *p);
@@ -71,7 +72,7 @@ public:
 	void addTrap(struct trapObject t);
 
 	void addStaticObject(struct staticObject);
-	void addStaticRampObject(struct staticObject);
+	void addStaticRampObject(struct staticRampObject);
 	int getNumStaticObjects();
 	int getNumStaticRampObjects();
 

@@ -33,11 +33,11 @@ class COMMON_API World {
 		static void initializeHeightMap();
 		static void updateHeightMap(AABB boundingBox, float offset);
 		static void updateHeightMap(AABB boundingBox);
-		static void updateHeightMapRamp(AABB boundingBox, int rotation);
-		static void updateHeightMapRamp0(AABB boundingBox);
-		static void updateHeightMapRamp90(AABB boundingBox);
-		static void updateHeightMapRamp180(AABB boundingBox);
-		static void updateHeightMapRamp270(AABB boundingBox);
+		static float updateHeightMapRamp(AABB boundingBox, int rotation);
+		static float updateHeightMapRamp0(AABB boundingBox);
+		static float updateHeightMapRamp90(AABB boundingBox);
+		static float updateHeightMapRamp180(AABB boundingBox);
+		static float updateHeightMapRamp270(AABB boundingBox);
 		static void printHeightMapToFile(string file);
 		static void readInHeightMapFromFile(string file);
 

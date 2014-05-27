@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
 		Client::sendStaticObject(level.buildings[i]->getBoundingBox().minX, level.buildings[i]->getBoundingBox().minY, level.buildings[i]->getBoundingBox().minZ, level.buildings[i]->getBoundingBox().maxX, level.buildings[i]->getBoundingBox().maxY, level.buildings[i]->getBoundingBox().maxZ);
 
 	for (int i = 0; i < level.ramps.size(); i++) {
-		Client::sendStaticRampObject(level.ramps[i]->getBoundingBox());
+		Client::sendStaticRampObject(level.ramps[i]->getBoundingBox(), level.rampSlopes[i]);
 	}
 
 	//client->printPlayers();

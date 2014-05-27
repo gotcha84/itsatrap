@@ -21,18 +21,18 @@ c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(34): warning 
           [
               _Ty=staticObject
           ]
-c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(35): warning C4251: 'DynamicWorld::staticRampObjects' : class 'std::vector<staticObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(35): warning C4251: 'DynamicWorld::staticRampObjects' : class 'std::vector<staticRampObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
           with
           [
-              _Ty=staticObject
+              _Ty=staticRampObject
           ]
-c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(52): warning C4251: 'DynamicWorld::trapMap' : class 'std::map<int,trapObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(53): warning C4251: 'DynamicWorld::trapMap' : class 'std::map<int,trapObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
           with
           [
               _Kty=int
   ,            _Ty=trapObject
           ]
-c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(53): warning C4251: 'DynamicWorld::playerMap' : class 'std::map<int,playerObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.h(54): warning C4251: 'DynamicWorld::playerMap' : class 'std::map<int,playerObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
           with
           [
               _Kty=int
@@ -45,9 +45,12 @@ c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(327): warni
 c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(335): warning C4018: '<' : signed/unsigned mismatch
 c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(349): warning C4018: '<' : signed/unsigned mismatch
 c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(371): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(415): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(1154): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(419): warning C4018: '<' : signed/unsigned mismatch
+c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(1213): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
   GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  AABB.cpp
+  Generating Code...
+c:\users\alvin\desktop\125\working2\itsatrap\common\aabb.cpp(236): warning C4715: 'AABB::collidesWithRampInside' : not all control paths return a value
 AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
      Creating library C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.lib and object C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.exp
   Common.vcxproj -> C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.dll

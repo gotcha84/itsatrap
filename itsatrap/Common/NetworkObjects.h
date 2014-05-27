@@ -162,5 +162,10 @@ struct staticObject {
 	AABB			aabb;
 };
 
+struct staticRampObject {
+	AABB			aabb;
+	float			slope;
+};
+
 
 #endif

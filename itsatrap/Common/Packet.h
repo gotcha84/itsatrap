@@ -51,7 +51,7 @@ struct staticRampObjectPacket
 {
 	int eventId;
 	int playerId;
-	struct staticObject object;
+	struct staticRampObject object;
 };
 
 struct spawnTrapPacket

@@ -45,7 +45,7 @@ class COMMON_API AABB {
 		bool collidesWithSide(AABB other);
 		bool collidesWithSidePointer(AABB* other);
 		bool collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance); // 0 = -x, 1 = +x, 2 = -y, 3 = +y, 4 = -z, 5 = +z
-		bool collidesWithRampSide(glm::vec3 from, AABB other, int entrance);
+		bool collidesWithRampInside(AABB other, int entrance, float slope);
 		bool inside(glm::vec3 goTo);
 		bool inside(AABB other);
 		bool nearTop(glm::vec3 goTo);

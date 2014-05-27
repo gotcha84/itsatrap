@@ -50,7 +50,7 @@ public:
 	static int initializeClient();
 	static int getPlayerId();
 	static void sendStaticObject(float, float, float, float, float, float);
-	static void sendStaticRampObject(AABB rampBB);
+	static void sendStaticRampObject(AABB rampBB, float slope);
 	static void sendPlayerUpdate(struct playerObject);
 	static void sendSpawnTrapEvent(struct trapObject);
 	static void sendKnifeHitEvent(int targetId);

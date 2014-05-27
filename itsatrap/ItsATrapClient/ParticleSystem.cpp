@@ -2,24 +2,34 @@
 
 Particle::Particle() {
 	init();
-}
-
-Particle::Particle(glm::vec3 origin) {
-	init();
-
-	m_origin = origin;
-	m_pos = m_origin;
-
+	reset();
 	initAge();
 }
 
-Particle::Particle(glm::vec3 origin, int life) {
+Particle::Particle(int id, glm::vec3 origin, glm::vec4 color) {
+	srand(id);
 	init();
 
+	this->id = id;
 	m_origin = origin;
-	m_pos = m_origin;
-	m_life = life;
+	m_color = color;
+	m_color.a = 1.0f;
 
+	reset();
+	initAge();
+}
+
+Particle::Particle(int id, glm::vec3 origin, int life, glm::vec4 color) {
+	srand(id);
+	init();
+
+	this->id = id;
+	m_origin = origin;
+	m_life = life;
+	m_color = color;
+	m_color.a = 1.0f;
+
+	reset();
 	initAge();
 }
 
@@ -34,11 +44,12 @@ void Particle::init() {
 	m_vel = glm::vec3(0, 0, 0);
 	m_color = glm::vec4(1, 1, 1, 1);
 	m_age = 0;
-	m_life = 100;
+	m_life = 1000;
+	
+	reset();
 }
 
 void Particle::initAge() {
-	srand(time(NULL));
 	m_age = rand() % m_life + 1;
 }
 
@@ -46,31 +57,48 @@ int Particle::getID() {
 	return id;
 }
 
+void Particle::reset() {
+	m_age = 0;
+	m_theta = 0;
+	m_rad = (rand() % 100 + 1)/500.0f;
+	m_pos = glm::vec3(m_rad, 0, 0);
+	m_vel = glm::vec3(0, 0.1f, 0.1f);
+	m_color.a = 1.0f;
+}
+
 void Particle::step() {
 	m_age++; // happy birthday particle! age++
 	
 	if (m_age > m_life) {
-		m_age = 0;
-		m_pos = m_origin;
+		reset();
 	}
 	else {
-		m_vel = glm::vec3(0,0.5f,0);
+		m_vel = glm::vec3(m_rad, 0.1f, 0);
+		m_vel = glm::rotateY(m_vel, m_theta);
+
+		m_color.a = 1.0f - m_pos.y / (0.1f*m_life); // turn particles black toward the top
+
 		m_pos += m_vel;
+		m_rad += 0.5f/m_life;
+		m_theta += 1.0f;
 	}
 }
 
 void Particle::draw() {
-	glEnable(GL_POINT_SMOOTH);
+	//glEnable(GL_POINT_SMOOTH);
 	glPointSize(10);
 
+	glColor4f(m_color.r, m_color.g, m_color.b, m_color.a);
 	glBegin(GL_POINTS);
-		glColor4f(m_color.r, m_color.g, m_color.b, m_color.a);
 		glVertex3f(m_pos.x, m_pos.y, m_pos.z);
 	glEnd();
+
+	//glDisable(GL_POINT_SMOOTH);
 }
 
 ParticleSystem::ParticleSystem(int numParticles) {
 	m_numParticles = numParticles;
+
 	initParticles();
 };
 
@@ -79,11 +107,12 @@ ParticleSystem::~ParticleSystem() {
 };
 
 void ParticleSystem::initParticles() {
+	m_color = glm::vec4(1, 1, 1, 1);
+
 	m_particles.clear();
 	m_particles.resize(m_numParticles);
 	for (int i = 0; i < m_numParticles; i++) {
-		m_particles[i] = Particle(m_origin);
-		m_particles[i].id = i;
+		m_particles[i] = Particle(i, m_origin, m_color);
 	}
 }
 
@@ -103,31 +132,38 @@ void ParticleSystem::setMaxLifetime(int life) {
 	m_maxLifetime = life;
 }
 
+glm::vec3 ParticleSystem::getOrigin() {
+	return m_origin;
+}
+
 void ParticleSystem::setOrigin(glm::vec3 origin) {
 	m_origin = origin;
 }
 
-glm::vec3 ParticleSystem::getOrigin() {
-	return m_origin;
+glm::vec4 ParticleSystem::getColor() {
+	return m_color;
+}
+
+void ParticleSystem::setColor(glm::vec4 color) {
+	m_color = color;
+
+	for (int i = 0; i < getNumParticles(); i++) {
+		m_particles[i].m_color.r = color.r;
+		m_particles[i].m_color.g = color.g;
+		m_particles[i].m_color.b = color.b;
+	}
 }
 
 void ParticleSystem::reset() {
 	initParticles();
 }
 
-void ParticleSystem::step() {
-	for (int i = 0; i < m_numParticles; i++) {
-		m_particles[i].step();
-	}
-}
-
 void ParticleSystem::draw() {
 	if (m_enabled) {
 		for (int i = 0; i < m_numParticles; i++) {
 			m_particles[i].draw();
+			m_particles[i].step();
 		}
-
-		step();
 	}
 }
 

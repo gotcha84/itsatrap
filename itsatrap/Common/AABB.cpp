@@ -106,12 +106,6 @@ bool AABB::onTopOfPointer(AABB* other) {
 		&& other->maxZ >= minZ && other->minZ <= maxZ);
 }
 
-bool AABB::onTopOfRamp(AABB other) {
-	return (maxX >= other.minX && minX <= other.maxX
-		//&& other.maxY >= maxY /*&& other->minY >= minY */
-		&& maxZ >= other.minZ && minZ <= other.maxZ);
-}
-
 bool AABB::inside(glm::vec3 goTo) {
 	return (goTo.x >= minX && goTo.x <= maxX 
 		&& goTo.y >= minY &&  goTo.y <= maxY
@@ -128,18 +122,20 @@ bool AABB::inside(AABB other) {
 // this = obj ie building. other = player
 bool AABB::collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance) {
 
+	
+	if (other.minY > minY + m_onRampYFactor) {
+		//cout << "too tall" << endl;
+		return false;
+	}
+
 	//cout << "building: ";
 	//this->print();
 	//cout << "player: ";
 	//other.print();
 
 	//cout << "from: " << glm::to_string(from) << endl;
-	//cout << "entrance: " << glm::to_string(entrance) << endl;
+	//cout << "entrance: " << entrance << endl;
 
-	if (other.minY > minY + m_onRampYFactor) {
-		//cout << "too tall" << endl;
-		return false;
-	}
 
 	switch (entrance) {
 		case 0:
@@ -147,18 +143,20 @@ bool AABB::collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance) {
 				//cout << "from entrance" << endl;
 				return (other.minX - minX < maxX - other.maxX && minX < other.minX && maxX > other.maxX && minZ < other.minZ && maxZ > other.maxZ);
 			}
-			else {
-				//cout << "from side" << endl;
-				return (minX < other.minX + 5.0f && minX + m_onRampXZFactor > other.minX + 5.0f && minZ > other.minZ && maxZ < other.maxZ);
-			}
+			return false;
+			//else {
+			//	//cout << "from side" << endl;
+			//	return (minX < other.minX + 5.0f && minX + m_onRampXZFactor > other.minX + 5.0f && minZ > other.minZ && maxZ < other.maxZ);
+			//}
 			break;
 		case 1:
 			if (minZ < from.z && maxZ > from.z) {
 				return (other.minX - minX > maxX - other.maxX && minX < other.minX && maxX > other.maxX && minZ < other.minZ && maxZ > other.maxZ);
 			}
-			else {
-				return (maxX > other.maxX - 5.0f && maxX - m_onRampXZFactor < other.maxX - 5.0f && minZ > other.minZ && maxZ < other.maxZ);
-			}
+			//else {
+			//	return (maxX > other.maxX - 5.0f && maxX - m_onRampXZFactor < other.maxX - 5.0f && minZ > other.minZ && maxZ < other.maxZ);
+			//}
+			return false;
 			break;
 		case 2:
 			cout << "why come from underground??" << endl;
@@ -170,28 +168,71 @@ bool AABB::collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance) {
 			if (minX < from.x && maxX > from.x) {
 				return (other.minZ - minZ < maxZ - other.maxZ && minZ < other.minZ && maxZ > other.maxZ && minX < other.minX && maxX > other.maxX);
 			}
-			else {
+			/*else {
 				return (minZ < other.minZ + 5.0f && minZ + m_onRampXZFactor > other.minZ + 5.0f && minX > other.minX && maxX < other.maxX);
-			}
+			}*/
+			return false;
 			break;
 		case 5:
 			if (minX < from.x && maxX > from.x) {
 				return (other.minZ - minZ > maxZ - other.maxZ && minZ < other.minZ && maxZ > other.maxZ && minX < other.minX && maxX > other.maxX);
 			}
-			else {
+			/*else {
 				return (maxZ > other.maxZ - 5.0f && maxZ - m_onRampXZFactor < other.maxZ - 5.0f && minX > other.minX && maxX < other.maxX);
-			}
+			}*/
+			return false;
 			break;
 	}
 
 	return false;
 }
 
-bool AABB::collidesWithRampSide(glm::vec3 from, AABB other, int entrance) {
+bool AABB::onTopOfRamp(AABB other) {
+	return (maxX >= other.minX && minX <= other.maxX
+		//&& other.maxY >= maxY /*&& other->minY >= minY */
+		&& maxZ >= other.minZ && minZ <= other.maxZ);
+}
 
-	return (other.maxX >= minX && other.minX <= maxX
-		&& other.maxY - m_nearTopFactor >= maxY
-		&& other.maxZ >= minZ && other.minZ <= maxZ);
+// this = player, other = building
+bool AABB::collidesWithRampInside(AABB other, int entrance, float slope) {
+
+	if (!(minX > other.minX && maxX < other.maxX
+		&& minY > other.minY
+		&& minZ > other.minZ && maxZ < other.maxZ)) {
+		//cout << "didnt pass prelim check" << endl;
+		return false;
+	}
+	/*cout << "building: ";
+	other.print();
+	cout << "player: ";
+	this->print();
+
+	cout << "slope: " << slope << endl;
+	cout << "entrance: " << entrance << endl;*/
+
+	glm::vec3 pos = glm::vec3(other.minX + 5.0f, other.minY /*+ 5.0f*/, other.minZ + 5.0f);
+	switch (entrance) {
+		case 0:
+			return (pos.y < other.minY + (pos.x - other.minX)*slope);
+			break;
+		case 1:
+			return (pos.y < other.minY + (other.maxX - pos.x)*slope);
+			break;
+		case 2:
+			cout << "y come from ground" << endl;
+			break;
+		case 3:
+			cout << "y come from sky" << endl;
+			break;
+		case 4:
+			return (pos.y < other.minY + (pos.z - other.minZ)*slope);
+			break;
+		case 5:
+			return (pos.y < other.minY + (other.maxZ - pos.z)*slope);
+			break;
+		default:
+			break;
+	}
 }
 
 

@@ -10,6 +10,7 @@
 #include <vector>
 #include <stdlib.h> // srand + rand
 #include <time.h> // for random seed
+#include <iostream>
 
 using namespace std;
 
@@ -23,9 +24,12 @@ struct Particle
 	int m_age;
 	int m_life;
 
+	float m_rad;
+	float m_theta;
+
 	Particle();
-	Particle(glm::vec3 origin);
-	Particle(glm::vec3 origin, int life);
+	Particle(int id, glm::vec3 origin, glm::vec4 color);
+	Particle(int id, glm::vec3 origin, int life, glm::vec4 color);
 	~Particle();
 
 	void init();
@@ -33,6 +37,7 @@ struct Particle
 
 	int getID();
 
+	void reset();
 	void step();
 	void draw();
 };
@@ -46,6 +51,7 @@ class ParticleSystem {
 		vector<Particle> m_particles;
 		
 		glm::vec3 m_origin;
+		glm::vec4 m_color;
 
 		ParticleSystem(int numParticles);
 		~ParticleSystem();
@@ -54,14 +60,17 @@ class ParticleSystem {
 
 		int getNumParticles();
 		void setNumParticles(int numParticles);
+		
 		int getMaxLifetime();
 		void setMaxLifetime(int life);
 
-		void setOrigin(glm::vec3 origin);
 		glm::vec3 getOrigin();
+		void setOrigin(glm::vec3 origin);
+
+		glm::vec4 getColor();
+		void setColor(glm::vec4 color);
 
 		void reset();
-		void step();
 		void draw();
 
 		bool isEnabled();

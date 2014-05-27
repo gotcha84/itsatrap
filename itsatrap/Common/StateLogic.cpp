@@ -304,8 +304,10 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	glm::vec3 WRStartcamX;
 	glm::vec3 WRStartcamUp;
 	glm::vec3 WRStartcamUpIncrement;
+	glm::vec3 WRStartvelocityDiff;
 	glm::vec3 WREndcamUpIncrement;
 	glm::vec3 WRMidvelocityDiff;
+	glm::vec3 WREndvelocityDiff;
 
 	float WRStartlookXIncrement;
 	float WREndlookXIncrement;
@@ -320,7 +322,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 		// TODO: change 0.8 to use config file,
 		WRStartcamZ = glm::vec3(0.0f, 0.0f, 1.0f);
 		WRStartcamX = glm::vec3(0.0f, -1.0f, 0.0f);
-		WRStartcamUp = glm::vec3(-0.8f, 0.8f, 0.0f);
+		WRStartcamUp = glm::vec3(-0.7f, 0.7f, 0.0f);
 
 	}
 	if (newDirection == 4 || newDirection == 5) {
@@ -331,7 +333,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 
 		WRStartcamZ = glm::vec3(1.0f, 0.0f, 0.0f);
 		WRStartcamX = glm::vec3(0.0f, 1.0f, 0.0f);
-		WRStartcamUp = glm::vec3(0.0f, 0.8f, -0.8f);
+		WRStartcamUp = glm::vec3(0.0f, 0.7f, -0.7f);
 	}
 
 	if (newDirection % 2 == 1) {
@@ -385,10 +387,13 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 
 	}
 
-	float wallRunFactor = 3.0f;
+	float wallRunFactor = 5.0f;
 	//ConfigSettings::getConfig()->getValue("wallRunFactor", wallRunFactor);
 
+	cout << "WRStartcamZ: " << glm::to_string(WRStartcamZ) << endl;
 	WRMidvelocityDiff = WRStartcamZ*wallRunFactor;
+	WRStartvelocityDiff = WRMidvelocityDiff;
+	WREndvelocityDiff = WRMidvelocityDiff;
 
 	statesInfo[e->id].initialX = WRinitialX;
 	statesInfo[e->id].initialY = WRinitialY;
@@ -402,19 +407,22 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	statesInfo[e->id].Start.camUp = WRStartcamUp;
 	statesInfo[e->id].Start.fraction = WRStartfraction;
 	statesInfo[e->id].Start.lookXIncrement = WRStartlookXIncrement;
-	cout << "wrstartcampincrment: " << glm::to_string(WRStartcamUpIncrement) << endl;
+	//cout << "wrstartcampincrment: " << glm::to_string(WRStartcamUpIncrement) << endl;
 	statesInfo[e->id].Start.camUpIncrement = WRStartcamUpIncrement;
+	statesInfo[e->id].Start.velocityDiff = WRStartvelocityDiff;
 
 	statesInfo[e->id].Mid.velocityDiff = WRMidvelocityDiff;
 
 	statesInfo[e->id].End.fraction = WREndfraction;
 	statesInfo[e->id].End.lookXIncrement = WREndlookXIncrement;
-	cout << "wrendcampincrment: " << glm::to_string(WREndcamUpIncrement) << endl;
+	//cout << "wrendcampincrment: " << glm::to_string(WREndcamUpIncrement) << endl;
 	statesInfo[e->id].End.camUpIncrement = WREndcamUpIncrement;
+	statesInfo[e->id].End.velocityDiff = WREndvelocityDiff;
 
 	e->feetPlanted = true; // not sure if makes a dfference
 	e->interactingWithBuildingId = buildingId;
 	e->currInnerState = innerStates::Starting;
+	cout << "SET WALL RUNNING CURRENT STATE TO: " << e->currInnerState << endl;
 	e->currPhysState = PhysicsStates::WallRunning;
 }
 
@@ -479,7 +487,7 @@ void StateLogic::applyHoldingEdge(struct playerObject *p) {
 		if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
 			p->currInnerState = innerStates::Off;
 			p->interactingWithBuildingId = -1;
-			cout << "ended state: " << p->currPhysState << endl;
+			//cout << "ended state: " << p->currPhysState << endl;
 			p->currPhysState = PhysicsStates::None;
 		}
 		break;
@@ -512,7 +520,7 @@ void StateLogic::applyPullingUp(struct playerObject *p) {
 		if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
 			p->currInnerState = innerStates::Off;
 			p->interactingWithBuildingId = -1;
-			cout << "ended state: " << p->currPhysState << endl;
+			//cout << "ended state: " << p->currPhysState << endl;
 			p->currPhysState = PhysicsStates::None;
 		}
 		break;
@@ -521,55 +529,55 @@ void StateLogic::applyPullingUp(struct playerObject *p) {
 }
 
 void StateLogic::applyWallRunning(struct playerObject *p) {
-
+	
 	switch (p->currInnerState) {
-	case innerStates::Starting:
-		cout << "TRIED TO RUN: " << p->triedToRun << endl;
-		if (p->triedToRun) {
-			cout << "wallrunning start lookXincrement: " << StateLogic::statesInfo[p->id].Start.lookXIncrement << endl;
-			cout << "wallrunning start lookYincrement: " << StateLogic::statesInfo[p->id].Start.lookYIncrement << endl;
-			cout << "wallrunning start camUpincrement: " << glm::to_string(StateLogic::statesInfo[p->id].Start.camUpIncrement) << endl;
-			cout << "starting wallrunning with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].Start.velocityDiff) << endl;
-			StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Start.lookXIncrement);
-			StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Start.lookYIncrement);
-			p->cameraObject.cameraUp += StateLogic::statesInfo[p->id].Start.camUpIncrement;
-			p->velocityDiff = StateLogic::statesInfo[p->id].Start.velocityDiff;
-			StateLogic::statesInfo[p->id].Start.counter++;
-			if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
-				p->currInnerState = innerStates::Mid;
+		case innerStates::Starting:
+			if (p->triedToRun) {
+				//cout << "wallrunning start lookXincrement: " << StateLogic::statesInfo[p->id].Start.lookXIncrement << endl;
+				//cout << "wallrunning start lookYincrement: " << StateLogic::statesInfo[p->id].Start.lookYIncrement << endl;
+				//cout << "wallrunning start camUpincrement: " << glm::to_string(StateLogic::statesInfo[p->id].Start.camUpIncrement) << endl;
+				//cout << "starting wallrunning with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].Start.velocityDiff) << endl;
+				StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Start.lookXIncrement);
+				StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Start.lookYIncrement);
+				p->cameraObject.cameraUp += StateLogic::statesInfo[p->id].Start.camUpIncrement;
+				p->velocityDiff = StateLogic::statesInfo[p->id].Start.velocityDiff;
+				StateLogic::statesInfo[p->id].Start.counter++;
+				if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
+					p->currInnerState = innerStates::Mid;
+				}
 			}
+			else {
+				StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
+				p->currInnerState = innerStates::Ending;
+			}
+			break;
+		case innerStates::Mid:
+			if (p->triedToRun) {
+				//cout << "middle wallrunning with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].Start.velocityDiff) << endl;
+				p->velocityDiff = StateLogic::statesInfo[p->id].Mid.velocityDiff;
+			}
+			else {
+				p->currInnerState = innerStates::Ending;
+			}
+			break;
+		case innerStates::Ending:
+			//cout << "wallrunning End lookXincrement: " << StateLogic::statesInfo[p->id].End.lookXIncrement << endl;
+			//cout << "wallrunning End lookYincrement: " << StateLogic::statesInfo[p->id].End.lookYIncrement << endl;
+			//cout << "wallrunning End camUpincrement: " << glm::to_string(StateLogic::statesInfo[p->id].End.camUpIncrement) << endl;
+			//cout << "Ending wallrunning with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].End.velocityDiff) << endl;
+			StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].End.lookXIncrement);
+			StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].End.lookYIncrement);
+			p->cameraObject.cameraUp += StateLogic::statesInfo[p->id].End.camUpIncrement;
+			p->velocityDiff = StateLogic::statesInfo[p->id].End.velocityDiff;
+			StateLogic::statesInfo[p->id].End.counter++;
+			if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
+				p->currInnerState = innerStates::Off;
+				p->interactingWithBuildingId = -1;
+				//cout << "ended state: " << p->currPhysState << endl;
+				p->currPhysState = PhysicsStates::None;
+			}
+			break;
 		}
-		else {
-			p->currInnerState = innerStates::Ending;
-		}
-		break;
-	case innerStates::Mid:
-		if (p->triedToRun) {
-			cout << "middle wallrunning with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].Start.velocityDiff) << endl;
-			p->velocityDiff = StateLogic::statesInfo[p->id].Mid.velocityDiff;
-		}
-		else {
-			p->currInnerState = innerStates::Ending;
-		}
-		break;
-	case innerStates::Ending:
-		cout << "wallrunning End lookXincrement: " << StateLogic::statesInfo[p->id].End.lookXIncrement << endl;
-		cout << "wallrunning End lookYincrement: " << StateLogic::statesInfo[p->id].End.lookYIncrement << endl;
-		cout << "wallrunning End camUpincrement: " << glm::to_string(StateLogic::statesInfo[p->id].End.camUpIncrement) << endl;
-		cout << "Ending wallrunning with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].End.velocityDiff) << endl;
-		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].End.lookXIncrement);
-		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].End.lookYIncrement);
-		p->cameraObject.cameraUp += StateLogic::statesInfo[p->id].End.camUpIncrement;
-		p->velocityDiff = StateLogic::statesInfo[p->id].End.velocityDiff;
-		StateLogic::statesInfo[p->id].End.counter++;
-		if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
-			p->currInnerState = innerStates::Off;
-			p->interactingWithBuildingId = -1;
-			cout << "ended state: " << p->currPhysState << endl;
-			p->currPhysState = PhysicsStates::None;
-		}
-		break;
-	}
 
 }
 
