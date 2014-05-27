@@ -35,6 +35,7 @@ private:
 	vector<struct staticRampObject>		staticRampObjects;
 	vector<struct staticResourceObject>	staticResourceObjects;
 	vector<glm::vec3>					team1RespawnPoints, team2RespawnPoints;
+	map<int, struct trapObject *>		portalMap;
 	bool								playerLock[MAX_PLAYERS];
 	
 	// 

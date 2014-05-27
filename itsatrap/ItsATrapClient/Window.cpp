@@ -228,6 +228,9 @@ void Window::keyUp(unsigned char key, int x, int y) {
 			type = TYPE_LIGHTNING_TRAP;
 			filename = DEATH_TRAP_OBJ;
 			break;
+		case '6':
+			type = TYPE_PORTAL_TRAP;
+			break;
 		default:
 			type = TYPE_FREEZE_TRAP;
 			break;

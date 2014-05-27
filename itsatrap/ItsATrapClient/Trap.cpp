@@ -109,9 +109,7 @@ namespace sg {
 		struct trapObject t = {};
 		t.ownerId = m_ownerId;
 		t.eventCode = 0;
-		t.x = this->getPosition().x;
-		t.y = this->getPosition().y;
-		t.z = this->getPosition().z;
+		t.pos = this->getPosition();
 		t.aabb.minX = this->m_model1->getBoundingBox().minX*polyTrapScaleX + this->getPosition().x;
 		t.aabb.minY = this->m_model1->getBoundingBox().minY*polyTrapScaleY + this->getPosition().y;
 		t.aabb.minZ = this->m_model1->getBoundingBox().minZ*polyTrapScaleZ + this->getPosition().z;

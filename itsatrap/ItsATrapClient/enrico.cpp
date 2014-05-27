@@ -110,7 +110,7 @@ void handleAddTrap(struct trapObject t)
 	}
 
 	sg::Trap *newTrap;
-	newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x, t.y, t.z), t.rotationAngle, TRAP_DIR + filename);
+	newTrap = new sg::Trap(t.ownerId, t.pos, t.rotationAngle, TRAP_DIR + filename);
 	
 	switch (t.type) {
 		case TYPE_TRAMPOLINE_TRAP:

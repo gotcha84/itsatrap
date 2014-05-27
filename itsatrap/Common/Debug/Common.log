@@ -1,5 +1,5 @@
-﻿Build started 5/27/2014 11:01:10 AM.
-     1>Project "C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Common\Common.vcxproj" on node 3 (Build target(s)).
+﻿Build started 5/27/2014 12:18:47 PM.
+     1>Project "C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Enrico\ItsATrap\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp
          DynamicWorld.cpp
@@ -45,25 +45,31 @@
                  [
                      _Ty=glm::vec3
                  ]
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(52): warning C4251: 'DynamicWorld::trapMap' : class 'std::map<int,trapObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(38): warning C4251: 'DynamicWorld::portalMap' : class 'std::map<int,trapObject *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+                 with
+                 [
+                     _Kty=int
+         ,            _Ty=trapObject *
+                 ]
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(53): warning C4251: 'DynamicWorld::trapMap' : class 'std::map<int,trapObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
                  with
                  [
                      _Kty=int
          ,            _Ty=trapObject
                  ]
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(53): warning C4251: 'DynamicWorld::playerMap' : class 'std::map<int,playerObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(54): warning C4251: 'DynamicWorld::playerMap' : class 'std::map<int,playerObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
                  with
                  [
                      _Kty=int
          ,            _Ty=playerObject
                  ]
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(183): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(204): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(232): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(337): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(345): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(359): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1019): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(186): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(207): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(235): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(347): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(355): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(369): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\enrico\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1028): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
          GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Enrico\ItsATrap\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\AABB.obj
@@ -81,4 +87,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:04.01
+Time Elapsed 00:00:03.57

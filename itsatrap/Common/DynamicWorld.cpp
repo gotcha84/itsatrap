@@ -14,8 +14,8 @@ DynamicWorld::DynamicWorld()
 		cleanStateInfo(i);
 	}
 
-	team1RespawnPoints.push_back(glm::vec3(0, 15, 19 * UNIT_SIZE));
-	team2RespawnPoints.push_back(glm::vec3(0, 15, -19 * UNIT_SIZE));
+	team1RespawnPoints.push_back(glm::vec3(0, 50, 19 * UNIT_SIZE));
+	team2RespawnPoints.push_back(glm::vec3(0, 50, -19 * UNIT_SIZE));
 }
 
 /*
@@ -66,6 +66,9 @@ void DynamicWorld::cleanStateInfo(int id) {
 
 void DynamicWorld::addNewPlayer(struct playerObject p)
 {
+	// Uncomment this to spawn at team base
+	// respawnPlayer(&p);
+	// and delete this while loop to spawn at team base
 	while (checkCollisionsWithAllNonTraps(&p) != -1)
 	{
 		p.position.x += 10;
@@ -323,6 +326,13 @@ void DynamicWorld::addTrap(struct trapObject t)
 			playerMap[t.ownerId].resources -= 75;
 			break;
 
+		case TYPE_PORTAL_TRAP:
+		{
+			playerMap[t.ownerId].resources -= 10;
+			portalMap[t.ownerId] = &trapMap[t.id];
+			break;
+		}
+
 		default:
 			playerMap[t.ownerId].resources -= 10;
 			break;
@@ -443,7 +453,6 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 	else
 		p->position = team2RespawnPoints[rand() % team2RespawnPoints.size()];
 	
-	p->position = glm::vec3(75, 0, 0);
 	computeAABB(p);
 
 	p->health = 100;
@@ -464,7 +473,6 @@ void DynamicWorld::computeAABB(struct playerObject *p)
 void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 {
 	struct playerObject *p = &playerMap[playerId];
-	cout << "processing move event, curr_state is: " << p->currPhysState << endl;
 	//noneMoveEvent(playerId, dir);
 	switch (p->currPhysState) {
 		case None:
@@ -489,7 +497,6 @@ void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 
 void DynamicWorld::noneMoveEvent(int playerId, Direction dir)
 {
-	cout << "handling none move event" << endl;
 	struct playerObject *p = &playerMap[playerId];
 
 	glm::vec3 proposedNewPos;
@@ -975,6 +982,8 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 			{
 				printf("Collision: player %d with trap id %d\n", p->id, it->second.id);
 				playerLock[p->id] = true;
+				bool okToRemove = true;
+
 				switch (it->second.type)
 				{
 					case TYPE_FREEZE_TRAP:
@@ -1020,14 +1029,42 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 
 						break;
 					}
+					case TYPE_PORTAL_TRAP:
+					{
+						okToRemove = false;
+
+						// Has to hit his own portal
+						if (it->second.ownerId == p->id)
+						{
+							// Find a teammate's portal
+							for (map<int, struct trapObject *>::iterator portalItr = portalMap.begin(); portalItr != portalMap.end(); portalItr++)
+							{
+								// Found teammate's portal, teleport successful!
+								if (portalItr->second->ownerId != p->id && portalItr->second->ownerId % 2 == p->id % 2)
+								{
+									okToRemove = true;
+									p->position = portalItr->second->pos;
+									portalItr->second->eventCode = EVENT_REMOVE_TRAP;
+									portalMap.erase(portalItr);
+									portalMap.erase(it->second.ownerId);
+									break;
+								}
+							}
+						}
+
+						break;
+					}
 					default:
 						break;
 				}
 
-				it->second.eventCode = EVENT_REMOVE_TRAP;
+				if (okToRemove)
+				{
+					it->second.eventCode = EVENT_REMOVE_TRAP;
+					return;
+				}
 
-				break;
-			}
+			} // end of if hit
 		}
 	}
 }

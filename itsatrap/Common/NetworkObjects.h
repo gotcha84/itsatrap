@@ -15,6 +15,7 @@
 #define TYPE_SLOW_TRAP 3
 #define TYPE_PUSH_TRAP 4
 #define TYPE_LIGHTNING_TRAP 5
+#define TYPE_PORTAL_TRAP 6
 
 enum CameraStates {
 	Client = 0,
@@ -152,7 +153,7 @@ struct trapObject {
 	int				timeTillActive;
 	int				type;
 	int				eventCode;
-	float			x, y, z;
+	glm::vec3		pos;
 	float			rotationAngle;
 	AABB			aabb;
 };
