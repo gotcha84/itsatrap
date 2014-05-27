@@ -95,6 +95,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.stopwatch = Stopwatch();
 	p.canClimb = true;
 	p.knifeDelay = 0;
+	p.timeUntilRegen = 0;
 }
 
 
@@ -409,6 +410,17 @@ void DynamicWorld::updateTimings(int timeDiff)
 
 		if (p.knifeDelay > 0)
 			p.knifeDelay -= timeDiff;
+
+		if (p.timeUntilRegen > 0)
+			p.timeUntilRegen -= timeDiff;
+		else
+		{
+			if (p.health < 100)
+			{
+				ConfigSettings::getConfig()->getValue("HealthRegenInterval", p.timeUntilRegen);
+				p.health++;
+			}
+		}
 		
 	}
 
@@ -431,6 +443,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		return;
 
 	target->health -= damage;
+	ConfigSettings::getConfig()->getValue("HealthRegenWaitAfterDamage", target->timeUntilRegen);
 
 	if (target->health <= 0)
 	{
