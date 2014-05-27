@@ -2,11 +2,12 @@
 
 namespace sg {
 
-	ResourceNode::ResourceNode(int numParticles)
+	ResourceNode::ResourceNode(int id, int numParticles)
 		: ObjNode() {
 		m_particles = new ParticleSystem(numParticles);
 		m_particles2 = new ParticleSystem(numParticles);
 
+		resourceId = id;
 		owner = -1;
 		isActive = false;
 		isChanneling = false;
@@ -26,6 +27,10 @@ namespace sg {
 
 	void ResourceNode::setParticleSystem(ParticleSystem *p) {
 		m_particles = p;
+	}
+
+	int ResourceNode::getResourceId() {
+		return resourceId;
 	}
 
 	void ResourceNode::draw(glm::mat4 parent, glm::mat4 cam) {

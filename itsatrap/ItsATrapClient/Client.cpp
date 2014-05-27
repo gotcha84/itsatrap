@@ -200,7 +200,7 @@ void Client::sendStaticRampObject(AABB rampBB, float slope)
 	sendMsg((char *)&packet, sizeof(struct staticRampObjectPacket));
 }
 
-void Client::sendStaticResourceObject(AABB resourceBB)
+void Client::sendStaticResourceObject(AABB resourceBB, int id)
 {
 	struct staticResourceObjectPacket packet = {};
 	packet.eventId = STATIC_RESOURCE_OBJECT_CREATION_EVENT;
@@ -211,6 +211,7 @@ void Client::sendStaticResourceObject(AABB resourceBB)
 	packet.object.aabb.maxX = resourceBB.maxX;
 	packet.object.aabb.maxY = resourceBB.maxY;
 	packet.object.aabb.maxZ = resourceBB.maxZ;
+	packet.object.id = id;
 
 	sendMsg((char *)&packet, sizeof(struct staticResourceObjectPacket));
 }

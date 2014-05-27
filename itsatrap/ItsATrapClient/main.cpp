@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	for (int i = 0; i < level.resources.size(); ++i) {
-		Client::sendStaticResourceObject(level.resources[i]->getBoundingBox());
+		Client::sendStaticResourceObject(level.resources[i]->getBoundingBox(), level.resources[i]->getResourceId());
 	}
 
 	//client->printPlayers();

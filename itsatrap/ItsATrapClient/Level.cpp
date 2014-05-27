@@ -45,10 +45,11 @@ void Level::initLevel() {
 	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_12, 0)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
-	rs = new sg::ResourceNode(NUMPARTICLES);
+	rs = new sg::ResourceNode(0, NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
 	rs->getParticleSystem()->setColor(glm::vec4(1, 0, 0, 1));
 	rs->m_particles2->setColor(glm::vec4(1, 0, 0, 1));
+	//rs->m_particles2->setColor(glm::vec4(1, 1, 1, 1));
 	rs->m_particles2->reverse();
 	if (!ENABLE_PARTICLES) {
 		rs->getParticleSystem()->disable();
@@ -64,7 +65,7 @@ void Level::initLevel() {
 	xForms.back()->setMatrix(glm::translate(glm::vec3(-15 * UNIT_SIZE, UNIT_8, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
-	rs = new sg::ResourceNode(NUMPARTICLES);
+	rs = new sg::ResourceNode(1, NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
 	rs->getParticleSystem()->setColor(glm::vec4(0, 1, 0, 1));
 	rs->m_particles2->setColor(glm::vec4(0, 1, 0, 1));
@@ -83,7 +84,7 @@ void Level::initLevel() {
 	xForms.back()->setMatrix(glm::translate(glm::vec3(15 * UNIT_SIZE, UNIT_8, -7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
-	rs = new sg::ResourceNode(NUMPARTICLES);
+	rs = new sg::ResourceNode(2, NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
 	rs->getParticleSystem()->setColor(glm::vec4(0, 0, 1, 1));
 	rs->m_particles2->setColor(glm::vec4(0, 0, 1, 1));

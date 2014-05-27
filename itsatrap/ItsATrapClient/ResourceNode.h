@@ -8,6 +8,7 @@
 namespace sg {
 	class ResourceNode : public ObjNode {
 		private:
+			int resourceId;
 			int owner;
 			bool isActive, isChanneling;
 			AABB bouddndingBox;
@@ -16,12 +17,13 @@ namespace sg {
 			ParticleSystem *m_particles;
 			ParticleSystem *m_particles2;
 
-			ResourceNode(int numParticles);
+			ResourceNode(int id, int numParticles);
 			~ResourceNode();
 
 			ParticleSystem *getParticleSystem();
 			void setParticleSystem(ParticleSystem *p);
 		
+			int getResourceId();
 			//void getOwner();
 			//void setOwner();
 			//void addResourcesToOwner();

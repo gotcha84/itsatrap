@@ -166,5 +166,9 @@ struct staticRampObject {
 	float			slope;
 };
 
+struct staticResourceObject {
+	AABB			aabb;
+	int				id;
+};
 
 #endif

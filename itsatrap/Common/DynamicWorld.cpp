@@ -268,7 +268,7 @@ void DynamicWorld::addStaticRampObject(struct staticRampObject obj)
 	staticRampObjects.push_back(obj);
 }
 
-void DynamicWorld::addStaticResourceObject(struct staticObject obj)
+void DynamicWorld::addStaticResourceObject(struct staticResourceObject obj)
 {
 	staticResourceObjects.push_back(obj);
 }

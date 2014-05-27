@@ -30,11 +30,11 @@ class COMMON_API DynamicWorld {
 
 private:
 	// Variables
-	int								currentId;
-	vector<struct staticObject>		staticObjects;
-	vector<struct staticRampObject>	staticRampObjects;
-	vector<struct staticObject>		staticResourceObjects;
-	bool							playerLock[MAX_PLAYERS];
+	int									currentId;
+	vector<struct staticObject>			staticObjects;
+	vector<struct staticRampObject>		staticRampObjects;
+	vector<struct staticResourceObject>	staticResourceObjects;
+	bool								playerLock[MAX_PLAYERS];
 	
 	// 
 	bool checkCollision(struct aabb a, struct aabb b);
@@ -71,7 +71,7 @@ public:
 
 	void addStaticObject(struct staticObject);
 	void addStaticRampObject(struct staticRampObject);
-	void addStaticResourceObject(struct staticObject);
+	void addStaticResourceObject(struct staticResourceObject);
 	int getNumStaticObjects();
 	int getNumStaticRampObjects();
 	int getNumStaticResourceObjects();

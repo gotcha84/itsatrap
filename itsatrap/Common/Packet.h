@@ -59,7 +59,7 @@ struct staticResourceObjectPacket
 {
 	int eventId;
 	int playerId;
-	struct staticObject object;
+	struct staticResourceObject object;
 };
 
 struct spawnTrapPacket
@@ -79,6 +79,12 @@ struct hotSpotPacket
 {
 	int eventId;
 	int x,y,z;
+};
+
+struct resourceNodePacket
+{
+	int eventId;
+	int id;
 };
 
 
