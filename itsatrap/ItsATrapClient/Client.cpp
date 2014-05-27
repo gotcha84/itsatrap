@@ -105,7 +105,8 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				// World update. 
 				// This variable 'world' is the world given by the server
 				DynamicWorld world(p);
-				handleUpdateWorldFromServer(&world);
+				if (client != nullptr)
+					handleUpdateWorldFromServer(&world);
 			}
 			else if (p->eventId == HOT_SPOT_UPDATE)
 			{

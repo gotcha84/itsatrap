@@ -13,6 +13,9 @@ DynamicWorld::DynamicWorld()
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		cleanStateInfo(i);
 	}
+
+	team1RespawnPoints.push_back(glm::vec3(0, 15, 19 * UNIT_SIZE));
+	team2RespawnPoints.push_back(glm::vec3(0, 15, -19 * UNIT_SIZE));
 }
 
 /*
@@ -434,14 +437,14 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 }
 
 void DynamicWorld::respawnPlayer(struct playerObject *p) {
+	
+	if (p->id % 2 == 0)
+		p->position = team1RespawnPoints[rand() % team1RespawnPoints.size()];
+	else
+		p->position = team2RespawnPoints[rand() % team2RespawnPoints.size()];
+	
 	p->position = glm::vec3(75, 0, 0);
 	computeAABB(p);
-
-	while(checkCollisionsWithAllNonTraps(p) != -1)
-	{
-		p->position.x += 10;
-		computeAABB(p);
-	}
 
 	p->health = 100;
 	p->timeUntilRespawn = 0;
