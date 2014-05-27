@@ -65,6 +65,7 @@ private:
 	static void processIncomingMsg(char *, struct sockaddr_in *);
 	static int receiveMsg(char *, struct sockaddr_in *);
 	static int sendMsg(char *, int, struct sockaddr_in *);
+	static int broadcastMsg(char *, int);
 	static DWORD WINAPI bufferProcessorThread(LPVOID);
 	static void processBuffer();
 	static void broadcastDynamicWorld();

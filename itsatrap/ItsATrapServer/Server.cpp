@@ -124,7 +124,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			Player player;
 			player.clientAddress = *source;
 			player.playerId = playerCount;
-			player.yPosition = 0;
+			player.active = true;
 			players[playerCount] = player;
 				
 			// Creating response message
@@ -198,8 +198,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		reloadPkt.eventId = RELOAD_CONFIG_FILE;
 
 		// Send reload config file to everyone
-		for (int i = 0; i < playerCount; i++)
-			Server::sendMsg((char *) &reloadPkt, sizeof(reloadPkt), &players[i].clientAddress);
+		Server::broadcastMsg((char *) &reloadPkt, sizeof(reloadPkt));
 	}
 	else
 	{
@@ -250,10 +249,7 @@ void Server::broadcastDynamicWorld()
 	memset(buf, 0, BUFSIZE);
 	int size = dynamicWorld.serialize(buf);
 
-	for (int i = 0; i < playerCount; i++)
-	{
-		Server::sendMsg(buf, size, &players[i].clientAddress);
-	}
+	Server::broadcastMsg(buf, size);
 }
 
 void Server::processBuffer()
@@ -269,10 +265,6 @@ void Server::processBuffer()
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
 	WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
 		//World world;
-
-	for (int i = 0; i < playerCount; i++) {
-		
-	}
 
 	for (int i = 0; i < packetBufferCount; i++)
 	{
@@ -458,9 +450,7 @@ void Server::sendActiveNodeUpdate(int id)
 	p.id = id;
 
 	// Send Message
-	for (int i = 0; i < playerCount; ++i) {
-		Server::sendMsg((char *)&p, sizeof(p), &players[i].clientAddress);
-	}
+	Server::broadcastMsg((char *)&p, sizeof(p));
 }
 
 void Server::printPacket(struct packet *p)
@@ -493,4 +483,15 @@ void Server::printPacket(struct packet *p)
 			break;
 		}
 	}
+}
+
+int Server::broadcastMsg(char * msg, int size)
+{
+	for (int i = 0; i < playerCount; i++)
+	{
+		if (players[i].active)
+			Server::sendMsg(msg, size, &players[i].clientAddress);
+	}
+
+	return 0;
 }

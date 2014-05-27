@@ -3,8 +3,9 @@
 
 class Player {
   public:
-    int				playerId, yPosition;
+    int				playerId;
     sockaddr_in		clientAddress;
+	bool			active;
 
     Player() {};
 
