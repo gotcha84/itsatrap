@@ -5,6 +5,7 @@ class Player {
   public:
     int				playerId;
     sockaddr_in		clientAddress;
+	int				timeUntilInactive;
 	bool			active;
 
     Player() {};

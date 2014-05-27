@@ -91,11 +91,12 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.currPhysState = PhysicsStates::None;
 	p.currInnerState = innerStates::Off;
 	p.currCamState = CameraStates::Client;
-	playerMap[p.id] = p;
 	p.stopwatch = Stopwatch();
 	p.canClimb = true;
 	p.knifeDelay = 0;
 	p.timeUntilRegen = 0;
+
+	playerMap[p.id] = p;
 }
 
 
@@ -196,6 +197,7 @@ int DynamicWorld::serialize(char *ptr)
 	// HEADER
 	((int *)buf)[0] = 4;
 	((int *)buf)[1] = playerMap.size();
+	//cout << "size :" << playerMap.size() << endl;
 	((int *)buf)[2] = trapsToSend.size();
 
 	// PAYLOAD

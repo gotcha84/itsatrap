@@ -364,15 +364,16 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 					// Needs to send a query to the server and check all of the players to see if client has hit anyone
 					printf("[Client]: Knife Swung!\n");
 					int numPlayers = client->players.size();
-					for (int i = 0; i < numPlayers; ++i)
+					for (unordered_map<int, sg::Player *>::iterator it = client->players.begin(); it != client->players.end(); it++)
 					{
-						if (i != client->root->getPlayerID())
+						if (it->second->m_playerID != client->root->getPlayerID())
 						{
 							//bool hit = client->root->knifeHitWith(client->players[i]);
 
 							//if (hit)
 							//{
-								Client::sendKnifeHitEvent(i);
+							//cout << "knife " << i << endl;
+							Client::sendKnifeHitEvent(it->second->m_playerID);
 							//}
 						}
 					}

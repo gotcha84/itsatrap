@@ -139,7 +139,7 @@ void handleRemoveTrap(struct trapObject t)
 void handleUpdateWorldFromServer(DynamicWorld *world)
 {
 	for (map<int, struct playerObject>::iterator it = world->playerMap.begin(); it != world->playerMap.end(); ++it) {
-		handlePlayerUpdate(it->second);
+			handlePlayerUpdate(it->second);
 	}
 
 	for (map<int, struct trapObject>::iterator it = world->trapMap.begin(); it != world->trapMap.end(); ++it) {

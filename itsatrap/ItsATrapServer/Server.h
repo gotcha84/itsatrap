@@ -74,6 +74,8 @@ private:
 	//static void sendHotSpotUpdate(int x, int y, int z);
 	static void sendActiveNodeUpdate(int id);
 	static void printPacket(struct packet *p);
+	static void checkConnection();
+	static void disconnectPlayer(int id);
 
 public:
 

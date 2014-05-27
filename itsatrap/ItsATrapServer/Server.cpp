@@ -125,6 +125,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			player.clientAddress = *source;
 			player.playerId = playerCount;
 			player.active = true;
+			ConfigSettings::getConfig()->getValue("TimeUntilInactive", player.timeUntilInactive);
 			players[playerCount] = player;
 				
 			// Creating response message
@@ -200,6 +201,11 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		// Send reload config file to everyone
 		Server::broadcastMsg((char *) &reloadPkt, sizeof(reloadPkt));
 	}
+	else if (p->eventId == REFRESH_EVENT)
+	{
+		struct refreshPacket *rPkt = (struct refreshPacket *)p;
+		ConfigSettings::getConfig()->getValue("TimeUntilInactive", players[rPkt->playerId].timeUntilInactive);
+	}
 	else
 	{
 		if (packetBufferCount < PACKET_BUFFER_SIZE)
@@ -254,6 +260,7 @@ void Server::broadcastDynamicWorld()
 
 void Server::processBuffer()
 {
+	checkConnection();
 	dynamicWorld.updateTimings(MAX_SERVER_PROCESS_RATE);
 	dynamicWorld.resetWorldInfo();
 	dynamicWorld.applyPhysics();
@@ -318,7 +325,7 @@ void Server::processBuffer()
 				playerObject *target = &dynamicWorld.playerMap[knifePkt->targetId];
 
 				// Make sure they're on different teams & knife is ready
-				if (player->knifeDelay <= 0 && player->id % 2 != target->id % 2)
+				if (player->knifeDelay <= 0 && player->id % 2 != target->id % 2 && players[target->id].active)
 				{
 					ConfigSettings::getConfig()->getValue("KnifeDelay", player->knifeDelay);
 
@@ -494,4 +501,31 @@ int Server::broadcastMsg(char * msg, int size)
 	}
 
 	return 0;
+}
+
+void Server::checkConnection()
+{
+	for (int i = 0; i < playerCount; i++)
+	{
+		if (players[i].timeUntilInactive > 0)
+		{
+			players[i].timeUntilInactive -= MAX_SERVER_PROCESS_RATE;
+
+			if (players[i].timeUntilInactive <= 0)
+				disconnectPlayer(i);
+		}
+	}
+}
+
+void Server::disconnectPlayer(int id)
+{
+	printf("[SERVER]: PLAYER %d HAS BEEN DISCONNECTED!\n", id);
+	players[id].active = false;
+	
+	struct disconnectPlayerPacket p = {};
+	p.eventId = DISCONNECT_PLAYER_EVENT;
+	p.disconnectedPlayerId = id;
+	dynamicWorld.playerMap.erase(id);
+
+	broadcastMsg((char *)&p, sizeof(p));
 }

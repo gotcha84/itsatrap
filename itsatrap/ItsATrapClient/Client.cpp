@@ -72,6 +72,7 @@ int Client::initializeClient() {
 
 	Client::startReceiverThread();
 	Client::startSenderThread();
+	Client::startRefresherThread();
 
 	return 0;
 	
@@ -87,6 +88,12 @@ void Client::startSenderThread()
 {
 	DWORD tmp = 0;
 	CreateThread(NULL, 0, Client::senderThread, NULL, 0, &tmp);
+}
+
+void Client::startRefresherThread()
+{
+	DWORD tmp = 0;
+	CreateThread(NULL, 0, Client::refresherThread, NULL, 0, &tmp);
 }
 
 DWORD WINAPI Client::receiverThread(LPVOID param)
@@ -119,6 +126,11 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			{
 				printf("[CLIENT]: Server told me to reload config file.\n");
 				ConfigSettings::getConfig()->reloadSettingsFile();
+			}
+			else if (p->eventId == DISCONNECT_PLAYER_EVENT)
+			{
+				struct disconnectPlayerPacket *dcP = (struct disconnectPlayerPacket *)p;
+				handleDisconnectPlayer(dcP->disconnectedPlayerId);
 			}
 		}
 	}
@@ -333,5 +345,30 @@ DWORD WINAPI Client::senderThread(LPVOID)
 		memset(moveEvents, 0, sizeof(moveEvents));
 		jumpEvent = false;
 		cameraChanged = false;
+	}
+}
+
+DWORD WINAPI Client::refresherThread(LPVOID)
+{
+	while (true)
+	{
+		int clientRefreshInterval = 1000;
+		ConfigSettings::getConfig()->getValue("ClientRefreshInterval", clientRefreshInterval);
+		Sleep(clientRefreshInterval);
+		struct refreshPacket p = {};
+		p.eventId = REFRESH_EVENT;
+		p.playerId = getPlayerId();
+		sendMsg((char *)&p, sizeof(p));
+	}
+}
+
+void Client::handleDisconnectPlayer(int id)
+{
+	printf("[CLIENT]: PLAYER %d HAS BEEN DISCONNECTED!\n", id);
+	if (client->players[id] != nullptr)
+	{
+		client->root->removeChild(client->players[id]);
+		client->players.erase(id);
+		client->objects.erase(id);
 	}
 }
