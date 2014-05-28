@@ -19,9 +19,13 @@ int					Server::resourcePerInterval;
 int					Server::resourceHotSpotBonusPerInterval;
 int					Server::resourceInterval;
 int					Server::hotSpotChangeInterval;
-vector<glm::vec3>	Server::hotSpotLocations;
-glm::vec3			Server::currentHotSpot;
-int					Server::currentHotSpotIndex;
+//vector<glm::vec3>	Server::hotSpotLocations;
+//glm::vec3			Server::currentHotSpot;
+//int					Server::currentHotSpotIndex;
+
+vector<int>			Server::resourceNodeLocations;
+int					Server::currentActiveResourceNodeIndex;
+int					Server::currentResourceOwner;
 
 // Private Vars
 HANDLE		packetBufMutex;
@@ -86,12 +90,15 @@ int Server::initialize() {
 	timeUntilHotSpotChange = hotSpotChangeInterval;
 
 	// Resource Locations
-	hotSpotLocations.push_back(glm::vec3(75, 0, 0));
-	hotSpotLocations.push_back(glm::vec3(35, 0, 0));
-	hotSpotLocations.push_back(glm::vec3(105, 0, 0));
+	//hotSpotLocations.push_back(glm::vec3(75, 0, 0));
+	//hotSpotLocations.push_back(glm::vec3(35, 0, 0));
+	//hotSpotLocations.push_back(glm::vec3(105, 0, 0));
 
-	currentHotSpotIndex = 0;
-	currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+	//currentHotSpotIndex = 0;
+	//currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+
+	currentActiveResourceNodeIndex = 0;
+	currentResourceOwner = -1;
 
 	// Load Height Map
 	string heightMapFile;
@@ -117,7 +124,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			Player player;
 			player.clientAddress = *source;
 			player.playerId = playerCount;
-			player.yPosition = 0;
+			player.active = true;
+			ConfigSettings::getConfig()->getValue("TimeUntilInactive", player.timeUntilInactive);
 			players[playerCount] = player;
 				
 			// Creating response message
@@ -132,7 +140,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 				
 			playerCount++;
 
-			sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
+			//sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+			//sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
 		}
 		else
 		{
@@ -172,10 +181,12 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticResourceObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
 			dynamicWorld.addStaticResourceObject(tmp);
-			//resourceNodeLocations.push_back(tmp.id);
+			resourceNodeLocations.push_back(tmp.id);
 			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
 			tmp.aabb.print();
 			printf("ResourceId: %d\n", tmp.id);
+
+			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 		}
 
 	}
@@ -188,8 +199,12 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		reloadPkt.eventId = RELOAD_CONFIG_FILE;
 
 		// Send reload config file to everyone
-		for (int i = 0; i < playerCount; i++)
-			Server::sendMsg((char *) &reloadPkt, sizeof(reloadPkt), &players[i].clientAddress);
+		Server::broadcastMsg((char *) &reloadPkt, sizeof(reloadPkt));
+	}
+	else if (p->eventId == REFRESH_EVENT)
+	{
+		struct refreshPacket *rPkt = (struct refreshPacket *)p;
+		ConfigSettings::getConfig()->getValue("TimeUntilInactive", players[rPkt->playerId].timeUntilInactive);
 	}
 	else
 	{
@@ -240,14 +255,12 @@ void Server::broadcastDynamicWorld()
 	memset(buf, 0, BUFSIZE);
 	int size = dynamicWorld.serialize(buf);
 
-	for (int i = 0; i < playerCount; i++)
-	{
-		Server::sendMsg(buf, size, &players[i].clientAddress);
-	}
+	Server::broadcastMsg(buf, size);
 }
 
 void Server::processBuffer()
 {
+	checkConnection();
 	dynamicWorld.updateTimings(MAX_SERVER_PROCESS_RATE);
 	updateResources();
 
@@ -307,20 +320,28 @@ void Server::processBuffer()
 				playerObject *player = &dynamicWorld.playerMap[knifePkt->playerId];
 				playerObject *target = &dynamicWorld.playerMap[knifePkt->targetId];
 
-				float knifeRange = 0.0f;
-				ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
-
-				glm::vec3 lookAt = player->cameraObject.cameraLookAt;
-				glm::vec3 center = player->cameraObject.cameraCenter;
-				glm::vec3 difVec = lookAt - center;
-				glm::vec3 hitPt = center + (knifeRange * difVec);
-
-				if (hitPt.x >= target->aabb.minX && hitPt.x <= target->aabb.maxX
-					&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
-					&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
+				// Make sure they're on different teams & knife is ready
+				if (player->knifeDelay <= 0 && player->id % 2 != target->id % 2 && players[target->id].active)
 				{
-					dynamicWorld.playerDamage(player, target, KNIFE_HIT_DMG);
+					ConfigSettings::getConfig()->getValue("KnifeDelay", player->knifeDelay);
+
+					float knifeRange = 0.0f;
+					ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
+
+					glm::vec3 lookAt = player->cameraObject.cameraLookAt;
+					glm::vec3 center = player->cameraObject.cameraCenter;
+					glm::vec3 difVec = lookAt - center;
+					glm::vec3 hitPt = center + (knifeRange * difVec);
+
+					if (hitPt.x >= target->aabb.minX && hitPt.x <= target->aabb.maxX
+						&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
+						&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
+					{
+
+						dynamicWorld.playerDamage(player, target, KNIFE_HIT_DMG);
+					}
 				}
+
 				break;
 			}
 
@@ -393,36 +414,42 @@ void Server::updateResources()
 			glm::vec3 pos = it->second.position;
 
 			// TODO: 
-			if (glm::distance(pos, currentHotSpot) < 10)
-				it->second.resources += resourceHotSpotBonusPerInterval;
+			//if (glm::distance(pos, currentHotSpot) < 10)
+				//it->second.resources += resourceHotSpotBonusPerInterval;
 		}
 	}
 
 	// Change the active node
 	if (timeUntilHotSpotChange < 0)
 	{
-		timeUntilHotSpotChange = hotSpotChangeInterval;
-		currentHotSpotIndex += 1; 
-		currentHotSpotIndex = currentHotSpotIndex % hotSpotLocations.size();
+		timeUntilHotSpotChange = hotSpotChangeInterval;		// Reset timer
 
-		currentHotSpot = hotSpotLocations[currentHotSpotIndex];
-		sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
+		++currentActiveResourceNodeIndex;
+		currentActiveResourceNodeIndex = currentActiveResourceNodeIndex % resourceNodeLocations.size();
+
+		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+
+		//currentHotSpotIndex += 1; 
+		//currentHotSpotIndex = currentHotSpotIndex % hotSpotLocations.size();
+
+		//currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+		//sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
 	}
 }
 
 // Sends messages to clients about location of resource node
-void Server::sendHotSpotUpdate(int x, int y, int z)
-{
-	struct hotSpotPacket p;
-	p.eventId = HOT_SPOT_UPDATE;
-	p.x = x;
-	p.y = y;
-	p.z = z;
-	
-	// Send Message
-	for (int i = 0; i < playerCount; i++)
-		Server::sendMsg((char *) &p, sizeof(p), &players[i].clientAddress);
-}
+//void Server::sendHotSpotUpdate(int x, int y, int z)
+//{
+//	struct hotSpotPacket p;
+//	p.eventId = HOT_SPOT_UPDATE;
+//	p.x = x;
+//	p.y = y;
+//	p.z = z;
+//	
+//	// Send Message
+//	for (int i = 0; i < playerCount; i++)
+//		Server::sendMsg((char *) &p, sizeof(p), &players[i].clientAddress);
+//}
 
 // Sends messages to clients about new location of resource node
 void Server::sendActiveNodeUpdate(int id)
@@ -432,9 +459,7 @@ void Server::sendActiveNodeUpdate(int id)
 	p.id = id;
 
 	// Send Message
-	for (int i = 0; i < playerCount; ++i) {
-		Server::sendMsg((char *)&p, sizeof(p), &players[i].clientAddress);
-	}
+	Server::broadcastMsg((char *)&p, sizeof(p));
 }
 
 void Server::printPacket(struct packet *p)
@@ -467,4 +492,42 @@ void Server::printPacket(struct packet *p)
 			break;
 		}
 	}
+}
+
+int Server::broadcastMsg(char * msg, int size)
+{
+	for (int i = 0; i < playerCount; i++)
+	{
+		if (players[i].active)
+			Server::sendMsg(msg, size, &players[i].clientAddress);
+	}
+
+	return 0;
+}
+
+void Server::checkConnection()
+{
+	for (int i = 0; i < playerCount; i++)
+	{
+		if (players[i].timeUntilInactive > 0)
+		{
+			players[i].timeUntilInactive -= MAX_SERVER_PROCESS_RATE;
+
+			if (players[i].timeUntilInactive <= 0)
+				disconnectPlayer(i);
+		}
+	}
+}
+
+void Server::disconnectPlayer(int id)
+{
+	printf("[SERVER]: PLAYER %d HAS BEEN DISCONNECTED!\n", id);
+	players[id].active = false;
+	
+	struct disconnectPlayerPacket p = {};
+	p.eventId = DISCONNECT_PLAYER_EVENT;
+	p.disconnectedPlayerId = id;
+	dynamicWorld.playerMap.erase(id);
+
+	broadcastMsg((char *)&p, sizeof(p));
 }

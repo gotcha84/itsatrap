@@ -13,6 +13,9 @@ DynamicWorld::DynamicWorld()
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		cleanStateInfo(i);
 	}
+
+	team1RespawnPoints.push_back(glm::vec3(0, 50, 19 * UNIT_SIZE));
+	team2RespawnPoints.push_back(glm::vec3(0, 50, -19 * UNIT_SIZE));
 }
 
 /*
@@ -63,6 +66,9 @@ void DynamicWorld::cleanStateInfo(int id) {
 
 void DynamicWorld::addNewPlayer(struct playerObject p)
 {
+	// Uncomment this to spawn at team base
+	// respawnPlayer(&p);
+	// and delete this while loop to spawn at team base
 	while (checkCollisionsWithAllNonTraps(&p) != -1)
 	{
 		p.position.x += 10;
@@ -86,9 +92,13 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.currPhysState = PhysicsStates::None;
 	p.currInnerState = innerStates::Off;
 	p.currCamState = CameraStates::Client;
-	playerMap[p.id] = p;
 	p.stopwatch = Stopwatch();
 	p.canClimb = true;
+
+	p.knifeDelay = 0;
+	p.timeUntilRegen = 0;
+
+	playerMap[p.id] = p;
 }
 
 
@@ -191,6 +201,7 @@ int DynamicWorld::serialize(char *ptr)
 	// HEADER
 	((int *)buf)[0] = 4;
 	((int *)buf)[1] = playerMap.size();
+	//cout << "size :" << playerMap.size() << endl;
 	((int *)buf)[2] = trapsToSend.size();
 
 	// PAYLOAD
@@ -321,6 +332,19 @@ void DynamicWorld::addTrap(struct trapObject t)
 		case TYPE_LIGHTNING_TRAP:
 			playerMap[t.ownerId].resources -= 75;
 			break;
+
+		case TYPE_PORTAL_TRAP:
+		{
+			playerMap[t.ownerId].resources -= 10;
+
+			if (portalMap[t.ownerId] != nullptr)
+			{
+				portalMap[t.ownerId]->eventCode = EVENT_REMOVE_TRAP;
+				portalMap.erase(t.ownerId);
+			}
+			portalMap[t.ownerId] = &trapMap[t.id];
+			break;
+		}
 
 		default:
 			playerMap[t.ownerId].resources -= 10;
@@ -483,6 +507,21 @@ void DynamicWorld::updateTimings(int timeDiff)
 			if (p.timeUntilRespawn < 0)
 				respawnPlayer(&p);
 		}
+
+		if (p.knifeDelay > 0)
+			p.knifeDelay -= timeDiff;
+
+		if (p.timeUntilRegen > 0)
+			p.timeUntilRegen -= timeDiff;
+		else
+		{
+			if (p.health < 100)
+			{
+				ConfigSettings::getConfig()->getValue("HealthRegenInterval", p.timeUntilRegen);
+				p.health++;
+			}
+		}
+		
 	}
 
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); ++it)
@@ -504,6 +543,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		return;
 
 	target->health -= damage;
+	ConfigSettings::getConfig()->getValue("HealthRegenWaitAfterDamage", target->timeUntilRegen);
 
 	if (target->health <= 0)
 	{
@@ -530,14 +570,13 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 }
 
 void DynamicWorld::respawnPlayer(struct playerObject *p) {
-	p->position = glm::vec3(75, 0, 0);
+	
+	if (p->id % 2 == 0)
+		p->position = team1RespawnPoints[rand() % team1RespawnPoints.size()];
+	else
+		p->position = team2RespawnPoints[rand() % team2RespawnPoints.size()];
+	
 	computeAABB(p);
-
-	while(checkCollisionsWithAllNonTraps(p) != -1)
-	{
-		p->position.x += 10;
-		computeAABB(p);
-	}
 
 	p->health = 100;
 	p->timeUntilRespawn = 0;
@@ -1165,6 +1204,8 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 			{
 				printf("Collision: player %d with trap id %d\n", p->id, it->second.id);
 				playerLock[p->id] = true;
+				bool okToRemove = true;
+
 				switch (it->second.type)
 				{
 					case TYPE_FREEZE_TRAP:
@@ -1210,14 +1251,42 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 
 						break;
 					}
+					case TYPE_PORTAL_TRAP:
+					{
+						okToRemove = false;
+
+						// Has to hit his own portal
+						if (it->second.ownerId == p->id)
+						{
+							// Find a teammate's portal
+							for (map<int, struct trapObject *>::iterator portalItr = portalMap.begin(); portalItr != portalMap.end(); portalItr++)
+							{
+								// Found teammate's portal, teleport successful!
+								if (portalItr->second->ownerId != p->id && portalItr->second->ownerId % 2 == p->id % 2)
+								{
+									okToRemove = true;
+									p->position = portalItr->second->pos;
+									portalItr->second->eventCode = EVENT_REMOVE_TRAP;
+									portalMap.erase(portalItr);
+									portalMap.erase(it->second.ownerId);
+									break;
+								}
+							}
+						}
+
+						break;
+					}
 					default:
 						break;
 				}
 
-				it->second.eventCode = EVENT_REMOVE_TRAP;
+				if (okToRemove)
+				{
+					it->second.eventCode = EVENT_REMOVE_TRAP;
+					return;
+				}
 
-				break;
-			}
+			} // end of if hit
 		}
 	}
 }

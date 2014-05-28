@@ -52,27 +52,30 @@ private:
 	static int					resourceInterval;
 	static int					hotSpotChangeInterval;
 
-	static vector<glm::vec3>	hotSpotLocations;
-	static glm::vec3			currentHotSpot;
-	static int					currentHotSpotIndex;
+	//static vector<glm::vec3>	hotSpotLocations;
+	//static glm::vec3			currentHotSpot;
+	//static int					currentHotSpotIndex;
 
 	static vector<int>			resourceNodeLocations;
-	static int					currentActiveResourceNode;
-	static int					resourceOwner;
+	static int					currentActiveResourceNodeIndex;
+	static int					currentResourceOwner;
 
 	// Functions
 	static int initialize();
 	static void processIncomingMsg(char *, struct sockaddr_in *);
 	static int receiveMsg(char *, struct sockaddr_in *);
 	static int sendMsg(char *, int, struct sockaddr_in *);
+	static int broadcastMsg(char *, int);
 	static DWORD WINAPI bufferProcessorThread(LPVOID);
 	static void processBuffer();
 	static void broadcastDynamicWorld();
 	static void respawnPlayer(int id);
 	static void updateResources();
-	static void sendHotSpotUpdate(int x, int y, int z);
+	//static void sendHotSpotUpdate(int x, int y, int z);
 	static void sendActiveNodeUpdate(int id);
 	static void printPacket(struct packet *p);
+	static void checkConnection();
+	static void disconnectPlayer(int id);
 
 public:
 

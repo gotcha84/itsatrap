@@ -44,7 +44,7 @@
 
 class Level {
 	public:
-		//World world;
+		int activeResourceNode;
 		sg::MatrixTransform *root;
 		sg::MatrixTransform *ground;
 		vector<sg::MatrixTransform *> xForms;
@@ -61,6 +61,10 @@ class Level {
 
 		sg::MatrixTransform* getRoot();
 		void setRoot(sg::MatrixTransform *newRoot);
+
+		void disableAllResourceNodes();
+		void disableCurrentResourceNode();
+		void activateResourceNode(int id);
 };
 
 #endif

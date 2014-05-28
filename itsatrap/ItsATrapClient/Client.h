@@ -41,9 +41,13 @@ private:
 	static int sendMsg(char *, int);
 	static void startReceiverThread();
 	static void startSenderThread();
+	static void startRefresherThread();
 	static DWORD WINAPI receiverThread(LPVOID);
 	static DWORD WINAPI senderThread(LPVOID);
+	static DWORD WINAPI refresherThread(LPVOID);
 	static void updateHotSpot(int x, int y, int z);
+	static void updateActiveResourceNode(int id);
+	static void handleDisconnectPlayer(int id);
 
 public:
 	// Functions

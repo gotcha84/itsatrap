@@ -29,6 +29,16 @@ namespace sg {
 		m_particles = p;
 	}
 
+	void ResourceNode::enableParticles() {
+		m_particles->enable();
+		m_particles2->enable();
+	}
+
+	void ResourceNode::disableParticles() {
+		m_particles->disable();
+		m_particles2->disable();
+	}
+
 	int ResourceNode::getResourceId() {
 		return resourceId;
 	}

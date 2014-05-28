@@ -22,6 +22,8 @@ namespace sg {
 
 			ParticleSystem *getParticleSystem();
 			void setParticleSystem(ParticleSystem *p);
+			void enableParticles();
+			void disableParticles();
 		
 			int getResourceId();
 			//void getOwner();

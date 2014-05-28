@@ -19,6 +19,8 @@
 #define STATIC_RAMP_OBJECT_CREATION_EVENT 13
 #define PLAYER_ACTION_EVENT 14
 #define STATIC_RESOURCE_OBJECT_CREATION_EVENT 15
+#define REFRESH_EVENT 16
+#define DISCONNECT_PLAYER_EVENT 17
 
 
 // Superclass of all packets
@@ -101,6 +103,18 @@ struct playerActionPacket
 	bool moveEvents[NUM_DIRECTIONS];
 	bool jump, cameraChanged;
 	struct cameraObject cam;
+};
+
+struct refreshPacket
+{
+	int eventId;
+	int playerId;
+};
+
+struct disconnectPlayerPacket
+{
+	int eventId;
+	int disconnectedPlayerId;
 };
 
 #endif

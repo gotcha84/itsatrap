@@ -18,6 +18,7 @@ ClientInstance::ClientInstance(int id) {
 
 	this->addPlayer(root);
 	objects[id] = root;
+
 }
 
 ClientInstance::~ClientInstance() {

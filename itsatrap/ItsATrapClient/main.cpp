@@ -107,17 +107,21 @@ int main(int argc, char *argv[]) {
 	//city.loadData("../Models/city.obj");
 	//client->root->addChild(&city);
 
-	Level level = Level();
-	client->root->addChild(level.getRoot());
-	for (int i = 0; i < level.buildings.size(); ++i)
-		Client::sendStaticObject(level.buildings[i]->getBoundingBox().minX, level.buildings[i]->getBoundingBox().minY, level.buildings[i]->getBoundingBox().minZ, level.buildings[i]->getBoundingBox().maxX, level.buildings[i]->getBoundingBox().maxY, level.buildings[i]->getBoundingBox().maxZ);
-
-	for (int i = 0; i < level.ramps.size(); ++i) {
-		Client::sendStaticRampObject(level.ramps[i]->getBoundingBox(), level.rampSlopes[i]);
+	//client->level = new Level();
+	//Level level = Level();
+	client->root->addChild(client->level.getRoot());
+	for (int i = 0; i < client->level.buildings.size(); ++i) {
+		Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,
+			client->level.buildings[i]->getBoundingBox().minZ, client->level.buildings[i]->getBoundingBox().maxX,
+			client->level.buildings[i]->getBoundingBox().maxY, client->level.buildings[i]->getBoundingBox().maxZ);
 	}
 
-	for (int i = 0; i < level.resources.size(); ++i) {
-		Client::sendStaticResourceObject(level.resources[i]->getBoundingBox(), level.resources[i]->getResourceId());
+	for (int i = 0; i < client->level.ramps.size(); ++i) {
+		Client::sendStaticRampObject(client->level.ramps[i]->getBoundingBox(), client->level.rampSlopes[i]);
+	}
+
+	for (int i = 0; i < client->level.resources.size(); ++i) {
+		Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), client->level.resources[i]->getResourceId());
 	}
 
 	//client->printPlayers();

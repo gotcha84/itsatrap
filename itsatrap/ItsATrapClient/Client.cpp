@@ -72,6 +72,7 @@ int Client::initializeClient() {
 
 	Client::startReceiverThread();
 	Client::startSenderThread();
+	Client::startRefresherThread();
 
 	return 0;
 	
@@ -87,6 +88,12 @@ void Client::startSenderThread()
 {
 	DWORD tmp = 0;
 	CreateThread(NULL, 0, Client::senderThread, NULL, 0, &tmp);
+}
+
+void Client::startRefresherThread()
+{
+	DWORD tmp = 0;
+	CreateThread(NULL, 0, Client::refresherThread, NULL, 0, &tmp);
 }
 
 DWORD WINAPI Client::receiverThread(LPVOID param)
@@ -105,17 +112,25 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				// World update. 
 				// This variable 'world' is the world given by the server
 				DynamicWorld world(p);
-				handleUpdateWorldFromServer(&world);
+				if (client != nullptr)
+					handleUpdateWorldFromServer(&world);
 			}
 			else if (p->eventId == HOT_SPOT_UPDATE)
 			{
-				struct hotSpotPacket *hsp = (struct hotSpotPacket *) p;
-				updateHotSpot(hsp->x, hsp->y, hsp->z);
+				//struct hotSpotPacket *hsp = (struct hotSpotPacket *) p;
+				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
+				//updateHotSpot(hsp->x, hsp->y, hsp->z);
+				updateActiveResourceNode(packet->id);
 			}
 			else if (p->eventId == RELOAD_CONFIG_FILE)
 			{
 				printf("[CLIENT]: Server told me to reload config file.\n");
 				ConfigSettings::getConfig()->reloadSettingsFile();
+			}
+			else if (p->eventId == DISCONNECT_PLAYER_EVENT)
+			{
+				struct disconnectPlayerPacket *dcP = (struct disconnectPlayerPacket *)p;
+				handleDisconnectPlayer(dcP->disconnectedPlayerId);
 			}
 		}
 	}
@@ -237,24 +252,36 @@ void Client::sendKnifeHitEvent(int targetId)
 	sendMsg((char *)&p, sizeof(struct knifeHitPacket));
 }
 
-void Client::updateHotSpot(int x, int y, int z)
+//void Client::updateHotSpot(int x, int y, int z)
+//{
+//	if (client == nullptr)
+//		return;
+//
+//	if (client->hotSpot != nullptr)
+//	{
+//		client->root->removeChild(client->hotSpot);
+//	}
+//
+//	// CONE node
+//	sg::MatrixTransform *mt = new sg::MatrixTransform();
+//	client->root->addChild(mt);
+//	client->hotSpot = mt;
+//
+//	sg::Cone *cone = new sg::Cone();
+//	mt->addChild(cone);
+//	mt->setMatrix(glm::translate(glm::vec3(x,y,z)) * glm::scale(glm::vec3(10,10,10)));
+//}
+
+void Client::updateActiveResourceNode(int id)
 {
 	if (client == nullptr)
-		return;
-
-	if (client->hotSpot != nullptr)
 	{
-		client->root->removeChild(client->hotSpot);
+		return;
 	}
 
-	// CONE node
-	sg::MatrixTransform *mt = new sg::MatrixTransform();
-	client->root->addChild(mt);
-	client->hotSpot = mt;
-
-	sg::Cone *cone = new sg::Cone();
-	mt->addChild(cone);
-	mt->setMatrix(glm::translate(glm::vec3(x,y,z)) * glm::scale(glm::vec3(10,10,10)));
+	// Shut down the old node that was active
+	client->level.disableCurrentResourceNode();
+	client->level.activateResourceNode(id);
 }
 
 void Client::sendReloadConfigFile()
@@ -318,5 +345,30 @@ DWORD WINAPI Client::senderThread(LPVOID)
 		memset(moveEvents, 0, sizeof(moveEvents));
 		jumpEvent = false;
 		cameraChanged = false;
+	}
+}
+
+DWORD WINAPI Client::refresherThread(LPVOID)
+{
+	while (true)
+	{
+		int clientRefreshInterval = 1000;
+		ConfigSettings::getConfig()->getValue("ClientRefreshInterval", clientRefreshInterval);
+		Sleep(clientRefreshInterval);
+		struct refreshPacket p = {};
+		p.eventId = REFRESH_EVENT;
+		p.playerId = getPlayerId();
+		sendMsg((char *)&p, sizeof(p));
+	}
+}
+
+void Client::handleDisconnectPlayer(int id)
+{
+	printf("[CLIENT]: PLAYER %d HAS BEEN DISCONNECTED!\n", id);
+	if (client->players[id] != nullptr)
+	{
+		client->root->removeChild(client->players[id]);
+		client->players.erase(id);
+		client->objects.erase(id);
 	}
 }

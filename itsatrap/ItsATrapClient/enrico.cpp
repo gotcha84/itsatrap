@@ -137,7 +137,7 @@ void handleAddTrap(struct trapObject t)
 	}
 
 	sg::Trap *newTrap;
-	newTrap = new sg::Trap(t.ownerId, glm::vec3(t.x, t.y, t.z), t.rotationAngle, TRAP_DIR + filename);
+	newTrap = new sg::Trap(t.ownerId, t.pos, t.rotationAngle, TRAP_DIR + filename);
 	
 	switch (t.type) {
 		case TYPE_TRAMPOLINE_TRAP:
@@ -166,7 +166,7 @@ void handleRemoveTrap(struct trapObject t)
 void handleUpdateWorldFromServer(DynamicWorld *world)
 {
 	for (map<int, struct playerObject>::iterator it = world->playerMap.begin(); it != world->playerMap.end(); ++it) {
-		handlePlayerUpdate(it->second);
+			handlePlayerUpdate(it->second);
 	}
 
 	for (map<int, struct trapObject>::iterator it = world->trapMap.begin(); it != world->trapMap.end(); ++it) {
