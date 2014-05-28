@@ -1052,9 +1052,9 @@ void DynamicWorld::applyPhysics()
 
 void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 	float climbingMaxDuration = 3000.0f;
-	//ConfigSettings::getConfig()->getValue("climbingMaxDuration", climbingMaxDuration);
+	ConfigSettings::getConfig()->getValue("climbingMaxDuration", climbingMaxDuration);
 	float holdingEdgeMaxDuration = 3000.0f;
-	//ConfigSettings::getConfig()->getValue("holdingEdgeMaxDuration", climbMaxDuration);
+	ConfigSettings::getConfig()->getValue("holdingEdgeMaxDuration", holdingEdgeMaxDuration);
 	switch (p->currPhysState) {
 	case PhysicsStates::Climbing:
 		
@@ -1137,13 +1137,13 @@ void DynamicWorld::processLookEvent(int playerId, struct cameraObject *cam)
 
 void DynamicWorld::noneJumpEvent(int playerId) {
 	
-	float yJumpFactor = 0;
-	ConfigSettings::getConfig()->getValue("yJumpFactor", yJumpFactor);
+	float jumpFactor = 0;
+	ConfigSettings::getConfig()->getValue("jumpFactor", jumpFactor);
 
 	struct playerObject *p = &playerMap[playerId];
 	if (p->feetPlanted) {
 		cout << "None jump event sucessful" << endl;
-		p->velocity.y += yJumpFactor;
+		p->velocity.y += jumpFactor;
 		p->feetPlanted = false;
 	}
 	else {

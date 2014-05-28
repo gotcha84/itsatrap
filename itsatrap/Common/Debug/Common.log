@@ -1,77 +1,4 @@
-﻿  DynamicWorld.cpp
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<std::string,std::string,stdext::hash_compare<_Kty,std::less<_Kty>>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-          with
-          [
-              _Kty=std::string
-  ,            _Ty=std::string
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\statelogic.h(47): warning C4091: 'static ' : ignored on left of 'StateLogic' when no variable is declared
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.h(31): warning C4251: 'World::m_boundingBoxes' : class 'std::vector<AABB,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
-          with
-          [
-              _Ty=AABB
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(34): warning C4251: 'DynamicWorld::staticObjects' : class 'std::vector<staticObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=staticObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(35): warning C4251: 'DynamicWorld::staticRampObjects' : class 'std::vector<staticRampObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=staticRampObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(36): warning C4251: 'DynamicWorld::staticResourceObjects' : class 'std::vector<staticResourceObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=staticResourceObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(37): warning C4251: 'DynamicWorld::team1RespawnPoints' : class 'std::vector<glm::vec3,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=glm::vec3
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(37): warning C4251: 'DynamicWorld::team2RespawnPoints' : class 'std::vector<glm::vec3,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=glm::vec3
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(38): warning C4251: 'DynamicWorld::portalMap' : class 'std::map<int,trapObject *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Kty=int
-  ,            _Ty=trapObject *
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(56): warning C4251: 'DynamicWorld::trapMap' : class 'std::map<int,trapObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Kty=int
-  ,            _Ty=trapObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(57): warning C4251: 'DynamicWorld::playerMap' : class 'std::map<int,playerObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Kty=int
-  ,            _Ty=playerObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(192): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(214): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(242): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(360): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(368): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(382): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(404): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(454): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(1250): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-  GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
-  Generating Code...
-  Compiling...
-  StateLogic.cpp
+﻿  StateLogic.cpp
 c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
 c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
 c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
@@ -86,9 +13,6 @@ c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(60): warning
 c:\users\alvin\desktop\125\merging\itsatrap\common\statelogic.h(47): warning C4091: 'static ' : ignored on left of 'StateLogic' when no variable is declared
   GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
   GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
-  Physics.cpp
-  InputEvents.cpp
-  Generating Code...
 AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
      Creating library C:\Users\alvin\Desktop\125\merging\itsatrap\Debug\Common.lib and object C:\Users\alvin\Desktop\125\merging\itsatrap\Debug\Common.exp
   Common.vcxproj -> C:\Users\alvin\Desktop\125\merging\itsatrap\Debug\Common.dll

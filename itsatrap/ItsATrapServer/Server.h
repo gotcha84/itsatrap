@@ -59,6 +59,7 @@ private:
 	static vector<int>			resourceNodeLocations;
 	static int					currentActiveResourceNodeIndex;
 	static int					currentResourceOwner;
+	static bool					isChanneling;
 
 	// Functions
 	static int initialize();

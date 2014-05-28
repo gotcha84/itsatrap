@@ -77,7 +77,7 @@ void StateLogic::startClimbing(struct playerObject *e, int buildingId) {
 	float CLStartlookYIncrement = CLStartlookY / (CLStartfraction*CLnumFrames);
 
 	float climbFactor = 3.0f;
-	//ConfigSettings::getConfig()->getValue("climbFactor", climbFactor);
+	ConfigSettings::getConfig()->getValue("climbFactor", climbFactor);
 
 	glm::vec3 CLStartvelocityDiff = glm::vec3(0.0f, climbFactor, 0.0f);
 
@@ -286,7 +286,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	StateLogic::clearStateInfo(e->id);
 	float WRinitialX = e->cameraObject.xRotated;
 	float WRinitialY = e->cameraObject.yRotated;
-	glm::vec3 WRinitialcamUp = e->cameraObject.cameraUp;
+	glm::vec3 WRinitialcamUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	cout << "wrinitialcamp: " << glm::to_string(WRinitialcamUp) << endl;
 
 	float WRnumFrames = 60.0f;
@@ -388,7 +388,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	}
 
 	float wallRunFactor = 5.0f;
-	//ConfigSettings::getConfig()->getValue("wallRunFactor", wallRunFactor);
+	ConfigSettings::getConfig()->getValue("wallRunFactor", wallRunFactor);
 
 	cout << "WRStartcamZ: " << glm::to_string(WRStartcamZ) << endl;
 	WRMidvelocityDiff = WRStartcamZ*wallRunFactor;
@@ -557,6 +557,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				p->velocityDiff = StateLogic::statesInfo[p->id].Mid.velocityDiff;
 			}
 			else {
+				StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
 				p->currInnerState = innerStates::Ending;
 			}
 			break;
@@ -574,6 +575,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				p->currInnerState = innerStates::Off;
 				p->interactingWithBuildingId = -1;
 				//cout << "ended state: " << p->currPhysState << endl;
+				cout << "ended with up as: " << glm::to_string(p->cameraObject.cameraUp) << endl;
 				p->currPhysState = PhysicsStates::None;
 			}
 			break;

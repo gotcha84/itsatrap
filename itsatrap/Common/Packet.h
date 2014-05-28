@@ -21,6 +21,7 @@
 #define STATIC_RESOURCE_OBJECT_CREATION_EVENT 15
 #define REFRESH_EVENT 16
 #define DISCONNECT_PLAYER_EVENT 17
+#define RESOURCE_HIT_EVENT 18
 
 
 // Superclass of all packets
@@ -75,6 +76,13 @@ struct knifeHitPacket
 	int eventId;
 	int playerId;
 	int targetId;
+};
+
+struct resourceHitPacket
+{
+	int eventId;
+	int playerId;
+	int resourceId;
 };
 
 struct hotSpotPacket

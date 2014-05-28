@@ -24,7 +24,6 @@
 class Client {
 
 private:
-
 	// Variables
 	static struct sockaddr_in myAddress, serverAddress;
 	static int		len;
@@ -59,12 +58,10 @@ public:
 	static void sendPlayerUpdate(struct playerObject);
 	static void sendSpawnTrapEvent(struct trapObject);
 	static void sendKnifeHitEvent(int targetId);
+	static void sendChannelAttemptEvent(int resourceId);
 	static void sendReloadConfigFile();
 	static void sendMoveEvent(Direction dir);
 	static void sendJumpEvent();
 	static void sendLookEvent(struct cameraObject cam);
 };
-
-
-
 #endif
