@@ -369,7 +369,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 			WREndlookXIncrement *= -1.0f;
 		}
 	}
-	else /*(angle > 90.0f)*/ {
+	else {
 
 		WRStartlookXIncrement = (abs(180.0f - angle))/(WRStartfraction*WRnumFrames);
 		WREndlookXIncrement = (abs(180.0f - angle))/(WREndfraction*WRnumFrames);
@@ -576,6 +576,8 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				p->interactingWithBuildingId = -1;
 				//cout << "ended state: " << p->currPhysState << endl;
 				cout << "ended with up as: " << glm::to_string(p->cameraObject.cameraUp) << endl;
+				// technically shouldnt need line below.. but w/e hardcoding ftw
+				p->cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 				p->currPhysState = PhysicsStates::None;
 			}
 			break;
