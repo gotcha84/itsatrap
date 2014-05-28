@@ -26,6 +26,7 @@ int					Server::hotSpotChangeInterval;
 vector<int>			Server::resourceNodeLocations;
 int					Server::currentActiveResourceNodeIndex;
 int					Server::currentResourceOwner;
+int					Server::channelingPlayer;
 bool				Server::isChanneling;
 
 // Private Vars
@@ -100,6 +101,7 @@ int Server::initialize() {
 
 	currentActiveResourceNodeIndex = 0;
 	currentResourceOwner = -1;
+	channelingPlayer = -1;
 	isChanneling = false;
 
 	// Load Height Map
@@ -190,7 +192,6 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			resourceNodeLocations.push_back(tmp.id);
 			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 		}
-
 	}
 	else if (p->eventId == RELOAD_CONFIG_FILE)
 	{
@@ -229,25 +230,16 @@ DWORD WINAPI Server::bufferProcessorThread(LPVOID param)
 	long elapsed;
 	printf("[SERVER]: Process buffer thread started\n");
 
-	while (1)
-	{
+	while (1) {
 		elapsed = 0;
 		stopwatch.reset();
 
 		processBuffer();
 
 		elapsed = MAX_SERVER_PROCESS_RATE - stopwatch.getElapsedMilliseconds();
-		if (elapsed >= 0)
-		{
+		if (elapsed >= 0) {
 			Sleep(elapsed);
 		}
-		/*
-		else
-		{
-			// Note: Hopefully this case doesn't happen, means processing time is taking longer than rate
-			Sleep(MAX_SERVER_PROCESS_RATE);	
-		}
-		*/
 	}
 }
 
@@ -297,13 +289,15 @@ void Server::processBuffer()
 				// Movements
 				for (int i = 0; i < NUM_DIRECTIONS; i++)
 				{
-					if (actPkt->moveEvents[i])
+					if (actPkt->moveEvents[i]) {
 						dynamicWorld.processMoveEvent(actPkt->playerId, (Direction)i);
+					}
 				}
 
 				// Jump
-				if (actPkt->jump)
+				if (actPkt->jump) {
 					dynamicWorld.processJumpEvent(actPkt->playerId);
+				}
 
 				// Camera
 				if (actPkt->cameraChanged)
@@ -354,6 +348,15 @@ void Server::processBuffer()
 
 				// Check if active node
 				if (hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]) {
+					if (!isChanneling) {
+						channelingPlayer = player->id;
+
+						if (currentResourceOwner != channelingPlayer || currentResourceOwner % 2 != channelingPlayer % 2) {
+							isChanneling = true;
+
+							// send resourceNodePacket to client, telling them it is ok to channel
+						}
+					}
 					// Check if isChanneling (client side?)
 						// Yes: break
 						// No:  check owner
@@ -409,74 +412,6 @@ int Server::sendMsg(char * msg, int len, struct sockaddr_in *destination) {
 
 	//printf("[SERVER]: Sent a packet of length %d\n", len);
 	return 0;
-}
-
-// Called everytime the server processes a buffer (Once per cycle)
-// Determines the active resource node and gives the player(owner) resources
-void Server::updateResources()
-{
-	timeUntilHotSpotChange -= MAX_SERVER_PROCESS_RATE;
-	timeUntilResourceBonus -= MAX_SERVER_PROCESS_RATE;
-
-	// Distributes the resources
-	if (timeUntilResourceBonus < 0)
-	{
-		timeUntilResourceBonus = resourceInterval;
-
-		for(map<int,struct playerObject>::iterator it = dynamicWorld.playerMap.begin(); it != dynamicWorld.playerMap.end(); ++it)
-		{
-			it->second.resources += resourcePerInterval;
-
-			// Hot spot bonus
-			glm::vec3 pos = it->second.position;
-
-			// TODO: 
-			//if (glm::distance(pos, currentHotSpot) < 10)
-				//it->second.resources += resourceHotSpotBonusPerInterval;
-		}
-	}
-
-	// Change the active node
-	if (timeUntilHotSpotChange < 0 && resourceNodeLocations.size() > 0)
-	{
-		timeUntilHotSpotChange = hotSpotChangeInterval;		// Reset timer
-
-		++currentActiveResourceNodeIndex;
-		currentActiveResourceNodeIndex = currentActiveResourceNodeIndex % resourceNodeLocations.size();
-
-		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
-
-		//currentHotSpotIndex += 1; 
-		//currentHotSpotIndex = currentHotSpotIndex % hotSpotLocations.size();
-
-		//currentHotSpot = hotSpotLocations[currentHotSpotIndex];
-		//sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
-	}
-}
-
-// Sends messages to clients about location of resource node
-//void Server::sendHotSpotUpdate(int x, int y, int z)
-//{
-//	struct hotSpotPacket p;
-//	p.eventId = HOT_SPOT_UPDATE;
-//	p.x = x;
-//	p.y = y;
-//	p.z = z;
-//	
-//	// Send Message
-//	for (int i = 0; i < playerCount; i++)
-//		Server::sendMsg((char *) &p, sizeof(p), &players[i].clientAddress);
-//}
-
-// Sends messages to clients about new location of resource node
-void Server::sendActiveNodeUpdate(int id)
-{
-	struct resourceNodePacket p;
-	p.eventId = HOT_SPOT_UPDATE;
-	p.id = id;
-
-	// Send Message
-	Server::broadcastMsg((char *)&p, sizeof(p));
 }
 
 void Server::printPacket(struct packet *p)
@@ -547,4 +482,68 @@ void Server::disconnectPlayer(int id)
 	dynamicWorld.playerMap.erase(id);
 
 	broadcastMsg((char *)&p, sizeof(p));
+}
+
+// Called everytime the server processes a buffer (Once per cycle)
+// Determines the active resource node and gives the player(owner) resources
+void Server::updateResources()
+{
+	timeUntilHotSpotChange -= MAX_SERVER_PROCESS_RATE;
+	timeUntilResourceBonus -= MAX_SERVER_PROCESS_RATE;
+
+	// Distributes the resources
+	if (timeUntilResourceBonus < 0)
+	{
+		timeUntilResourceBonus = resourceInterval;
+
+		for (map<int, struct playerObject>::iterator it = dynamicWorld.playerMap.begin(); it != dynamicWorld.playerMap.end(); ++it)
+		{
+			it->second.resources += resourcePerInterval;
+
+			// Hot spot bonus
+			glm::vec3 pos = it->second.position;
+
+			// TODO: 
+			//if (glm::distance(pos, currentHotSpot) < 10)
+			//it->second.resources += resourceHotSpotBonusPerInterval;
+		}
+	}
+
+	// Change the active node
+	if (timeUntilHotSpotChange < 0 && resourceNodeLocations.size() > 0)
+	{
+		timeUntilHotSpotChange = hotSpotChangeInterval;		// Reset timer
+
+		++currentActiveResourceNodeIndex;
+		currentActiveResourceNodeIndex = currentActiveResourceNodeIndex % resourceNodeLocations.size();
+
+		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+	}
+}
+
+// Sends messages to clients about new location of resource node
+void Server::sendActiveNodeUpdate(int resourceId)
+{
+	struct resourceNodePacket p;
+	p.eventId = HOT_SPOT_UPDATE;
+	p.id = resourceId;
+
+	// Send Message
+	Server::broadcastMsg((char *)&p, sizeof(p));
+}
+
+void Server::sendPermissionToChannel(int playerId, int resourceId)
+{
+	struct resourceNodePacket p;
+	p.eventId = CHANNELING_PERMISSION;
+	p.id = resourceId;
+
+	Server::sendMsg((char *)&p, sizeof(p), &players[playerId].clientAddress);
+}
+
+void Server::resetChanneling() {
+	isChanneling = false;
+	channelingPlayer = -1;
+
+	// TODO: broadcast message to stop channeling
 }

@@ -98,7 +98,6 @@ void Client::startRefresherThread()
 
 DWORD WINAPI Client::receiverThread(LPVOID param)
 {
-	
 	printf("[CLIENT]: Receiver thread started\n");
 	while (1)
 	{
@@ -108,19 +107,11 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 
 			if (p->eventId == WORLD_UPDATE_EVENT)
 			{
-				
 				// World update. 
 				// This variable 'world' is the world given by the server
 				DynamicWorld world(p);
 				if (client != nullptr)
 					handleUpdateWorldFromServer(&world);
-			}
-			else if (p->eventId == HOT_SPOT_UPDATE)
-			{
-				//struct hotSpotPacket *hsp = (struct hotSpotPacket *) p;
-				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
-				//updateHotSpot(hsp->x, hsp->y, hsp->z);
-				updateActiveResourceNode(packet->id);
 			}
 			else if (p->eventId == RELOAD_CONFIG_FILE)
 			{
@@ -132,10 +123,19 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				struct disconnectPlayerPacket *dcP = (struct disconnectPlayerPacket *)p;
 				handleDisconnectPlayer(dcP->disconnectedPlayerId);
 			}
+			else if (p->eventId == HOT_SPOT_UPDATE)
+			{
+				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
+				updateActiveResourceNode(packet->id);
+			}
+			else if (p->eventId == CHANNELING_PERMISSION)
+			{
+				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
+				// Start channeling
+			}
 		}
 	}
 }
-
 
 void Client::sendPlayerUpdate(struct playerObject player)
 {
@@ -145,7 +145,6 @@ void Client::sendPlayerUpdate(struct playerObject player)
 	memcpy(&p.playerObj, &player, sizeof(struct playerObject));
 	Client::sendMsg((char *)&p, sizeof(p));
 }
-
 
 // Client receives messages from the server
 int Client::receiveMsg() {
@@ -261,26 +260,6 @@ void Client::sendChannelAttemptEvent(int resourceId)
 
 	sendMsg((char *)&p, sizeof(struct resourceHitPacket));
 }
-
-//void Client::updateHotSpot(int x, int y, int z)
-//{
-//	if (client == nullptr)
-//		return;
-//
-//	if (client->hotSpot != nullptr)
-//	{
-//		client->root->removeChild(client->hotSpot);
-//	}
-//
-//	// CONE node
-//	sg::MatrixTransform *mt = new sg::MatrixTransform();
-//	client->root->addChild(mt);
-//	client->hotSpot = mt;
-//
-//	sg::Cone *cone = new sg::Cone();
-//	mt->addChild(cone);
-//	mt->setMatrix(glm::translate(glm::vec3(x,y,z)) * glm::scale(glm::vec3(10,10,10)));
-//}
 
 void Client::updateActiveResourceNode(int id)
 {

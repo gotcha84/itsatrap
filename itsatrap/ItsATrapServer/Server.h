@@ -52,13 +52,10 @@ private:
 	static int					resourceInterval;
 	static int					hotSpotChangeInterval;
 
-	//static vector<glm::vec3>	hotSpotLocations;
-	//static glm::vec3			currentHotSpot;
-	//static int					currentHotSpotIndex;
-
 	static vector<int>			resourceNodeLocations;
 	static int					currentActiveResourceNodeIndex;
 	static int					currentResourceOwner;
+	static int					channelingPlayer;
 	static bool					isChanneling;
 
 	// Functions
@@ -71,12 +68,14 @@ private:
 	static void processBuffer();
 	static void broadcastDynamicWorld();
 	static void respawnPlayer(int id);
-	static void updateResources();
-	//static void sendHotSpotUpdate(int x, int y, int z);
-	static void sendActiveNodeUpdate(int id);
 	static void printPacket(struct packet *p);
 	static void checkConnection();
 	static void disconnectPlayer(int id);
+
+	static void updateResources();
+	static void sendActiveNodeUpdate(int resourceId);
+	static void sendPermissionToChannel(int playerId, int resourceId);
+	static void resetChanneling();
 
 public:
 

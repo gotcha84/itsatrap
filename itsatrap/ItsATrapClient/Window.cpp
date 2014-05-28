@@ -263,7 +263,6 @@ void Window::specialKeyUp(int key, int x, int y) {
 }
 
 void Window::processKeys() {
-
 	//client->root->m_player->getPhysics()->m_triedToRun = false;
 
 	int count = 0;
@@ -333,8 +332,6 @@ void Window::processKeys() {
 	//if (keyState['u']) {
 	//	client->root->getPlayer()->Unstuck();
 	//}
-
-
 
 	// trap
 	/*
