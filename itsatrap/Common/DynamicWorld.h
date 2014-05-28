@@ -30,10 +30,11 @@ class COMMON_API DynamicWorld {
 
 private:
 	// Variables
-	int								currentId;
-	vector<struct staticObject>		staticObjects;
-	vector<struct staticRampObject>	staticRampObjects;
-	bool							playerLock[MAX_PLAYERS];
+	int									currentId;
+	vector<struct staticObject>			staticObjects;
+	vector<struct staticRampObject>		staticRampObjects;
+	vector<struct staticResourceObject>	staticResourceObjects;
+	bool								playerLock[MAX_PLAYERS];
 	
 	// 
 	bool checkCollision(struct aabb a, struct aabb b);
@@ -73,8 +74,10 @@ public:
 
 	void addStaticObject(struct staticObject);
 	void addStaticRampObject(struct staticRampObject);
+	void addStaticResourceObject(struct staticResourceObject);
 	int getNumStaticObjects();
 	int getNumStaticRampObjects();
+	int getNumStaticResourceObjects();
 
 	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
@@ -83,11 +86,12 @@ public:
 	void applyPhysics();
 	void applyAdjustments();
 
-	void noneMoveEvent(int playerId, Direction dir);
-	void climbingMoveEvent(int playerId, Direction dir);
-	void pullingUpMoveEvent(int playerId, Direction dir);
-	void holdingEdgeMoveEvent(int playerId, Direction dir);
-	void wallRunningMoveEvent(int playerId, Direction dir);
+	void applyMoveEvents();
+	void noneMoveEvent(int playerId);
+	void climbingMoveEvent(int playerId);
+	void pullingUpMoveEvent(int playerId);
+	void holdingEdgeMoveEvent(int playerId);
+	void wallRunningMoveEvent(int playerId);
 
 	void noneJumpEvent(int playerId);
 	void climbingJumpEvent(int playerId);

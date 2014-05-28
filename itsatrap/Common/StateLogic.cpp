@@ -532,7 +532,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 	
 	switch (p->currInnerState) {
 		case innerStates::Starting:
-			if (p->triedToRun) {
+			if (p->triedForward) {
 				//cout << "wallrunning start lookXincrement: " << StateLogic::statesInfo[p->id].Start.lookXIncrement << endl;
 				//cout << "wallrunning start lookYincrement: " << StateLogic::statesInfo[p->id].Start.lookYIncrement << endl;
 				//cout << "wallrunning start camUpincrement: " << glm::to_string(StateLogic::statesInfo[p->id].Start.camUpIncrement) << endl;
@@ -552,7 +552,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 			}
 			break;
 		case innerStates::Mid:
-			if (p->triedToRun) {
+			if (p->triedForward) {
 				//cout << "middle wallrunning with velocity diff: " << glm::to_string(StateLogic::statesInfo[p->id].Start.velocityDiff) << endl;
 				p->velocityDiff = StateLogic::statesInfo[p->id].Mid.velocityDiff;
 			}

@@ -109,11 +109,15 @@ int main(int argc, char *argv[]) {
 
 	Level level = Level();
 	client->root->addChild(level.getRoot());
-	for (int i = 0; i < level.buildings.size(); i++)
+	for (int i = 0; i < level.buildings.size(); ++i)
 		Client::sendStaticObject(level.buildings[i]->getBoundingBox().minX, level.buildings[i]->getBoundingBox().minY, level.buildings[i]->getBoundingBox().minZ, level.buildings[i]->getBoundingBox().maxX, level.buildings[i]->getBoundingBox().maxY, level.buildings[i]->getBoundingBox().maxZ);
 
-	for (int i = 0; i < level.ramps.size(); i++) {
+	for (int i = 0; i < level.ramps.size(); ++i) {
 		Client::sendStaticRampObject(level.ramps[i]->getBoundingBox(), level.rampSlopes[i]);
+	}
+
+	for (int i = 0; i < level.resources.size(); ++i) {
+		Client::sendStaticResourceObject(level.resources[i]->getBoundingBox(), level.resources[i]->getResourceId());
 	}
 
 	//client->printPlayers();

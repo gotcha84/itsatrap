@@ -257,7 +257,7 @@ void Window::specialKeyUp(int key, int x, int y) {
 
 void Window::processKeys() {
 
-	//client->root->m_player->getPhysics()->m_triedToRun = false;
+	//client->root->m_player->getPhysics()->m_triedForward = false;
 
 	int count = 0;
 	//PhysicsStates curr_state = client->root->m_player->getPhysics()->m_currentState;

@@ -140,13 +140,13 @@ void World::readInHeightMapFromFile(string file) {
 }
 
 AABB* World::fixBoundingBox(AABB boundingBox) {
-	float minX = boundingBox.minX;
+	int minX = (boundingBox.minX + 0.5);
 	float minY = boundingBox.minY;
-	float minZ = boundingBox.minZ;
-	float maxX = boundingBox.maxX;
+	int minZ = (boundingBox.minZ + 0.5);
+	int maxX = (boundingBox.maxX + 0.5);
 	float maxY = boundingBox.maxY;
-	float maxZ = boundingBox.maxZ;
-	float temp = 0.0f;
+	int maxZ = (boundingBox.maxZ + 0.5);
+	int temp = 0;
 
 	if (minX > maxX) {
 		temp = minX;

@@ -45,11 +45,15 @@ void Level::initLevel() {
 	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_12, 0)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
-	rs = new sg::ResourceNode(NUMPARTICLES);
+	rs = new sg::ResourceNode(0, NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
 	rs->getParticleSystem()->setColor(glm::vec4(1, 0, 0, 1));
+	rs->m_particles2->setColor(glm::vec4(1, 0, 0, 1));
+	//rs->m_particles2->setColor(glm::vec4(1, 1, 1, 1));
+	rs->m_particles2->reverse();
 	if (!ENABLE_PARTICLES) {
 		rs->getParticleSystem()->disable();
+		rs->m_particles2->disable();
 	}
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 0: (0, 0, 0)");
@@ -61,11 +65,14 @@ void Level::initLevel() {
 	xForms.back()->setMatrix(glm::translate(glm::vec3(-15 * UNIT_SIZE, UNIT_8, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
-	rs = new sg::ResourceNode(NUMPARTICLES);
+	rs = new sg::ResourceNode(1, NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
 	rs->getParticleSystem()->setColor(glm::vec4(0, 1, 0, 1));
+	rs->m_particles2->setColor(glm::vec4(0, 1, 0, 1));
+	rs->m_particles2->reverse();
 	if (!ENABLE_PARTICLES) {
 		rs->getParticleSystem()->disable();
+		rs->m_particles2->disable();
 	}
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 1: (-15, 8, 7)");
@@ -77,11 +84,14 @@ void Level::initLevel() {
 	xForms.back()->setMatrix(glm::translate(glm::vec3(15 * UNIT_SIZE, UNIT_8, -7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 1)));
 	root->addChild(xForms.back());
 
-	rs = new sg::ResourceNode(NUMPARTICLES);
+	rs = new sg::ResourceNode(2, NUMPARTICLES);
 	rs->loadModel(RESOURCETOWER, BLOCKS);
 	rs->getParticleSystem()->setColor(glm::vec4(0, 0, 1, 1));
+	rs->m_particles2->setColor(glm::vec4(0, 0, 1, 1));
+	rs->m_particles2->reverse();
 	if (!ENABLE_PARTICLES) {
 		rs->getParticleSystem()->disable();
+		rs->m_particles2->disable();
 	}
 	resources.push_back(rs);
 	resources.back()->setName("Resource Tower 2: (-15, 8, 7)");
@@ -475,6 +485,11 @@ void Level::initLevel() {
 	for (int i = 0; i < buildings.size(); ++i) {
 		buildings[i]->calculateBoundingBox();
 		World::updateHeightMap(buildings[i]->getBoundingBox());
+	}
+
+	// Resource Nodes
+	for (int i = 0; i < resources.size(); ++i) {
+		resources[i]->calculateBoundingBox();
 	}
 
 	// Ramp Height Map

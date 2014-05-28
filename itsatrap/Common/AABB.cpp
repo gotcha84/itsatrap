@@ -37,8 +37,8 @@ AABB::~AABB() {
 void AABB::initCommon() {
 	m_nearTopFactor = 15.0f;
 	m_overTopFactor = 5.0f;
-	m_onRampXZFactor = 2.0f;
-	m_onRampYFactor = 5.0f;
+	m_onRampXZFactor = 1.0f;
+	m_onRampYFactor = 10.0f;
 }
 
 void AABB::setAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
@@ -121,27 +121,30 @@ bool AABB::inside(AABB other) {
 // TODO: imp coming from other entrance of ramp if needed
 // this = obj ie building. other = player
 bool AABB::collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance) {
-
-	
+		
 	if (other.minY > minY + m_onRampYFactor) {
 		//cout << "too tall" << endl;
 		return false;
 	}
 
-	//cout << "building: ";
-	//this->print();
-	//cout << "player: ";
-	//other.print();
+	glm::vec3 pos = glm::vec3(other.minX + 5.0f, other.minY + 5.0f, other.minZ + 5.0f);
 
-	//cout << "from: " << glm::to_string(from) << endl;
+	/*cout << "building: ";
+	this->print();
+	cout << "player: ";
+	other.print();
+
+	cout << "from: " << glm::to_string(from) << endl;
+	cout << "pos:" << glm::to_string(pos) << endl;*/
 	//cout << "entrance: " << entrance << endl;
 
+	
 
 	switch (entrance) {
 		case 0:
 			if (minZ < from.z && maxZ > from.z) {
 				//cout << "from entrance" << endl;
-				return (other.minX - minX < maxX - other.maxX && minX < other.minX && maxX > other.maxX && minZ < other.minZ && maxZ > other.maxZ);
+				return (other.minX - minX < maxX - other.maxX && minX - m_onRampXZFactor < pos.x && maxX > other.maxX && minZ < other.minZ && maxZ > other.maxZ);
 			}
 			return false;
 			//else {
@@ -151,7 +154,7 @@ bool AABB::collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance) {
 			break;
 		case 1:
 			if (minZ < from.z && maxZ > from.z) {
-				return (other.minX - minX > maxX - other.maxX && minX < other.minX && maxX > other.maxX && minZ < other.minZ && maxZ > other.maxZ);
+				return (other.minX - minX > maxX - other.maxX && minX < other.minX && maxX + m_onRampXZFactor > pos.x && minZ < other.minZ && maxZ > other.maxZ);
 			}
 			//else {
 			//	return (maxX > other.maxX - 5.0f && maxX - m_onRampXZFactor < other.maxX - 5.0f && minZ > other.minZ && maxZ < other.maxZ);
@@ -166,7 +169,13 @@ bool AABB::collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance) {
 			break;
 		case 4:
 			if (minX < from.x && maxX > from.x) {
-				return (other.minZ - minZ < maxZ - other.maxZ && minZ < other.minZ && maxZ > other.maxZ && minX < other.minX && maxX > other.maxX);
+				//cout << "from entrance" << endl;
+				//cout << "first: " << (other.minZ - minZ < maxZ - other.maxZ) << endl;
+				//cout << "second: " << (minZ /*- m_onRampXZFactor*/ < pos.z) << endl;
+				//cout << "third: " << (maxZ > other.maxZ) << endl;
+				//cout << "fourth: " << (minX < other.minX) << endl;
+				//cout << "fifth: " << (maxX > other.maxX) << endl << endl;
+				return (other.minZ - minZ < maxZ - other.maxZ && minZ /*- m_onRampXZFactor*/ < pos.z && maxZ > other.maxZ && minX < other.minX && maxX > other.maxX);
 			}
 			/*else {
 				return (minZ < other.minZ + 5.0f && minZ + m_onRampXZFactor > other.minZ + 5.0f && minX > other.minX && maxX < other.maxX);
@@ -175,7 +184,7 @@ bool AABB::collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance) {
 			break;
 		case 5:
 			if (minX < from.x && maxX > from.x) {
-				return (other.minZ - minZ > maxZ - other.maxZ && minZ < other.minZ && maxZ > other.maxZ && minX < other.minX && maxX > other.maxX);
+				return (other.minZ - minZ > maxZ - other.maxZ && minZ < other.minZ && maxZ + m_onRampXZFactor > pos.z && minX < other.minX && maxX > other.maxX);
 			}
 			/*else {
 				return (maxZ > other.maxZ - 5.0f && maxZ - m_onRampXZFactor < other.maxZ - 5.0f && minX > other.minX && maxX < other.maxX);

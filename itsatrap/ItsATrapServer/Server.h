@@ -44,15 +44,21 @@ private:
 	static int					packetBufferCount;
 	static DynamicWorld			dynamicWorld;
 	static Stopwatch			stopwatch;
+
 	static int					timeUntilResourceBonus;
 	static int					timeUntilHotSpotChange;
 	static int					resourcePerInterval;
 	static int					resourceHotSpotBonusPerInterval;
 	static int					resourceInterval;
 	static int					hotSpotChangeInterval;
+
 	static vector<glm::vec3>	hotSpotLocations;
 	static glm::vec3			currentHotSpot;
 	static int					currentHotSpotIndex;
+
+	static vector<int>			resourceNodeLocations;
+	static int					currentActiveResourceNode;
+	static int					resourceOwner;
 
 	// Functions
 	static int initialize();
@@ -65,6 +71,7 @@ private:
 	static void respawnPlayer(int id);
 	static void updateResources();
 	static void sendHotSpotUpdate(int x, int y, int z);
+	static void sendActiveNodeUpdate(int id);
 	static void printPacket(struct packet *p);
 
 public:

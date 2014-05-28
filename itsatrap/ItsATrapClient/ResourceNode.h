@@ -7,19 +7,31 @@
 
 namespace sg {
 	class ResourceNode : public ObjNode {
+		private:
+			int resourceId;
+			int owner;
+			bool isActive, isChanneling;
+			AABB bouddndingBox;
+
 		public:
 			ParticleSystem *m_particles;
+			ParticleSystem *m_particles2;
 
-			ResourceNode(int numParticles);
+			ResourceNode(int id, int numParticles);
 			~ResourceNode();
 
 			ParticleSystem *getParticleSystem();
 			void setParticleSystem(ParticleSystem *p);
+		
+			int getResourceId();
+			//void getOwner();
+			//void setOwner();
+			//void addResourcesToOwner();
+			//bool startChanneling(int player);
 
 			void draw(glm::mat4 parent, glm::mat4 cam);
 			void print();
-	};
-
+		};
 }
 
 #endif

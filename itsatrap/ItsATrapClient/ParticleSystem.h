@@ -26,6 +26,7 @@ struct Particle
 
 	float m_rad;
 	float m_theta;
+	bool m_reversed;
 
 	Particle();
 	Particle(int id, glm::vec3 origin, glm::vec4 color);
@@ -49,18 +50,18 @@ class ParticleSystem {
 		int m_numParticles;
 		float m_maxLifetime;
 		vector<Particle> m_particles;
-		
+
 		glm::vec3 m_origin;
 		glm::vec4 m_color;
 
 		ParticleSystem(int numParticles);
 		~ParticleSystem();
-		
+
 		void initParticles();
 
 		int getNumParticles();
 		void setNumParticles(int numParticles);
-		
+
 		int getMaxLifetime();
 		void setMaxLifetime(int life);
 
@@ -76,6 +77,9 @@ class ParticleSystem {
 		bool isEnabled();
 		void enable();
 		void disable();
+
+		void reverse();
+		bool getReversed();
 };
 
 #endif

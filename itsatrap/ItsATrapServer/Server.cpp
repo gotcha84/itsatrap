@@ -81,7 +81,7 @@ int Server::initialize() {
 	ConfigSettings::getConfig()->getValue("ResourceHotSpotBonusPerInterval", resourceHotSpotBonusPerInterval);
 	ConfigSettings::getConfig()->getValue("ResourceInterval", resourceInterval);
 	ConfigSettings::getConfig()->getValue("HotSpotChangeInterval", hotSpotChangeInterval);
-
+	
 	timeUntilResourceBonus = resourcePerInterval;
 	timeUntilHotSpotChange = hotSpotChangeInterval;
 
@@ -96,7 +96,7 @@ int Server::initialize() {
 	// Load Height Map
 	string heightMapFile;
 	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
-	//World::readInHeightMapFromFile(heightMapFile);
+	World::readInHeightMapFromFile(heightMapFile);
 	
 	return 0;
 }
@@ -163,6 +163,21 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			tmp.aabb.print();
 			printf("Slope: %f\n", tmp.slope);
 		}
+	}
+	else if (p->eventId == STATIC_RESOURCE_OBJECT_CREATION_EVENT)
+	{
+		struct staticResourceObjectPacket *staticObjPkt = (struct staticResourceObjectPacket *)p;
+		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
+		{
+			struct staticResourceObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
+			dynamicWorld.addStaticResourceObject(tmp);
+			//resourceNodeLocations.push_back(tmp.id);
+			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
+			tmp.aabb.print();
+			printf("ResourceId: %d\n", tmp.id);
+		}
+
 	}
 	else if (p->eventId == RELOAD_CONFIG_FILE)
 	{
@@ -231,11 +246,8 @@ void Server::broadcastDynamicWorld()
 	}
 }
 
-
-
 void Server::processBuffer()
 {
-
 	dynamicWorld.updateTimings(MAX_SERVER_PROCESS_RATE);
 	updateResources();
 
@@ -324,7 +336,7 @@ void Server::processBuffer()
 		broadcastDynamicWorld();
 	}
 
-	
+	dynamicWorld.applyMoveEvents();
 	dynamicWorld.applyPhysics();
 	dynamicWorld.applyGravity();
 	dynamicWorld.applyAdjustments();
@@ -361,10 +373,14 @@ int Server::sendMsg(char * msg, int len, struct sockaddr_in *destination) {
 	return 0;
 }
 
+// Called everytime the server processes a buffer (Once per cycle)
+// Determines the active resource node and gives the player(owner) resources
 void Server::updateResources()
 {
 	timeUntilHotSpotChange -= MAX_SERVER_PROCESS_RATE;
 	timeUntilResourceBonus -= MAX_SERVER_PROCESS_RATE;
+
+	// Distributes the resources
 	if (timeUntilResourceBonus < 0)
 	{
 		timeUntilResourceBonus = resourceInterval;
@@ -382,6 +398,7 @@ void Server::updateResources()
 		}
 	}
 
+	// Change the active node
 	if (timeUntilHotSpotChange < 0)
 	{
 		timeUntilHotSpotChange = hotSpotChangeInterval;
@@ -393,6 +410,7 @@ void Server::updateResources()
 	}
 }
 
+// Sends messages to clients about location of resource node
 void Server::sendHotSpotUpdate(int x, int y, int z)
 {
 	struct hotSpotPacket p;
@@ -404,7 +422,19 @@ void Server::sendHotSpotUpdate(int x, int y, int z)
 	// Send Message
 	for (int i = 0; i < playerCount; i++)
 		Server::sendMsg((char *) &p, sizeof(p), &players[i].clientAddress);
+}
 
+// Sends messages to clients about new location of resource node
+void Server::sendActiveNodeUpdate(int id)
+{
+	struct resourceNodePacket p;
+	p.eventId = HOT_SPOT_UPDATE;
+	p.id = id;
+
+	// Send Message
+	for (int i = 0; i < playerCount; ++i) {
+		Server::sendMsg((char *)&p, sizeof(p), &players[i].clientAddress);
+	}
 }
 
 void Server::printPacket(struct packet *p)
