@@ -110,8 +110,10 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				// World update. 
 				// This variable 'world' is the world given by the server
 				DynamicWorld world(p);
-				if (client != nullptr)
+				if (client != nullptr) {
 					handleUpdateWorldFromServer(&world);
+				}
+					
 			}
 			else if (p->eventId == RELOAD_CONFIG_FILE)
 			{
@@ -131,6 +133,7 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			else if (p->eventId == CHANNELING_PERMISSION)
 			{
 				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
+				client->level.resources[client->level.activeResourceNode]->startChanneling(getPlayerId());
 				// Start channeling
 			}
 		}
@@ -148,7 +151,6 @@ void Client::sendPlayerUpdate(struct playerObject player)
 
 // Client receives messages from the server
 int Client::receiveMsg() {
-
 	char dummy[65536];
 
 	int bytesReceived = 0;
@@ -273,6 +275,16 @@ void Client::updateActiveResourceNode(int id)
 	client->level.activateResourceNode(id);
 }
 
+void Client::sendChannelCompletedEvent(int resourceId)
+{
+	struct resourceHitPacket p = {}; 
+	p.eventId = CHANNELING_COMPLETE;
+	p.playerId = getPlayerId();
+	p.resourceId = resourceId;
+
+	sendMsg((char*)&p, sizeof(struct resourceHitPacket));
+}
+
 void Client::sendReloadConfigFile()
 {
 	struct packet p = {};
@@ -285,11 +297,13 @@ void Client::sendReloadConfigFile()
 void Client::sendMoveEvent(Direction dir)
 {
 	moveEvents[dir] = true;
+	// TODO: Would cancel channeling if currently channeling
 }
 
 void Client::sendJumpEvent()
 {
 	jumpEvent = true;
+	// TODO: Would cancel channeling if currently channeling
 }
 
 void Client::sendLookEvent(struct cameraObject cam)

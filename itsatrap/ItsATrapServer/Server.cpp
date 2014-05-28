@@ -142,7 +142,6 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			playerCount++;
 
 			//sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
-			//sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
 		}
 		else
 		{
@@ -340,7 +339,7 @@ void Server::processBuffer()
 				playerObject *player = &dynamicWorld.playerMap[hitPkt->playerId];
 
 				// Check if active node
-				if (hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]) {
+				if (player->knifeDelay <= 0 && hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]) {
 					if (!isChanneling) {
 						channelingPlayer = player->id;
 
@@ -348,21 +347,19 @@ void Server::processBuffer()
 							isChanneling = true;
 
 							// send resourceNodePacket to client, telling them it is ok to channel
+							sendPermissionToChannel(channelingPlayer, resourceNodeLocations[currentActiveResourceNodeIndex]);
 						}
 					}
-					// Check if isChanneling (client side?)
-						// Yes: break
-						// No:  check owner
-							// If owner is self or team, return
-							// Else: broadcast message saying:
-								// isChanneling = true;
-								// For given player: call channelingFunction
 									// Wait for completion or interrupt
 										// Completion: owner = playerId
 										// isChannelling = false;
 				}
 
 				break;
+			}
+			case CHANNELING_COMPLETE:
+			{
+				struct resourceHitPacket *hitPkt = (struct resourceHitPacket *)p;
 			}
 			default:
 				printf("[SERVER]: Unknown event at buffer %d, eventId: %d\n", i, p->eventId);
@@ -517,6 +514,8 @@ void Server::updateResources()
 		currentActiveResourceNodeIndex = currentActiveResourceNodeIndex % resourceNodeLocations.size();
 
 		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+		currentResourceOwner = -1;
+		// TODO: Broadcast no owner, reset all nodes
 	}
 }
 

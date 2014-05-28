@@ -43,6 +43,10 @@ namespace sg {
 		return resourceId;
 	}
 
+	bool ResourceNode::startChanneling(int player) {
+		return false;
+	}
+
 	void ResourceNode::draw(glm::mat4 parent, glm::mat4 cam) {
 		glm::mat4 mv = glm::inverse(cam) * parent;
 

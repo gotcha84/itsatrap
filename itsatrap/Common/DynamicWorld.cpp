@@ -918,27 +918,34 @@ void DynamicWorld::resetWorldInfo() {
 		p.triedLeft = false;
 		p.triedRight = false;
 		p.currCamState = CameraStates::Client;
+		p.oldPhysState = p.currPhysState;
 		switch (p.currPhysState) {
 			case PhysicsStates::Climbing:
-				if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Mid || p.currInnerState == innerStates::Ending) {
+				//p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+				//if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Mid || p.currInnerState == innerStates::Ending) {
 					p.currCamState = CameraStates::Server;
-				}
+				//}
 				break;
 			case PhysicsStates::HoldingEdge:
-				if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Ending) {
+				//p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+				//if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Ending) {
 					p.currCamState = CameraStates::Server;
-				}
+				//}
 				break;
 			case PhysicsStates::PullingUp:
-				if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Ending) {
+				//p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+				//if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Ending) {
 					p.currCamState = CameraStates::Server;
-				}
+				//}
 				break;
 			case PhysicsStates::WallRunning:
 				p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-				if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Ending) {
+				//if (p.currInnerState == innerStates::Starting || p.currInnerState == innerStates::Ending) {
 					p.currCamState = CameraStates::Server;
-				}
+				//}
+				break;
+			default:
+				//p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 				break;
 
 		}
@@ -1030,6 +1037,11 @@ void DynamicWorld::applyAdjustments() {
 
 		p.cameraObject.cameraCenter = glm::vec3(p.position.x, p.position.y + playerHeight, p.position.z);
 		p.cameraObject.cameraLookAt = p.cameraObject.cameraCenter + p.cameraObject.camZ;
+
+		if (p.currPhysState != PhysicsStates::WallRunning) {
+			p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+		}
+
 		computeAABB(&p);
 	}
 }
