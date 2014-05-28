@@ -11,7 +11,6 @@ namespace sg {
 			int resourceId;
 			int owner;
 			bool isActive, isChanneling;
-			AABB bouddndingBox;
 
 		public:
 			ParticleSystem *m_particles;
@@ -29,7 +28,8 @@ namespace sg {
 			//void getOwner();
 			//void setOwner();
 			//void addResourcesToOwner();
-			//bool startChanneling(int player);
+			bool startChanneling(int player);
+			void cancelChanneling();
 
 			void draw(glm::mat4 parent, glm::mat4 cam);
 			void print();

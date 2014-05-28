@@ -30,7 +30,7 @@ private:
 	static int 		i_sockfd;
 	static char 	c_msg[BUFSIZE];
 	static WSADATA	wsaData;
-	static int playerId;
+	static int		playerId;
 	static bool		moveEvents[NUM_DIRECTIONS]; // UP, DOWN, LEFT, RIGHT
 	static bool		jumpEvent, cameraChanged;
 	static cameraObject playerCam;
@@ -59,6 +59,7 @@ public:
 	static void sendSpawnTrapEvent(struct trapObject);
 	static void sendKnifeHitEvent(int targetId);
 	static void sendChannelAttemptEvent(int resourceId);
+	static void sendChannelCompletedEvent(int resourceId);
 	static void sendReloadConfigFile();
 	static void sendMoveEvent(Direction dir);
 	static void sendJumpEvent();

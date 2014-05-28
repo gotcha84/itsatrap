@@ -299,7 +299,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	//ConfigSettings::getConfig()->getValue("WREndfraction", WREndfraction);
 
 	glm::vec3 WRHoldercamZ;
-	glm::vec3  WRHoldervelocityDiff;
+	glm::vec3 WRHoldervelocityDiff;
 	glm::vec3 WRStartcamZ;
 	glm::vec3 WRStartcamX;
 	glm::vec3 WRStartcamUp;
@@ -369,7 +369,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 			WREndlookXIncrement *= -1.0f;
 		}
 	}
-	if (angle > 90.0f) {
+	else /*(angle > 90.0f)*/ {
 
 		WRStartlookXIncrement = (abs(180.0f - angle))/(WRStartfraction*WRnumFrames);
 		WREndlookXIncrement = (abs(180.0f - angle))/(WREndfraction*WRnumFrames);

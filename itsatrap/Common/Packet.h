@@ -23,6 +23,7 @@
 #define DISCONNECT_PLAYER_EVENT 17
 #define RESOURCE_HIT_EVENT 18
 #define CHANNELING_PERMISSION 19
+#define CHANNELING_COMPLETE 20
 
 
 // Superclass of all packets
