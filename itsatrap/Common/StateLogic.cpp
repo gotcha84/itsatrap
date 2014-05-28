@@ -114,6 +114,7 @@ void StateLogic::startClimbing(struct playerObject *e, int buildingId) {
 	e->interactingWithBuildingId = buildingId;
 	e->currInnerState = innerStates::Starting;
 	e->currPhysState = PhysicsStates::Climbing;
+	e->stopwatch.start();
 
 }
 
@@ -193,6 +194,7 @@ void StateLogic::startHoldingEdge(struct playerObject *e, int buildingId) {
 	e->interactingWithBuildingId = buildingId;
 	e->currInnerState = innerStates::Starting;
 	e->currPhysState = PhysicsStates::HoldingEdge;
+	e->stopwatch.start();
 
 }
 
@@ -575,9 +577,10 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				p->currInnerState = innerStates::Off;
 				p->interactingWithBuildingId = -1;
 				//cout << "ended state: " << p->currPhysState << endl;
-				cout << "ended with up as: " << glm::to_string(p->cameraObject.cameraUp) << endl;
+			
 				// technically shouldnt need line below.. but w/e hardcoding ftw
 				p->cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+				cout << "ended with up as: " << glm::to_string(p->cameraObject.cameraUp) << endl;
 				p->currPhysState = PhysicsStates::None;
 			}
 			break;

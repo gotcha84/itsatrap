@@ -770,7 +770,6 @@ void DynamicWorld::noneMoveEvent(int playerId)
 					newPos = oldPos;
 					//cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
 					StateLogic::startClimbing(p, buildingId);
-					p->stopwatch.start();
 					return;
 				}
 				
