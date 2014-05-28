@@ -42,6 +42,9 @@ private:
 	bool checkCollision(struct aabb a, struct aabb b);
 	int checkCollisionsWithAllNonTraps(struct playerObject *e);
 	int checkSideCollisionsWithAllBuildings(struct playerObject *e);
+	int checkCollisionsWithAllRampsEntrance(struct playerObject *e);
+	//int checkOnTopOfWithAllRamps(struct playerObject *e);
+	int checkCollisionsWithAllRampsInside(struct playerObject *e);
 	void addNewPlayer(struct playerObject p);
 	void respawnPlayer(struct playerObject *p);
 	void computeAABB(struct playerObject *p);
@@ -85,11 +88,12 @@ public:
 	void applyPhysics();
 	void applyAdjustments();
 
-	void noneMoveEvent(int playerId, Direction dir);
-	void climbingMoveEvent(int playerId, Direction dir);
-	void pullingUpMoveEvent(int playerId, Direction dir);
-	void holdingEdgeMoveEvent(int playerId, Direction dir);
-	void wallRunningMoveEvent(int playerId, Direction dir);
+	void applyMoveEvents();
+	void noneMoveEvent(int playerId);
+	void climbingMoveEvent(int playerId);
+	void pullingUpMoveEvent(int playerId);
+	void holdingEdgeMoveEvent(int playerId);
+	void wallRunningMoveEvent(int playerId);
 
 	void noneJumpEvent(int playerId);
 	void climbingJumpEvent(int playerId);

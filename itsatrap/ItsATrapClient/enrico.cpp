@@ -80,6 +80,33 @@ void handlePlayerUpdate(struct playerObject p)
 			}
 
 		}
+		// if curr player
+		else {
+			if (p.currCamState == CameraStates::Server) {
+				glm::vec3 pCenter = p.cameraObject.cameraCenter;
+				glm::vec3 pLookAt = p.cameraObject.cameraLookAt;
+				glm::vec3 pLookIn = pLookAt - pCenter;
+
+				glm::vec3 clientLookIn = client->players[p.id]->getCamera()->getCameraLookAt() - client->players[p.id]->getCamera()->getCameraCenter();
+
+				if (pLookIn != clientLookIn) {
+					client->players[p.id]->lookIn(pLookIn);
+					//cout << "[" << client->root->getPlayerID() << "] p" << p.id << " now looking in " << glm::to_string(pLookIn) << endl;
+				}
+
+				if (glm::vec3(p.cameraObject.cameraUp) != client->players[p.id]->getCamera()->getCameraUp()) {
+					client->players[p.id]->setUp(p.cameraObject.cameraUp);
+				}
+
+				if (p.cameraObject.xRotated != client->players[p.id]->getCamera()->getXRotated()) {
+					client->players[p.id]->getCamera()->setXRotated(p.cameraObject.xRotated);
+				}
+
+				if (p.cameraObject.yRotated != client->players[p.id]->getCamera()->getYRotated()) {
+					client->players[p.id]->getCamera()->setYRotated(p.cameraObject.yRotated);
+				}
+			}
+		}
 
 	}
 }

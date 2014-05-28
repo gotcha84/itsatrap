@@ -217,7 +217,7 @@ namespace sg {
 	}
 
 	bool Building::onTopOf(AABB* other) {
-		return (m_boundingBox.onTopOf(other));
+		return (m_boundingBox.onTopOfPointer(other));
 	}
 
 	int Building::collidesWith(AABB* other) {

@@ -99,7 +99,7 @@ struct physicsObject {
 	glm::vec3 position;
 	glm::vec3 lastMoved;
 
-	bool triedToRun;
+	bool triedForward;
 	bool canJump; // not used, same purpose as below anyway
 	bool feetPlanted;
 	
@@ -138,12 +138,16 @@ struct playerObject {
 	glm::vec3 velocityDiff;
 	bool feetPlanted;
 	bool canClimb;
-	bool triedToRun;
+	bool triedForward;
+	bool triedBackward;
+	bool triedLeft;
+	bool triedRight;
 	PhysicsStates currPhysState;
 	innerStates currInnerState;
 	CameraStates currCamState;
 	int interactingWithBuildingId;
-	int interactingWIthBuildingFace; //-x = 0, +x = 1 etc. will be used for ramps
+	int interactingWithBuildingFace; //-x = 0, +x = 1 etc. will be used for ramps
+	int interactingWithRampId;
 };
 
 struct trapObject {

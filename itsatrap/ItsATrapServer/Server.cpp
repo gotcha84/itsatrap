@@ -19,9 +19,6 @@ int					Server::resourcePerInterval;
 int					Server::resourceHotSpotBonusPerInterval;
 int					Server::resourceInterval;
 int					Server::hotSpotChangeInterval;
-//vector<glm::vec3>	Server::hotSpotLocations;
-//glm::vec3			Server::currentHotSpot;
-//int					Server::currentHotSpotIndex;
 
 vector<int>			Server::resourceNodeLocations;
 int					Server::currentActiveResourceNodeIndex;
@@ -87,7 +84,7 @@ int Server::initialize() {
 	ConfigSettings::getConfig()->getValue("ResourceHotSpotBonusPerInterval", resourceHotSpotBonusPerInterval);
 	ConfigSettings::getConfig()->getValue("ResourceInterval", resourceInterval);
 	ConfigSettings::getConfig()->getValue("HotSpotChangeInterval", hotSpotChangeInterval);
-
+	
 	timeUntilResourceBonus = resourcePerInterval;
 	timeUntilHotSpotChange = hotSpotChangeInterval;
 
@@ -256,16 +253,12 @@ void Server::processBuffer()
 {
 	checkConnection();
 	dynamicWorld.updateTimings(MAX_SERVER_PROCESS_RATE);
-	dynamicWorld.resetWorldInfo();
-	dynamicWorld.applyPhysics();
-	dynamicWorld.applyGravity();
-	dynamicWorld.applyAdjustments();
-	dynamicWorld.checkPlayersCollideWithTrap();
 	updateResources();
+
+	dynamicWorld.resetWorldInfo();
 
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
 	WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
-		//World world;
 
 	for (int i = 0; i < packetBufferCount; i++)
 	{
@@ -382,6 +375,12 @@ void Server::processBuffer()
 	if (playerCount > 0) {
 		broadcastDynamicWorld();
 	}
+
+	dynamicWorld.applyMoveEvents();
+	dynamicWorld.applyPhysics();
+	dynamicWorld.applyGravity();
+	dynamicWorld.applyAdjustments();
+	dynamicWorld.checkPlayersCollideWithTrap();
 
 	// Release Mutex
 	ReleaseMutex(packetBufMutex);

@@ -60,10 +60,6 @@ void Window::reshapeCallback(int w, int h)
 //----------------------------------------------------------------------------
 // Callback method called when window readraw is necessary or
 // when glutPostRedisplay() was called.
-void Window::displayCallback2(void) {
-
-}
-
 void Window::displayCallback(void)
 {	
 	float oldBuildingId = client->root->getPlayer()->m_onTopOfBuildingId;
@@ -264,6 +260,7 @@ void Window::specialKeyUp(int key, int x, int y) {
 
 void Window::processKeys() {
 	//client->root->m_player->getPhysics()->m_triedToRun = false;
+	//client->root->m_player->getPhysics()->m_triedForward = false;
 
 	int count = 0;
 	//PhysicsStates curr_state = client->root->m_player->getPhysics()->m_currentState;

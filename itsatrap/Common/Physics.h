@@ -26,7 +26,7 @@ class COMMON_API Physics {
 	public:
 
 		static bool atRest();
-		static void toggleTriedToRun();
+		static void toggletriedForward();
 		static int handleCollisionDetection(AABB* other);
 		static float handleIntersection(glm::vec3 from, glm::vec3 goTo, AABB* other); // not used
 		
