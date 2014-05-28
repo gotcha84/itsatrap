@@ -185,6 +185,18 @@ bool ParticleSystem::isEnabled() {
 
 void ParticleSystem::enable() {
 	m_enabled = true;
+
+	// restart particles from the bottom
+	for (int i = 0; i < m_particles.size(); i++) {
+		m_particles[i].m_pos = glm::vec3(m_particles[i].m_rad, 0, 0);
+		m_particles[i].m_theta = 0;
+		if (m_particles[i].m_reversed) {
+			m_particles[i].m_rad = -1 * (rand() % 100 + 1) / 500.0f;
+		}
+		else {
+			m_particles[i].m_rad = (rand() % 100 + 1) / 500.0f;
+		}
+	}
 }
 
 void ParticleSystem::disable() {
