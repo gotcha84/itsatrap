@@ -409,6 +409,46 @@ void Level::initLevel() {
 	buildings.back()->setColor(glm::vec4(0.6, 0.5, 0.5, 1));
 	xForms.back()->addChild(buildings.back());
 
+	// Building 31: (-21, 48, 0)
+	xForms.push_back(new sg::MatrixTransform());
+	xForms.back()->setMatrix(glm::translate(glm::vec3(-21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2, UNIT_48, UNIT_40)));
+	root->addChild(xForms.back());
+
+	buildings.push_back(new sg::Cube());
+	buildings.back()->setName("Building 31: (-21, 48, 0)");
+	buildings.back()->setColor(glm::vec4(0.1, 0.1, 0.1, 0.7));
+	xForms.back()->addChild(buildings.back());
+
+	// Building 32: (21, 48, 0)
+	xForms.push_back(new sg::MatrixTransform());
+	xForms.back()->setMatrix(glm::translate(glm::vec3(21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2, UNIT_48, UNIT_40)));
+	root->addChild(xForms.back());
+
+	buildings.push_back(new sg::Cube());
+	buildings.back()->setName("Building 32: (21, 48, 0)");
+	buildings.back()->setColor(glm::vec4(0.1, 0.1, 0.1, 0.7));
+	xForms.back()->addChild(buildings.back());
+
+	// Building 33: (0, 48, -21)
+	xForms.push_back(new sg::MatrixTransform());
+	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, -21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48, UNIT_2)));
+	root->addChild(xForms.back());
+
+	buildings.push_back(new sg::Cube());
+	buildings.back()->setName("Building 32: (21, 48, 0)");
+	buildings.back()->setColor(glm::vec4(0.1, 0.1, 0.1, 0.7));
+	xForms.back()->addChild(buildings.back());
+
+	// Building 34: (0, 48, 21)
+	xForms.push_back(new sg::MatrixTransform());
+	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, 21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48, UNIT_2)));
+	root->addChild(xForms.back());
+
+	buildings.push_back(new sg::Cube());
+	buildings.back()->setName("Building 32: (21, 48, 0)");
+	buildings.back()->setColor(glm::vec4(0.1, 0.1, 0.1, 0.7));
+	xForms.back()->addChild(buildings.back());
+
 	// Note: Ramp needs to be reduced by 45% in the y-axis to match unit_size. 55% for other axis
 	// Note: COMMENT THESE FOLLOWING RAMPS TO GET RID OF THE RAMPS
 	// Ramp 0: (7, 0, -7) +z

@@ -9,8 +9,8 @@
 #include "../Common/World.h"
 
 #define FLOOR_HEIGHT	0.01f
-#define MAP_X_LENGTH	40
-#define MAP_Z_LENGTH	40
+#define MAP_X_LENGTH	44
+#define MAP_Z_LENGTH	44
 #define UNIT_SIZE		27
 
 #define NUM_BUILDINGS	31
@@ -30,6 +30,7 @@
 #define UNIT_20			UNIT_SIZE * 20
 #define UNIT_24			UNIT_SIZE * 24
 #define UNIT_40			UNIT_SIZE * 40
+#define UNIT_48			UNIT_SIZE * 48
 
 #define BLOCKS			"../Models/Blocks/"
 #define POLYNOIDS		"../Models/Polynoid/"

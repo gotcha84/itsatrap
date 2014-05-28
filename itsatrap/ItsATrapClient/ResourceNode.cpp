@@ -44,7 +44,8 @@ namespace sg {
 	}
 
 	bool ResourceNode::startChanneling(int player) {
-
+		//SetTimer(channelingHandle, NULL, 1000, (TIMERPROC)channelingCompleted);
+		return false;
 	}
 
 	void ResourceNode::draw(glm::mat4 parent, glm::mat4 cam) {

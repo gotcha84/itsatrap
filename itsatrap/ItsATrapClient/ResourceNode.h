@@ -12,6 +12,10 @@ namespace sg {
 			int owner;
 			bool isActive, isChanneling;
 
+			HWND channelingHandle;
+
+			void channelingCompleted();
+
 		public:
 			ParticleSystem *m_particles;
 			ParticleSystem *m_particles2;
