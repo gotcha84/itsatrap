@@ -10,11 +10,6 @@ namespace sg {
 		private:
 			int resourceId;
 			int owner;
-			bool isActive, isChanneling;
-
-			HWND channelingHandle;
-
-			void channelingCompleted();
 
 		public:
 			ParticleSystem *m_particles;
@@ -32,8 +27,6 @@ namespace sg {
 			//void getOwner();
 			//void setOwner();
 			//void addResourcesToOwner();
-			bool startChanneling(int player);
-			void cancelChanneling();
 
 			void draw(glm::mat4 parent, glm::mat4 cam);
 			void print();

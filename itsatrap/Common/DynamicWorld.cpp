@@ -301,6 +301,17 @@ int DynamicWorld::getNumStaticResourceObjects()
 	return staticResourceObjects.size();
 }
 
+AABB DynamicWorld::getStaticResourceBB(int resourceId)
+{
+	for (int i = 0; i < staticResourceObjects.size(); ++i) {
+		if (staticResourceObjects[i].id == resourceId) {
+			return staticResourceObjects[i].aabb;
+		}
+	}
+
+	return AABB();
+}
+
 void DynamicWorld::addTrap(struct trapObject t)
 {
 	t.eventCode = EVENT_ADD_TRAP;

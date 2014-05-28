@@ -12,6 +12,7 @@ int					Client::playerId;
 bool				Client::moveEvents[NUM_DIRECTIONS] = {};
 bool				Client::jumpEvent, Client::cameraChanged;
 cameraObject		Client::playerCam = {};
+int					Client::channelingResourceId;
 
 int Client::initializeClient() {
 
@@ -133,8 +134,7 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			else if (p->eventId == CHANNELING_PERMISSION)
 			{
 				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
-				client->level.resources[client->level.activeResourceNode]->startChanneling(getPlayerId());
-				// Start channeling
+				startChanneling(packet->id);
 			}
 		}
 	}
@@ -374,4 +374,20 @@ void Client::handleDisconnectPlayer(int id)
 		client->players.erase(id);
 		client->objects.erase(id);
 	}
+}
+
+void Client::startChanneling(int resourceId) {
+	channelingResourceId = resourceId;
+	DWORD tmp = 0;
+	CreateThread(NULL, 0, Client::channelingThread, NULL, 0, &tmp);
+	// ExitThread?
+}
+
+DWORD WINAPI Client::channelingThread(LPVOID arg) {
+	Sleep(1000);
+	cout << "Channeling Node..." << endl;
+	// Send Message to server
+	Client::sendChannelCompletedEvent(channelingResourceId);
+	channelingResourceId = -1;
+	return 0;
 }

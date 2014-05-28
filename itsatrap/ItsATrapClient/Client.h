@@ -48,6 +48,11 @@ private:
 	static void updateActiveResourceNode(int id);
 	static void handleDisconnectPlayer(int id);
 
+	static void startChanneling(int resourceId);
+	static void cancelChanneling();
+	static DWORD WINAPI channelingThread(LPVOID);
+	static int	channelingResourceId;
+
 public:
 	// Functions
 	static int initializeClient();

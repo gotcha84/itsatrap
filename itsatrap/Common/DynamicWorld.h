@@ -80,6 +80,7 @@ public:
 	int getNumStaticObjects();
 	int getNumStaticRampObjects();
 	int getNumStaticResourceObjects();
+	AABB getStaticResourceBB(int resourceId);
 
 	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
