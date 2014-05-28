@@ -716,7 +716,7 @@ void DynamicWorld::noneMoveEvent(int playerId)
 
 		// hit side of ramp
 		if (rampId == -1 && checkCollisionsWithAllRampsInside(p) != -1) {
-			cout << "not on ramp, found hit side" << endl;
+			//cout << "not on ramp, found hit side" << endl;
 			toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
 			p->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 			p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
@@ -724,12 +724,14 @@ void DynamicWorld::noneMoveEvent(int playerId)
 			computeAABB(p);
 			return;
 		}
+		/*
 		if (rampId == -1) {
 			cout << "not on ramp, did not find entrance. did not hit side" << endl;
 		}
 		else {
 			cout << "not no ramp, found entrance" << endl;
 		}
+		*/
 		p->interactingWithRampId = rampId;
 	}
 	// if already on ramp
@@ -776,8 +778,14 @@ void DynamicWorld::noneMoveEvent(int playerId)
 				//cout << "starting the wallrunning with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
 				// 0,1 = x, -1 = y, 4,5 = z
 					int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
-					StateLogic::startWallRunning(p, newDirection, toAdd, angle, buildingId);
-					return;
+					if (newDirection != -1) {
+						StateLogic::startWallRunning(p, newDirection, toAdd, angle, buildingId);
+					}
+					else {
+						toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
+						p->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+						p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
+					}
 				}
 			}
 			else {
@@ -890,13 +898,13 @@ void DynamicWorld::holdingEdgeMoveEvent(int playerId) {
 
 void DynamicWorld::pullingUpMoveEvent(int playerId) {
 
-	cout << "why handling pullingupevent wtf??" << endl;
+	//cout << "why handling pullingupevent wtf??" << endl;
 	return;
 }
 
 void DynamicWorld::wallRunningMoveEvent(int playerId) {
 
-	cout << "why handling wallrunningmoveevent" << endl;
+	//cout << "why handling wallrunningmoveevent" << endl;
 	return;
 }
 
