@@ -252,6 +252,16 @@ void Client::sendKnifeHitEvent(int targetId)
 	sendMsg((char *)&p, sizeof(struct knifeHitPacket));
 }
 
+void Client::sendChannelAttemptEvent(int resourceId)
+{
+	struct resourceHitPacket p;
+	p.eventId = RESOURCE_HIT_EVENT;
+	p.playerId = getPlayerId();
+	p.resourceId = resourceId;
+
+	sendMsg((char *)&p, sizeof(struct resourceHitPacket));
+}
+
 //void Client::updateHotSpot(int x, int y, int z)
 //{
 //	if (client == nullptr)

@@ -26,6 +26,7 @@ int					Server::hotSpotChangeInterval;
 vector<int>			Server::resourceNodeLocations;
 int					Server::currentActiveResourceNodeIndex;
 int					Server::currentResourceOwner;
+bool				Server::isChanneling;
 
 // Private Vars
 HANDLE		packetBufMutex;
@@ -99,11 +100,12 @@ int Server::initialize() {
 
 	currentActiveResourceNodeIndex = 0;
 	currentResourceOwner = -1;
+	isChanneling = false;
 
 	// Load Height Map
 	string heightMapFile;
 	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
-	//World::readInHeightMapFromFile(heightMapFile);
+	World::readInHeightMapFromFile(heightMapFile);
 	
 	return 0;
 }
@@ -181,11 +183,11 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticResourceObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
 			dynamicWorld.addStaticResourceObject(tmp);
-			resourceNodeLocations.push_back(tmp.id);
 			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
 			tmp.aabb.print();
 			printf("ResourceId: %d\n", tmp.id);
 
+			resourceNodeLocations.push_back(tmp.id);
 			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 		}
 
@@ -320,7 +322,6 @@ void Server::processBuffer()
 			{
 				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
 
-				// TODO (ktngo): Maybe have a more general player interaction method?
 				playerObject *player = &dynamicWorld.playerMap[knifePkt->playerId];
 				playerObject *target = &dynamicWorld.playerMap[knifePkt->targetId];
 
@@ -341,14 +342,32 @@ void Server::processBuffer()
 						&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
 						&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
 					{
-
 						dynamicWorld.playerDamage(player, target, KNIFE_HIT_DMG);
 					}
+				}
+				break;
+			}
+			case RESOURCE_HIT_EVENT:
+			{
+				struct resourceHitPacket *hitPkt = (struct resourceHitPacket *)p;
+				playerObject *player = &dynamicWorld.playerMap[hitPkt->playerId];
+
+				// Check if active node
+				if (hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]) {
+					// Check if isChanneling (client side?)
+						// Yes: break
+						// No:  check owner
+							// If owner is self or team, return
+							// Else: broadcast message saying:
+								// isChanneling = true;
+								// For given player: call channelingFunction
+									// Wait for completion or interrupt
+										// Completion: owner = playerId
+										// isChannelling = false;
 				}
 
 				break;
 			}
-
 			default:
 				printf("[SERVER]: Unknown event at buffer %d, eventId: %d\n", i, p->eventId);
 				break;
@@ -418,7 +437,7 @@ void Server::updateResources()
 	}
 
 	// Change the active node
-	if (timeUntilHotSpotChange < 0)
+	if (timeUntilHotSpotChange < 0 && resourceNodeLocations.size() > 0)
 	{
 		timeUntilHotSpotChange = hotSpotChangeInterval;		// Reset timer
 
