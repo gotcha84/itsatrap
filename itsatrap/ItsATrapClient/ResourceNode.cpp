@@ -9,8 +9,6 @@ namespace sg {
 
 		resourceId = id;
 		owner = -1;
-		isActive = false;
-		isChanneling = false;
 	}
 
 	ResourceNode::~ResourceNode() {
@@ -41,11 +39,6 @@ namespace sg {
 
 	int ResourceNode::getResourceId() {
 		return resourceId;
-	}
-
-	bool ResourceNode::startChanneling(int player) {
-		//SetTimer(channelingHandle, NULL, 1000, (TIMERPROC)channelingCompleted);
-		return false;
 	}
 
 	void ResourceNode::draw(glm::mat4 parent, glm::mat4 cam) {

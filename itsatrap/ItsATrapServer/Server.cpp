@@ -97,7 +97,7 @@ int Server::initialize() {
 	// Load Height Map
 	string heightMapFile;
 	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
-	//World::readInHeightMapFromFile(heightMapFile);
+	World::readInHeightMapFromFile(heightMapFile);
 	
 	return 0;
 }
@@ -333,14 +333,34 @@ void Server::processBuffer()
 
 				// Check if active node
 				if (player->knifeDelay <= 0 && hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]) {
+					ConfigSettings::getConfig()->getValue("KnifeDelay", player->knifeDelay);
+
 					if (!isChanneling) {
 						channelingPlayer = player->id;
 
 						if (currentResourceOwner != channelingPlayer || currentResourceOwner % 2 != channelingPlayer % 2) {
 							isChanneling = true;
 
-							// send resourceNodePacket to client, telling them it is ok to channel
-							sendPermissionToChannel(channelingPlayer, resourceNodeLocations[currentActiveResourceNodeIndex]);
+							float knifeRange = 0.0f;
+							ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
+
+							glm::vec3 lookAt = player->cameraObject.cameraLookAt;
+							glm::vec3 center = player->cameraObject.cameraCenter;
+							glm::vec3 difVec = lookAt - center;
+							glm::vec3 hitPt = center + (knifeRange * difVec);
+
+							AABB target = dynamicWorld.getStaticResourceBB(hitPkt->resourceId);
+							if (hitPt.x >= target.minX && hitPt.x <= target.maxX
+								&& hitPt.y >= target.minY && hitPt.y <= target.maxY
+								&& hitPt.z >= target.minZ && hitPt.z <= target.maxZ)
+							{
+								// send resourceNodePacket to client, telling them it is ok to channel
+								sendPermissionToChannel(channelingPlayer, resourceNodeLocations[currentActiveResourceNodeIndex]);
+							}
+							else
+							{
+								resetChanneling();
+							}
 						}
 					}
 				}
@@ -355,7 +375,8 @@ void Server::processBuffer()
 				if (hitPkt->playerId == channelingPlayer
 					&& hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]
 					&& isChanneling) {
-
+					// Establish the owner
+					// Broadcast owner to all
 				}
 			}
 			default:
@@ -512,6 +533,7 @@ void Server::updateResources()
 
 		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 		currentResourceOwner = -1;
+		resetChanneling();
 		// TODO: Broadcast no owner, reset all nodes
 	}
 }
