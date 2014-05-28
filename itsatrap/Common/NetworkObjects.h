@@ -143,6 +143,7 @@ struct playerObject {
 	bool triedLeft;
 	bool triedRight;
 	PhysicsStates currPhysState;
+	PhysicsStates oldPhysState;
 	innerStates currInnerState;
 	CameraStates currCamState;
 	int interactingWithBuildingId;

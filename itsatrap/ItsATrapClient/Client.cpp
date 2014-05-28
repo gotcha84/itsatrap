@@ -111,8 +111,10 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				// World update. 
 				// This variable 'world' is the world given by the server
 				DynamicWorld world(p);
-				if (client != nullptr)
+				if (client != nullptr) {
 					handleUpdateWorldFromServer(&world);
+				}
+					
 			}
 			else if (p->eventId == RELOAD_CONFIG_FILE)
 			{

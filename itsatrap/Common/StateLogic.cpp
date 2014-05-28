@@ -114,6 +114,7 @@ void StateLogic::startClimbing(struct playerObject *e, int buildingId) {
 	e->interactingWithBuildingId = buildingId;
 	e->currInnerState = innerStates::Starting;
 	e->currPhysState = PhysicsStates::Climbing;
+	e->stopwatch.start();
 
 }
 
@@ -193,6 +194,7 @@ void StateLogic::startHoldingEdge(struct playerObject *e, int buildingId) {
 	e->interactingWithBuildingId = buildingId;
 	e->currInnerState = innerStates::Starting;
 	e->currPhysState = PhysicsStates::HoldingEdge;
+	e->stopwatch.start();
 
 }
 
@@ -313,6 +315,9 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	float WREndlookXIncrement;
 	float WRHolderxRotated;
 
+	int WRStartCounter = 0;
+	int WREndCounter = 0;
+
 	if (newDirection == 0 || newDirection == 1) {
 		WRHoldercamZ = glm::vec3(e->cameraObject.camZ.x*-1.0f, e->cameraObject.camZ.y, e->cameraObject.camZ.z);
 		toAdd.z *= -1.0f;
@@ -410,6 +415,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	//cout << "wrstartcampincrment: " << glm::to_string(WRStartcamUpIncrement) << endl;
 	statesInfo[e->id].Start.camUpIncrement = WRStartcamUpIncrement;
 	statesInfo[e->id].Start.velocityDiff = WRStartvelocityDiff;
+	statesInfo[e->id].Start.counter = WRStartCounter;
 
 	statesInfo[e->id].Mid.velocityDiff = WRMidvelocityDiff;
 
@@ -418,6 +424,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	//cout << "wrendcampincrment: " << glm::to_string(WREndcamUpIncrement) << endl;
 	statesInfo[e->id].End.camUpIncrement = WREndcamUpIncrement;
 	statesInfo[e->id].End.velocityDiff = WREndvelocityDiff;
+	statesInfo[e->id].End.counter = WREndCounter;
 
 	e->feetPlanted = true; // not sure if makes a dfference
 	e->interactingWithBuildingId = buildingId;
@@ -575,9 +582,15 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				p->currInnerState = innerStates::Off;
 				p->interactingWithBuildingId = -1;
 				//cout << "ended state: " << p->currPhysState << endl;
-				cout << "ended with up as: " << glm::to_string(p->cameraObject.cameraUp) << endl;
+			
 				// technically shouldnt need line below.. but w/e hardcoding ftw
 				p->cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+				//cout << "ended with up as: " << glm::to_string(p->cameraObject.cameraUp) << endl;
+				//cout << "ended with: x: " << p->cameraObject.xRotated << endl;
+				//cout << "ended with: y: " << p->cameraObject.yRotated << endl;
+				//cout << "ended with: camX: " << glm::to_string(p->cameraObject.camX) << endl;
+				//cout << "ended with: camZ: " << glm::to_string(p->cameraObject.camZ) << endl;
+				//cout << "ended with cam state: " << p->currCamState << endl;
 				p->currPhysState = PhysicsStates::None;
 			}
 			break;

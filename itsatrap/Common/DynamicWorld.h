@@ -85,6 +85,7 @@ public:
 	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
 	void resetWorldInfo();
+	void applyCollisions();
 	void applyGravity();
 	void applyPhysics();
 	void applyAdjustments();

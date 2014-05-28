@@ -58,6 +58,20 @@ void handlePlayerUpdate(struct playerObject p)
 		if (client->root->getPlayerID() != p.id) {
 			glm::vec3 pCenter = p.cameraObject.cameraCenter;
 			glm::vec3 pLookAt = p.cameraObject.cameraLookAt;
+
+			if (p.cameraObject.cameraUp != glm::vec3(0.0f, 1.0f, 0.0f) || client->players[p.id]->getCamera()->getCameraUp() != glm::vec3(0.0f, 1.0f, 0.0f)) {
+				//cout << "currstate: " << p.currPhysState << endl;
+				if (p.currPhysState != PhysicsStates::WallRunning /*|| p.oldPhysState != PhysicsStates::WallRunning*/) {
+					client->players[p.id]->setUp(glm::vec3(0.0f, 1.0f, 0.0f));
+				}
+				else {
+					client->players[p.id]->setUp(p.cameraObject.cameraUp);
+				}
+				//cout << "curr up: " << glm::to_string(p.cameraObject.cameraUp) << endl;
+				client->players[p.id]->setUp(p.cameraObject.cameraUp);
+				//cout << "updated up: " << glm::to_string(client->players[p.id]->getCamera()->getCameraUp()) << endl;
+			}
+
 			glm::vec3 pLookIn = pLookAt - pCenter;
 
 			glm::vec3 clientLookIn = client->players[p.id]->getCamera()->getCameraLookAt() - client->players[p.id]->getCamera()->getCameraCenter();
@@ -67,11 +81,8 @@ void handlePlayerUpdate(struct playerObject p)
 				//cout << "[" << client->root->getPlayerID() << "] p" << p.id << " now looking in " << glm::to_string(pLookIn) << endl;
 			}
 
-			if (glm::vec3(p.cameraObject.cameraUp) != client->players[p.id]->getCamera()->getCameraUp()) {
-				client->players[p.id]->setUp(p.cameraObject.cameraUp);
-			}
-
 			if (p.cameraObject.xRotated != client->players[p.id]->getCamera()->getXRotated()) {
+				//cout << "updated xrotated: " << client->players[p.id]->getCamera()->getXRotated() << endl;
 				client->players[p.id]->getCamera()->setXRotated(p.cameraObject.xRotated);
 			}
 			
@@ -82,9 +93,20 @@ void handlePlayerUpdate(struct playerObject p)
 		}
 		// if curr player
 		else {
+			if (p.cameraObject.cameraUp != glm::vec3(0.0f, 1.0f, 0.0f) || client->players[p.id]->getCamera()->getCameraUp() != glm::vec3(0.0f, 1.0f, 0.0f)) {
+				if (p.currPhysState != PhysicsStates::WallRunning /*|| p.oldPhysState != PhysicsStates::WallRunning*/) {
+					client->players[p.id]->setUp(glm::vec3(0.0f, 1.0f, 0.0f));
+				}
+				else {
+					client->players[p.id]->setUp(p.cameraObject.cameraUp);
+				}
+				client->players[p.id]->setUp(p.cameraObject.cameraUp);
+			}
+
 			if (p.currCamState == CameraStates::Server) {
 				glm::vec3 pCenter = p.cameraObject.cameraCenter;
 				glm::vec3 pLookAt = p.cameraObject.cameraLookAt;
+
 				glm::vec3 pLookIn = pLookAt - pCenter;
 
 				glm::vec3 clientLookIn = client->players[p.id]->getCamera()->getCameraLookAt() - client->players[p.id]->getCamera()->getCameraCenter();
@@ -92,10 +114,6 @@ void handlePlayerUpdate(struct playerObject p)
 				if (pLookIn != clientLookIn) {
 					client->players[p.id]->lookIn(pLookIn);
 					//cout << "[" << client->root->getPlayerID() << "] p" << p.id << " now looking in " << glm::to_string(pLookIn) << endl;
-				}
-
-				if (glm::vec3(p.cameraObject.cameraUp) != client->players[p.id]->getCamera()->getCameraUp()) {
-					client->players[p.id]->setUp(p.cameraObject.cameraUp);
 				}
 
 				if (p.cameraObject.xRotated != client->players[p.id]->getCamera()->getXRotated()) {

@@ -159,7 +159,7 @@ glm::vec4 ParticleSystem::getColor() {
 void ParticleSystem::setColor(glm::vec4 color) {
 	m_color = color;
 
-	for (int i = 0; i < getNumParticles(); i++) {
+	for (int i = 0; i < m_particles.size(); i++) {
 		m_particles[i].m_color.r = color.r;
 		m_particles[i].m_color.g = color.g;
 		m_particles[i].m_color.b = color.b;
