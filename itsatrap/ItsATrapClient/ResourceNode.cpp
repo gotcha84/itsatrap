@@ -44,6 +44,7 @@ namespace sg {
 	}
 
 	bool ResourceNode::startChanneling(int player) {
+		//SetTimer(channelingHandle, NULL, 1000, (TIMERPROC)channelingCompleted);
 		return false;
 	}
 

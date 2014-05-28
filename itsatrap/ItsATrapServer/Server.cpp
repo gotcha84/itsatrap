@@ -89,13 +89,6 @@ int Server::initialize() {
 	timeUntilHotSpotChange = hotSpotChangeInterval;
 
 	// Resource Locations
-	//hotSpotLocations.push_back(glm::vec3(75, 0, 0));
-	//hotSpotLocations.push_back(glm::vec3(35, 0, 0));
-	//hotSpotLocations.push_back(glm::vec3(105, 0, 0));
-
-	//currentHotSpotIndex = 0;
-	//currentHotSpot = hotSpotLocations[currentHotSpotIndex];
-
 	currentActiveResourceNodeIndex = 0;
 	currentResourceOwner = -1;
 	channelingPlayer = -1;
@@ -104,7 +97,7 @@ int Server::initialize() {
 	// Load Height Map
 	string heightMapFile;
 	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
-	World::readInHeightMapFromFile(heightMapFile);
+	//World::readInHeightMapFromFile(heightMapFile);
 	
 	return 0;
 }
@@ -350,9 +343,6 @@ void Server::processBuffer()
 							sendPermissionToChannel(channelingPlayer, resourceNodeLocations[currentActiveResourceNodeIndex]);
 						}
 					}
-									// Wait for completion or interrupt
-										// Completion: owner = playerId
-										// isChannelling = false;
 				}
 
 				break;
@@ -360,6 +350,13 @@ void Server::processBuffer()
 			case CHANNELING_COMPLETE:
 			{
 				struct resourceHitPacket *hitPkt = (struct resourceHitPacket *)p;
+
+				// Check playerId, resourceId, isChanneling == true;
+				if (hitPkt->playerId == channelingPlayer
+					&& hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]
+					&& isChanneling) {
+
+				}
 			}
 			default:
 				printf("[SERVER]: Unknown event at buffer %d, eventId: %d\n", i, p->eventId);
