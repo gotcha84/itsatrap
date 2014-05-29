@@ -19,6 +19,7 @@ ClientInstance::ClientInstance(int id) {
 	this->addPlayer(root);
 	objects[id] = root;
 
+	tabPressed = false;
 }
 
 ClientInstance::~ClientInstance() {

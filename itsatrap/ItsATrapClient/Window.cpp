@@ -422,6 +422,8 @@ void Window::processKeys() {
 		//client->toggleCurrentPlayer();
 		//client->printSceneGraph();
 		//break;
+	
+	client->tabPressed = keyState[9];
 }
 void Window::processMouseKeys(int button, int state, int x, int y)
 {

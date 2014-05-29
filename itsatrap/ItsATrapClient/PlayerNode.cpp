@@ -1,6 +1,8 @@
 #define PLAYER_RAD 5.0f
 
 #include "PlayerNode.h"
+#include "ClientInstance.h"
+extern ClientInstance* client;
 
 namespace sg {
 
@@ -8,6 +10,7 @@ namespace sg {
 		this->setPlayerID(0);
 		m_player = new MyPlayer();
 		m_hud = new HUD();
+		board = new Scoreboard();
 		
 		m_translate = glm::vec3();
 		m_rotate = glm::quat();
@@ -27,7 +30,8 @@ namespace sg {
 		this->setPlayerID(0);
 		m_player = new MyPlayer(pos);
 		m_hud = new HUD();
-		
+		board = new Scoreboard();
+
 		m_translate = glm::vec3();
 		m_rotate = glm::quat();
 		m_scale = glm::vec3(1,1,1);
@@ -58,6 +62,9 @@ namespace sg {
 
 		delete m_otherPlayer;
 		m_otherPlayer = nullptr;
+
+		delete board;
+		board = nullptr;
 	}
 
 	void Player::initModels() {
@@ -159,7 +166,27 @@ namespace sg {
 		this->drawAsCurrentPlayer(mv);
 
 		// draw player hud
-		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources);
+		//TODO: last parameter is the respawn input time. from server to client
+		for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
+			sg::Player *player = it->second;
+			cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
+			cout << client->tabPressed << endl;
+		}
+
+		if (client->tabPressed) {
+			for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
+				sg::Player *player = it->second;
+				Scoreboard::Entry entry;
+				entry.setName( player->getPlayerID() );
+				entry.setKill(player->getPlayer()->m_numKills);
+				entry.setDeath(player->getPlayer()->m_numDeaths);
+				board->addEntry(entry);
+				//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
+				//cout << client->tabPressed << endl;
+			}
+			board->draw();
+		}
+		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, 5, 0, 0);
 	}
 
 	void Player::drawAsCurrentPlayer(glm::mat4 mv) {

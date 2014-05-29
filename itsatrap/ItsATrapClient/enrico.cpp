@@ -36,6 +36,8 @@ void handlePlayerUpdate(struct playerObject p)
 			client->players[p.id]->setHealth(p.health);
 		}
 		client->players[p.id]->m_player->m_deathState = p.deathState;
+		client->players[p.id]->m_player->m_numDeaths = p.numDeaths;
+		client->players[p.id]->m_player->m_numKills = p.numKills;
 
 		// BUFFS
 		client->players[p.id]->m_player->m_stunDuration = p.stunDuration;

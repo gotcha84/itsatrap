@@ -1,3 +1,5 @@
+#define FULLSCREEN 0
+
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -5,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include "FTGL\ftgl.h"
 
 #include "ConfigSettings.h"
 
@@ -54,7 +57,9 @@ int main(int argc, char *argv[]) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
 	glutInitWindowSize(window->m_width, window->m_height);      // set initial window size
 	glutCreateWindow("It's a Trap!");           // open window and set window title
-	//glutFullScreen();
+	if (FULLSCREEN)	 {
+		glutFullScreen();
+	}
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
 	glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer

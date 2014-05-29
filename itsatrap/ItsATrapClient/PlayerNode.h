@@ -6,6 +6,7 @@
 #include "MatrixTransform.h"
 #include "MyPlayer.h"
 #include "HUD.h"
+#include "Scoreboard.h"
 #include "ObjModel.h"
 
 namespace sg {
@@ -14,6 +15,7 @@ namespace sg {
 			int m_playerID;
 			MyPlayer *m_player;
 			HUD *m_hud;
+			Scoreboard *board;
 			
 			glm::vec4 m_color;
 			glm::vec3 m_translate;

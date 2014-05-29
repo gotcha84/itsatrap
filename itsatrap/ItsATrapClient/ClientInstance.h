@@ -20,6 +20,8 @@ class ClientInstance {
 		//sg::MatrixTransform *hotSpot;
 		Level level;
 
+		bool tabPressed;
+
 		int m_xMouse, m_yMouse; // mouse position
 
 		ClientInstance();

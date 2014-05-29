@@ -43,7 +43,7 @@ void Level::initLevel() {
 	// Add obstacles + buildings to level
 	// Resource Tower #1
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_12, 0)) * glm::scale(glm::vec3(5, 10, 1)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_12, 0)) * glm::scale(glm::vec3(5, 10, 5)));
 	root->addChild(xForms.back());
 
 	rs = new sg::ResourceNode(0, NUMPARTICLES);
@@ -63,7 +63,7 @@ void Level::initLevel() {
 
 	// Resource Tower #2
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(-15 * UNIT_SIZE, UNIT_8, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 1)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(-15 * UNIT_SIZE, UNIT_8, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 5)));
 	root->addChild(xForms.back());
 
 	rs = new sg::ResourceNode(1, NUMPARTICLES);
@@ -82,7 +82,7 @@ void Level::initLevel() {
 
 	// Resource Tower #3
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(15 * UNIT_SIZE, UNIT_8, -7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 1)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(15 * UNIT_SIZE, UNIT_8, -7 * UNIT_SIZE)) * glm::scale(glm::vec3(5, 10, 5)));
 	root->addChild(xForms.back());
 
 	rs = new sg::ResourceNode(2, NUMPARTICLES);
