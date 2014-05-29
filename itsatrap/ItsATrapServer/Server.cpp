@@ -612,6 +612,4 @@ void Server::resetChanneling() {
 
 	isChanneling = false;
 	channelingPlayer = -1;
-	//TODO: reset for all clients.
-	//client->root->m_hud->m_progressTime == -1;
 }
