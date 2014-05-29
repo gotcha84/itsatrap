@@ -411,7 +411,7 @@ void Level::initLevel() {
 
 	// Wall 0: (-21, 48, 0)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(-21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2*50, UNIT_48*2, UNIT_40)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(-21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2*100, UNIT_48*4, UNIT_40)));
 	root->addChild(xForms.back());
 
 	walls.push_back(new sg::Cube());
@@ -421,7 +421,7 @@ void Level::initLevel() {
 
 	// Wall 1: (21, 48, 0)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2*50, UNIT_48*2, UNIT_40)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2*100, UNIT_48*4, UNIT_40)));
 	root->addChild(xForms.back());
 
 	walls.push_back(new sg::Cube());
@@ -431,7 +431,7 @@ void Level::initLevel() {
 
 	// Wall 2: (0, 48, -21)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, -21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48*2, UNIT_2*50)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, -21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48*4, UNIT_2*100)));
 	root->addChild(xForms.back());
 
 	walls.push_back(new sg::Cube());
@@ -441,7 +441,7 @@ void Level::initLevel() {
 
 	// Wall 3: (0, 48, 21)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, 21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48*2, UNIT_2*50)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, 21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48*4, UNIT_2*100)));
 	root->addChild(xForms.back());
 
 	walls.push_back(new sg::Cube());
