@@ -67,6 +67,7 @@ class Level {
 		void disableAllResourceNodes();
 		void disableCurrentResourceNode();
 		void activateResourceNode(int id);
+		void setOwnerToResourceNode(int resourceId, int playerId);
 };
 
 #endif

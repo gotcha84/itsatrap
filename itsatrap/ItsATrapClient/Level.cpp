@@ -595,6 +595,7 @@ void Level::setRoot(sg::MatrixTransform *newRoot) {
 void Level::disableAllResourceNodes() {
 	for (int i = 0; i < resources.size(); ++i) {
 		resources[i]->disableParticles();
+		resources[i]->resetOwnerColor();
 	}
 	activeResourceNode = -1;
 }
@@ -603,6 +604,7 @@ void Level::disableCurrentResourceNode() {
 	for (int i = 0; i < resources.size(); ++i) {
 		if (resources[i]->getResourceId() == activeResourceNode) {
 			resources[i]->disableParticles();
+			resources[i]->resetOwnerColor();
 			activeResourceNode = -1;
 		}
 	}
@@ -613,6 +615,14 @@ void Level::activateResourceNode(int id) {
 		if (resources[i]->getResourceId() == id) {
 			activeResourceNode = id;
 			resources[i]->enableParticles();
+		}
+	}
+}
+
+void Level::setOwnerToResourceNode(int resourceId, int playerId) {
+	for (int i = 0; i < resources.size(); ++i) {
+		if (resources[i]->getResourceId() == resourceId) {
+			resources[i]->setOwnerColor(playerId);
 		}
 	}
 }

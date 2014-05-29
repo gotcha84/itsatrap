@@ -41,6 +41,36 @@ namespace sg {
 		return resourceId;
 	}
 
+	void ResourceNode::setOwnerColor(int playerId)
+	{
+		float r, g, b, a;
+		if (playerId % 2 == 0) {
+			ConfigSettings::getConfig()->getValue("Team1R", r);
+			ConfigSettings::getConfig()->getValue("Team1G", g);
+			ConfigSettings::getConfig()->getValue("Team1B", b);
+			ConfigSettings::getConfig()->getValue("Team1A", a);
+		}
+		else {
+			ConfigSettings::getConfig()->getValue("Team2R", r);
+			ConfigSettings::getConfig()->getValue("Team2G", g);
+			ConfigSettings::getConfig()->getValue("Team2B", b);
+			ConfigSettings::getConfig()->getValue("Team2A", a);
+		}
+
+		this->m_model->setColor(glm::vec4(r, g, b, a - 0.3));
+		this->m_particles->setColor(glm::vec4(r, g, b, a));
+		this->m_particles2->setColor(glm::vec4(r, g, b, a));
+	}
+
+	void ResourceNode::resetOwnerColor()
+	{
+		glm::vec4 emptyColor = glm::vec4(1, 1, 1, 1);
+
+		this->m_model->setColor(emptyColor);
+		this->m_particles->setColor(emptyColor);
+		this->m_particles2->setColor(emptyColor);
+	}
+
 	void ResourceNode::draw(glm::mat4 parent, glm::mat4 cam) {
 		glm::mat4 mv = glm::inverse(cam) * parent;
 
