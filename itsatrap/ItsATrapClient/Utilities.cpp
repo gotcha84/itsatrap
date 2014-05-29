@@ -233,7 +233,7 @@ bool ReadFile(const char* pFileName, string& outFile)
         ret = true;
     }
     else {
-        OGLDEV_FILE_ERROR(pFileName);
+        cout << "[Utilities] ReadFile cannot open file : " << pFileName << endl;;
     }
     
     return ret;

@@ -244,5 +244,11 @@
     <None Include="gouraud.vert">
       <Filter>Shader</Filter>
     </None>
+    <None Include="..\Shaders\skinning.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shaders\skinning.vert">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

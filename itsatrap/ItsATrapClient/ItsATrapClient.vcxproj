@@ -149,6 +149,8 @@
   <ItemGroup>
     <None Include="..\..\phong.frag" />
     <None Include="..\..\phong.vert" />
+    <None Include="..\Shaders\skinning.frag" />
+    <None Include="..\Shaders\skinning.vert" />
     <None Include="can.frag">
       <SubType>Designer</SubType>
     </None>

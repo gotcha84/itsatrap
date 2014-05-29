@@ -71,13 +71,12 @@ namespace sg {
 
 	void MeshNode::SetWVP(const glm::mat4& WVP)
 	{
-		glUniformMatrix4fv(m_WVPLocation, 1, GL_TRUE, (const GLfloat*)WVP.m);
+		glUniformMatrix4fv(m_WVPLocation, 1, GL_TRUE, glm::value_ptr(WVP));
 	}
-
 
 	void MeshNode::SetWorldMatrix(const glm::mat4& WorldInverse)
 	{
-		glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_TRUE, (const GLfloat*)WorldInverse.m);
+		glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_TRUE, glm::value_ptr(WorldInverse));
 	}
 
 	GLint MeshNode::GetUniformLocation(const char* pUniformName)
