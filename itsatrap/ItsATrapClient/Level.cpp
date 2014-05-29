@@ -50,7 +50,6 @@ void Level::initLevel() {
 	rs->loadModel(RESOURCETOWER, BLOCKS);
 	rs->getParticleSystem()->setColor(glm::vec4(1, 0, 0, 1));
 	rs->m_particles2->setColor(glm::vec4(1, 0, 0, 1));
-	//rs->m_particles2->setColor(glm::vec4(1, 1, 1, 1));
 	rs->m_particles2->reverse();
 	if (!ENABLE_PARTICLES) {
 		rs->getParticleSystem()->disable();
@@ -534,7 +533,7 @@ void Level::initLevel() {
 
 	// Resource Nodes
 	for (int i = 0; i < resources.size(); ++i) {
-		resources[i]->calculateBoundingBox();
+		//resources[i]->calculateBoundingBox();
 	}
 
 	// Ramp Height Map
