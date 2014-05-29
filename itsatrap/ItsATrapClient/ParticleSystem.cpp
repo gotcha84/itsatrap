@@ -67,7 +67,7 @@ void Particle::reset() {
 	else {
 		m_rad = (rand() % 100 + 1) / 500.0f;
 	}
-	m_pos = glm::vec3(m_rad, 0, 0);
+	m_pos = glm::vec3(m_rad, 0, 10);
 	m_vel = glm::vec3(0, 0.1f, 0.1f);
 	m_color.a = 1.0f;
 }
