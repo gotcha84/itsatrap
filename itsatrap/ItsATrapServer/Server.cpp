@@ -596,7 +596,20 @@ void Server::sendNewResourceOwnerUpdate(int playerId, int resourceId)
 	Server::broadcastMsg((char *)&p, sizeof(p));
 }
 
+void Server::sendClearChannelingProgressBar(int playerId)
+{
+	struct refreshPacket p;
+	p.eventId = CLEAR_CHANNEL_BAR;
+	p.playerId = playerId;
+
+	Server::sendMsg((char *)&p, sizeof(p), &players[playerId].clientAddress);
+}
+
 void Server::resetChanneling() {
+	if (channelingPlayer != -1) {
+		sendClearChannelingProgressBar(channelingPlayer);
+	}
+
 	isChanneling = false;
 	channelingPlayer = -1;
 	//TODO: reset for all clients.
