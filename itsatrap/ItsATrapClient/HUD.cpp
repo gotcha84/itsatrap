@@ -6,6 +6,7 @@
 HUD::HUD() {
 	font = new FTGLPixmapFont("C:/Windows/Fonts/Arial.ttf");
 	board = new Scoreboard();
+	m_progressTime = -1;
 }
 
 // destructor
@@ -13,7 +14,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources, int spawnTime, int progressTime, int flashTime) {
+void HUD::draw(int health, int resources, int spawnTime, int flashTime) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -30,7 +31,7 @@ void HUD::draw(int health, int resources, int spawnTime, int progressTime, int f
 				drawCrossHair();
 				drawHealthBar(health);
 				drawResource(resources);
-				drawProgressBar(progressTime);
+				if( m_progressTime > -1 ) drawProgressBar(m_progressTime);
 				drawFlashbag(flashTime);
 			}
 

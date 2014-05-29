@@ -106,7 +106,7 @@ void Level::initLevel() {
 
 	buildings.push_back(new sg::Cube());
 	buildings.back()->setName("Building 0: (0, 0, 0)");
-	buildings.back()->setColor(glm::vec4(1, 0, 0, 1));
+	buildings.back()->setColor(glm::vec4(0.5, 0.3, 0.5, 1));
 	xForms.back()->addChild(buildings.back());
 	
 	// Building 1: (-15, 8, 7)
@@ -116,7 +116,7 @@ void Level::initLevel() {
 
 	buildings.push_back(new sg::Cube());
 	buildings.back()->setName("Building 1: (-15, 8, 7)");
-	buildings.back()->setColor(glm::vec4(1, 0, 0, 1));
+	buildings.back()->setColor(glm::vec4(0.5, 0.3, 0.5, 1));
 	xForms.back()->addChild(buildings.back());
 
 	// Building 2: (15, 8, -7)
@@ -126,7 +126,7 @@ void Level::initLevel() {
 
 	buildings.push_back(new sg::Cube());
 	buildings.back()->setName("Building 2: (15, 8, -7)");
-	buildings.back()->setColor(glm::vec4(1, 0, 0, 1));
+	buildings.back()->setColor(glm::vec4(0.5, 0.3, 0.5, 1));
 	xForms.back()->addChild(buildings.back());
 
 	// Building 3: (-13, 8, -1)
@@ -416,7 +416,7 @@ void Level::initLevel() {
 
 	walls.push_back(new sg::Cube());
 	walls.back()->setName("Wall 0: (-21, 48, 0)");
-	walls.back()->setColor(glm::vec4(1, 0, 0.005, 1));
+	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 1));
 	xForms.back()->addChild(walls.back());
 
 	// Wall 1: (21, 48, 0)
@@ -426,7 +426,7 @@ void Level::initLevel() {
 
 	walls.push_back(new sg::Cube());
 	walls.back()->setName("Wall 1: (21, 48, 0)");
-	walls.back()->setColor(glm::vec4(1, 0, 0.005, 1));
+	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 1));
 	xForms.back()->addChild(walls.back());
 
 	// Wall 2: (0, 48, -21)
@@ -436,7 +436,7 @@ void Level::initLevel() {
 
 	walls.push_back(new sg::Cube());
 	walls.back()->setName("Wall 2: (21, 48, 0)");
-	walls.back()->setColor(glm::vec4(1, 0, 0.005, 1));
+	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 1));
 	xForms.back()->addChild(walls.back());
 
 	// Wall 3: (0, 48, 21)
@@ -446,7 +446,7 @@ void Level::initLevel() {
 
 	walls.push_back(new sg::Cube());
 	walls.back()->setName("Wall 3: (21, 48, 0)");
-	walls.back()->setColor(glm::vec4(1, 0, 0.005, 1));
+	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 1));
 	xForms.back()->addChild(walls.back());
 
 	// Note: Ramp needs to be reduced by 45% in the y-axis to match unit_size. 55% for other axis

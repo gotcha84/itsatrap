@@ -311,6 +311,14 @@ int DynamicWorld::getNumStaticResourceObjects()
 	return staticResourceObjects.size();
 }
 
+AABB DynamicWorld::getStaticObjectBB(int buildingId) {
+	return staticObjects[buildingId].aabb;
+}
+
+AABB DynamicWorld::getStaticRampObjectBB(int rampId) {
+	return staticRampObjects[rampId].aabb;
+}
+
 AABB DynamicWorld::getStaticResourceBB(int resourceId)
 {
 	for (int i = 0; i < staticResourceObjects.size(); ++i) {
@@ -1071,8 +1079,8 @@ void DynamicWorld::applyGravity()
 void DynamicWorld::applyAdjustments() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
-		float playerHeight = 8.0f;
-		//ConfigSettings::getConfig()->getValue("playerHeight", playerHeight);
+		float playerHeight = 0;
+		ConfigSettings::getConfig()->getValue("PlayerHeight", playerHeight);
 
 		float velocityDecayFactor = 0.9f;
 		//ConfigSettings::getConfig()->getValue("velocityDecayFactor ", velocityDecayFactor );

@@ -19,8 +19,9 @@ class HUD {
 
 		FTGLPixmapFont *font;
 		Scoreboard *board;
+		int m_progressTime;
 
-		void draw(int health, int resources, int spawnTime, int progressTime, int flashTime);
+		void draw(int health, int resources, int spawnTime, int flashTime);
 		
 		void drawCrossHair(); 
 		void drawHealthBar(int health);

@@ -404,12 +404,23 @@ void Client::startChanneling(int resourceId) {
 
 DWORD WINAPI Client::channelingThread(LPVOID arg) {
 	int channelTime;
+	int timeElapsed = 0;
 	ConfigSettings::getConfig()->getValue("ChannelTime", channelTime);
 
-	client->root->m_hud->drawProgressBar(50);
+	while (timeElapsed < channelTime) {
+		if (client->root->m_hud->m_progressTime == -1) {
+			client->root->m_hud->m_progressTime = 0;
+		}
+		else {
+			client->root->m_hud->m_progressTime+=10;
+		}
+		timeElapsed += channelTime / 10.0f;
+		cout << "Channeling Node..." << endl;
+		Sleep(channelTime/10.0f);
+	}
 
-	cout << "Channeling Node..." << endl;
-	Sleep(channelTime);
+	client->root->m_hud->m_progressTime = -1;
+	
 	cout << "Channel Complete!" << endl;
 	// Send Message to server
 	Client::sendChannelCompletedEvent(channelingResourceId);

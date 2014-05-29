@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ItsATrapClient", "ItsATrapClient\ItsATrapClient.vcxproj", "{D0AB73B0-F424-4930-8EC4-0EB84FED863D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C4A1F118-CCBA-415C-B9B7-F4E6BBF612FE} = {C4A1F118-CCBA-415C-B9B7-F4E6BBF612FE}
@@ -9,6 +11,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{C4A1F118-CCBA-415C-B9B7-F4E6BBF612FE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ItsATrapServer", "ItsATrapServer\ItsATrapServer.vcxproj", "{5C14B208-1A3D-4F9D-B8DB-D247902671CF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C4A1F118-CCBA-415C-B9B7-F4E6BBF612FE} = {C4A1F118-CCBA-415C-B9B7-F4E6BBF612FE}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
