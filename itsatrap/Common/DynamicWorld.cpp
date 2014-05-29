@@ -73,6 +73,11 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	{
 		p.position.x += 10;
 		computeAABB(&p);
+		
+	}
+
+	for (int i = 0; i < staticWallObjects.size(); i++) {
+		staticWallObjects[i].aabb.print();
 	}
 
 	// why not update resources?
@@ -99,6 +104,8 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.timeUntilRegen = 0;
 
 	playerMap[p.id] = p;
+	cout << "newplayer aabb: ";
+	p.aabb.print();
 }
 
 
@@ -419,6 +426,25 @@ int DynamicWorld::checkCollisionsWithAllNonTraps(struct playerObject *e)
 		}
 	}
 
+	for (int i = 0; i < staticWallObjects.size(); i++) 
+	{
+		if (e->aabb.collidesWith(staticWallObjects[i].aabb))
+		{
+			//printf("Collision: player %d with static wall object %d\n", e->id, i);
+			return i;
+		}
+	}
+
+	for (int i = 0; i < staticResourceObjects.size(); i++)
+	{
+		if (e->aabb.collidesWith(staticResourceObjects[i].aabb))
+		{
+			printf("Collision: player %d with resource object %d\n", e->id, i);
+			return i;
+		}
+	}
+
+
 	return -1;
 }
 
@@ -647,7 +673,7 @@ void DynamicWorld::applyCollisions() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		struct playerObject &p = it->second;
-		if (p.currPhysState == PhysicsStates::None || p.currPhysState == PhysicsStates::WallRunning) {
+		if (p.currPhysState == PhysicsStates::None /*|| p.currPhysState == PhysicsStates::WallRunning*/) {
 			glm::vec3 proposedNewPos = p.position + p.velocity + p.velocityDiff;
 
 			glm::vec3 oldPos = p.position;
@@ -1017,14 +1043,14 @@ void DynamicWorld::applyGravity()
 		/*if (p.velocity != glm::vec3(0.0f, 0.0f, 0.0f) || p.velocityDiff != glm::vec3(0.0f, 0.0f, 0.0f)) {
 			cout << "pvelo: " << glm::to_string(p.velocity) << endl;
 			cout << "pvelodiff: " << glm::to_string(p.velocityDiff) << endl;
-		}*/
+			}*/
 
 
-		int xIndex1 = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x - 5.0f);
-		int zIndex1 = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z - 5.0f);
+		int xIndex1 = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x /*- 5.0f*/);
+		int zIndex1 = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z /*- 5.0f*/);
 
-		int xIndex2 = xIndex1 + 10;
-		int zIndex2 = zIndex1 + 10;
+		int xIndex2 = xIndex1 + 1/*0*/;
+		int zIndex2 = zIndex1 + 1/*0*/;
 
 		float heightMap11 = World::m_heightMap[xIndex1 + World::m_heightMapXShift][zIndex1 + World::m_heightMapZShift];
 		float heightMap12 = World::m_heightMap[xIndex1 + World::m_heightMapXShift][zIndex2 + World::m_heightMapZShift];
@@ -1079,13 +1105,36 @@ void DynamicWorld::applyGravity()
 void DynamicWorld::applyAdjustments() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
+
+		struct playerObject &p = it->second;
+		
+		int xIndex1 = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x /*- 5.0f*/);
+		int zIndex1 = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z /*- 5.0f*/);
+
+		int xIndex2 = xIndex1 + 1/*0*/;
+		int zIndex2 = zIndex1 + 1/*0*/;
+
+		int worldHeightMapNegXBound = -540;
+		int worldHeightMapPosXBound = 540;
+		int worldHeightMapNegZBound = -540;
+		int worldHeightMapPosZBound = 540;
+
+		if (xIndex1 < -540 || xIndex1 > 540 || zIndex1 < -540 || zIndex1 > 540) {
+			cout << "OUT OF BOUNDS!" << endl;
+			p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+			p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+			p.currInnerState = innerStates::Off;
+			p.currPhysState = PhysicsStates::None;
+		}
+
+
+
 		float playerHeight = 0;
 		ConfigSettings::getConfig()->getValue("PlayerHeight", playerHeight);
 
 		float velocityDecayFactor = 0.9f;
 		//ConfigSettings::getConfig()->getValue("velocityDecayFactor ", velocityDecayFactor );
 
-		struct playerObject &p = it->second;
 		p.velocity += p.velocityDiff;
 		p.position += p.velocity;
 		p.velocity -= p.velocityDiff;
@@ -1236,7 +1285,7 @@ void DynamicWorld::wallRunningJumpEvent(int playerId) {
 	struct playerObject *p = &playerMap[playerId];
 
 	if (p->currInnerState != innerStates::Ending) {
-		glm::vec3 WRBounceFactor = glm::vec3(1.5f, 1.0, 1.5f);
+		glm::vec3 WRBounceFactor = glm::vec3(100.0f, 1.0f, 100.0f);
 		//ConfigSettings::getConfig()->getValue("WRBounceFactor", WRBounceFactor);
 		StateLogic::statesInfo[p->id].Holder.velocityDiff.x *= WRBounceFactor.x;
 		StateLogic::statesInfo[p->id].Holder.velocityDiff.z *= WRBounceFactor.z;

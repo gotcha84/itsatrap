@@ -170,8 +170,8 @@ namespace sg {
 		//TODO: last parameter is the respawn input time. from server to client
 		for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
 			sg::Player *player = it->second;
-			cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
-			cout << client->tabPressed << endl;
+			//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
+			//cout << client->tabPressed << endl;
 
 		}
 
