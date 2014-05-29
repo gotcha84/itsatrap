@@ -53,7 +53,10 @@ int Scoreboard::size() const { return entries.size(); }
 Scoreboard::EntryLocation Scoreboard::entryWorseThan(Entry const& entry) {
 	int i = 0;
 	for (auto it = entries.begin(); it != entries.end(); ++it, ++i) {
-		if (it->kill <= entry.kill) {
+		/*if (it->kill <= entry.kill) {
+			return EntryLocation(it, i);
+		}*/
+		if (it->name % 2 == 0) {
 			return EntryLocation(it, i);
 		}
 	}
@@ -88,19 +91,19 @@ void Scoreboard::draw() {
 		glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
 				glLoadIdentity();
-				float incrementText = 0.0f;
+
 				bool switchColor = false;
 
 
 				glColor3f(1.0f, 1.0f, 1.0f);
 				font->FaceSize(50);
 				font->CharMap(ft_encoding_symbol);
-				glRasterPos2f(-0.10f, 0.8f);
+				glRasterPos2f(-0.12f, 0.9f);
 				font->Render( (to_string(entries.size()) + " players").c_str() );
-				glRasterPos2f(-0.10f, 0.8f);
+				glRasterPos2f(-0.10f, 0.7f);
 				font->Render("Team 1");
 				glRasterPos2f(-0.10f, -0.2f);
-				font->Render( to_string(entries.size()).c_str() );
+				font->Render("Team 2");
 				for (int i = 0; i<entries.size(); ++i) {
 
 					// setup color
@@ -113,14 +116,6 @@ void Scoreboard::draw() {
 						switchColor = true;
 					}
 
-					// setup strings
-					/*
-					Scoreboard::Entry e = entries[i];
-					string name = "es";
-					stringstream ss;
-					ss << e.score;
-					string score = ss.str();
-					*/
 					Scoreboard::Entry e = entries[i];
 					stringstream id;
 					id << ((e.name) + 1);
@@ -137,14 +132,29 @@ void Scoreboard::draw() {
 					
 
 					string name = "Player" + playerID + "          " + "Team" + teamID + "          " + "Kill: " + numKill + "          " + "Death: " + numDeath;
-					glRasterPos2f(-0.4f, incrementText);
-					font->Render(name.c_str());
+					int temp = e.name;
+					
 					/*
 					for (int t = 0; t< name.length(); t++) {
 						glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, name[t]);
 					}*/
+					if (e.name == 0) { 
+						glRasterPos2f(-0.6f, 0.5f);
+						font->Render(name.c_str());
+					}
+					if (e.name == 1) {
+						glRasterPos2f(-0.6f, -0.4f);
+						font->Render(name.c_str());
+					}
+					if (e.name == 2) {
+						glRasterPos2f(-0.6f, 0.2f);
+						font->Render(name.c_str());
+					}
+					if (e.name == 3) {
+						glRasterPos2f(-0.6f, -0.7f);
+						font->Render(name.c_str());
+					}
 
-					incrementText += 0.2f;
 				}
 
 				//drawCube(0.0f, 0.5f, 0.0f);
