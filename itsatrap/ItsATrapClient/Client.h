@@ -34,6 +34,7 @@ private:
 	static bool		moveEvents[NUM_DIRECTIONS]; // UP, DOWN, LEFT, RIGHT
 	static bool		jumpEvent, cameraChanged;
 	static cameraObject playerCam;
+	static bool		okChannel;
 
 	// Functions
 	static int receiveMsg();

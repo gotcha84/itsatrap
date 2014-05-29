@@ -13,6 +13,7 @@ bool				Client::moveEvents[NUM_DIRECTIONS] = {};
 bool				Client::jumpEvent, Client::cameraChanged;
 cameraObject		Client::playerCam = {};
 int					Client::channelingResourceId;
+bool				Client::okChannel;
 
 int Client::initializeClient() {
 
@@ -70,6 +71,8 @@ int Client::initializeClient() {
 		printf("[CLIENT]: Server gave me ID: %d\n", irp->givenPlayerId);
 		playerId = irp->givenPlayerId;
 	}
+
+	okChannel = false;
 
 	Client::startReceiverThread();
 	Client::startSenderThread();
@@ -139,6 +142,12 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			{
 				struct resourceHitPacket *packet = (struct resourceHitPacket *) p;
 				client->level.setOwnerToResourceNode(packet->resourceId, packet->playerId);
+			}
+			else if (p->eventId == CLEAR_CHANNEL_BAR)
+			{
+				struct refreshPacket *packet = (struct refreshPacket *) p;
+				okChannel = false;
+				client->root->m_hud->m_progressTime = -1;
 			}
 		}
 	}
@@ -397,6 +406,8 @@ void Client::handleDisconnectPlayer(int id)
 
 void Client::startChanneling(int resourceId) {
 	channelingResourceId = resourceId;
+
+	okChannel = true;
 	DWORD tmp = 0;
 	CreateThread(NULL, 0, Client::channelingThread, NULL, 0, &tmp);
 	// ExitThread?
@@ -407,7 +418,8 @@ DWORD WINAPI Client::channelingThread(LPVOID arg) {
 	int timeElapsed = 0;
 	ConfigSettings::getConfig()->getValue("ChannelTime", channelTime);
 
-	while (timeElapsed < channelTime) {
+	cout << "Channeling Node..." << endl;
+	while (okChannel && timeElapsed < channelTime) {
 		if (client->root->m_hud->m_progressTime == -1) {
 			client->root->m_hud->m_progressTime = 0;
 		}
@@ -415,10 +427,10 @@ DWORD WINAPI Client::channelingThread(LPVOID arg) {
 			client->root->m_hud->m_progressTime+=10;
 		}
 		timeElapsed += channelTime / 10.0f;
-		cout << "Channeling Node..." << endl;
 		Sleep(channelTime/10.0f);
 	}
 
+	okChannel = false;
 	client->root->m_hud->m_progressTime = -1;
 	
 	cout << "Channel Complete!" << endl;
