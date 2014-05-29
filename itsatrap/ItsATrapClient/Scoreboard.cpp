@@ -96,6 +96,8 @@ void Scoreboard::draw() {
 				font->FaceSize(50);
 				font->CharMap(ft_encoding_symbol);
 				glRasterPos2f(-0.10f, 0.8f);
+				font->Render( (to_string(entries.size()) + " players").c_str() );
+				glRasterPos2f(-0.10f, 0.8f);
 				font->Render("Team 1");
 				glRasterPos2f(-0.10f, -0.2f);
 				font->Render( to_string(entries.size()).c_str() );
@@ -145,8 +147,8 @@ void Scoreboard::draw() {
 					incrementText += 0.2f;
 				}
 
-				drawCube(0.0f, 0.5f, 0.0f);
-				drawCube(0.0f, -0.5f, 0.0f);
+				//drawCube(0.0f, 0.5f, 0.0f);
+				//drawCube(0.0f, -0.5f, 0.0f);
 			glPopMatrix();
 		glMatrixMode(GL_PROJECTION);
 	glPopMatrix();

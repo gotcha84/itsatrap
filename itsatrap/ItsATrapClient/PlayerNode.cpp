@@ -171,6 +171,7 @@ namespace sg {
 			sg::Player *player = it->second;
 			cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
 			cout << client->tabPressed << endl;
+
 		}
 
 		if (client->tabPressed) {

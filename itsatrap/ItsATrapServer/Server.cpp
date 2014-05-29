@@ -97,7 +97,7 @@ int Server::initialize() {
 	// Load Height Map
 	string heightMapFile;
 	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
-	World::readInHeightMapFromFile(heightMapFile); // ANURAG
+	//World::readInHeightMapFromFile(heightMapFile); // ANURAG
 	
 	return 0;
 }

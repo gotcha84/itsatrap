@@ -406,6 +406,8 @@ DWORD WINAPI Client::channelingThread(LPVOID arg) {
 	int channelTime;
 	ConfigSettings::getConfig()->getValue("ChannelTime", channelTime);
 
+	client->root->m_hud->drawProgressBar(50);
+
 	cout << "Channeling Node..." << endl;
 	Sleep(channelTime);
 	cout << "Channel Complete!" << endl;
