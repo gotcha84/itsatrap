@@ -222,13 +222,14 @@ void Window::keyUp(unsigned char key, int x, int y) {
 			break;
 		case '5':
 			type = TYPE_LIGHTNING_TRAP;
-			filename = DEATH_TRAP_OBJ;
+			//filename = DEATH_TRAP_OBJ;
 			break;
 		case '6':
 			type = TYPE_PORTAL_TRAP;
 			break;
 		default:
 			type = TYPE_FREEZE_TRAP;
+			filename = TRAMPOLINE_TRAP_OBJ;
 			break;
 		}
 		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated, TRAP_DIR + filename);

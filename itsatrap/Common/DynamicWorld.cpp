@@ -324,6 +324,60 @@ AABB DynamicWorld::getStaticResourceBB(int resourceId)
 
 void DynamicWorld::addTrap(struct trapObject t)
 {
+	int cost = 0;
+	switch (t.type)
+	{
+	case TYPE_FREEZE_TRAP:
+		ConfigSettings::getConfig()->getValue("CostFreezeTrap", cost);
+		break;
+
+	case TYPE_TRAMPOLINE_TRAP:
+		ConfigSettings::getConfig()->getValue("CostTrampolineTrap", cost);
+		break;
+
+	case TYPE_SLOW_TRAP:
+		ConfigSettings::getConfig()->getValue("CostSlowTrap", cost);
+		break;
+
+	case TYPE_PUSH_TRAP:
+		ConfigSettings::getConfig()->getValue("CostPushTrap", cost);
+		break;
+
+	case TYPE_LIGHTNING_TRAP:
+		ConfigSettings::getConfig()->getValue("CostLightningTrap", cost);
+		break;
+
+	case TYPE_PORTAL_TRAP:
+	{
+		ConfigSettings::getConfig()->getValue("CostPortalTrap", cost);
+		break;
+	}
+
+	default:
+		cost = 10;
+		break;
+	}
+
+	//cost = 5;
+
+	struct playerObject *trapOwner = &playerMap[t.ownerId];
+	if (trapOwner->resources - cost < 0)
+		return; // You do not have enough money!
+
+	trapOwner->resources -= cost;
+
+	// Special case for portal trap
+	if (t.type == TYPE_PORTAL_TRAP)
+	{
+
+		if (portalMap[t.ownerId] != nullptr)
+		{
+			portalMap[t.ownerId]->eventCode = EVENT_REMOVE_TRAP;
+			portalMap.erase(t.ownerId);
+		}
+		portalMap[t.ownerId] = &trapMap[t.id];
+	}
+
 	t.eventCode = EVENT_ADD_TRAP;
 	t.id = currentId;
 	int timeTillActive = 0;
@@ -332,45 +386,7 @@ void DynamicWorld::addTrap(struct trapObject t)
 	trapMap[currentId] = t;
 	
 	playerLock[t.ownerId] = true;
-	switch (t.type)
-	{
-		case TYPE_FREEZE_TRAP:
-			playerMap[t.ownerId].resources -= 20;
-			break;
-
-		case TYPE_TRAMPOLINE_TRAP:
-			playerMap[t.ownerId].resources -= 30;
-			break;
-
-		case TYPE_SLOW_TRAP:
-			playerMap[t.ownerId].resources -= 15;
-			break;
-
-		case TYPE_PUSH_TRAP:
-			playerMap[t.ownerId].resources -= 15;
-			break;
-
-		case TYPE_LIGHTNING_TRAP:
-			playerMap[t.ownerId].resources -= 75;
-			break;
-
-		case TYPE_PORTAL_TRAP:
-		{
-			playerMap[t.ownerId].resources -= 10;
-
-			if (portalMap[t.ownerId] != nullptr)
-			{
-				portalMap[t.ownerId]->eventCode = EVENT_REMOVE_TRAP;
-				portalMap.erase(t.ownerId);
-			}
-			portalMap[t.ownerId] = &trapMap[t.id];
-			break;
-		}
-
-		default:
-			playerMap[t.ownerId].resources -= 10;
-			break;
-	}
+	cost = 
 
 	currentId++;
 }
@@ -582,11 +598,14 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		target->aabb.minZ = 0;
 		target->deathState = true;
 
-		attacker->numKills++;
+		if (attacker->id % 2 != target->id % 2)
+		{
+			attacker->numKills++;
 
-		int killBonusResource = 0;
-		ConfigSettings::getConfig()->getValue("KillBonusResource", killBonusResource);
-		attacker->resources += killBonusResource;
+			int killBonusResource = 0;
+			ConfigSettings::getConfig()->getValue("KillBonusResource", killBonusResource);
+			attacker->resources += killBonusResource;
+		}
 	}
 }
 
@@ -602,6 +621,8 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 	p->health = 100;
 	p->timeUntilRespawn = 0;
 	p->deathState = false;
+	p->currPhysState = PhysicsStates::None;
+	p->currInnerState = innerStates::Off;
 }
 
 void DynamicWorld::computeAABB(struct playerObject *p)
@@ -1272,7 +1293,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 					{
 						int trampolinePower = 0;
 						ConfigSettings::getConfig()->getValue("TrampolinePower", trampolinePower);
-						p->velocityDiff = glm::vec3(0, trampolinePower, 0);
+						p->velocity = glm::vec3(0, trampolinePower, 0);
 
 						break;
 					}
@@ -1291,7 +1312,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 						glm::vec3 force = glm::rotateY(glm::vec3(0, 0, -1), it->second.rotationAngle);
 						force *= pushPower;
 
-						p->velocityDiff = glm::vec3(force.x, 0, force.z);
+						p->velocity = glm::vec3(force.x, 0, force.z);
 
 						break;
 					}
