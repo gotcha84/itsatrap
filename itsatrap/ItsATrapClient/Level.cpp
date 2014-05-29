@@ -409,51 +409,51 @@ void Level::initLevel() {
 	buildings.back()->setColor(glm::vec4(0.6, 0.5, 0.5, 1));
 	xForms.back()->addChild(buildings.back());
 
-	// Building 31: (-21, 48, 0)
+	// Wall 0: (-21, 48, 0)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(-21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2, UNIT_48, UNIT_40)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(-21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2*50, UNIT_48*2, UNIT_40)));
 	root->addChild(xForms.back());
 
-	buildings.push_back(new sg::Cube());
-	buildings.back()->setName("Building 31: (-21, 48, 0)");
-	buildings.back()->setColor(glm::vec4(0.1, 0.1, 0.1, 0.7));
-	xForms.back()->addChild(buildings.back());
+	walls.push_back(new sg::Cube());
+	walls.back()->setName("Wall 0: (-21, 48, 0)");
+	walls.back()->setColor(glm::vec4(1, 0, 0.005, 1));
+	xForms.back()->addChild(walls.back());
 
-	// Building 32: (21, 48, 0)
+	// Wall 1: (21, 48, 0)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2, UNIT_48, UNIT_40)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2*50, UNIT_48*2, UNIT_40)));
 	root->addChild(xForms.back());
 
-	buildings.push_back(new sg::Cube());
-	buildings.back()->setName("Building 32: (21, 48, 0)");
-	buildings.back()->setColor(glm::vec4(0.1, 0.1, 0.1, 0.7));
-	xForms.back()->addChild(buildings.back());
+	walls.push_back(new sg::Cube());
+	walls.back()->setName("Wall 1: (21, 48, 0)");
+	walls.back()->setColor(glm::vec4(1, 0, 0.005, 1));
+	xForms.back()->addChild(walls.back());
 
-	// Building 33: (0, 48, -21)
+	// Wall 2: (0, 48, -21)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, -21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48, UNIT_2)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, -21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48*2, UNIT_2*50)));
 	root->addChild(xForms.back());
 
-	buildings.push_back(new sg::Cube());
-	buildings.back()->setName("Building 32: (21, 48, 0)");
-	buildings.back()->setColor(glm::vec4(0.1, 0.1, 0.1, 0.7));
-	xForms.back()->addChild(buildings.back());
+	walls.push_back(new sg::Cube());
+	walls.back()->setName("Wall 2: (21, 48, 0)");
+	walls.back()->setColor(glm::vec4(1, 0, 0.005, 1));
+	xForms.back()->addChild(walls.back());
 
-	// Building 34: (0, 48, 21)
+	// Wall 3: (0, 48, 21)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, 21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48, UNIT_2)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, 21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48*2, UNIT_2*50)));
 	root->addChild(xForms.back());
 
-	buildings.push_back(new sg::Cube());
-	buildings.back()->setName("Building 32: (21, 48, 0)");
-	buildings.back()->setColor(glm::vec4(0.1, 0.1, 0.1, 0.7));
-	xForms.back()->addChild(buildings.back());
+	walls.push_back(new sg::Cube());
+	walls.back()->setName("Wall 3: (21, 48, 0)");
+	walls.back()->setColor(glm::vec4(1, 0, 0.005, 1));
+	xForms.back()->addChild(walls.back());
 
 	// Note: Ramp needs to be reduced by 45% in the y-axis to match unit_size. 55% for other axis
 	// Note: COMMENT THESE FOLLOWING RAMPS TO GET RID OF THE RAMPS
-	// Ramp 0: (7, 0, -7) +z
+	// Ramp 0: (7, 0, -8) +z
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(7 * UNIT_SIZE, 0, -7 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 24, .55 * 6)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(7 * UNIT_SIZE, 0, -8 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 24, .55 * 6)));
 	root->addChild(xForms.back());
 
 	ramps.push_back(new sg::ObjNode(SMALLRAMP, BLOCKS));
@@ -461,9 +461,9 @@ void Level::initLevel() {
 	ramps.back()->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	xForms.back()->addChild(ramps.back());
 
-	// Ramp 1: (-7, 0, 7)	-z
+	// Ramp 1: (-7, 0, 8)	-z
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(-7 * UNIT_SIZE, 0, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 24, .55 * 6)) * Utilities::rotateY(180));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(-7 * UNIT_SIZE, 0, 8 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 24, .55 * 6)) * Utilities::rotateY(180));
 	root->addChild(xForms.back());
 
 	ramps.push_back(new sg::ObjNode(SMALLRAMP, BLOCKS));
@@ -501,9 +501,9 @@ void Level::initLevel() {
 	ramps.back()->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	xForms.back()->addChild(ramps.back());
 
-	// Ramp 5: (5, 0, 19) +x
+	// Ramp 5: (4, 0, 18) +x
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(5 * UNIT_SIZE, 0, 19 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 10, 0.45 * 32, .55 * 2)) * Utilities::rotateY(90));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(4 * UNIT_SIZE, 0, 19 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 10, 0.45 * 32, .55 * 2)) * Utilities::rotateY(90));
 	root->addChild(xForms.back());
 
 	ramps.push_back(new sg::ObjNode(SMALLRAMP, BLOCKS));
@@ -511,9 +511,9 @@ void Level::initLevel() {
 	ramps.back()->getModel()->setColor(glm::vec4(0, 0.5, 0.5, 1));
 	xForms.back()->addChild(ramps.back());
 
-	// Ramp 6: (17, 0, 8) -z
+	// Ramp 6: (17, 0, 9) -z
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(17 * UNIT_SIZE, 0, 7.95 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 16, .55 * 8)) * Utilities::rotateY(180));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(17 * UNIT_SIZE, 0, 9 * UNIT_SIZE)) * glm::scale(glm::vec3(.55 * 2, 0.45 * 16, .55 * 8)) * Utilities::rotateY(180));
 	root->addChild(xForms.back());
 
 	ramps.push_back(new sg::ObjNode(SMALLRAMP, BLOCKS));
@@ -526,6 +526,10 @@ void Level::initLevel() {
 	for (int i = 0; i < buildings.size(); ++i) {
 		buildings[i]->calculateBoundingBox();
 		World::updateHeightMap(buildings[i]->getBoundingBox());
+	}
+
+	for (int i = 0; i < walls.size(); ++i) {
+		walls[i]->calculateBoundingBox();
 	}
 
 	// Resource Nodes

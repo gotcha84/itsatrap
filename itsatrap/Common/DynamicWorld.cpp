@@ -276,6 +276,11 @@ void DynamicWorld::addStaticObject(struct staticObject obj)
 	staticObjects.push_back(obj);
 }
 
+void DynamicWorld::addStaticWallObject(struct staticObject obj)
+{
+	staticWallObjects.push_back(obj);
+}
+
 void DynamicWorld::addStaticRampObject(struct staticRampObject obj)
 {
 	staticRampObjects.push_back(obj);
@@ -289,6 +294,11 @@ void DynamicWorld::addStaticResourceObject(struct staticResourceObject obj)
 int DynamicWorld::getNumStaticObjects() 
 {
 	return staticObjects.size();
+}
+
+int DynamicWorld::getNumStaticWallObjects()
+{
+	return staticWallObjects.size();
 }
 
 int DynamicWorld::getNumStaticRampObjects()
@@ -1201,9 +1211,10 @@ void DynamicWorld::wallRunningJumpEvent(int playerId) {
 	struct playerObject *p = &playerMap[playerId];
 
 	if (p->currInnerState != innerStates::Ending) {
-		float bounceFactor = 2.0f;
-		//ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
-		StateLogic::statesInfo[p->id].End.velocityDiff *= bounceFactor;
+		glm::vec3 WRBounceFactor = glm::vec3(1.5f, 1.0, 1.5f);
+		//ConfigSettings::getConfig()->getValue("WRBounceFactor", WRBounceFactor);
+		StateLogic::statesInfo[p->id].Holder.velocityDiff.x *= WRBounceFactor.x;
+		StateLogic::statesInfo[p->id].Holder.velocityDiff.z *= WRBounceFactor.z;
 		StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
 		p->currInnerState = innerStates::Ending;
 	}

@@ -153,6 +153,18 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			tmp.aabb.print();
 		}
 	}
+	else if (p->eventId == STATIC_WALL_OBJECT_CREATION_EVENT)
+	{
+		struct staticObjectPacket *staticObjPkt = (struct staticObjectPacket *)p;
+		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
+		{
+			struct staticObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
+			dynamicWorld.addStaticWallObject(tmp);
+			printf("[SERVER]: Added a static wall object. Now have %d static wall objects\n", dynamicWorld.getNumStaticWallObjects());
+			tmp.aabb.print();
+		}
+	}
 	else if (p->eventId == STATIC_RAMP_OBJECT_CREATION_EVENT)
 	{
 		struct staticRampObjectPacket *staticObjPkt = (struct staticRampObjectPacket *)p;
