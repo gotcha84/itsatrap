@@ -19,6 +19,8 @@ namespace sg {
 		m_color = glm::vec4(10,10,10,1);
 		m_xAngleChangeFactor = 20.0f;
 		m_yAngleChangeFactor = 20.0f;
+
+		initModels();
 	}
 
 	Player::Player(glm::vec3 pos) {
@@ -36,6 +38,8 @@ namespace sg {
 		m_color = glm::vec4(10,10,10,1);
 		m_xAngleChangeFactor = 20.0f;
 		m_yAngleChangeFactor = 20.0f;
+
+		initModels();
 	}
 
 	Player::Player(MyPlayer *p) {
@@ -48,6 +52,17 @@ namespace sg {
 
 		delete m_hud;
 		m_hud = nullptr;
+
+		delete m_thisPlayer;
+		m_thisPlayer = nullptr;
+
+		delete m_otherPlayer;
+		m_otherPlayer = nullptr;
+	}
+
+	void Player::initModels() {
+		// m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
+		m_otherPlayer = new ObjModel("../Models/Polynoid.obj", "../Models/");
 	}
 
 	void Player::setColor(glm::vec4 color) {
@@ -172,6 +187,7 @@ namespace sg {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
+			/*
 			glPushMatrix();
 				glTranslatef(0, 0, -PLAYER_RAD);
 				glScalef(1, 1, 0.1f);
@@ -181,6 +197,10 @@ namespace sg {
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			glutSolidCube(PLAYER_RAD*2);
+			*/
+
+			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
+			m_otherPlayer->drawModel();
 		glPopMatrix();
 	}
 

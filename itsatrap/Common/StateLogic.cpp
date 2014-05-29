@@ -55,6 +55,8 @@ void StateLogic::startClimbing(struct playerObject *e, int buildingId) {
 
 	if (!e->canClimb) {
 		cout << "tried to climb but not allowed" << endl;
+		e->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+		e->velocity = glm::vec3(0.0f, e->velocity.y, 0.0f);
 		return;
 	}
 
@@ -289,13 +291,14 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	float WRinitialX = e->cameraObject.xRotated;
 	float WRinitialY = e->cameraObject.yRotated;
 	glm::vec3 WRinitialcamUp = glm::vec3(0.0f, 1.0f, 0.0f);
-	cout << "wrinitialcamp: " << glm::to_string(WRinitialcamUp) << endl;
+	//cout << "wrinitialcamp: " << glm::to_string(WRinitialcamUp) << endl;
 
-	float zWalkFactor = 0;
-	ConfigSettings::getConfig()->getValue("zWalkFactor", zWalkFactor);
-
-	e->velocityDiff *= zWalkFactor / e->velocityDiff.length();
-
+	float zSlowWalkFactor = 0;
+	ConfigSettings::getConfig()->getValue("zSlowWalkFactor", zSlowWalkFactor);
+	//cout << "before velo diff: " << glm::to_string(e->velocityDiff) << endl;
+	//cout << "length: " << glm::length(e->velocityDiff) << endl;
+	e->velocityDiff *= zSlowWalkFactor / glm::length(e->velocityDiff);
+	//cout << "after velo diff: " << glm::to_string(e->velocityDiff) << endl;
 	float WRnumFrames = 60.0f;
 	//ConfigSettings::getConfig()->getValue("WRnumFrames", WRnumFrames);
 
@@ -406,7 +409,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	float wallRunFactor = 5.0f;
 	ConfigSettings::getConfig()->getValue("wallRunFactor", wallRunFactor);
 
-	cout << "WRStartcamZ: " << glm::to_string(WRStartcamZ) << endl;
+	//cout << "WRStartcamZ: " << glm::to_string(WRStartcamZ) << endl;
 	WRMidvelocityDiff = WRStartcamZ*wallRunFactor;
 	WRStartvelocityDiff = WRMidvelocityDiff;
 	WREndvelocityDiff = WRMidvelocityDiff;
@@ -440,7 +443,6 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	e->feetPlanted = true; // not sure if makes a dfference
 	e->interactingWithBuildingId = buildingId;
 	e->currInnerState = innerStates::Starting;
-	cout << "SET WALL RUNNING CURRENT STATE TO: " << e->currInnerState << endl;
 	e->currPhysState = PhysicsStates::WallRunning;
 }
 
@@ -448,8 +450,8 @@ void StateLogic::applyClimbing(struct playerObject *p) {
 
 	switch (p->currInnerState) {
 	case innerStates::Starting:
-		cout << "climbing start lookXincrement: " << StateLogic::statesInfo[p->id].Start.lookXIncrement << endl;
-		cout << "climbing start lookYincrement: " << StateLogic::statesInfo[p->id].Start.lookYIncrement << endl;
+		//cout << "climbing start lookXincrement: " << StateLogic::statesInfo[p->id].Start.lookXIncrement << endl;
+		//cout << "climbing start lookYincrement: " << StateLogic::statesInfo[p->id].Start.lookYIncrement << endl;
 
 		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Start.lookXIncrement);
 		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Start.lookYIncrement);
@@ -457,11 +459,12 @@ void StateLogic::applyClimbing(struct playerObject *p) {
 		p->velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 		StateLogic::statesInfo[p->id].Start.counter++;
 		if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
+			cout << "switching to mid state" << endl;
 			p->currInnerState = innerStates::Mid;
 		}
 		break;
 	case innerStates::Mid:
-		cout << "StateLogic::statesInfo[p->id].Mid.velocityDiff: " << glm::to_string(StateLogic::statesInfo[p->id].Mid.velocityDiff) << endl;
+		//cout << "StateLogic::statesInfo[p->id].Mid.velocityDiff: " << glm::to_string(StateLogic::statesInfo[p->id].Mid.velocityDiff) << endl;
 		StateLogic::handleXRotation(p, StateLogic::statesInfo[p->id].Mid.lookXIncrement);
 		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Mid.lookYIncrement);
 		p->velocityDiff = StateLogic::statesInfo[p->id].Mid.velocityDiff;
@@ -493,6 +496,7 @@ void StateLogic::applyHoldingEdge(struct playerObject *p) {
 		StateLogic::handleYRotation(p, StateLogic::statesInfo[p->id].Start.lookYIncrement);
 		StateLogic::statesInfo[p->id].Start.counter++;
 		if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
+			cout << "going to mid state" << endl;
 			p->currInnerState = innerStates::Mid;
 		}
 		break;
@@ -505,7 +509,7 @@ void StateLogic::applyHoldingEdge(struct playerObject *p) {
 		if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
 			p->currInnerState = innerStates::Off;
 			p->interactingWithBuildingId = -1;
-			//cout << "ended state: " << p->currPhysState << endl;
+			cout << "ended state: " << p->currPhysState << endl;
 			p->currPhysState = PhysicsStates::None;
 		}
 		break;
@@ -524,6 +528,7 @@ void StateLogic::applyPullingUp(struct playerObject *p) {
 		p->velocityDiff = StateLogic::statesInfo[p->id].Start.velocityDiff;
 		StateLogic::statesInfo[p->id].Start.counter++;
 		if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
+			cout << "ending state" << endl;
 			p->currInnerState = innerStates::Ending;
 		}
 		break;
@@ -538,7 +543,7 @@ void StateLogic::applyPullingUp(struct playerObject *p) {
 		if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
 			p->currInnerState = innerStates::Off;
 			p->interactingWithBuildingId = -1;
-			//cout << "ended state: " << p->currPhysState << endl;
+			cout << "ended state: " << p->currPhysState << endl;
 			p->currPhysState = PhysicsStates::None;
 		}
 		break;
@@ -561,11 +566,13 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				p->velocityDiff = StateLogic::statesInfo[p->id].Start.velocityDiff;
 				StateLogic::statesInfo[p->id].Start.counter++;
 				if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
+					cout << "switching to mid" << endl;
 					p->currInnerState = innerStates::Mid;
 				}
 			}
 			else {
 				StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
+				cout << "switching to ending from starting" << endl;
 				p->currInnerState = innerStates::Ending;
 			}
 			break;
@@ -576,6 +583,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 			}
 			else {
 				StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
+				cout << "switching to ending from mid" << endl;
 				p->currInnerState = innerStates::Ending;
 			}
 			break;
@@ -593,7 +601,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				p->currInnerState = innerStates::Off;
 				p->interactingWithBuildingId = -1;
 				p->velocity += StateLogic::statesInfo[p->id].Holder.velocityDiff;
-				//cout << "ended state: " << p->currPhysState << endl;
+				cout << "ended state: " << p->currPhysState << endl;
 				// technically shouldnt need line below.. but w/e hardcoding ftw
 				p->cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 				//cout << "ended with up as: " << glm::to_string(p->cameraObject.cameraUp) << endl;

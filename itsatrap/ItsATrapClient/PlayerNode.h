@@ -6,6 +6,7 @@
 #include "MatrixTransform.h"
 #include "MyPlayer.h"
 #include "HUD.h"
+#include "ObjModel.h"
 
 namespace sg {
 	class Player : public Group {
@@ -22,10 +23,15 @@ namespace sg {
 			float m_xAngleChange, m_yAngleChange;
 			float m_xAngleChangeFactor, m_yAngleChangeFactor;
 
+			ObjModel *m_thisPlayer;
+			ObjModel *m_otherPlayer;
+
 			Player();
 			Player(glm::vec3 pos);
 			Player(MyPlayer *p);
 			~Player();
+
+			void initModels();
 
 			void setColor(glm::vec4 color);
 			glm::vec4 getColor();

@@ -148,7 +148,7 @@ void handleAddTrap(struct trapObject t)
 	case TYPE_PUSH_TRAP:
 		break;
 	case TYPE_LIGHTNING_TRAP:
-		filename = DEATH_TRAP_OBJ;
+		//filename = DEATH_TRAP_OBJ;
 		break;
 	default:
 		break;
