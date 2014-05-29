@@ -141,16 +141,22 @@ void handleAddTrap(struct trapObject t)
 	switch (t.type)
 	{
 	case TYPE_FREEZE_TRAP:
+		filename = FREEZE_TRAP_OBJ;
 		break;
 	case TYPE_TRAMPOLINE_TRAP:
 		filename = TRAMPOLINE_TRAP_OBJ;
 		break;
 	case TYPE_SLOW_TRAP:
+		filename = SLOW_TRAP_OBJ;
 		break;
 	case TYPE_PUSH_TRAP:
+		filename = PUSH_TRAP_OBJ;
 		break;
 	case TYPE_LIGHTNING_TRAP:
-		//filename = DEATH_TRAP_OBJ;
+		filename = DEATH_TRAP_OBJ;
+		break;
+	case TYPE_PORTAL_TRAP:
+		filename = PORTAL_TRAP_OBJ;
 		break;
 	default:
 		break;

@@ -403,8 +403,12 @@ void Client::startChanneling(int resourceId) {
 }
 
 DWORD WINAPI Client::channelingThread(LPVOID arg) {
-	Sleep(1000);
+	int channelTime;
+	ConfigSettings::getConfig()->getValue("ChannelTime", channelTime);
+
 	cout << "Channeling Node..." << endl;
+	Sleep(channelTime);
+	cout << "Channel Complete!" << endl;
 	// Send Message to server
 	Client::sendChannelCompletedEvent(channelingResourceId);
 	channelingResourceId = -1;

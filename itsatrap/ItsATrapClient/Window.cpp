@@ -259,6 +259,7 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		{
 		case '1':
 			type = TYPE_FREEZE_TRAP;
+			filename = FREEZE_TRAP_OBJ;
 			freezeTrapSound->setIsPaused(true);
 			break;
 		case '2':
@@ -268,10 +269,12 @@ void Window::keyUp(unsigned char key, int x, int y) {
 			break;
 		case '3':
 			type = TYPE_SLOW_TRAP;
+			filename = SLOW_TRAP_OBJ;
 			slowSound->setIsPaused(true);
 			break;
 		case '4':
 			type = TYPE_PUSH_TRAP;
+			filename = PUSH_TRAP_OBJ;
 			pushSound->setIsPaused(true);
 			break;
 		case '5':
@@ -281,7 +284,7 @@ void Window::keyUp(unsigned char key, int x, int y) {
 			break;
 		case '6':
 			type = TYPE_PORTAL_TRAP;
-			freezeTrapSound->setIsPaused(true);
+			filename = PORTAL_TRAP_OBJ;
 			break;
 		default:
 			type = TYPE_FREEZE_TRAP;

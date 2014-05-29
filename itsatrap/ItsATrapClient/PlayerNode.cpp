@@ -69,7 +69,7 @@ namespace sg {
 
 	void Player::initModels() {
 		// m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
-		m_otherPlayer = new ObjModel("../Models/Polynoid.obj", "../Models/");
+		m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
 	}
 
 	void Player::setColor(glm::vec4 color) {

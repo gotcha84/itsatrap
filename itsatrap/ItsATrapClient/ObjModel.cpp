@@ -112,7 +112,8 @@ void ObjModel::setNIndices(int ele) {
 }
 
 void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
-	this->setMatrix(glm::translate(this->getPosition()) * glm::scale(m_scaleVec));
+
+	this->setMatrix(glm::translate(this->getPosition()) *  glm::scale(m_scaleVec));
 	glm::mat4 new_model = parent * this->getMatrix();
 	glm::mat4 mv = glm::inverse(cam) * new_model;
 
@@ -133,6 +134,8 @@ void ObjModel::drawModel() {
 	if (this->m_objFilename == "../Models/Can.obj") {
 		glFrontFace(GL_CW);
 	}
+
+
 
 	//cout << "nverts is : " << m_nIndices[0] << endl;
 	int p = 0;

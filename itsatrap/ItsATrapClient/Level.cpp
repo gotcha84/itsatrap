@@ -1,5 +1,5 @@
 #define ENABLE_PARTICLES 1
-#define NUMPARTICLES 500
+#define NUMPARTICLES 1000
 
 #include "Level.h"
 
