@@ -20,12 +20,34 @@ bool *Window::specialKeyState = new bool[256];
 bool *Window::specialKeyEventTriggered = new bool[256];
 int Window::modifierKey = 0;
 
+ISoundEngine *engine;
+ISoundEngine *jumpSound;
+ISoundEngine *knifeSound;
+ISound *walk;
+ISound *freezeTrapSound;
+ISound *pushSound;
+ISound *tramSound;
+ISound *slowSound;
+ISound *lightningSound;
+bool jump;
+
 
 Window::Window() {
 	for (int i=0; i<256; i++) {
 		keyState[i] = false;
 		specialKeyState[i] = false;
+		keyEventTriggered[i] = false;
 	}
+	engine = createIrrKlangDevice(); //declare loop, pause, and track
+	jumpSound = createIrrKlangDevice();
+	knifeSound = createIrrKlangDevice();
+	walk = engine->play2D("footstep.wav", true, true, true);
+	freezeTrapSound = engine->play2D("trap.wav", true, true, true);
+	pushSound = engine->play2D("push.wav", true, true, true);
+	tramSound = engine->play2D("tram.wav", true, true, true);
+	slowSound = engine->play2D("slow.wav", true, true, true);
+	lightningSound = engine->play2D("lightning.wav", true, true, true);
+	jump = true;
 }
 
 Window::~Window() {
@@ -196,11 +218,39 @@ void Window::displayCallback(void)
 void Window::keyDown(unsigned char key, int x, int y)
 {
 	keyState[key] = true;
+	if (key >= '1' && key <= '9') {
+		switch (key)
+		{
+		case '1':
+			freezeTrapSound->setIsPaused(false);
+			break;
+		case '2':
+			tramSound->setIsPaused(false);
+			break;
+		case '3':
+			slowSound->setIsPaused(false);
+			break;
+		case '4':
+			pushSound->setIsPaused(false);
+			break;
+		case '5':
+			lightningSound->setIsPaused(false);
+			break;
+		case '6':
+			freezeTrapSound->setIsPaused(false);
+			break;
+		default:
+			freezeTrapSound->setIsPaused(false);
+			break;
+		}
+	}
 }
 
 void Window::keyUp(unsigned char key, int x, int y) {
 	keyState[key] = false;
 	keyEventTriggered[key] = false;
+	jump = true;
+	walk->setIsPaused(true);
 
 	if (key >= '1' && key <= '9') {
 		string filename = TRAMPOLINE_TRAP_OBJ;
@@ -209,26 +259,33 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		{
 		case '1':
 			type = TYPE_FREEZE_TRAP;
+			freezeTrapSound->setIsPaused(true);
 			break;
 		case '2':
 			type = TYPE_TRAMPOLINE_TRAP;
 			filename = TRAMPOLINE_TRAP_OBJ;
+			tramSound->setIsPaused(true);
 			break;
 		case '3':
 			type = TYPE_SLOW_TRAP;
+			slowSound->setIsPaused(true);
 			break;
 		case '4':
 			type = TYPE_PUSH_TRAP;
+			pushSound->setIsPaused(true);
 			break;
 		case '5':
 			type = TYPE_LIGHTNING_TRAP;
 			filename = DEATH_TRAP_OBJ;
+			lightningSound->setIsPaused(true);
 			break;
 		case '6':
 			type = TYPE_PORTAL_TRAP;
+			freezeTrapSound->setIsPaused(true);
 			break;
 		default:
 			type = TYPE_FREEZE_TRAP;
+			freezeTrapSound->setIsPaused(true);
 			break;
 		}
 		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated, TRAP_DIR + filename);
@@ -271,12 +328,17 @@ void Window::processKeys() {
 	}
 
 	// jump
-	if (keyState[' ']) {
+	if (keyState[' '] && jump) {
 		Client::sendJumpEvent();
 		if (!keyEventTriggered[' ']) {
 			
 			keyEventTriggered[' '] = true;
+
+			if (!jumpSound->isCurrentlyPlaying("jump.wav")) {
+				jumpSound->play2D("jump.wav", false, false, true);
+			}
 		}
+		jump = false;
 	}
 
 	// modifierKey = 
@@ -326,6 +388,13 @@ void Window::processKeys() {
 		}
 	}
 
+	if (keyState['w'] ||
+		keyState['s'] ||
+		keyState['a'] ||
+		keyState['d']) {
+		walk->setIsPaused(false);
+	}
+
 	//if (keyState['u']) {
 	//	client->root->getPlayer()->Unstuck();
 	//}
@@ -357,6 +426,10 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 				{
 					// Needs to send a query to the server and check all of the players to see if client has hit anyone
 					printf("[Client]: Knife Swung!\n");
+
+					if (!knifeSound->isCurrentlyPlaying("knife.wav")) {
+						knifeSound->play2D("knife.wav", false, false, true);
+					}
 
 					// Player Hits
 					for (unordered_map<int, sg::Player *>::iterator it = client->players.begin(); it != client->players.end(); ++it) {

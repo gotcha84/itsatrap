@@ -15,6 +15,8 @@
 #include "MyPlayer.h"
 #include "SceneGraph.h"
 
+#include "Sound.h"
+
 class Window {
 	public:
 		static int m_width, m_height; // window size
