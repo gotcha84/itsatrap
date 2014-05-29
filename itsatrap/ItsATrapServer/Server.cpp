@@ -97,7 +97,7 @@ int Server::initialize() {
 	// Load Height Map
 	string heightMapFile;
 	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
-	World::readInHeightMapFromFile(heightMapFile); // ANURAG
+	//World::readInHeightMapFromFile(heightMapFile); // ANURAG
 	
 	return 0;
 }
@@ -174,6 +174,21 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			printf("[SERVER]: Added a static ramp object. Now have %d static ramp objects\n", dynamicWorld.getNumStaticRampObjects());
 			tmp.aabb.print();
 			printf("Slope: %f\n", tmp.slope);
+
+			if (dynamicWorld.getNumStaticRampObjects() >= 7) {
+				vector<AABB> buildings;
+				vector<AABB> ramps;
+				
+				for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
+					buildings.push_back(dynamicWorld.getStaticObjectBB(i));
+				}
+
+				for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
+					ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
+				}
+
+				World::superHeightMapInit(buildings, ramps);
+			}
 		}
 	}
 	else if (p->eventId == STATIC_RESOURCE_OBJECT_CREATION_EVENT)

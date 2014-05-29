@@ -57,7 +57,7 @@ namespace sg {
 			ConfigSettings::getConfig()->getValue("Team2A", a);
 		}
 
-		this->m_model->setColor(glm::vec4(r, g, b, a - 0.3));
+		this->m_model->setColor(glm::vec4(r, g, b, a));
 		this->m_particles->setColor(glm::vec4(r, g, b, a));
 		this->m_particles2->setColor(glm::vec4(r, g, b, a));
 	}
@@ -65,7 +65,7 @@ namespace sg {
 	void ResourceNode::resetOwnerColor()
 	{
 
-		this->m_model->setColor(glm::vec4(0.9, 0.9, 0.9, 0.7));
+		this->m_model->setColor(glm::vec4(0.9, 0.9, 0.9, 1));
 		this->m_particles->setColor(glm::vec4(0.5, 0.5, 0.5, 1));
 		this->m_particles2->setColor(glm::vec4(0.7, 0.7, 0.7, 1));
 	}
