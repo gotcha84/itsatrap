@@ -627,12 +627,12 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 
 void DynamicWorld::computeAABB(struct playerObject *p)
 {	
-	p->aabb.minX = p->position.x - 5.0f;
-	p->aabb.maxX = p->position.x + 5.0f;
+	p->aabb.minX = p->position.x - 8.0f;
+	p->aabb.maxX = p->position.x + 8.0f;
 	p->aabb.minY = p->position.y - 5.0f;
-	p->aabb.maxY = p->position.y + 5.0f;
-	p->aabb.minZ = p->position.z - 5.0f;
-	p->aabb.maxZ = p->position.z + 5.0f;
+	p->aabb.maxY = p->position.y + 20;
+	p->aabb.minZ = p->position.z - 8.0f;
+	p->aabb.maxZ = p->position.z + 8.0f;
 }
 
 void DynamicWorld::applyCollisions() {
