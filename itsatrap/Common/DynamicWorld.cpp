@@ -735,6 +735,8 @@ void DynamicWorld::applyCollisions() {
 				computeAABB(&p);
 				if (buildingId != -1) {
 					cout << "collided with building" << endl;
+					cout << "xz: " << proposedNewPos.x << ", " << proposedNewPos.z << endl;
+					cout << "heightmap at that location: " << World::m_heightMap[(int)proposedNewPos.x + World::m_heightMapXShift][(int)proposedNewPos.z + World::m_heightMapXShift];
 					// TODO: check guy is facing wall too, at rest
 					if (!p.feetPlanted /*&& !(m_physics->atRest()) */ && p.triedForward) {
 						if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {

@@ -9,8 +9,8 @@
 #include "../Common/World.h"
 
 #define FLOOR_HEIGHT	0.01f
-#define MAP_X_LENGTH	44
-#define MAP_Z_LENGTH	44
+#define MAP_X_LENGTH	40
+#define MAP_Z_LENGTH	40
 #define UNIT_SIZE		27
 
 #define NUM_BUILDINGS	31
