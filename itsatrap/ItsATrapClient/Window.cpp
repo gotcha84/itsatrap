@@ -243,6 +243,13 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		ConfigSettings::getConfig()->reloadSettingsFile();
 		Client::sendReloadConfigFile();
 	}
+	else if (key == 'e')
+	{
+		// Resource Tower Hits
+		for (int i = 0; i < client->level.resources.size(); ++i) {
+			Client::sendChannelAttemptEvent(client->level.resources[i]->getResourceId());
+		}
+	}
 }
 
 void Window::specialKeyDown(int key, int x, int y) {
@@ -363,11 +370,6 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 						if (it->second->m_playerID != client->root->getPlayerID()) {
 							Client::sendKnifeHitEvent(it->second->m_playerID);
 						}
-					}
-
-					// Resource Tower Hits
-					for (int i = 0; i < client->level.resources.size(); ++i) {
-						Client::sendChannelAttemptEvent(client->level.resources[i]->getResourceId());
 					}
 					break;
 				}

@@ -114,7 +114,6 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				if (client != nullptr) {
 					handleUpdateWorldFromServer(&world);
 				}
-					
 			}
 			else if (p->eventId == RELOAD_CONFIG_FILE)
 			{
@@ -135,6 +134,11 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			{
 				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
 				startChanneling(packet->id);
+			}
+			else if (p->eventId == NEW_OWNER_RESOURCE_UPDATE_EVENT)
+			{
+				struct resourceHitPacket *packet = (struct resourceHitPacket *) p;
+				client->level.setOwnerToResourceNode(packet->resourceId, packet->playerId);
 			}
 		}
 	}

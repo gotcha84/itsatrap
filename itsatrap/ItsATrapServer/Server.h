@@ -75,6 +75,7 @@ private:
 	static void updateResources();
 	static void sendActiveNodeUpdate(int resourceId);
 	static void sendPermissionToChannel(int playerId, int resourceId);
+	static void sendNewResourceOwnerUpdate(int playerId, int resourceId);
 	static void resetChanneling();
 
 public:
