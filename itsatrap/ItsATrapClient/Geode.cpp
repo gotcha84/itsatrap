@@ -1,11 +1,25 @@
 #define RAD 0.5f
-
+#define ENABLE_SHADER 0
 #include "Geode.h"
 
 namespace sg {
 
 	Geode::Geode() {
 		m_color = glm::vec4(1,0,0,1);
+		if (ENABLE_SHADER) {
+			shader = new Shader();
+			light = shader->lightShader("../Shaders/phongandtexture.frag", "../Shaders/phongandtexture.vert");
+
+		}
+
+		//this let the shaders on texture, so when you try to use shader on texture you add this on eline of a code
+		texture = new Texture();
+		if (ENABLE_SHADER) {
+			glUniform1i(glGetUniformLocation(light, "../Models/building1.ppm"), 0);
+		}
+		texturePPM = texture->loadTexture("../Models/building1.ppm");
+
+		//cout << "Init geode!" << endl;
 	}
 
 	Geode::~Geode() {

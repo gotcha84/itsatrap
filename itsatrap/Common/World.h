@@ -16,8 +16,8 @@
 // REFERENCE FROM Level.h
 // TODO (ktngo): Figure how to link the header file without crashing everything
 #define FLOOR_HEIGHT	0.01f
-#define MAP_X_LENGTH	44
-#define MAP_Z_LENGTH	44
+#define MAP_X_LENGTH	40
+#define MAP_Z_LENGTH	40
 #define UNIT_SIZE		27
 
 using namespace std;
