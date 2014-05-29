@@ -12,8 +12,12 @@
 #include "Utilities.h"
 
 #define TRAP_DIR "../Models/Traps/"
-#define TRAMPOLINE_TRAP_OBJ "Trampoline.obj"
+#define TRAMPOLINE_TRAP_OBJ "Jump_Trap.obj"
 #define DEATH_TRAP_OBJ "Death_Trap.obj"
+#define FREEZE_TRAP_OBJ "Freeze_Trap.obj"
+#define SLOW_TRAP_OBJ "Stun_Trap.obj"
+#define PUSH_TRAP_OBJ "Pad_Trap.obj"
+#define PORTAL_TRAP_OBJ "Flash_Trap.obj"
 
 namespace sg {
 	class Trap : public Geode {

@@ -94,7 +94,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.currCamState = CameraStates::Client;
 	p.stopwatch = Stopwatch();
 	p.canClimb = true;
-
+	p.resources = 50;
 	p.knifeDelay = 0;
 	p.timeUntilRegen = 0;
 
@@ -736,6 +736,8 @@ void DynamicWorld::applyCollisions() {
 					p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 					p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
 				}
+				p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+				p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
 			}
 		}
 	}
@@ -1069,7 +1071,7 @@ void DynamicWorld::applyGravity()
 void DynamicWorld::applyAdjustments() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
-		float playerHeight = 4.0f;
+		float playerHeight = 8.0f;
 		//ConfigSettings::getConfig()->getValue("playerHeight", playerHeight);
 
 		float velocityDecayFactor = 0.9f;
