@@ -238,5 +238,17 @@
     <None Include="..\Shaders\simple.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="..\Shaders\pass1.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\pass1.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\pass2blur.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Shaders\pass2blur.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

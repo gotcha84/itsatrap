@@ -118,14 +118,19 @@ class Shader
 {
 	public:
 		Shader();
+		Shader(string vertFile, string fragFile);
 		~Shader();
+		
 		GLuint vertShader;
 		GLuint fragShader;
 		GLuint gl2Program;
 
+		GLuint m_prog;
+
 		int shaderInit(void);
-		int readShaderSource(GLuint shader, char *file);
+		int readShaderSource(GLuint shader, string file);
 		void printShaderInfoLog(GLuint shader);
 		void printProgramInfoLog(GLuint program);
 		GLuint lightShader(char* fragFile, char* vertFile);
+		GLuint getShader();
 };

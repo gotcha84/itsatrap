@@ -160,6 +160,10 @@
     <None Include="..\Shaders\can.vert" />
     <None Include="..\Shaders\gouraud.frag" />
     <None Include="..\Shaders\gouraud.vert" />
+    <None Include="..\Shaders\pass1.frag" />
+    <None Include="..\Shaders\pass1.vert" />
+    <None Include="..\Shaders\pass2blur.frag" />
+    <None Include="..\Shaders\pass2blur.vert" />
     <None Include="..\Shaders\phongandtexture.frag" />
     <None Include="..\Shaders\phongandtexture.vert" />
     <None Include="..\Shaders\simple.frag" />
