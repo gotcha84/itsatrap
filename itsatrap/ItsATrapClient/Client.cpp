@@ -200,6 +200,21 @@ void Client::sendStaticObject(float minX, float minY, float minZ, float maxX, fl
 	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
 }
 
+void Client::sendStaticWallObject(AABB wallBB)
+{
+	struct staticObjectPacket packet = {};
+	packet.eventId = STATIC_WALL_OBJECT_CREATION_EVENT;
+	packet.playerId = playerId;
+	packet.object.aabb.minX = wallBB.minX;
+	packet.object.aabb.minY = wallBB.minY;
+	packet.object.aabb.minZ = wallBB.minZ;
+	packet.object.aabb.maxX = wallBB.maxX;
+	packet.object.aabb.maxY = wallBB.maxY;
+	packet.object.aabb.maxZ = wallBB.maxZ;
+
+	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
+}
+
 void Client::sendStaticRampObject(AABB rampBB, float slope)
 {
 	struct staticRampObjectPacket packet = {};

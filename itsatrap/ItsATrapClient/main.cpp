@@ -107,8 +107,6 @@ int main(int argc, char *argv[]) {
 	//city.loadData("../Models/city.obj");
 	//client->root->addChild(&city);
 
-	//client->level = new Level();
-	//Level level = Level();
 	client->root->addChild(client->level.getRoot());
 	for (int i = 0; i < client->level.buildings.size(); ++i) {
 		Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,
@@ -122,6 +120,10 @@ int main(int argc, char *argv[]) {
 
 	for (int i = 0; i < client->level.resources.size(); ++i) {
 		Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), client->level.resources[i]->getResourceId());
+	}
+
+	for (int i = 0; i < client->level.walls.size(); ++i) {
+		Client::sendStaticWallObject(client->level.walls[i]->getBoundingBox());
 	}
 
 	//client->printPlayers();
