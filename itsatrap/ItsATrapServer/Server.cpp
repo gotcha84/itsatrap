@@ -392,6 +392,7 @@ void Server::processBuffer()
 	}
 
 	dynamicWorld.applyMoveEvents();
+	dynamicWorld.applyCollisions();
 	dynamicWorld.applyPhysics();
 	dynamicWorld.applyGravity();
 	dynamicWorld.applyAdjustments();

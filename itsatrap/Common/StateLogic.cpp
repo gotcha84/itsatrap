@@ -300,6 +300,8 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	float WREndfraction = 0.3f;
 	//ConfigSettings::getConfig()->getValue("WREndfraction", WREndfraction);
 
+	glm::vec3 WRBounceFactor = glm::vec3(2.0f, 1.5, 2.0f);
+
 	glm::vec3 WRHoldercamZ;
 	glm::vec3 WRHoldervelocityDiff;
 	glm::vec3 WRStartcamZ;
@@ -317,6 +319,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 
 	int WRStartCounter = 0;
 	int WREndCounter = 0;
+
 
 	if (newDirection == 0 || newDirection == 1) {
 		WRHoldercamZ = glm::vec3(e->cameraObject.camZ.x*-1.0f, e->cameraObject.camZ.y, e->cameraObject.camZ.z);
@@ -349,6 +352,8 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 
 	WRStartcamUpIncrement = (WRStartcamUp - WRinitialcamUp) / (WRStartfraction*WRnumFrames);
 	WREndcamUpIncrement = -1.0f*(WRStartcamUp - WRinitialcamUp) / (WREndfraction*WRnumFrames);
+
+	WRHoldervelocityDiff = glm::vec3(WRHoldervelocityDiff.x * WRBounceFactor.x, WRHoldervelocityDiff.y * WRBounceFactor.y, WRHoldervelocityDiff.z * WRBounceFactor.z);
 
 	/*	1 +,-
 	2 -,+
@@ -581,6 +586,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 			if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
 				p->currInnerState = innerStates::Off;
 				p->interactingWithBuildingId = -1;
+				p->velocity += StateLogic::statesInfo[p->id].Holder.velocityDiff;
 				//cout << "ended state: " << p->currPhysState << endl;
 			
 				// technically shouldnt need line below.. but w/e hardcoding ftw
