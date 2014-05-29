@@ -64,11 +64,10 @@ namespace sg {
 
 	void ResourceNode::resetOwnerColor()
 	{
-		glm::vec4 emptyColor = glm::vec4(1, 1, 1, 1);
 
-		this->m_model->setColor(emptyColor);
-		this->m_particles->setColor(emptyColor);
-		this->m_particles2->setColor(emptyColor);
+		this->m_model->setColor(glm::vec4(0.9, 0.9, 0.9, 0.7));
+		this->m_particles->setColor(glm::vec4(0.5, 0.5, 0.5, 1));
+		this->m_particles2->setColor(glm::vec4(0.7, 0.7, 0.7, 1));
 	}
 
 	void ResourceNode::draw(glm::mat4 parent, glm::mat4 cam) {

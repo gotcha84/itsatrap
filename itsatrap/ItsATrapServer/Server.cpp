@@ -285,12 +285,16 @@ void Server::processBuffer()
 				for (int i = 0; i < NUM_DIRECTIONS; i++)
 				{
 					if (actPkt->moveEvents[i]) {
+						if (isChanneling && actPkt->playerId == channelingPlayer) resetChanneling();
+
 						dynamicWorld.processMoveEvent(actPkt->playerId, (Direction)i);
 					}
 				}
 
 				// Jump
 				if (actPkt->jump) {
+					if (isChanneling && actPkt->playerId == channelingPlayer) resetChanneling();
+
 					dynamicWorld.processJumpEvent(actPkt->playerId);
 				}
 
@@ -518,21 +522,17 @@ void Server::updateResources()
 	timeUntilHotSpotChange -= MAX_SERVER_PROCESS_RATE;
 	timeUntilResourceBonus -= MAX_SERVER_PROCESS_RATE;
 
-	// Distributes the resources
+	// Distributes the resources TODO
 	if (timeUntilResourceBonus < 0)
 	{
 		timeUntilResourceBonus = resourceInterval;
 
 		for (map<int, struct playerObject>::iterator it = dynamicWorld.playerMap.begin(); it != dynamicWorld.playerMap.end(); ++it)
 		{
-			it->second.resources += resourcePerInterval;
-
-			// Hot spot bonus
-			glm::vec3 pos = it->second.position;
-
-			// TODO: 
-			//if (glm::distance(pos, currentHotSpot) < 10)
-			//it->second.resources += resourceHotSpotBonusPerInterval;
+			if (currentResourceOwner != -1 && it->second.id % 2 == currentResourceOwner % 2) {
+				//it->second.resources += resourcePerInterval;
+				it->second.resources += resourceHotSpotBonusPerInterval;
+			}
 		}
 	}
 
@@ -547,7 +547,6 @@ void Server::updateResources()
 		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 		currentResourceOwner = -1;
 		resetChanneling();
-		// TODO: Broadcast no owner, reset all nodes
 	}
 }
 
@@ -584,6 +583,4 @@ void Server::sendNewResourceOwnerUpdate(int playerId, int resourceId)
 void Server::resetChanneling() {
 	isChanneling = false;
 	channelingPlayer = -1;
-
-	// TODO: broadcast message to stop channeling
 }
