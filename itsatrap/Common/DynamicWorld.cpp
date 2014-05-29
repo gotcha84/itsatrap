@@ -311,6 +311,14 @@ int DynamicWorld::getNumStaticResourceObjects()
 	return staticResourceObjects.size();
 }
 
+AABB DynamicWorld::getStaticObjectBB(int buildingId) {
+	return staticObjects[buildingId].aabb;
+}
+
+AABB DynamicWorld::getStaticRampObjectBB(int rampId) {
+	return staticRampObjects[rampId].aabb;
+}
+
 AABB DynamicWorld::getStaticResourceBB(int resourceId)
 {
 	for (int i = 0; i < staticResourceObjects.size(); ++i) {

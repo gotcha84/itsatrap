@@ -1,7 +1,32 @@
-﻿Build started 5/29/2014 12:33:17 AM.
+﻿Build started 5/29/2014 12:36:32 AM.
      1>Project "C:\itsatrap\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\itsatrap\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\itsatrap\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp World.cpp
+         World.cpp
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.h(31): warning C4251: 'World::m_boundingBoxes' : class 'std::vector<AABB,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
+                 with
+                 [
+                     _Ty=AABB
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(17): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(21): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(53): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(54): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(85): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(88): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(102): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(105): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(121): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(124): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(138): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(141): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(179): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(181): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(182): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(184): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(194): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(196): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(205): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
          DynamicWorld.cpp
      1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
      1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
@@ -71,14 +96,15 @@
      1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(192): warning C4018: '<' : signed/unsigned mismatch
      1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(214): warning C4018: '<' : signed/unsigned mismatch
      1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(242): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(316): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(397): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(324): warning C4018: '<' : signed/unsigned mismatch
      1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(405): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(419): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(441): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(491): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1320): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(413): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(427): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(449): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(499): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1328): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
          GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\itsatrap\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\itsatrap\itsatrap\itsatrap\Debug\ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\itsatrap\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\itsatrap\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\AABB.obj
          Debug\ConfigSettings.obj
@@ -95,4 +121,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.64
+Time Elapsed 00:00:02.34

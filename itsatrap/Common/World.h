@@ -31,6 +31,7 @@ class COMMON_API World {
 		static vector<AABB> m_boundingBoxes;
 
 		static void initializeHeightMap();
+		static void superHeightMapInit(vector<AABB> buildings, vector<AABB> ramps);
 		static void updateHeightMap(AABB boundingBox, float offset);
 		static void updateHeightMap(AABB boundingBox);
 		static float updateHeightMapRamp(AABB boundingBox, int rotation);

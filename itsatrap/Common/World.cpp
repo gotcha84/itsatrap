@@ -13,6 +13,42 @@ void World::initializeHeightMap() {
 	}
 }
 
+void World::superHeightMapInit(vector<AABB> buildings, vector<AABB> ramps) {
+	for (int i = 0; i < buildings.size(); ++i) {
+		World::updateHeightMap(buildings[i]);
+	}
+
+	for (int i = 0; i < ramps.size(); ++i) {
+		switch (i)
+		{
+		case 0:
+			World::updateHeightMapRamp(ramps[i], 0);
+			break;
+		case 1:
+			World::updateHeightMapRamp(ramps[i], 180);
+			break;
+		case 2:
+			World::updateHeightMapRamp(ramps[i], 0);
+			break;
+		case 3:
+			World::updateHeightMapRamp(ramps[i], 0);
+			break;
+		case 4:
+			World::updateHeightMapRamp(ramps[i], 90);
+			break;
+		case 5:
+			World::updateHeightMapRamp(ramps[i], 90);
+			break;
+		case 6:
+			World::updateHeightMapRamp(ramps[i], 180);
+			break;
+		default:
+			cout << "[ERR] Level.cpp - Unexpected Ramp Found!" << endl;
+			break;
+		}
+	}
+}
+
 void World::updateHeightMap(AABB boundingBox) {
 	for (int x = boundingBox.minX; x < boundingBox.maxX; ++x) {
 		for (int z = boundingBox.minZ; z < boundingBox.maxZ; ++z) {
