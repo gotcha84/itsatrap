@@ -2,6 +2,7 @@
 #ifndef RESOURCENODE_H
 #define RESOURCENODE_H
 
+#include "ConfigSettings.h"
 #include "ObjNode.h"
 #include "ParticleSystem.h"
 
@@ -24,6 +25,8 @@ namespace sg {
 			void disableParticles();
 		
 			int getResourceId();
+			void setOwnerColor(int playerId);
+			void resetOwnerColor();
 			//void getOwner();
 			//void setOwner();
 			//void addResourcesToOwner();

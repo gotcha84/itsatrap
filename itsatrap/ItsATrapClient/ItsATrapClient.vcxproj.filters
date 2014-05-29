@@ -54,9 +54,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ClientInstance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -126,8 +123,13 @@
     <ClCompile Include="ObjNode.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Sound.cpp">
       <Filter>Source Files</Filter>
+=======
+    <ClCompile Include="ClientInstance.cpp">
+      <Filter>Source Files\SceneGraph</Filter>
+>>>>>>> 6ea079a1049d9cd03ad5d421454259ec86f48718
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
