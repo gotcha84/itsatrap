@@ -308,7 +308,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	float WREndfraction = 0.3f;
 	//ConfigSettings::getConfig()->getValue("WREndfraction", WREndfraction);
 
-	glm::vec3 WRBounceFactor = glm::vec3(1.5f, 1.0, 1.5f);
+	glm::vec3 WRBounceFactor = glm::vec3(100.0f, 1.0f, 100.0f);
 	//ConfigSettings::getConfig()->getValue("WRBounceFactor", WRBounceFactor);
 
 	glm::vec3 WRHoldercamZ;
@@ -329,6 +329,8 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	int WRStartCounter = 0;
 	int WREndCounter = 0;
 
+	float WRUpFactor = 0.5f;
+	//ConfigSettings::getConfig()->getValue("WRUpFactor",WRUpFactor);
 
 	if (newDirection == 0 || newDirection == 1) {
 		WRHoldercamZ = glm::vec3(e->cameraObject.camZ.x*-1.0f, e->cameraObject.camZ.y, e->cameraObject.camZ.z);
@@ -339,7 +341,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 		// TODO: change 0.8 to use config file,
 		WRStartcamZ = glm::vec3(0.0f, 0.0f, 1.0f);
 		WRStartcamX = glm::vec3(0.0f, -1.0f, 0.0f);
-		WRStartcamUp = glm::vec3(-0.7f, 0.7f, 0.0f);
+		WRStartcamUp = glm::vec3(-1.0f*WRUpFactor, WRUpFactor, 0.0f);
 
 	}
 	if (newDirection == 4 || newDirection == 5) {
@@ -350,7 +352,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 
 		WRStartcamZ = glm::vec3(1.0f, 0.0f, 0.0f);
 		WRStartcamX = glm::vec3(0.0f, 1.0f, 0.0f);
-		WRStartcamUp = glm::vec3(0.0f, 0.7f, -0.7f);
+		WRStartcamUp = glm::vec3(0.0f, WRUpFactor, -1.0f*WRUpFactor);
 	}
 
 	if (newDirection % 2 == 1) {
@@ -601,6 +603,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				p->currInnerState = innerStates::Off;
 				p->interactingWithBuildingId = -1;
 				p->velocity += StateLogic::statesInfo[p->id].Holder.velocityDiff;
+				cout << "added a velo of: " << glm::to_string(StateLogic::statesInfo[p->id].Holder.velocityDiff) << endl;
 				cout << "ended state: " << p->currPhysState << endl;
 				// technically shouldnt need line below.. but w/e hardcoding ftw
 				p->cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);

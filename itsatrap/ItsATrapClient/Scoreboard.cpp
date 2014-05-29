@@ -53,9 +53,7 @@ int Scoreboard::size() const { return entries.size(); }
 Scoreboard::EntryLocation Scoreboard::entryWorseThan(Entry const& entry) {
 	int i = 0;
 	for (auto it = entries.begin(); it != entries.end(); ++it, ++i) {
-		/*if (it->kill <= entry.kill) {
-			return EntryLocation(it, i);
-		}*/
+
 		if (it->name % 2 == 0) {
 			return EntryLocation(it, i);
 		}
@@ -91,7 +89,6 @@ void Scoreboard::draw() {
 		glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
 				glLoadIdentity();
-
 				bool switchColor = false;
 
 
@@ -104,6 +101,7 @@ void Scoreboard::draw() {
 				font->Render("Team 1");
 				glRasterPos2f(-0.10f, -0.2f);
 				font->Render("Team 2");
+
 				for (int i = 0; i<entries.size(); ++i) {
 
 					// setup color
@@ -138,6 +136,7 @@ void Scoreboard::draw() {
 					for (int t = 0; t< name.length(); t++) {
 						glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, name[t]);
 					}*/
+
 					if (e.name == 0) { 
 						glRasterPos2f(-0.6f, 0.5f);
 						font->Render(name.c_str());

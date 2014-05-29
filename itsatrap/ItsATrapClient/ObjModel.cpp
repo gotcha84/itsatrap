@@ -350,6 +350,9 @@ void ObjModel::calculateBoundingBox(glm::mat4 model) {
 	maxz = maxVec.z;
 
 	m_boundingBox.setAABB(minx, miny, minz, maxx, maxy, maxz);
+
+	cout << "set aabb: ";
+	m_boundingBox.print();
 }
 
 bool ObjModel::isInside(glm::vec3 point) {		
