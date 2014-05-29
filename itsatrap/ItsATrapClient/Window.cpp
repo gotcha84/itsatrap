@@ -45,6 +45,7 @@ Window::Window() {
 		specialKeyState[i] = false;
 		specialKeyEventTriggered[i] = false;
 	}	
+	jumpSound = engine->play2D("jump.wav", true, true, true);
 }
 
 Window::~Window() {
@@ -184,6 +185,7 @@ void Window::keyUp(unsigned char key, int x, int y) {
 	keyEventTriggered[key] = false;
 	trapKey = 0;
 	//cout << key << " up" << endl;
+	jumpSound->setIsPaused(true);
 	cout << key << " : " << keyEventTriggered[key] << endl;
 }
 
@@ -266,7 +268,7 @@ void Window::processKeys() {
 	if (keyState[' ']) {
 		client->root->getPlayer()->handleJump();
 		if (!keyEventTriggered[' ']) {
-			jumpSound = engine->play2D("jump.wav", false, false, true);
+			jumpSound->setIsPaused(false);
 			keyEventTriggered[' '] = true;
 		}
 	}
