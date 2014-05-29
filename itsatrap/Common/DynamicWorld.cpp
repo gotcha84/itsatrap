@@ -614,6 +614,118 @@ void DynamicWorld::computeAABB(struct playerObject *p)
 	p->aabb.maxZ = p->position.z + 5.0f;
 }
 
+void DynamicWorld::applyCollisions() {
+	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
+	{
+		struct playerObject &p = it->second;
+		if (p.currPhysState == PhysicsStates::None) {
+			glm::vec3 proposedNewPos = p.position + p.velocity + p.velocityDiff;
+
+			glm::vec3 oldPos = p.position;
+			glm::vec3 newPos;
+
+			//cout << "pos: " << glm::to_string(p.position) << endl;
+			//cout << "newPos: " << glm::to_string(proposedNewPos) << endl;
+			p.position = proposedNewPos;
+			p.position.y += 5.0f;
+			computeAABB(&p);
+			p.position = oldPos;
+			//p.position.y += 5.0f;
+			int collisionId = checkCollisionsWithAllNonTraps(&p);
+			int rampId;
+			// if not on ramp
+			if (p.interactingWithRampId == -1) {
+
+				// check for entrance
+				rampId = checkCollisionsWithAllRampsEntrance(&p);
+
+				// hit side of ramp
+				if (rampId == -1 && checkCollisionsWithAllRampsInside(&p) != -1) {
+					//cout << "not on ramp, found hit side" << endl;
+					p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+					p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+					p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
+					p.position = oldPos;
+					computeAABB(&p);
+					return;
+				}
+				/*
+				if (rampId == -1) {
+				cout << "not on ramp, did not find entrance. did not hit side" << endl;
+				}
+				else {
+				cout << "not no ramp, found entrance" << endl;
+				}
+				*/
+				p.interactingWithRampId = rampId;
+			}
+			// if already on ramp
+			else {
+				rampId = checkCollisionsWithAllRampsInside(&p);
+				cout << "on ramp, checking: " << rampId << endl;
+				p.interactingWithRampId = rampId;
+			}
+			p.position = oldPos;
+			computeAABB(&p);
+			//cout << "collision id: " << collisionId << endl;
+			if (collisionId != -1 && rampId == -1) {
+				p.position = proposedNewPos;
+				p.position.y += 5.0f;
+				computeAABB(&p);
+				p.position = oldPos;
+				//p.position.y += 5.0f;
+				int buildingId = checkSideCollisionsWithAllBuildings(&p);
+				p.position = oldPos;
+				computeAABB(&p);
+				//cout << "buildingId: " << buildingId << endl;
+				if (buildingId != -1) {
+					cout << "collided with building" << endl;
+					// TODO: check guy is facing wall too, at rest
+					if (!p.feetPlanted /*&& !(m_physics->atRest()) */ && p.triedForward) {
+						//cout << "doing extra logic!" << endl;
+						if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
+							StateLogic::startHoldingEdge(&p, buildingId);
+							//TODO: startHoldingEdge(p);
+							return;
+							//return;
+						}
+
+						float angle = Physics::handleAngleIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
+						if (abs(90.0f - angle) < 15.0f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
+							newPos = oldPos;
+							//cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
+							StateLogic::startClimbing(&p, buildingId);
+							return;
+						}
+
+						else {
+							//cout << "starting the wallrunning with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
+							// 0,1 = x, -1 = y, 4,5 = z
+							int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
+							if (newDirection != -1) {
+								StateLogic::startWallRunning(&p, newDirection, p.velocityDiff, angle, buildingId);
+							}
+							else {
+								p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+								p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
+							}
+						}
+					}
+					else {
+						p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+						p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
+					}
+				}
+
+				else {
+					p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+					p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
+				}
+			}
+		}
+	}
+}
+
 void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 {
 	struct playerObject *p = &playerMap[playerId];
@@ -638,6 +750,8 @@ void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 
 	
 }
+
+
 
 void DynamicWorld::applyMoveEvents() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
@@ -713,113 +827,6 @@ void DynamicWorld::noneMoveEvent(int playerId)
 	}
 	else if (p->triedRight) {
 		toAdd += xWalkFactor*p->cameraObject.camX;
-	}
-
-	proposedNewPos = p->position + p->velocity + toAdd;
-	
-	glm::vec3 oldPos = p->position;
-	glm::vec3 newPos;
-	
-	//cout << "pos: " << glm::to_string(p->position) << endl;
-	//cout << "newPos: " << glm::to_string(proposedNewPos) << endl;
-	p->position = proposedNewPos;
-	p->position.y += 5.0f;
-	computeAABB(p);
-	p->position = oldPos;
-	//p->position.y += 5.0f;
-	int collisionId = checkCollisionsWithAllNonTraps(p);
-	int rampId;
-	// if not on ramp
-	if (p->interactingWithRampId == -1) {
-
-		// check for entrance
-		rampId = checkCollisionsWithAllRampsEntrance(p);
-
-		// hit side of ramp
-		if (rampId == -1 && checkCollisionsWithAllRampsInside(p) != -1) {
-			//cout << "not on ramp, found hit side" << endl;
-			toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
-			p->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-			p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
-			p->position = oldPos;
-			computeAABB(p);
-			return;
-		}
-		/*
-		if (rampId == -1) {
-			cout << "not on ramp, did not find entrance. did not hit side" << endl;
-		}
-		else {
-			cout << "not no ramp, found entrance" << endl;
-		}
-		*/
-		p->interactingWithRampId = rampId;
-	}
-	// if already on ramp
-	else {
-		rampId = checkCollisionsWithAllRampsInside(p);
-		cout << "on ramp, checking: " << rampId << endl;
-		p->interactingWithRampId = rampId;
-	}
-	p->position = oldPos;
-	computeAABB(p);
-	//cout << "collision id: " << collisionId << endl;
-	if (collisionId != -1 && rampId == -1) {
-		p->position = proposedNewPos;
-		p->position.y += 5.0f;
-		computeAABB(p);
-		p->position = oldPos;
-		//p->position.y += 5.0f;
-		int buildingId = checkSideCollisionsWithAllBuildings(p);
-		p->position = oldPos;
-		computeAABB(p);
-		//cout << "buildingId: " << buildingId << endl;
-		if (buildingId != -1) {
-			//cout << "collided with building" << endl;
-			// TODO: check guy is facing wall too, at rest
-			if (!p->feetPlanted /*&& !(m_physics->atRest()) */ && p->triedForward) {
-				//cout << "doing extra logic!" << endl;
-				if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
-					StateLogic::startHoldingEdge(p, buildingId);
-					//TODO: startHoldingEdge(p);
-					return;
-					//return;
-				}
-
-				float angle = Physics::handleAngleIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
-				if (abs(90.0f-angle) < 22.5f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
-					newPos = oldPos;
-					//cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
-					StateLogic::startClimbing(p, buildingId);
-					return;
-				}
-				
-				else {
-				//cout << "starting the wallrunning with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
-				// 0,1 = x, -1 = y, 4,5 = z
-					int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
-					if (newDirection != -1) {
-						StateLogic::startWallRunning(p, newDirection, toAdd, angle, buildingId);
-					}
-					else {
-						toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
-						p->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-						p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
-					}
-				}
-			}
-			else {
-				toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
-				p->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-				p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
-			}
-		}
-			
-		else {
-			toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
-			p->velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-			p->velocity = glm::vec3(0.0f, p->velocity.y, 0.0f);
-		}
 	}
 
 	p->velocityDiff = toAdd;
@@ -1047,14 +1054,19 @@ void DynamicWorld::applyGravity()
 void DynamicWorld::applyAdjustments() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
+		float playerHeight = 4.0f;
+		//ConfigSettings::getConfig()->getValue("playerHeight", playerHeight);
+
+		float velocityDecayFactor = 0.9f;
+		//ConfigSettings::getConfig()->getValue("velocityDecayFactor ", velocityDecayFactor );
+
 		struct playerObject &p = it->second;
 		p.velocity += p.velocityDiff;
 		p.position += p.velocity;
 		p.velocity -= p.velocityDiff;
+		p.velocity.x *= velocityDecayFactor;
+		p.velocity.z *= velocityDecayFactor;
 		p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-
-		float playerHeight = 4.0f;
-		//ConfigSettings::getConfig()->getValue("playerHeight", playerHeight);
 
 		p.cameraObject.cameraCenter = glm::vec3(p.position.x, p.position.y + playerHeight, p.position.z);
 		p.cameraObject.cameraLookAt = p.cameraObject.cameraCenter + p.cameraObject.camZ;
@@ -1199,9 +1211,10 @@ void DynamicWorld::wallRunningJumpEvent(int playerId) {
 	struct playerObject *p = &playerMap[playerId];
 
 	if (p->currInnerState != innerStates::Ending) {
-		float bounceFactor = 2.0f;
-		//ConfigSettings::getConfig()->getValue("bounceFactor", bounceFactor);
-		StateLogic::statesInfo[p->id].End.velocityDiff *= bounceFactor;
+		glm::vec3 WRBounceFactor = glm::vec3(1.5f, 1.0, 1.5f);
+		//ConfigSettings::getConfig()->getValue("WRBounceFactor", WRBounceFactor);
+		StateLogic::statesInfo[p->id].Holder.velocityDiff.x *= WRBounceFactor.x;
+		StateLogic::statesInfo[p->id].Holder.velocityDiff.z *= WRBounceFactor.z;
 		StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
 		p->currInnerState = innerStates::Ending;
 	}

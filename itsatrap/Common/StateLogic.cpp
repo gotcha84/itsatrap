@@ -291,6 +291,11 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 	glm::vec3 WRinitialcamUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	cout << "wrinitialcamp: " << glm::to_string(WRinitialcamUp) << endl;
 
+	float zWalkFactor = 0;
+	ConfigSettings::getConfig()->getValue("zWalkFactor", zWalkFactor);
+
+	e->velocityDiff *= zWalkFactor / e->velocityDiff.length();
+
 	float WRnumFrames = 60.0f;
 	//ConfigSettings::getConfig()->getValue("WRnumFrames", WRnumFrames);
 
@@ -299,6 +304,9 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 
 	float WREndfraction = 0.3f;
 	//ConfigSettings::getConfig()->getValue("WREndfraction", WREndfraction);
+
+	glm::vec3 WRBounceFactor = glm::vec3(1.5f, 1.0, 1.5f);
+	//ConfigSettings::getConfig()->getValue("WRBounceFactor", WRBounceFactor);
 
 	glm::vec3 WRHoldercamZ;
 	glm::vec3 WRHoldervelocityDiff;
@@ -317,6 +325,7 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 
 	int WRStartCounter = 0;
 	int WREndCounter = 0;
+
 
 	if (newDirection == 0 || newDirection == 1) {
 		WRHoldercamZ = glm::vec3(e->cameraObject.camZ.x*-1.0f, e->cameraObject.camZ.y, e->cameraObject.camZ.z);
@@ -349,6 +358,8 @@ void StateLogic::startWallRunning(struct playerObject *e, int newDirection, glm:
 
 	WRStartcamUpIncrement = (WRStartcamUp - WRinitialcamUp) / (WRStartfraction*WRnumFrames);
 	WREndcamUpIncrement = -1.0f*(WRStartcamUp - WRinitialcamUp) / (WREndfraction*WRnumFrames);
+
+	//WRHoldervelocityDiff = glm::vec3(WRHoldervelocityDiff.x * WRBounceFactor.x, WRHoldervelocityDiff.y * WRBounceFactor.y, WRHoldervelocityDiff.z * WRBounceFactor.z);
 
 	/*	1 +,-
 	2 -,+
@@ -581,8 +592,8 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 			if (StateLogic::statesInfo[p->id].End.counter >= StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames) {
 				p->currInnerState = innerStates::Off;
 				p->interactingWithBuildingId = -1;
+				p->velocity += StateLogic::statesInfo[p->id].Holder.velocityDiff;
 				//cout << "ended state: " << p->currPhysState << endl;
-			
 				// technically shouldnt need line below.. but w/e hardcoding ftw
 				p->cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 				//cout << "ended with up as: " << glm::to_string(p->cameraObject.cameraUp) << endl;
