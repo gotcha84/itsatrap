@@ -41,12 +41,12 @@ Window::Window() {
 	engine = createIrrKlangDevice(); //declare loop, pause, and track
 	jumpSound = createIrrKlangDevice();
 	knifeSound = createIrrKlangDevice();
-	walk = engine->play2D("footstep.wav", true, true, true);
-	freezeTrapSound = engine->play2D("trap.wav", true, true, true);
-	pushSound = engine->play2D("push.wav", true, true, true);
-	tramSound = engine->play2D("tram.wav", true, true, true);
-	slowSound = engine->play2D("slow.wav", true, true, true);
-	lightningSound = engine->play2D("lightning.wav", true, true, true);
+	walk = engine->play2D("../SoundFiles/footstep.wav", true, true, true);
+	freezeTrapSound = engine->play2D("../SoundFiles/trap.wav", true, true, true);
+	pushSound = engine->play2D("../SoundFiles/push.wav", true, true, true);
+	tramSound = engine->play2D("../SoundFiles/tram.wav", true, true, true);
+	slowSound = engine->play2D("../SoundFiles/slow.wav", true, true, true);
+	lightningSound = engine->play2D("../SoundFiles/lightning.wav", true, true, true);
 	jump = true;
 }
 
@@ -345,8 +345,8 @@ void Window::processKeys() {
 			
 			keyEventTriggered[' '] = true;
 
-			if (!jumpSound->isCurrentlyPlaying("jump.wav")) {
-				jumpSound->play2D("jump.wav", false, false, true);
+			if (!jumpSound->isCurrentlyPlaying("../SoundFiles/jump.wav")) {
+				jumpSound->play2D("../SoundFiles/jump.wav", false, false, true);
 			}
 		}
 		jump = false;
@@ -440,8 +440,8 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 					// Needs to send a query to the server and check all of the players to see if client has hit anyone
 					printf("[Client]: Knife Swung!\n");
 
-					if (!knifeSound->isCurrentlyPlaying("knife.wav")) {
-						knifeSound->play2D("knife.wav", false, false, true);
+					if (!knifeSound->isCurrentlyPlaying("../SoundFiles/knife.wav")) {
+						knifeSound->play2D("../SoundFiles/knife.wav", false, false, true);
 					}
 
 					// Player Hits

@@ -1071,8 +1071,8 @@ void DynamicWorld::applyGravity()
 void DynamicWorld::applyAdjustments() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
-		float playerHeight = 8.0f;
-		//ConfigSettings::getConfig()->getValue("playerHeight", playerHeight);
+		float playerHeight = 0;
+		ConfigSettings::getConfig()->getValue("PlayerHeight", playerHeight);
 
 		float velocityDecayFactor = 0.9f;
 		//ConfigSettings::getConfig()->getValue("velocityDecayFactor ", velocityDecayFactor );
