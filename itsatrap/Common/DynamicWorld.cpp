@@ -618,7 +618,7 @@ void DynamicWorld::applyCollisions() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		struct playerObject &p = it->second;
-		if (p.currPhysState == PhysicsStates::None) {
+		if (p.currPhysState == PhysicsStates::None || p.currPhysState == PhysicsStates::WallRunning) {
 			glm::vec3 proposedNewPos = p.position + p.velocity + p.velocityDiff;
 
 			glm::vec3 oldPos = p.position;
@@ -626,11 +626,11 @@ void DynamicWorld::applyCollisions() {
 
 			//cout << "pos: " << glm::to_string(p.position) << endl;
 			//cout << "newPos: " << glm::to_string(proposedNewPos) << endl;
-			p.position = proposedNewPos;
+			p.position = proposedNewPos;	
 			p.position.y += 5.0f;
 			computeAABB(&p);
 			p.position = oldPos;
-			//p.position.y += 5.0f;
+			p.position.y += 5.0f;
 			int collisionId = checkCollisionsWithAllNonTraps(&p);
 			int rampId;
 			// if not on ramp
@@ -669,41 +669,35 @@ void DynamicWorld::applyCollisions() {
 			computeAABB(&p);
 			//cout << "collision id: " << collisionId << endl;
 			if (collisionId != -1 && rampId == -1) {
+				cout << "collision id: " << collisionId << endl;
 				p.position = proposedNewPos;
 				p.position.y += 5.0f;
 				computeAABB(&p);
 				p.position = oldPos;
-				//p.position.y += 5.0f;
+				p.position.y += 5.0f;
 				int buildingId = checkSideCollisionsWithAllBuildings(&p);
 				p.position = oldPos;
 				computeAABB(&p);
-				//cout << "buildingId: " << buildingId << endl;
 				if (buildingId != -1) {
 					cout << "collided with building" << endl;
 					// TODO: check guy is facing wall too, at rest
 					if (!p.feetPlanted /*&& !(m_physics->atRest()) */ && p.triedForward) {
-						//cout << "doing extra logic!" << endl;
 						if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
 							StateLogic::startHoldingEdge(&p, buildingId);
-							//TODO: startHoldingEdge(p);
 							return;
-							//return;
 						}
-
 						float angle = Physics::handleAngleIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
 						if (abs(90.0f - angle) < 15.0f /*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
-							newPos = oldPos;
-							//cout << "starting the climb with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
 							StateLogic::startClimbing(&p, buildingId);
 							return;
 						}
 
 						else {
-							//cout << "starting the wallrunning with angle: " << abs(90.0f-angle) << ", and y velo: " << m_physics->m_velocity.y << ", on building: " << buildingId << endl;
 							// 0,1 = x, -1 = y, 4,5 = z
 							int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
 							if (newDirection != -1) {
 								StateLogic::startWallRunning(&p, newDirection, p.velocityDiff, angle, buildingId);
+								return;
 							}
 							else {
 								p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -995,11 +989,11 @@ void DynamicWorld::applyGravity()
 		}*/
 
 
-		int xIndex1 = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x);
-		int zIndex1 = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z);
+		int xIndex1 = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x - 5.0f);
+		int zIndex1 = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z - 5.0f);
 
-		int xIndex2 = xIndex1 + 1;
-		int zIndex2 = zIndex1 + 1;
+		int xIndex2 = xIndex1 + 10;
+		int zIndex2 = zIndex1 + 10;
 
 		float heightMap11 = World::m_heightMap[xIndex1 + World::m_heightMapXShift][zIndex1 + World::m_heightMapZShift];
 		float heightMap12 = World::m_heightMap[xIndex1 + World::m_heightMapXShift][zIndex2 + World::m_heightMapZShift];
