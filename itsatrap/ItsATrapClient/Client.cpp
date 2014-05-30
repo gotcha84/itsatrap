@@ -200,7 +200,7 @@ void Client::updateHotSpot(int x, int y, int z)
 	client->hotSpot = mt;
 
 	sg::Cone *cone = new sg::Cone();
-	mt->addChild(cone);
+	//mt->addChild(cone);
 	mt->setMatrix(glm::translate(glm::vec3(x,y,z)) * glm::scale(glm::vec3(10,10,10)));
 }
 

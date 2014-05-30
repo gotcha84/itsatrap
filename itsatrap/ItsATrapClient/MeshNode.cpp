@@ -1,3 +1,6 @@
+#include "ClientInstance.h"
+extern ClientInstance *client;
+
 #ifdef WIN32
 	#define SNPRINTF _snprintf_s
 #else
@@ -30,7 +33,9 @@ namespace sg {
 	void MeshNode::initShader() {
 		m_shader = new Shader("../Shaders/skinning.vert", "../Shaders/skinning.frag");
 		m_shaderID = m_shader->getShader();
-		glUseProgram(m_shaderID);
+
+		m_WVPLocation = GetUniformLocation("gWVP");
+		m_WorldMatrixLocation = GetUniformLocation("gWorld");
 
 		for (unsigned int i = 0; i < ARRAY_SIZE_IN_ELEMENTS(m_boneLocation); i++) {
 			char Name[128];
@@ -52,15 +57,39 @@ namespace sg {
 		glm::mat4 mv = glm::inverse(cam) * parent;
 
 		glPushMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(glm::value_ptr(mv));
+			glMatrixMode(GL_MODELVIEW);
+			glLoadMatrixf(glm::value_ptr(mv));
+			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 
-		glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
+			glUseProgram(m_shaderID);
 
-		vector<glm::mat4> Transforms;
-		float RunningTime = (float)((double)Utilities::GetCurrentTimeMillis() - (double)Utilities::m_startTime) / 1000.0f;
-		m_mesh->BoneTransform(RunningTime, Transforms);
-		m_mesh->Render();
+			vector<glm::mat4> Transforms;
+			float RunningTime = (float)((double)Utilities::GetCurrentTimeMillis() - (double)Utilities::m_startTime) / 1000.0f;
+
+			m_mesh->BoneTransform(RunningTime, Transforms);
+			for (uint i = 0 ; i < Transforms.size() ; i++) {
+				SetBoneTransform(i, Transforms[i]);
+			}
+			// ANURAG IS NOOB
+			//Pipeline p;
+			//p.SetCamera(m_pGameCamera->GetPos(), m_pGameCamera->GetTarget(), m_pGameCamera->GetUp());
+			//p.SetPerspectiveProj(m_persProjInfo);
+			//p.Scale(0.1f, 0.1f, 0.1f);
+
+			//Vector3f Pos(m_position);
+			//p.WorldPos(Pos);
+			//p.Rotate(270.0f, 180.0f, 0.0f);
+
+			//SetWVP(p.GetWVPTrans());
+			//SetWorldMatrix(p.GetWorldTrans());
+
+			glm::mat4 proj = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+			SetWVP(mv * proj);
+			SetWorldMatrix(parent);
+
+			m_mesh->Render();
+
+			glUseProgram(0);
 
 		glPopMatrix();
 	}
@@ -71,12 +100,20 @@ namespace sg {
 
 	void MeshNode::SetWVP(const glm::mat4& WVP)
 	{
+		//glUniformMatrix4fv(m_WVPLocation, 1, GL_TRUE, glm::value_ptr(WVP));
 		glUniformMatrix4fv(m_WVPLocation, 1, GL_TRUE, glm::value_ptr(WVP));
 	}
 
 	void MeshNode::SetWorldMatrix(const glm::mat4& WorldInverse)
 	{
+		//glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_TRUE, glm::value_ptr(WorldInverse));
 		glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_TRUE, glm::value_ptr(WorldInverse));
+	}
+
+	void MeshNode::SetBoneTransform(uint Index, const glm::mat4& Transform) {
+		assert(Index < MAX_BONES);
+		//Transform.Print();
+		glUniformMatrix4fv(m_boneLocation[Index], 1, GL_TRUE, glm::value_ptr(Transform));
 	}
 
 	GLint MeshNode::GetUniformLocation(const char* pUniformName)
@@ -84,7 +121,7 @@ namespace sg {
 		GLuint Location = glGetUniformLocation(m_shaderID, pUniformName);
 
 		if (Location == INVALID_UNIFORM_LOCATION) {
-			fprintf(stderr, "Warning! Unable to get the location of uniform '%s'\n", pUniformName);
+			cout << "Warning! Unable to get the location of uniform '" << pUniformName << "'" << endl;
 		}
 
 		return Location;

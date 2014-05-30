@@ -134,14 +134,14 @@ Shader::Shader(string vertFile, string fragFile) {
 	glGetShaderiv(vert, GL_COMPILE_STATUS, &compiled);
 	printShaderInfoLog(vert);
 	if (compiled == GL_FALSE) {
-		fprintf(stderr, "Compile error in vertex shader.\n");
+		cout << "Compile error in vertex shader." << endl;
 	}
 
-	glCompileShader(fragShader);
-	glGetShaderiv(fragShader, GL_COMPILE_STATUS, &compiled);
+	glCompileShader(frag);
+	glGetShaderiv(frag, GL_COMPILE_STATUS, &compiled);
 	printShaderInfoLog(frag);
 	if (compiled == GL_FALSE) {
-		fprintf(stderr, "Compile error in fragment shader.\n");
+		cout << "Compile error in fragment shader." << endl;
 	}
 
 	// create program and attach shaders
@@ -154,12 +154,12 @@ Shader::Shader(string vertFile, string fragFile) {
 	glDeleteShader(frag);
 
 	// link program
-	GLint linked;
+	GLint linked = GL_TRUE;
 	glLinkProgram(prog);
 	glGetProgramiv(prog, GL_LINK_STATUS, &linked);
 	printProgramInfoLog(prog);
 	if (linked == GL_FALSE) {
-		fprintf(stderr, "Link error in shader program.\n");
+		cout << "Link error in shader program." << endl;
 	}
 
 	m_prog = prog;

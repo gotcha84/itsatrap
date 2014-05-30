@@ -14,6 +14,11 @@ namespace sg {
 			Shader *m_shader;
 			GLuint m_shaderID;
 
+			GLuint m_WVPLocation;
+			GLuint m_WorldMatrixLocation;
+			static const uint MAX_BONES = 100;
+			GLuint m_boneLocation[MAX_BONES];
+
 			MeshNode();
 			MeshNode(std::string filename);
 			~MeshNode();
@@ -30,6 +35,7 @@ namespace sg {
 
 			void SetWVP(const glm::mat4 &WVP);
 			void SetWorldMatrix(const glm::mat4 &WorldInverse);
+			void SetBoneTransform(uint Index, const glm::mat4 &Transform);
 			GLint GetUniformLocation(const char* pUniformName);
 	};
 }

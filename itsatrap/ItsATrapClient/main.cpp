@@ -56,6 +56,9 @@ int main(int argc, char *argv[]) {
 	  cout << "[glewInit] Error : " << glewGetErrorString(err) << endl;
 	}
 
+	//glFrustum(-10.0, 10.0, -10.0, 10.0, 10, 1000.0);
+	gluPerspective(90.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
 	glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
 	glClearColor(0.0, 0.0, 0.0, 0.0);           // set clear color to black
