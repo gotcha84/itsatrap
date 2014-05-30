@@ -25,14 +25,14 @@ namespace sg {
 			glm::mat4 m_model;
 			glm::vec4 m_color;
 
-			// textures
-			Texture *texture;
-			GLuint texturePPM;
-			char* m_textureFilename;
+			//// textures
+			//Texture *texture;
+			//GLuint texturePPM;
+			//char* m_textureFilename;
 
-			// shaders
-			Shader *shader;
-			GLuint light;
+			//// shaders
+			//Shader *shader;
+			//GLuint light;
 
 
 			void setPosition(glm::vec3);
