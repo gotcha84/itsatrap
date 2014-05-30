@@ -98,7 +98,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.currCamState = CameraStates::Client;
 	p.stopwatch = Stopwatch();
 	p.canClimb = true;
-	p.resources = 100000;
+	ConfigSettings::getConfig()->getValue("StartingResources", p.resources);
 	p.knifeDelay = 0;
 	p.timeUntilRegen = 0;
 
