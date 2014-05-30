@@ -27,10 +27,10 @@ namespace sg {
 
 
 			void draw(glm::mat4 parent, glm::mat4 cam) {
-				glEnable(GL_TEXTURE_GEN_S); //enable texture coordinate generation
-				glEnable(GL_TEXTURE_GEN_T);
-				glEnable(GL_TEXTURE_2D);
-				glBindTexture(GL_TEXTURE_2D, texturePPM);
+				//glEnable(GL_TEXTURE_GEN_S); //enable texture coordinate generation
+				//glEnable(GL_TEXTURE_GEN_T);
+				//glEnable(GL_TEXTURE_2D);
+				//glBindTexture(GL_TEXTURE_2D, texturePPM);
 				glm::mat4 mv = glm::inverse(cam) * parent;
 
 				glPushMatrix();
@@ -40,11 +40,10 @@ namespace sg {
 					glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 					//glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 					glutSolidCube(2*RAD);
-					//glEnd();
 				glPopMatrix();
-				glDisable(GL_TEXTURE_GEN_S); //enable texture coordinate generation
-				glDisable(GL_TEXTURE_GEN_T);
-				glDisable(GL_TEXTURE_2D);
+				//glDisable(GL_TEXTURE_GEN_S); //enable texture coordinate generation
+				//glDisable(GL_TEXTURE_GEN_T);
+				//glDisable(GL_TEXTURE_2D);
 				
 			}
 

@@ -1,4 +1,47 @@
-﻿  DynamicWorld.cpp
+﻿  World.cpp
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.h(31): warning C4251: 'World::m_boundingBoxes' : class 'std::vector<AABB,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
+          with
+          [
+              _Ty=AABB
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(17): warning C4018: '<' : signed/unsigned mismatch
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(21): warning C4018: '<' : signed/unsigned mismatch
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(53): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(54): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(85): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(88): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(102): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(105): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(121): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(124): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(138): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(141): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(179): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(181): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(182): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(184): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(194): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(196): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\alvin\desktop\125\working2\itsatrap\common\world.cpp(205): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+  Stopwatch.cpp
+  StateLogic.cpp
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<std::string,std::string,stdext::hash_compare<_Kty,std::less<_Kty>>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+          with
+          [
+              _Kty=std::string
+  ,            _Ty=std::string
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+c:\users\alvin\desktop\125\working2\itsatrap\common\statelogic.h(47): warning C4091: 'static ' : ignored on left of 'StateLogic' when no variable is declared
+  GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  Physics.cpp
+  InputEvents.cpp
+  DynamicWorld.cpp
 c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
 c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
 c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
@@ -77,6 +120,21 @@ c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(474): warni
 c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(524): warning C4018: '<' : signed/unsigned mismatch
 c:\users\alvin\desktop\125\working2\itsatrap\common\dynamicworld.cpp(1416): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
   GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  ConfigSettings.cpp
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<std::string,std::string,stdext::hash_compare<_Kty,std::less<_Kty>>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+          with
+          [
+              _Kty=std::string
+  ,            _Ty=std::string
+          ]
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+c:\users\alvin\desktop\125\working2\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+  AABB.cpp
+  Generating Code...
+c:\users\alvin\desktop\125\working2\itsatrap\common\aabb.cpp(245): warning C4715: 'AABB::collidesWithRampInside' : not all control paths return a value
 AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
      Creating library C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.lib and object C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.exp
   Common.vcxproj -> C:\Users\alvin\Desktop\125\working2\itsatrap\Debug\Common.dll
