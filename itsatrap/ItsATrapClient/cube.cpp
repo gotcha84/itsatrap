@@ -40,7 +40,7 @@ namespace sg {
 					glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 					//glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 					glutSolidCube(2*RAD);
-					glEnd();
+					//glEnd();
 				glPopMatrix();
 				glDisable(GL_TEXTURE_GEN_S); //enable texture coordinate generation
 				glDisable(GL_TEXTURE_GEN_T);

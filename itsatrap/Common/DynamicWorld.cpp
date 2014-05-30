@@ -1,4 +1,7 @@
 #include "DynamicWorld.h"
+#define XOFFSET 10.0f
+#define YOFFSET 13.0f
+#define ZOFFSET 8.0f
 
 #define HEADER_SIZE (3 * sizeof(int))
 
@@ -76,10 +79,6 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 		
 	}
 
-	for (int i = 0; i < staticWallObjects.size(); i++) {
-		staticWallObjects[i].aabb.print();
-	}
-
 	// why not update resources?
 	p.health = 100;
 	p.numKills = 0;
@@ -99,7 +98,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.currCamState = CameraStates::Client;
 	p.stopwatch = Stopwatch();
 	p.canClimb = true;
-	p.resources = 50;
+	p.resources = 100000;
 	p.knifeDelay = 0;
 	p.timeUntilRegen = 0;
 
@@ -661,10 +660,10 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 
 void DynamicWorld::computeAABB(struct playerObject *p)
 {	
-	p->aabb.minX = p->position.x - 8.0f;
-	p->aabb.maxX = p->position.x + 8.0f;
-	p->aabb.minY = p->position.y - 5.0f;
-	p->aabb.maxY = p->position.y + 20;
+	p->aabb.minX = p->position.x - 10.0f;
+	p->aabb.maxX = p->position.x + 10.0f;
+	p->aabb.minY = p->position.y - 13.0f;
+	p->aabb.maxY = p->position.y + 13.0f;
 	p->aabb.minZ = p->position.z - 8.0f;
 	p->aabb.maxZ = p->position.z + 8.0f;
 }
@@ -682,10 +681,10 @@ void DynamicWorld::applyCollisions() {
 			//cout << "pos: " << glm::to_string(p.position) << endl;
 			//cout << "newPos: " << glm::to_string(proposedNewPos) << endl;
 			p.position = proposedNewPos;	
-			p.position.y += 5.0f;
+			p.position.y += YOFFSET;
 			computeAABB(&p);
 			p.position = oldPos;
-			p.position.y += 5.0f;
+			p.position.y += YOFFSET;
 			int collisionId = checkCollisionsWithAllNonTraps(&p);
 			int rampId;
 			// if not on ramp
@@ -726,10 +725,10 @@ void DynamicWorld::applyCollisions() {
 			if (collisionId != -1 && rampId == -1) {
 				cout << "collision id: " << collisionId << endl;
 				p.position = proposedNewPos;
-				p.position.y += 5.0f;
+				//p.position.y += YOFFSET;
 				computeAABB(&p);
 				p.position = oldPos;
-				p.position.y += 5.0f;
+				//p.position.y += YOFFSET;
 				int buildingId = checkSideCollisionsWithAllBuildings(&p);
 				p.position = oldPos;
 				computeAABB(&p);
@@ -1101,7 +1100,7 @@ void DynamicWorld::applyGravity()
 			p.velocity.y = 0.0f;
 			p.velocityDiff.y = 0.0f;
 			p.canClimb = true;
-			p.position.y = heightMap + 5.0f; // on ground
+			p.position.y = heightMap + YOFFSET; // on ground
 			cout << "on ramp, adjusted to heightmap" << endl;
 			return;
 		}
@@ -1116,10 +1115,10 @@ void DynamicWorld::applyGravity()
 
 			//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
 
-			if (heightMap > p.position.y + p.velocity.y + p.velocityDiff.y - 5.0f) {
+			if (heightMap > p.position.y + p.velocity.y + p.velocityDiff.y - YOFFSET) {
 				//cout << "landed: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
 				//cout << "landed\n";
-				p.position.y = heightMap+5.0f; // on ground
+				p.position.y = heightMap + YOFFSET; // on ground
 				p.feetPlanted = true;
 				p.velocity.y = 0.0f;
 				p.velocityDiff.y = 0.0f;
@@ -1144,11 +1143,11 @@ void DynamicWorld::applyAdjustments() {
 	{
 		struct playerObject &p = it->second;
 		
-		int xIndex1 = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x /*- 5.0f*/);
-		int zIndex1 = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z /*- 5.0f*/);
+		int xIndex1 = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x /*- XOFFSET*/);
+		int zIndex1 = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z /*- ZOFFSET*/);
 
-		int xIndex2 = xIndex1 + 1/*0*/;
-		int zIndex2 = zIndex1 + 1/*0*/;
+		int xIndex2 = xIndex1 /*+ 2*XOFFSET*/;
+		int zIndex2 = zIndex1 /*+ 2*ZOFFSET*/;
 
 		int worldHeightMapNegXBound = -535;
 		int worldHeightMapPosXBound = 535;
@@ -1164,6 +1163,9 @@ void DynamicWorld::applyAdjustments() {
 			return;
 		}
 
+		//cout << "player pos: ";
+		//p.aabb.print();
+
 		float playerHeight = 0;
 		ConfigSettings::getConfig()->getValue("PlayerHeight", playerHeight);
 
@@ -1177,14 +1179,16 @@ void DynamicWorld::applyAdjustments() {
 		p.velocity.z *= velocityDecayFactor;
 		p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 
-		p.cameraObject.cameraCenter = glm::vec3(p.position.x, p.position.y + playerHeight, p.position.z);
+		computeAABB(&p);
+
+		p.cameraObject.cameraCenter = glm::vec3(p.position.x, p.aabb.minY + playerHeight, p.position.z);
 		p.cameraObject.cameraLookAt = p.cameraObject.cameraCenter + p.cameraObject.camZ;
 
 		if (p.currPhysState != PhysicsStates::WallRunning) {
 			p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		}
 
-		computeAABB(&p);
+		
 	}
 }
 

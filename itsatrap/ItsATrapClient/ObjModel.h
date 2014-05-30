@@ -10,6 +10,7 @@
 
 #include "tiny_obj_loader.h"
 #include "Geode.h"
+#include "Utilities.h"
 
 using namespace std;
 
