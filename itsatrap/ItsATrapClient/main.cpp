@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
 	glutPassiveMotionFunc(window->processMouseMove);
 
 	// hide mouse cursor
-	glutSetCursor(GLUT_CURSOR_NONE);
+	//glutSetCursor(GLUT_CURSOR_NONE);
 
 
 	//sg::City city = sg::City();

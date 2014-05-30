@@ -1034,6 +1034,27 @@ void DynamicWorld::resetWorldInfo() {
 	}
 }
 
+void DynamicWorld::applyTrapGravity() {
+	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); ++it)
+	{
+		struct trapObject &t = it->second;
+
+		float gravityConstant = 0;
+		ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
+
+		t.pos -= glm::vec3(0.0f, gravityConstant, 0.0f);
+
+		if (t.aabb.minY < World::m_heightMap[(int)(t.pos.x) + World::m_heightMapXShift][(int)(t.pos.z) + World::m_heightMapZShift]) {
+			float diff = World::m_heightMap[(int)(t.pos.x) + World::m_heightMapXShift][(int)(t.pos.z) + World::m_heightMapZShift] - t.aabb.minY;
+			t.pos.y += diff;
+			t.aabb.maxY += diff;
+			t.aabb.minY += diff;
+			// TODO: check for collisions?
+		}
+	}
+}
+
+
 // TODO: check for feet?
 void DynamicWorld::applyGravity()
 {
@@ -1053,6 +1074,20 @@ void DynamicWorld::applyGravity()
 
 		int xIndex2 = xIndex1 + 1/*0*/;
 		int zIndex2 = zIndex1 + 1/*0*/;
+
+		int worldHeightMapNegXBound = -535;
+		int worldHeightMapPosXBound = 535;
+		int worldHeightMapNegZBound = -535;
+		int worldHeightMapPosZBound = 535;
+
+		if (xIndex1 < worldHeightMapNegXBound || xIndex1 > worldHeightMapPosXBound || zIndex1 < worldHeightMapNegZBound || zIndex1 > worldHeightMapPosZBound) {
+			cout << "OUT OF BOUNDS!" << endl;
+			p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+			p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+			p.currInnerState = innerStates::Off;
+			p.currPhysState = PhysicsStates::None;
+			return;
+		}
 
 		float heightMap11 = World::m_heightMap[xIndex1 + World::m_heightMapXShift][zIndex1 + World::m_heightMapZShift];
 		float heightMap12 = World::m_heightMap[xIndex1 + World::m_heightMapXShift][zIndex2 + World::m_heightMapZShift];
@@ -1107,7 +1142,6 @@ void DynamicWorld::applyGravity()
 void DynamicWorld::applyAdjustments() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
-
 		struct playerObject &p = it->second;
 		
 		int xIndex1 = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x /*- 5.0f*/);
@@ -1116,25 +1150,24 @@ void DynamicWorld::applyAdjustments() {
 		int xIndex2 = xIndex1 + 1/*0*/;
 		int zIndex2 = zIndex1 + 1/*0*/;
 
-		int worldHeightMapNegXBound = -540;
-		int worldHeightMapPosXBound = 540;
-		int worldHeightMapNegZBound = -540;
-		int worldHeightMapPosZBound = 540;
+		int worldHeightMapNegXBound = -535;
+		int worldHeightMapPosXBound = 535;
+		int worldHeightMapNegZBound = -535;
+		int worldHeightMapPosZBound = 535;
 
-		if (xIndex1 < -540 || xIndex1 > 540 || zIndex1 < -540 || zIndex1 > 540) {
+		if (xIndex1 < worldHeightMapNegXBound || xIndex1 > worldHeightMapPosXBound || zIndex1 < worldHeightMapNegZBound || zIndex1 > worldHeightMapPosZBound) {
 			cout << "OUT OF BOUNDS!" << endl;
 			p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 			p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 			p.currInnerState = innerStates::Off;
 			p.currPhysState = PhysicsStates::None;
+			return;
 		}
-
-
 
 		float playerHeight = 0;
 		ConfigSettings::getConfig()->getValue("PlayerHeight", playerHeight);
 
-		float velocityDecayFactor = 0.9f;
+		float velocityDecayFactor = 0.95f;
 		//ConfigSettings::getConfig()->getValue("velocityDecayFactor ", velocityDecayFactor );
 
 		p.velocity += p.velocityDiff;

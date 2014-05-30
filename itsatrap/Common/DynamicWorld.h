@@ -95,6 +95,8 @@ public:
 	void applyPhysics();
 	void applyAdjustments();
 
+	void applyTrapGravity();
+
 	void applyMoveEvents();
 	void noneMoveEvent(int playerId);
 	void climbingMoveEvent(int playerId);
