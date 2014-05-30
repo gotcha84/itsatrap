@@ -28,13 +28,15 @@ void HUD::draw(int health, int resources, int spawnTime, int flashTime) {
 				
 				drawDeathTimer(spawnTime);
 			}else {
+				//sdrawKillSymbol(true);
 				drawCrossHair();
 				drawHealthBar(health);
 				drawResource(resources);
 				if( m_progressTime > -1 ) drawProgressBar(m_progressTime);
 				drawFlashbag(flashTime);
+				
 			}
-
+			
 		glPopMatrix();
 	glPopMatrix();
 		
@@ -45,7 +47,7 @@ void HUD::drawCrossHair() {
 	glPushMatrix();
 		glLoadIdentity();
 
-		std::string text = "X";
+		std::string text = ".";
 		glColor4f(0,0,0,1);
 		glRasterPos2f(-0.02f, -0.02f);
 		for (int i=0; i<text.length(); i++) {
@@ -95,12 +97,11 @@ void HUD::drawResource(int resource) {
 		glLoadIdentity();
 		
 		glColor4f(0,20,0,1); // green
+		font->FaceSize(75);
+		font->CharMap(ft_encoding_symbol);
+		glRasterPos2f(0.65f, 0.8f);
+		font->Render(to_string(resource).c_str());
 
-		std::string text = std::to_string(static_cast<long long>(resource));			
-		glRasterPos2f(0.8f, 0.9f);
-		for (int i=0; i<text.length(); i++) {
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
-		}
 	glPopMatrix();
 }
 
@@ -149,4 +150,14 @@ void HUD::drawFlashbag(int time) {
 	glTranslatef(0.0f, 0.0f, 0.0f);
 	glScaled(10.0f, 10.0f, 10.0f);
 	glutSolidCube(0.2f);
+}
+
+void HUD::drawKillSymbol(bool hit) {
+	if (hit) {
+		glColor3f(0.0f, 0.0f, 0.0f);
+		font->FaceSize(100);
+		font->CharMap(ft_encoding_symbol);
+		glRasterPos2f(-0.02f, -0.02f);
+		font->Render("X");
+	}
 }
