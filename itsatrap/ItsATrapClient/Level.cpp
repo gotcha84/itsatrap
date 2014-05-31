@@ -27,7 +27,7 @@ void Level::initLevel0() {
 
 	ground->addChild(xForm);
 
-	sg::ObjNode *wholeLevel = new sg::ObjNode("../Models/MajorScene.obj", "../Models/");
+	sg::ObjNode *wholeLevel = new sg::ObjNode("../Models/Level/MajorScene.obj", "../Models/Level/");
 	wholeLevel->setName("whole level");
 	wholeLevel->getModel()->setColor(glm::vec4(0.8, 0.8, 0.8, 0.5));
 	xForm->addChild(wholeLevel);
