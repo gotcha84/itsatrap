@@ -239,6 +239,12 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		struct refreshPacket *rPkt = (struct refreshPacket *)p;
 		ConfigSettings::getConfig()->getValue("TimeUntilInactive", players[rPkt->playerId].timeUntilInactive);
 	}
+	else if (p->eventId == AABB_INFO)
+	{
+		struct aabbInfoPacket *aabbPkt = (struct aabbInfoPacket *)p;
+		if (aabbPkt->playerId == 0)
+			dynamicWorld.addAABBInfo(aabbPkt->type, aabbPkt->aabb);
+	}
 	else
 	{
 		if (packetBufferCount < PACKET_BUFFER_SIZE)

@@ -34,6 +34,7 @@ class COMMON_API AABB {
 		AABB();
 		AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
 		AABB(glm::vec3 pos, float rad);
+		AABB(AABB *);
 		~AABB();
 
 		void initCommon();
@@ -60,6 +61,7 @@ class COMMON_API AABB {
 		float angleIntersection(glm::vec3 from, glm::vec3 goTo);
 
 		void drawBoundingBox(AABB bb);
+		void update(glm::vec3 pos, AABB *offset);
 
 		void print();
 };

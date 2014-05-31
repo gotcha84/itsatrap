@@ -27,6 +27,7 @@
 #define STATIC_WALL_OBJECT_CREATION_EVENT 21
 #define NEW_OWNER_RESOURCE_UPDATE_EVENT 22
 #define CLEAR_CHANNEL_BAR 23
+#define AABB_INFO 24
 
 
 // Superclass of all packets
@@ -128,6 +129,14 @@ struct disconnectPlayerPacket
 {
 	int eventId;
 	int disconnectedPlayerId;
+};
+
+struct aabbInfoPacket
+{
+	int eventId;
+	int playerId;
+	int type;
+	AABB aabb;
 };
 
 #endif

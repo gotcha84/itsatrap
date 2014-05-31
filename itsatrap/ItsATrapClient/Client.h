@@ -71,5 +71,6 @@ public:
 	static void sendMoveEvent(Direction dir);
 	static void sendJumpEvent();
 	static void sendLookEvent(struct cameraObject cam);
+	static void sendAABBInfo(int type, AABB aabb);
 };
 #endif

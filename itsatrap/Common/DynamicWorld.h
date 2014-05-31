@@ -38,6 +38,7 @@ private:
 	vector<glm::vec3>					team1RespawnPoints, team2RespawnPoints;
 	map<int, struct trapObject *>		portalMap;
 	bool								playerLock[MAX_PLAYERS];
+	map<int, AABB>						aabbOffsets;
 	
 	// 
 	bool checkCollision(struct aabb a, struct aabb b);
@@ -49,6 +50,7 @@ private:
 	void addNewPlayer(struct playerObject p);
 	void respawnPlayer(struct playerObject *p);
 	void computeAABB(struct playerObject *p);
+	void computeAABB(struct trapObject *t);
 
 	//float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, struct aabb other, int buildingId);
 
@@ -114,6 +116,7 @@ public:
 
 	void checkForStateChanges(struct playerObject *e);
 
+	void addAABBInfo(int type, AABB aabb);
 };
 
 #endif
