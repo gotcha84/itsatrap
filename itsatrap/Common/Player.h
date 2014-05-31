@@ -3,8 +3,10 @@
 
 class Player {
   public:
-    int				playerId, yPosition;
+    int				playerId;
     sockaddr_in		clientAddress;
+	int				timeUntilInactive;
+	bool			active;
 
     Player() {};
 

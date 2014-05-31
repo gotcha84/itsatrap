@@ -16,7 +16,7 @@ Camera::Camera(glm::vec3 pos) {
 }
 
 void Camera::initCommon() {
-	m_playerHeight = glm::vec3(0.0f, 4.0f, 0.0f);
+	m_playerHeight = glm::vec3(0.0f, 27.0f, 0.0f);
 	m_slidingHeight = glm::vec3(0.0f, 2.0f, 0.0f);
 
 	m_xRotationAngle = 1.0f;
@@ -29,7 +29,7 @@ void Camera::initCommon() {
 	m_cameraLookAt = m_cameraCenter + glm::vec3(0.0f, 0.0f, -1.0f);
 	m_cameraUp = glm::vec3(0, 1.0f, 0);
 
-	m_xRotated = 0.0f;
+	m_xRotated = 180.0f;
 	m_camZSliding = glm::vec3(0.0f, 10.0f, 0.0f);
 
 	m_yRotated = 0.0f;

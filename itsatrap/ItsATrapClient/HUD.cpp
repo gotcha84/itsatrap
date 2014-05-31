@@ -1,9 +1,12 @@
 #include "HUD.h"
+
 #include <iostream>
 
 // default constructor
 HUD::HUD() {
-
+	font = new FTGLPixmapFont("C:/Windows/Fonts/Arial.ttf");
+	board = new Scoreboard();
+	m_progressTime = -1;
 }
 
 // destructor
@@ -11,7 +14,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources) {
+void HUD::draw(int health, int resources, int spawnTime, int flashTime) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -20,12 +23,20 @@ void HUD::draw(int health, int resources) {
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 			glLoadIdentity();
-
-			drawCrossHair();
-			drawHealthBar(health);
-			drawResource(resources);
-			//drawDeathTimer(5.0f);
-
+			int health1 = 5;
+			if (health1 <= 0) {
+				
+				drawDeathTimer(spawnTime);
+			}else {
+				//sdrawKillSymbol(true);
+				drawCrossHair();
+				drawHealthBar(health);
+				drawResource(resources);
+				if( m_progressTime > -1 ) drawProgressBar(m_progressTime);
+				drawFlashbag(flashTime);
+				
+			}
+			
 		glPopMatrix();
 	glPopMatrix();
 }
@@ -35,9 +46,9 @@ void HUD::drawCrossHair() {
 	glPushMatrix();
 		glLoadIdentity();
 
-		std::string text = "X";
+		std::string text = ".";
 		glColor4f(0,0,0,1);
-		glRasterPos2f(0.0f, 0.0f);
+		glRasterPos2f(-0.02f, -0.02f);
 		for (int i=0; i<text.length(); i++) {
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
 		}
@@ -77,40 +88,79 @@ void HUD::drawHealthBar(int health) {
 		//for (int i=0; i<text.length(); i++) {
 		//	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
 		//}
+
 	glPopMatrix();
+
 }
 
 void HUD::drawResource(int resource) {
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 		glLoadIdentity();
-		
-		glColor4f(10,10,0,1);
 
-		std::string text = std::to_string(static_cast<long long>(resource));			
-		glRasterPos2f(0.8f, 0.9f);
-		for (int i=0; i<text.length(); i++) {
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
-		}
+		glColor4f(0,20,0,1); // green
+		font->FaceSize(75);
+		font->CharMap(ft_encoding_symbol);
+		glRasterPos2f(0.65f, 0.8f);
+		font->Render(to_string(resource).c_str());
+
 	glPopMatrix();
 }
 
-void HUD::drawDeathTimer(float respawnTime) {
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-		glLoadIdentity();
+void HUD::drawDeathTimer(int respawnTime) {
 
-		glPushMatrix();
-			glTranslatef(0,0,-0.5f);
-			glColor4f(10,0,0,1);
-			glutSolidCube(2.0f);
-		glPopMatrix();
 
-		glColor4f(0,0,0,1);
-		std::string text = std::to_string(static_cast<long long>(respawnTime));
-		glRasterPos2f(0, 0);
-		for (int i=0; i<text.length(); i++) {
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+	font->FaceSize(50);
+	font->CharMap(ft_encoding_symbol);
+	glRasterPos2f(-0.55f, 0.0f);
+	font->Render("You are Dead");
+
+	font->FaceSize(50);
+	font->CharMap(ft_encoding_symbol);
+	glRasterPos2f(-0.05f, -0.3f);
+	std::string  text = std::to_string(respawnTime);
+	font->Render(text.c_str());
+
+	glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, 0.0f);
+	glScaled(10.0f, 10.0f, 10.0f);
+	glutSolidCube(0.2f);
+}
+
+void HUD::drawProgressBar(int time) {
+	if (time >= 10) {
+		for (int i = 0; i < time / 10; i++) {
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glLoadIdentity();
+			glTranslatef(-0.315 + 0.07*i, 0.0f, 0.0f);
+			glScalef(1.5f, 1.5f, 1.0f);
+			glutSolidCube(0.05f);
 		}
-	glPopMatrix();
+
+		glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
+		glLoadIdentity();
+		glTranslatef(0.0f, 0.0f, 0.0f);
+		glScaled(1.5f, 0.2f, 0.2f);
+		glutSolidCube(0.5f);
+	}
+}
+
+void HUD::drawFlashbag(int time) {
+	float fade = time * 0.1;
+	glColor4f(1.0f, 1.0f, 1.0f, fade);
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, 0.0f);
+	glScaled(10.0f, 10.0f, 10.0f);
+	glutSolidCube(0.2f);
+}
+
+void HUD::drawKillSymbol(bool hit) {
+	if (hit) {
+		glColor3f(0.0f, 0.0f, 0.0f);
+		font->FaceSize(100);
+		font->CharMap(ft_encoding_symbol);
+		glRasterPos2f(-0.02f, -0.02f);
+		font->Render("X");
+	}
 }

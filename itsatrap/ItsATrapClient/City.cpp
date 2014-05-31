@@ -9,7 +9,7 @@ namespace sg {
 		m_maxArraySize = 10000;
 		m_cityScale = 0.1f;
 		m_canScale = 5.0f;
-		m_defaultScale = 1.0f;
+		m_defaultScale = glm::vec3(0.5f, 0.75f, 0.5f);
 		initArrays();
 	}
 
@@ -477,8 +477,8 @@ namespace sg {
 		for (int i = 0; i < added; i++) {
 			sg::Building *buildingPtr = ((sg::Building*)m_child[i+num_children]);
 			buildingPtr->calculateBoundingBox();
-			Client::sendStaticObject(buildingPtr->m_boundingBox.m_minX, buildingPtr->m_boundingBox.m_minY, buildingPtr->m_boundingBox.m_minZ, 
-				buildingPtr->m_boundingBox.m_maxX, buildingPtr->m_boundingBox.m_maxY, buildingPtr->m_boundingBox.m_maxZ);
+			Client::sendStaticObject(buildingPtr->m_boundingBox.minX, buildingPtr->m_boundingBox.minY, buildingPtr->m_boundingBox.minZ, 
+				buildingPtr->m_boundingBox.maxX, buildingPtr->m_boundingBox.maxY, buildingPtr->m_boundingBox.maxZ);
 			buildingPtr->setMaterial();
 		}
 

@@ -6,6 +6,8 @@
 #include "MatrixTransform.h"
 #include "MyPlayer.h"
 #include "HUD.h"
+#include "Scoreboard.h"
+#include "ObjModel.h"
 
 namespace sg {
 	class Player : public Group {
@@ -13,6 +15,7 @@ namespace sg {
 			int m_playerID;
 			MyPlayer *m_player;
 			HUD *m_hud;
+			Scoreboard *board;
 			
 			glm::vec4 m_color;
 			glm::vec3 m_translate;
@@ -22,10 +25,15 @@ namespace sg {
 			float m_xAngleChange, m_yAngleChange;
 			float m_xAngleChangeFactor, m_yAngleChangeFactor;
 
+			ObjModel *m_thisPlayer;
+			ObjModel *m_otherPlayer;
+
 			Player();
 			Player(glm::vec3 pos);
 			Player(MyPlayer *p);
 			~Player();
+
+			void initModels();
 
 			void setColor(glm::vec4 color);
 			glm::vec4 getColor();
@@ -64,6 +72,7 @@ namespace sg {
 			//bool knifeHitWith(sg::Player *other);
 
 			struct playerObject getPlayerObjectForNetworking();
+			struct cameraObject getCameraObjectForNetworking();
 
 			int getHealth();
 			void setHealth(int health);

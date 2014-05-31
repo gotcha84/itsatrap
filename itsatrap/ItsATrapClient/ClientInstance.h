@@ -9,6 +9,7 @@
 #include <queue>
 
 #include "SceneGraph.h"
+#include "Level.h"
 
 class ClientInstance {
 	public:
@@ -16,7 +17,10 @@ class ClientInstance {
 		unordered_map<int,sg::Trap*> traps;
 		unordered_map<int, sg::Node*> objects;
 		sg::Player *root;
-		sg::MatrixTransform *hotSpot;
+		//sg::MatrixTransform *hotSpot;
+		Level level;
+
+		bool tabPressed;
 
 		int m_xMouse, m_yMouse; // mouse position
 

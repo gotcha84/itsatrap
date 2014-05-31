@@ -11,12 +11,15 @@ ClientInstance::ClientInstance(int id) {
 	players = unordered_map<int,sg::Player*>();
 	objects = unordered_map<int,sg::Node*>();
 
-	root = new sg::Player(glm::vec3(75.0f,0.0f,0.0f));
+	//root = new sg::Player(glm::vec3(75.0f,0.0f,0.0f));
+	root = new sg::Player(glm::vec3(0.0f,0.0f,0.0f));
 	root->setPlayerID(id);
 	root->setObjectID(id);
 
 	this->addPlayer(root);
 	objects[id] = root;
+
+	tabPressed = false;
 }
 
 ClientInstance::~ClientInstance() {

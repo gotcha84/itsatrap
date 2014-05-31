@@ -12,11 +12,10 @@
 #include "Geode.h"
 #include "World.h"
 #include "City.h"
-#include "Physics.h"
+//#include "Physics.h"
 
 #include "Texture.h"
 #include "Shader.h"
-
 #include "glext.h"
 
 using namespace std;
@@ -26,7 +25,7 @@ namespace sg {
 		public:
 			int m_id;
 
-			Physics m_physics;
+			//Physics m_physics;
 			
 			// textures
 			Texture *texture;

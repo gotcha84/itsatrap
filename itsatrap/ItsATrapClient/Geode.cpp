@@ -1,9 +1,26 @@
+#define RAD 0.5f
+#define ENABLE_SHADER 0
 #include "Geode.h"
 
 namespace sg {
 
 	Geode::Geode() {
 		m_color = glm::vec4(1,0,0,1);
+		
+		//if (ENABLE_SHADER) {
+		//	shader = new Shader();
+		//	light = shader->lightShader("../Shaders/phongandtexture.frag", "../Shaders/phongandtexture.vert");
+
+		//}
+
+		////this let the shaders on texture, so when you try to use shader on texture you add this on eline of a code
+		//texture = new Texture();
+		//if (ENABLE_SHADER) {
+		//	glUniform1i(glGetUniformLocation(light, "../Models/building1.ppm"), 0);
+		//}
+		//texturePPM = texture->loadTexture("../Models/building1.ppm");
+
+		//cout << "Init geode!" << endl;
 	}
 
 	Geode::~Geode() {
@@ -43,13 +60,75 @@ namespace sg {
 		m_boundingBox.setAABB(pos, rad);
 	}
 
+	void Geode::setBoundingBox(AABB boundingBox) {
+		m_boundingBox.setAABB(boundingBox.minX, boundingBox.minY, boundingBox.minZ, boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ);
+	}
+
 	void Geode::print() {
 		cout << "(" << this->getObjectID() << " Geode: " << this->getName() << ")";
 	}
 
-	// TODO : implement base class
-	void Geode::calculateBoundingBox() {
+	glm::mat4 Geode::getWorldTransformMatrix() {
+		sg::MatrixTransform *curr;
+		std::vector<glm::mat4> mats;
 
+		bool parentIsMT = false;
+
+		// handle this node's parent
+		if (this->hasParent()) {
+			curr = dynamic_cast<sg::MatrixTransform*>(this->getParent());
+			if (curr != nullptr) {
+				mats.push_back(curr->getMatrix());
+				parentIsMT = true;
+			}
+		}
+
+		// check more parents only if this node's parent is MT
+		if (parentIsMT) {
+			// handle this node's grandparents and above
+			while (curr->hasParent()) {
+				curr = dynamic_cast<sg::MatrixTransform*>(curr->getParent());
+			
+				if (curr == nullptr) {
+					break;
+				}
+				else {
+					mats.push_back(curr->getMatrix());
+				}
+			}
+		}
+
+		glm::mat4 result = glm::mat4();
+		for (int i=0; i<mats.size(); i++) {
+			result = result * mats[i];
+		}
+
+		return result;
+	}
+
+	void Geode::calculateBoundingBox() {
+		calculateBoundingBox(this->getWorldTransformMatrix());
+	}
+
+	void Geode::calculateBoundingBox(glm::mat4 model) {
+		float minx = -RAD;
+		float miny = -RAD;
+		float minz = -RAD;
+		float maxx = RAD;
+		float maxy = RAD;
+		float maxz = RAD;
+
+		glm::vec4 minVec = model*glm::vec4(minx, miny, minz, 1);
+		glm::vec4 maxVec = model*glm::vec4(maxx, maxy, maxz, 1);
+
+		minx = minVec.x;
+		miny = minVec.y;
+		minz = minVec.z;
+		maxx = maxVec.x;
+		maxy = maxVec.y;
+		maxz = maxVec.z;
+
+		m_boundingBox.setAABB(minx, miny, minz, maxx, maxy, maxz);
 	}
 
 	// TODO : implement base class
@@ -135,13 +214,13 @@ namespace sg {
 		planes.push_back(left);
 		planes.push_back(right);
 		
-		float midX = (m_boundingBox.m_maxX+m_boundingBox.m_minX)/2;
-		float midY = (m_boundingBox.m_maxY+m_boundingBox.m_minY)/2;
-		float midZ = (m_boundingBox.m_maxZ+m_boundingBox.m_minZ)/2;
+		float midX = (m_boundingBox.maxX+m_boundingBox.minX)/2;
+		float midY = (m_boundingBox.maxY+m_boundingBox.minY)/2;
+		float midZ = (m_boundingBox.maxZ+m_boundingBox.minZ)/2;
 
-		float xLength = 2.0f*(m_boundingBox.m_maxX-m_boundingBox.m_minX);
-		float yLength = 2.0f*(m_boundingBox.m_maxY-m_boundingBox.m_minY);
-		float zLength = 2.0f*(m_boundingBox.m_maxZ-m_boundingBox.m_minZ);
+		float xLength = 2.0f*(m_boundingBox.maxX-m_boundingBox.minX);
+		float yLength = 2.0f*(m_boundingBox.maxY-m_boundingBox.minY);
+		float zLength = 2.0f*(m_boundingBox.maxZ-m_boundingBox.minZ);
 
 		//float maxLength = max(max(midX, midY), midZ);
 		//float maxLength = max(max(xLength, yLength), zLength);

@@ -26,16 +26,26 @@ class Camera {
 		glm::vec3 m_cameraCenter;
 		glm::vec3 m_cameraLookAt;
 		glm::vec3 m_cameraUp;
-
 		glm::vec3 m_camZ;
 		glm::vec3 m_camX;
 
-		glm::vec3 m_cameraCenterWallJump;
-		glm::vec3 m_cameraLookAtWallJump;
-		glm::vec3 m_cameraUpWallJump;
+		glm::vec3 m_cameraCenterClimb;
+		glm::vec3 m_cameraLookAtClimb;
+		glm::vec3 m_cameraUpClimb;
+		glm::vec3 m_camZClimb;
+		glm::vec3 m_camXClimb;
 
-		glm::vec3 m_camZWallJump;
-		glm::vec3 m_camXWallJump;
+		glm::vec3 m_cameraCenterWallRunHolder;
+		glm::vec3 m_cameraLookAtWallRunHolder;
+		glm::vec3 m_cameraUpWallRunHolder;
+		glm::vec3 m_camZWallRunHolder;
+		glm::vec3 m_camXWallRunHolder;
+
+		glm::vec3 m_cameraCenterWallRun;
+		glm::vec3 m_cameraLookAtWallRun;
+		glm::vec3 m_cameraUpWallRun;
+		glm::vec3 m_camZWallRun;
+		glm::vec3 m_camXWallRun;
 
 		glm::vec3 m_camZSliding;
 	
@@ -46,6 +56,8 @@ class Camera {
 
 		float m_xRotated;
 		float m_yRotated;
+		float m_xRotatedWallRunHolder;
+		float m_yRotatedWallRunHolder;
 
 		Camera();
 		Camera(glm::vec3 pos);

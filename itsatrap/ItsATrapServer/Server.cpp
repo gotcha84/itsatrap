@@ -19,9 +19,12 @@ int					Server::resourcePerInterval;
 int					Server::resourceHotSpotBonusPerInterval;
 int					Server::resourceInterval;
 int					Server::hotSpotChangeInterval;
-vector<glm::vec3>	Server::hotSpotLocations;
-glm::vec3			Server::currentHotSpot;
-int					Server::currentHotSpotIndex;
+
+vector<int>			Server::resourceNodeLocations;
+int					Server::currentActiveResourceNodeIndex;
+int					Server::currentResourceOwner;
+int					Server::channelingPlayer;
+bool				Server::isChanneling;
 
 // Private Vars
 HANDLE		packetBufMutex;
@@ -81,24 +84,26 @@ int Server::initialize() {
 	ConfigSettings::getConfig()->getValue("ResourceHotSpotBonusPerInterval", resourceHotSpotBonusPerInterval);
 	ConfigSettings::getConfig()->getValue("ResourceInterval", resourceInterval);
 	ConfigSettings::getConfig()->getValue("HotSpotChangeInterval", hotSpotChangeInterval);
-
+	
 	timeUntilResourceBonus = resourcePerInterval;
 	timeUntilHotSpotChange = hotSpotChangeInterval;
 
-	hotSpotLocations.push_back(glm::vec3(75, 0, 0));
-	hotSpotLocations.push_back(glm::vec3(35, 0, 0));
-	hotSpotLocations.push_back(glm::vec3(105, 0, 0));
+	// Resource Locations
+	currentActiveResourceNodeIndex = 0;
+	currentResourceOwner = -1;
+	channelingPlayer = -1;
+	isChanneling = false;
 
-	currentHotSpotIndex = 0;
-	currentHotSpot = hotSpotLocations[currentHotSpotIndex];
+	// Load Height Map
+	string heightMapFile;
+	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
+	//World::readInHeightMapFromFile(heightMapFile); // ANURAG
 	
 	return 0;
 }
 
 // Server processes a given message
 void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
-	// TODO (ktngo): Bad practice. Move away from using structs
-	// and serialize messages.
 	struct packet *p = (struct packet *) msg;
 	//printPacket(p);
 	//printf("[SERVER]: Received a packet. eventId: %d\n", p->eventId);
@@ -113,7 +118,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			Player player;
 			player.clientAddress = *source;
 			player.playerId = playerCount;
-			player.yPosition = 0;
+			player.active = true;
+			ConfigSettings::getConfig()->getValue("TimeUntilInactive", player.timeUntilInactive);
 			players[playerCount] = player;
 				
 			// Creating response message
@@ -127,8 +133,6 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			printf("[SERVER]: Init Response sent. Given ID = %d\n", response.givenPlayerId);
 				
 			playerCount++;
-
-			sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
 		}
 		else
 		{
@@ -144,6 +148,63 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticObject(tmp);
 			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			tmp.aabb.print();
+		}
+	}
+	else if (p->eventId == STATIC_WALL_OBJECT_CREATION_EVENT)
+	{
+		struct staticObjectPacket *staticObjPkt = (struct staticObjectPacket *)p;
+		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
+		{
+			struct staticObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
+			dynamicWorld.addStaticWallObject(tmp);
+			printf("[SERVER]: Added a static wall object. Now have %d static wall objects\n", dynamicWorld.getNumStaticWallObjects());
+			tmp.aabb.print();
+		}
+	}
+	else if (p->eventId == STATIC_RAMP_OBJECT_CREATION_EVENT)
+	{
+		struct staticRampObjectPacket *staticObjPkt = (struct staticRampObjectPacket *)p;
+		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
+		{
+			struct staticRampObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticRampObject));
+			dynamicWorld.addStaticRampObject(tmp);
+			printf("[SERVER]: Added a static ramp object. Now have %d static ramp objects\n", dynamicWorld.getNumStaticRampObjects());
+			tmp.aabb.print();
+			printf("Slope: %f\n", tmp.slope);
+
+			if (dynamicWorld.getNumStaticRampObjects() >= 7) {
+				vector<AABB> buildings;
+				vector<AABB> ramps;
+				
+				for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
+					buildings.push_back(dynamicWorld.getStaticObjectBB(i));
+				}
+
+				for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
+					ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
+				}
+
+				World::superHeightMapInit(buildings, ramps);
+			}
+		}
+	}
+	else if (p->eventId == STATIC_RESOURCE_OBJECT_CREATION_EVENT)
+	{
+		struct staticResourceObjectPacket *staticObjPkt = (struct staticResourceObjectPacket *)p;
+		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
+		{
+			struct staticResourceObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
+			dynamicWorld.addStaticResourceObject(tmp);
+			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
+			tmp.aabb.print();
+			printf("ResourceId: %d\n", tmp.id);
+
+			resourceNodeLocations.push_back(tmp.id);
+			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 		}
 	}
 	else if (p->eventId == RELOAD_CONFIG_FILE)
@@ -155,8 +216,18 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		reloadPkt.eventId = RELOAD_CONFIG_FILE;
 
 		// Send reload config file to everyone
-		for (int i = 0; i < playerCount; i++)
-			Server::sendMsg((char *) &reloadPkt, sizeof(reloadPkt), &players[i].clientAddress);
+		Server::broadcastMsg((char *) &reloadPkt, sizeof(reloadPkt));
+	}
+	else if (p->eventId == REFRESH_EVENT)
+	{
+		struct refreshPacket *rPkt = (struct refreshPacket *)p;
+		ConfigSettings::getConfig()->getValue("TimeUntilInactive", players[rPkt->playerId].timeUntilInactive);
+	}
+	else if (p->eventId == AABB_INFO)
+	{
+		struct aabbInfoPacket *aabbPkt = (struct aabbInfoPacket *)p;
+		if (aabbPkt->playerId == 0)
+			dynamicWorld.addAABBInfo(aabbPkt->type, aabbPkt->aabb);
 	}
 	else
 	{
@@ -179,46 +250,35 @@ DWORD WINAPI Server::bufferProcessorThread(LPVOID param)
 	long elapsed;
 	printf("[SERVER]: Process buffer thread started\n");
 
-	while (1)
-	{
+	while (1) {
 		elapsed = 0;
 		stopwatch.reset();
 
 		processBuffer();
 
-
 		elapsed = MAX_SERVER_PROCESS_RATE - stopwatch.getElapsedMilliseconds();
-		if (elapsed >= 0)
-		{
+		if (elapsed >= 0) {
 			Sleep(elapsed);
 		}
-		/*
-		else
-		{
-			// Note: Hopefully this case doesn't happen, means processing time is taking longer than rate
-			Sleep(MAX_SERVER_PROCESS_RATE);	
-		}
-		*/
 	}
 }
 
 void Server::broadcastDynamicWorld()
 {
-	char *buf;
-	int size = dynamicWorld.serialize(&buf);
+	char buf[BUFSIZE];
+	memset(buf, 0, BUFSIZE);
+	int size = dynamicWorld.serialize(buf);
 
-	for (int i = 0; i < playerCount; i++)
-	{
-		Server::sendMsg(buf, size, &players[i].clientAddress);
-	}
+	Server::broadcastMsg(buf, size);
 }
-
-
 
 void Server::processBuffer()
 {
-	dynamicWorld.updatePlayerBuffs(MAX_SERVER_PROCESS_RATE);
+	checkConnection();
+	dynamicWorld.updateTimings(MAX_SERVER_PROCESS_RATE);
 	updateResources();
+
+	dynamicWorld.resetWorldInfo();
 
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
 	WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
@@ -237,6 +297,35 @@ void Server::processBuffer()
 				dynamicWorld.updatePlayer(updatePacket->playerObj);
 				break;
 			}
+
+			case PLAYER_ACTION_EVENT:
+			{
+				struct playerActionPacket *actPkt = (struct playerActionPacket *)p;
+
+				// Movements
+				for (int i = 0; i < NUM_DIRECTIONS; i++)
+				{
+					if (actPkt->moveEvents[i]) {
+						if (isChanneling && actPkt->playerId == channelingPlayer) resetChanneling();
+
+						dynamicWorld.processMoveEvent(actPkt->playerId, (Direction)i);
+					}
+				}
+
+				// Jump
+				if (actPkt->jump) {
+					if (isChanneling && actPkt->playerId == channelingPlayer) resetChanneling();
+
+					dynamicWorld.processJumpEvent(actPkt->playerId);
+				}
+
+				// Camera
+				if (actPkt->cameraChanged)
+					dynamicWorld.processLookEvent(actPkt->playerId, &actPkt->cam);
+
+				break;
+			}
+
 			case SPAWN_TRAP_REQUEST:
 			{
 				struct spawnTrapPacket *trapPkt = (struct spawnTrapPacket *)p;
@@ -247,27 +336,87 @@ void Server::processBuffer()
 			{
 				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
 
-				// TODO (ktngo): Maybe have a more general player interaction method?
 				playerObject *player = &dynamicWorld.playerMap[knifePkt->playerId];
 				playerObject *target = &dynamicWorld.playerMap[knifePkt->targetId];
 
-				float knifeRange = 0.0f;
-				ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
-
-				glm::vec3 lookAt = glm::vec3(player->lookX, player->lookY, player->lookZ);
-				glm::vec3 center = glm::vec3(player->centerX, player->centerY, player->centerZ);
-				glm::vec3 difVec = lookAt - center;
-				glm::vec3 hitPt = center + (knifeRange * difVec);
-
-				if (hitPt.x >= target->aabb.minX && hitPt.x <= target->aabb.maxX
-					&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
-					&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
+				// Make sure they're on different teams & knife is ready
+				if (player->knifeDelay <= 0 && player->id % 2 != target->id % 2 && players[target->id].active)
 				{
-					dynamicWorld.playerDamage(player, target, KNIFE_HIT_DMG);
+					ConfigSettings::getConfig()->getValue("KnifeDelay", player->knifeDelay);
+
+					float knifeRange = 0.0f;
+					ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
+
+					glm::vec3 lookAt = player->cameraObject.cameraLookAt;
+					glm::vec3 center = player->cameraObject.cameraCenter;
+					glm::vec3 difVec = lookAt - center;
+					glm::vec3 hitPt = center + (knifeRange * difVec);
+
+					if (hitPt.x >= target->aabb.minX && hitPt.x <= target->aabb.maxX
+						&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
+						&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
+					{
+						dynamicWorld.playerDamage(player, target, KNIFE_HIT_DMG);
+					}
 				}
 				break;
 			}
+			case RESOURCE_HIT_EVENT:
+			{
+				struct resourceHitPacket *hitPkt = (struct resourceHitPacket *)p;
+				playerObject *player = &dynamicWorld.playerMap[hitPkt->playerId];
 
+				// Check if active node
+				if (player->knifeDelay <= 0 && hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]) {
+					ConfigSettings::getConfig()->getValue("KnifeDelay", player->knifeDelay);
+
+					if (!isChanneling) {
+						channelingPlayer = player->id;
+
+						if (currentResourceOwner != channelingPlayer || currentResourceOwner % 2 != channelingPlayer % 2) {
+							isChanneling = true;
+
+							float knifeRange = 0.0f;
+							ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
+
+							glm::vec3 lookAt = player->cameraObject.cameraLookAt;
+							glm::vec3 center = player->cameraObject.cameraCenter;
+							glm::vec3 difVec = lookAt - center;
+							glm::vec3 hitPt = center + (knifeRange * difVec);
+
+							AABB target = dynamicWorld.getStaticResourceBB(hitPkt->resourceId);
+							if (hitPt.x >= target.minX && hitPt.x <= target.maxX
+								&& hitPt.y >= target.minY && hitPt.y <= target.maxY
+								&& hitPt.z >= target.minZ && hitPt.z <= target.maxZ)
+							{
+								// send resourceNodePacket to client, telling them it is ok to channel
+								sendPermissionToChannel(channelingPlayer, resourceNodeLocations[currentActiveResourceNodeIndex]);
+							}
+							else
+							{
+								resetChanneling();
+							}
+						}
+					}
+				}
+
+				break;
+			}
+			case CHANNELING_COMPLETE:
+			{
+				struct resourceHitPacket *hitPkt = (struct resourceHitPacket *)p;
+
+				if (hitPkt->playerId == channelingPlayer
+					&& hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]
+					&& isChanneling) {
+					currentResourceOwner = channelingPlayer;
+					resetChanneling();
+
+					sendNewResourceOwnerUpdate(currentResourceOwner, resourceNodeLocations[currentActiveResourceNodeIndex]);
+				}
+
+				break;
+			}
 			default:
 				printf("[SERVER]: Unknown event at buffer %d, eventId: %d\n", i, p->eventId);
 				break;
@@ -279,6 +428,14 @@ void Server::processBuffer()
 	if (playerCount > 0) {
 		broadcastDynamicWorld();
 	}
+
+	dynamicWorld.applyMoveEvents();
+	dynamicWorld.applyTrapGravity();
+	dynamicWorld.applyCollisions();
+	dynamicWorld.applyPhysics();
+	dynamicWorld.applyGravity();
+	dynamicWorld.applyAdjustments();
+	dynamicWorld.checkPlayersCollideWithTrap();
 
 	// Release Mutex
 	ReleaseMutex(packetBufMutex);
@@ -294,6 +451,8 @@ int Server::receiveMsg(char * msg, struct sockaddr_in *source) {
 		return 1;
 	}
 
+	//printf("[SERVER]: Message received.\n");
+
 	return 0;
 }
 
@@ -307,50 +466,6 @@ int Server::sendMsg(char * msg, int len, struct sockaddr_in *destination) {
 
 	//printf("[SERVER]: Sent a packet of length %d\n", len);
 	return 0;
-}
-
-void Server::updateResources()
-{
-	timeUntilHotSpotChange -= MAX_SERVER_PROCESS_RATE;
-	timeUntilResourceBonus -= MAX_SERVER_PROCESS_RATE;
-	if (timeUntilResourceBonus < 0)
-	{
-		timeUntilResourceBonus = resourceInterval;
-
-		for(map<int,struct playerObject>::iterator it = dynamicWorld.playerMap.begin(); it != dynamicWorld.playerMap.end(); ++it)
-		{
-			it->second.resources += resourcePerInterval;
-
-			// Hot spot bonus
-			glm::vec3 pos = glm::vec3(it->second.x, it->second.y, it->second.z);
-			if (glm::distance(pos, currentHotSpot) < 10)
-				it->second.resources += resourceHotSpotBonusPerInterval;
-		}
-	}
-
-	if (timeUntilHotSpotChange < 0)
-	{
-		timeUntilHotSpotChange = hotSpotChangeInterval;
-		currentHotSpotIndex += 1; 
-		currentHotSpotIndex = currentHotSpotIndex % hotSpotLocations.size();
-
-		currentHotSpot = hotSpotLocations[currentHotSpotIndex];
-		sendHotSpotUpdate(currentHotSpot.x, currentHotSpot.y, currentHotSpot.z);
-	}
-}
-
-void Server::sendHotSpotUpdate(int x, int y, int z)
-{
-	struct hotSpotPacket p;
-	p.eventId = HOT_SPOT_UPDATE;
-	p.x = x;
-	p.y = y;
-	p.z = z;
-	
-	// Send Message
-	for (int i = 0; i < playerCount; i++)
-		Server::sendMsg((char *) &p, sizeof(p), &players[i].clientAddress);
-
 }
 
 void Server::printPacket(struct packet *p)
@@ -370,10 +485,9 @@ void Server::printPacket(struct packet *p)
 			printf("=====================================\n");
 			printf("PLAYER UPDATE PACKET\n");
 			printf("ID: %d\n", player->id);
-			printf("x: %.1f, y:%.1f, z:%.1f\n", player->x, player->y, player->z);
-			printf("look: %.1f %.1f %.1f ", player->lookX, player->lookY, player->lookZ);
-			printf("upVector: %.1f %.1f %.1f\n", player->upX, player->upY, player->upZ);
+			printf("x: %.1f, y:%.1f, z:%.1f\n", player->position.x, player->position.y, player->position.z);
 			printf("=====================================\n");
+			
 			break;
 		}
 		default:
@@ -384,4 +498,125 @@ void Server::printPacket(struct packet *p)
 			break;
 		}
 	}
+}
+
+int Server::broadcastMsg(char * msg, int size)
+{
+	for (int i = 0; i < playerCount; i++)
+	{
+		if (players[i].active)
+			Server::sendMsg(msg, size, &players[i].clientAddress);
+	}
+
+	return 0;
+}
+
+void Server::checkConnection()
+{
+	for (int i = 0; i < playerCount; i++)
+	{
+		if (players[i].timeUntilInactive > 0)
+		{
+			players[i].timeUntilInactive -= MAX_SERVER_PROCESS_RATE;
+
+			if (players[i].timeUntilInactive <= 0)
+				disconnectPlayer(i);
+		}
+	}
+}
+
+void Server::disconnectPlayer(int id)
+{
+	printf("[SERVER]: PLAYER %d HAS BEEN DISCONNECTED!\n", id);
+	players[id].active = false;
+	
+	struct disconnectPlayerPacket p = {};
+	p.eventId = DISCONNECT_PLAYER_EVENT;
+	p.disconnectedPlayerId = id;
+	dynamicWorld.playerMap.erase(id);
+
+	broadcastMsg((char *)&p, sizeof(p));
+}
+
+// Called everytime the server processes a buffer (Once per cycle)
+// Determines the active resource node and gives the player(owner) resources
+void Server::updateResources()
+{
+	timeUntilHotSpotChange -= MAX_SERVER_PROCESS_RATE;
+	timeUntilResourceBonus -= MAX_SERVER_PROCESS_RATE;
+
+	// Distributes the resources TODO
+	if (timeUntilResourceBonus < 0)
+	{
+		timeUntilResourceBonus = resourceInterval;
+
+		for (map<int, struct playerObject>::iterator it = dynamicWorld.playerMap.begin(); it != dynamicWorld.playerMap.end(); ++it)
+		{
+			if (currentResourceOwner != -1 && it->second.id % 2 == currentResourceOwner % 2) {
+				//it->second.resources += resourcePerInterval;
+				it->second.resources += resourceHotSpotBonusPerInterval;
+			}
+		}
+	}
+
+	// Change the active node
+	if (timeUntilHotSpotChange < 0 && resourceNodeLocations.size() > 0)
+	{
+		timeUntilHotSpotChange = hotSpotChangeInterval;		// Reset timer
+
+		++currentActiveResourceNodeIndex;
+		currentActiveResourceNodeIndex = currentActiveResourceNodeIndex % resourceNodeLocations.size();
+
+		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+		currentResourceOwner = -1;
+		resetChanneling();
+	}
+}
+
+// Sends messages to clients about new location of resource node
+void Server::sendActiveNodeUpdate(int resourceId)
+{
+	struct resourceNodePacket p;
+	p.eventId = HOT_SPOT_UPDATE;
+	p.id = resourceId;
+
+	// Send Message
+	Server::broadcastMsg((char *)&p, sizeof(p));
+}
+
+void Server::sendPermissionToChannel(int playerId, int resourceId)
+{
+	struct resourceNodePacket p;
+	p.eventId = CHANNELING_PERMISSION;
+	p.id = resourceId;
+
+	Server::sendMsg((char *)&p, sizeof(p), &players[playerId].clientAddress);
+}
+
+void Server::sendNewResourceOwnerUpdate(int playerId, int resourceId)
+{
+	struct resourceHitPacket p;
+	p.eventId = NEW_OWNER_RESOURCE_UPDATE_EVENT;
+	p.playerId = playerId;
+	p.resourceId = resourceId;
+
+	Server::broadcastMsg((char *)&p, sizeof(p));
+}
+
+void Server::sendClearChannelingProgressBar(int playerId)
+{
+	struct refreshPacket p;
+	p.eventId = CLEAR_CHANNEL_BAR;
+	p.playerId = playerId;
+
+	Server::sendMsg((char *)&p, sizeof(p), &players[playerId].clientAddress);
+}
+
+void Server::resetChanneling() {
+	if (channelingPlayer != -1) {
+		sendClearChannelingProgressBar(channelingPlayer);
+	}
+
+	isChanneling = false;
+	channelingPlayer = -1;
 }

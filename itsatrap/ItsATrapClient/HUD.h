@@ -5,6 +5,8 @@
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include "Scoreboard.h"
+#include <FTGL/ftgl.h>
 
 #include <string>
 
@@ -15,13 +17,19 @@ class HUD {
 		HUD();
 		~HUD();
 
-		void draw(int health, int resources);
+		FTGLPixmapFont *font;
+		Scoreboard *board;
+		int m_progressTime;
+
+		void draw(int health, int resources, int spawnTime, int flashTime);
 		
 		void drawCrossHair(); 
 		void drawHealthBar(int health);
 		void drawResource(int resource);
-		void drawDeathTimer(float respawnTime);
-
+		void drawDeathTimer(int respawnTime);
+		void drawProgressBar(int time);
+		void drawFlashbag(int time); // max 10 to 0
+		void drawKillSymbol(bool hit);
 		// GLuint loadAndBufferImage( const char *filename);
 };
 

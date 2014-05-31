@@ -8,8 +8,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Node.h"
-#include "AABB.h"
+#include "../Common/AABB.h"
 #include "Material.h"
+#include "MatrixTransform.h"
+#include "Texture.h"
+#include "Shader.h"
 
 namespace sg {
 
@@ -22,6 +25,16 @@ namespace sg {
 			glm::mat4 m_model;
 			glm::vec4 m_color;
 
+			//// textures
+			//Texture *texture;
+			//GLuint texturePPM;
+			//char* m_textureFilename;
+
+			//// shaders
+			//Shader *shader;
+			//GLuint light;
+
+
 			void setPosition(glm::vec3);
 			glm::vec3 getPosition();
 			
@@ -33,6 +46,7 @@ namespace sg {
 
 			AABB getBoundingBox();
 			void setBoundingBox(glm::vec3 pos, float rad);
+			void setBoundingBox(AABB boundingBox);
 
 			Geode();
 			~Geode();
@@ -41,7 +55,10 @@ namespace sg {
 
 			void draw(glm::mat4 parent, glm::mat4 cam) = 0;
 
+			glm::mat4 getWorldTransformMatrix();
 			virtual void calculateBoundingBox();
+			virtual void calculateBoundingBox(glm::mat4 model);
+			
 			virtual bool isInside(glm::vec3 point);
 			// virtual bool collidesWith(Geode b);
 			virtual void setMaterial();

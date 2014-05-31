@@ -68,6 +68,22 @@ vector<float> Utilities::modifyVec(vector<float> oldVec, float scale, float xTra
 	return vec;
 }
 
+vector<float> Utilities::modifyVec(vector<float> oldVec, glm::vec3 scale, float xTranslate, float yTranslate, float zTranslate) {
+	vector<float> vec;
+	for (int i = 0; i < oldVec.size(); i++) {
+		if (i % 3 == 0) {
+			vec.push_back((oldVec[i]*scale.x)+xTranslate);
+		}
+		else if (i % 3 == 1) {
+			vec.push_back((oldVec[i]*scale.y)+yTranslate);
+		}
+		else if (i % 3 == 2) {
+			vec.push_back((oldVec[i]*scale.z)+zTranslate);
+		}
+	}
+	return vec;
+}
+
 vector<float> Utilities::findMinsMaxs(string inputfile) {
 	
 	vector<tinyobj::shape_t> shapes;

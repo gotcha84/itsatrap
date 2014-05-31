@@ -44,28 +44,40 @@ private:
 	static int					packetBufferCount;
 	static DynamicWorld			dynamicWorld;
 	static Stopwatch			stopwatch;
+
 	static int					timeUntilResourceBonus;
 	static int					timeUntilHotSpotChange;
 	static int					resourcePerInterval;
 	static int					resourceHotSpotBonusPerInterval;
 	static int					resourceInterval;
 	static int					hotSpotChangeInterval;
-	static vector<glm::vec3>	hotSpotLocations;
-	static glm::vec3			currentHotSpot;
-	static int					currentHotSpotIndex;
+
+	static vector<int>			resourceNodeLocations;
+	static int					currentActiveResourceNodeIndex;
+	static int					currentResourceOwner;
+	static int					channelingPlayer;
+	static bool					isChanneling;
 
 	// Functions
 	static int initialize();
 	static void processIncomingMsg(char *, struct sockaddr_in *);
 	static int receiveMsg(char *, struct sockaddr_in *);
 	static int sendMsg(char *, int, struct sockaddr_in *);
+	static int broadcastMsg(char *, int);
 	static DWORD WINAPI bufferProcessorThread(LPVOID);
 	static void processBuffer();
 	static void broadcastDynamicWorld();
 	static void respawnPlayer(int id);
-	static void updateResources();
-	static void sendHotSpotUpdate(int x, int y, int z);
 	static void printPacket(struct packet *p);
+	static void checkConnection();
+	static void disconnectPlayer(int id);
+
+	static void updateResources();
+	static void sendActiveNodeUpdate(int resourceId);
+	static void sendPermissionToChannel(int playerId, int resourceId);
+	static void sendNewResourceOwnerUpdate(int playerId, int resourceId);
+	static void sendClearChannelingProgressBar(int playerId);
+	static void resetChanneling();
 
 public:
 

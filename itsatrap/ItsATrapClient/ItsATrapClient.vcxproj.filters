@@ -51,9 +51,6 @@
     <ClCompile Include="ClientInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Physics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,9 +81,6 @@
     <ClCompile Include="PlayerNode.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="City.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
@@ -95,9 +89,6 @@
     </ClCompile>
     <ClCompile Include="Building.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="AABB.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Trap.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
@@ -129,6 +120,15 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scoreboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -144,9 +144,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ClientInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utilities.h">
@@ -176,14 +173,8 @@
     <ClInclude Include="Building.h">
       <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="City.h">
       <Filter>Header Files\SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Trap.h">
       <Filter>Header Files\SceneGraph</Filter>
@@ -217,6 +208,15 @@
     </ClInclude>
     <ClInclude Include="Skybox.h">
       <Filter>Header Files\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scoreboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

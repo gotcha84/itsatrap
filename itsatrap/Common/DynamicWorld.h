@@ -1,18 +1,22 @@
 #ifndef DYNAMICWORLD_H
 #define DYNAMICWORLD_H
 
-#include <../glm/glm/glm.hpp>
-#include <../glm/glm/ext.hpp>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 #include <map>
 #include <vector>
 #include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
 
 #include "NetworkObjects.h"
 #include "NetworkConfig.h"
 #include "Packet.h"
 #include "ConfigSettings.h"
+#include "Physics.h"
+#include "StateLogic.h"
+#include "World.h"
 
 using namespace std;
 
@@ -22,20 +26,33 @@ using namespace std;
  * This class contains information about the world.
  *
  */
-class DynamicWorld {
+class COMMON_API DynamicWorld {
 
 private:
 	// Variables
-	int								currentId;
-	vector<struct staticObject>		staticObjects;
-	bool							playerLock[MAX_PLAYERS];
-
-	// Functions
+	int									currentId;
+	vector<struct staticObject>			staticObjects;
+	vector<struct staticObject>			staticWallObjects;		// ANDRE: Bounding Walls - Add BB
+	vector<struct staticRampObject>		staticRampObjects;
+	vector<struct staticResourceObject>	staticResourceObjects;	// ANDRE: Resource Tower - Add BB
+	vector<glm::vec3>					team1RespawnPoints, team2RespawnPoints;
+	map<int, struct trapObject *>		portalMap;
+	bool								playerLock[MAX_PLAYERS];
+	map<int, AABB>						aabbOffsets;
+	
+	// 
 	bool checkCollision(struct aabb a, struct aabb b);
-	bool checkCollisionWithAllNonTraps(struct playerObject *e);
+	int checkCollisionsWithAllNonTraps(struct playerObject *e);
+	int checkSideCollisionsWithAllBuildings(struct playerObject *e);
+	int checkCollisionsWithAllRampsEntrance(struct playerObject *e);
+	//int checkOnTopOfWithAllRamps(struct playerObject *e);
+	int checkCollisionsWithAllRampsInside(struct playerObject *e);
 	void addNewPlayer(struct playerObject p);
 	void respawnPlayer(struct playerObject *p);
-	void computeTemporaryAABB(struct playerObject *p);
+	void computeAABB(struct playerObject *p);
+	void computeAABB(struct trapObject *t);
+
+	//float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, struct aabb other, int buildingId);
 
 public:
 	// Variables
@@ -43,24 +60,63 @@ public:
 	map<int, struct playerObject>	playerMap;
 
 	// Functions
-	__declspec(dllexport) DynamicWorld();
-	__declspec(dllexport) DynamicWorld(struct packet *packet);
-	__declspec(dllexport) int serialize(char **ptr);
-	__declspec(dllexport) void printWorld();
+	DynamicWorld();
+	DynamicWorld(struct packet *packet);
+	int serialize(char *ptr);
+	void printWorld();
 
-	__declspec(dllexport) void updatePlayer(struct playerObject e);
-	__declspec(dllexport) int getNumPlayers();
-	__declspec(dllexport) vector<struct playerObject> getAllPlayers();
-	__declspec(dllexport) void updatePlayerBuffs(int timeDiff);
+	void cleanStateInfo(int id);
 
-	__declspec(dllexport) void addTrap(struct trapObject t);
+	void updatePlayer(struct playerObject e);
+	int getNumPlayers();
+	vector<struct playerObject> getAllPlayers();
+	void updateTimings(int timeDiff);
+	void processMoveEvent(int playerId, Direction dir);
+	void processJumpEvent(int playerId);
+	void processLookEvent(int playerId, struct cameraObject *cam);
 
-	__declspec(dllexport) void addStaticObject(struct staticObject);
-	__declspec(dllexport) int getNumStaticObjects();
+	void addTrap(struct trapObject t);
 
-	__declspec(dllexport) void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
+	void addStaticObject(struct staticObject);
+	void addStaticWallObject(struct staticObject);
+	void addStaticRampObject(struct staticRampObject);
+	void addStaticResourceObject(struct staticResourceObject);
+	int getNumStaticObjects();
+	int getNumStaticWallObjects();
+	int getNumStaticRampObjects();
+	int getNumStaticResourceObjects();
+	AABB getStaticObjectBB(int buildingId);
+	AABB getStaticRampObjectBB(int rampId);
+	AABB getStaticResourceBB(int resourceId);
 
-	
+	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
+
+	void resetWorldInfo();
+	void applyCollisions();
+	void applyGravity();
+	void applyPhysics();
+	void applyAdjustments();
+
+	void applyTrapGravity();
+
+	void applyMoveEvents();
+	void noneMoveEvent(int playerId);
+	void climbingMoveEvent(int playerId);
+	void pullingUpMoveEvent(int playerId);
+	void holdingEdgeMoveEvent(int playerId);
+	void wallRunningMoveEvent(int playerId);
+
+	void noneJumpEvent(int playerId);
+	void climbingJumpEvent(int playerId);
+	void pullingUpJumpEvent(int playerId);
+	void holdingEdgeJumpEvent(int playerId);
+	void wallRunningJumpEvent(int playerId);
+
+	void checkPlayersCollideWithTrap();
+
+	void checkForStateChanges(struct playerObject *e);
+
+	void addAABBInfo(int type, AABB aabb);
 };
 
 #endif

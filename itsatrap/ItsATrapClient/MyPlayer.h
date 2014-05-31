@@ -15,7 +15,7 @@
 #include <iomanip> // to round floats
 
 #include "Camera.h"
-#include "Physics.h"
+//#include "Physics.h"
 #include "NetworkObjects.h"
 #include "ConfigSettings.h"
 
@@ -29,8 +29,12 @@ class MyPlayer {
 		bool m_deathState;
 
 		Camera *m_cam;
-		Physics *m_physics;
+		//Physics *m_physics;
 		AABB *m_boundingBox;
+
+		glm::vec3 m_position;
+		PhysicsStates m_currPhysState;
+
 
 		glm::mat4 m_transMatrix;
 
@@ -43,7 +47,8 @@ class MyPlayer {
 		float m_zWalkFactor;
 		float m_xSlowWalkFactor;
 		float m_zSlowWalkFactor;
-		float m_wallJumpFactor;
+		float m_climbFactor;
+		float m_pullingUpFactor;
 		float m_wallJumpTime;
 		float m_holdingEdgeTime;
 		float m_teleportFactor;
@@ -63,10 +68,11 @@ class MyPlayer {
 
 		Camera *getCamera();
 		glm::vec3 getPosition();
-		Physics *getPhysics();
+		//Physics *getPhysics();
 		
 		AABB *getAABB();
 		void setAABB(AABB *bbox);
+		//void setAABB(AABB bbox);
 
 		glm::mat4 getTransMatrix();
 		glm::mat4 getModelMatrix();
@@ -79,13 +85,8 @@ class MyPlayer {
 		void handleYRotation(float magnitude);
 		void handleSliding();
 		void handleTeleport();
-		void handleMovement(unsigned char key);
-		void handleJump();
-		void applyClimbing();
-		void applyPullingUp();
-		void handleHoldingEdge(unsigned char key);
-		void applyHoldingEdge();
-		void Unstuck();
+		
+		void Unstuck(unsigned char key);
 		
 		void updateModelViewMatrix();
 		void setTransMatrix(glm::mat4 m);

@@ -5,10 +5,19 @@
 #include <iostream>
 #include <fstream>
 
+#include "ConfigSettings.h"
 #include "Geode.h"
 #include "ObjModel.h"
 #include "NetworkObjects.h"
 #include "Utilities.h"
+
+#define TRAP_DIR "../Models/Traps/"
+#define TRAMPOLINE_TRAP_OBJ "Jump_Trap.obj"
+#define DEATH_TRAP_OBJ "Death_Trap.obj"
+#define FREEZE_TRAP_OBJ "Freeze_Trap.obj"
+#define SLOW_TRAP_OBJ "Stun_Trap.obj"
+#define PUSH_TRAP_OBJ "Pad_Trap.obj"
+#define PORTAL_TRAP_OBJ "Flash_Trap.obj"
 
 namespace sg {
 	class Trap : public Geode {
@@ -22,7 +31,7 @@ namespace sg {
 			ObjModel *m_model1;
 
 			Trap();
-			Trap(int, glm::vec3 pos, float rotationAngle);
+			Trap(int, glm::vec3 pos, float rotationAngle, string filename);
 			Trap(glm::vec3);
 			Trap(glm::vec3 currPos, int type);
 

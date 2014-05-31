@@ -11,6 +11,7 @@
 #include "tiny_obj_loader.h"
 #include "Geode.h"
 #include "Texture.h"
+#include "Utilities.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ class ObjModel : public sg::Geode {
 		float m_cityScale;
 		float m_canScale;
 		float m_defaultScale;
+
 		float m_turtleScale;
 		glm::vec3 m_scaleVec;
 
@@ -68,11 +70,13 @@ class ObjModel : public sg::Geode {
 		void loadTexture(string filename);
 
 		void print();
-			
+		
 		void calculateBoundingBox();
+		void calculateBoundingBox(glm::mat4 model);
 		bool isInside(glm::vec3 point);
 		bool collidesWith(ObjModel* o);
 		void setMaterial();
+		void setMaterial(float ambient[4], float diffuse[4], float specular[4], float emission[4], float shininess);
 };
 
 #endif

@@ -14,9 +14,9 @@
 #include <vector>
 #include <math.h>
 
+#include "../Common/World.h"
 #include "AABB.h"
 #include "Utilities.h"
-#include "World.h"
 
 using namespace std;
 

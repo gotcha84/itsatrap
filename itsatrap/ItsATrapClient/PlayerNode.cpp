@@ -1,6 +1,8 @@
 #define PLAYER_RAD 5.0f
 
 #include "PlayerNode.h"
+#include "ClientInstance.h"
+extern ClientInstance* client;
 
 namespace sg {
 
@@ -8,6 +10,7 @@ namespace sg {
 		this->setPlayerID(0);
 		m_player = new MyPlayer();
 		m_hud = new HUD();
+		board = new Scoreboard();
 		
 		m_translate = glm::vec3();
 		m_rotate = glm::quat();
@@ -19,13 +22,16 @@ namespace sg {
 		m_color = glm::vec4(10,10,10,1);
 		m_xAngleChangeFactor = 20.0f;
 		m_yAngleChangeFactor = 20.0f;
+
+		initModels();
 	}
 
 	Player::Player(glm::vec3 pos) {
 		this->setPlayerID(0);
 		m_player = new MyPlayer(pos);
 		m_hud = new HUD();
-		
+		board = new Scoreboard();
+
 		m_translate = glm::vec3();
 		m_rotate = glm::quat();
 		m_scale = glm::vec3(1,1,1);
@@ -36,6 +42,8 @@ namespace sg {
 		m_color = glm::vec4(10,10,10,1);
 		m_xAngleChangeFactor = 20.0f;
 		m_yAngleChangeFactor = 20.0f;
+
+		initModels();
 	}
 
 	Player::Player(MyPlayer *p) {
@@ -48,6 +56,22 @@ namespace sg {
 
 		delete m_hud;
 		m_hud = nullptr;
+
+		delete m_thisPlayer;
+		m_thisPlayer = nullptr;
+
+		delete m_otherPlayer;
+		m_otherPlayer = nullptr;
+
+		delete board;
+		board = nullptr;
+	}
+
+	void Player::initModels() {
+		m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
+		m_otherPlayer->loadTexture("../Textures/1.ppm");
+		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
+		m_thisPlayer->loadTexture("../Textures/1.ppm");
 	}
 
 	void Player::setColor(glm::vec4 color) {
@@ -72,7 +96,7 @@ namespace sg {
 
 	glm::mat4 Player::getModelMatrix() {
 		m_translate = this->getPosition();
-		glm::mat4 translationMatrix = glm::translate(m_translate);
+		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x-1.0f, -6.0f, m_translate.z));
 
 		this->getCamera()->calculateAxis();
 		glm::mat4 rotatedX = Utilities::rotateY(this->getCamera()->m_xRotated);
@@ -144,17 +168,45 @@ namespace sg {
 		this->drawAsCurrentPlayer(mv);
 
 		// draw player hud
-		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources);
+		//TODO: last parameter is the respawn input time. from server to client
+		for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
+			sg::Player *player = it->second;
+			//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
+			//cout << client->tabPressed << endl;
+
+		}
+
+		if (client->tabPressed) {
+			for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
+				sg::Player *player = it->second;
+				Scoreboard::Entry entry;
+				entry.setName( player->getPlayerID() );
+				entry.setKill(player->getPlayer()->m_numKills);
+				entry.setDeath(player->getPlayer()->m_numDeaths);
+				board->addEntry(entry);
+				//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
+				//cout << client->tabPressed << endl;
+			}
+			board->draw();
+		}
+		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, 5, 0);
 	}
 
 	void Player::drawAsCurrentPlayer(glm::mat4 mv) {
 		// load updated mv matrix and draw shape for player
+
+		if (this->getPlayerID() % 2 == 0)
+			m_thisPlayer->setColor(glm::vec4(0.75, 0, 0, 1));
+		else
+			m_thisPlayer->setColor(glm::vec4(0, 0, 0.75, 1));
+
 		glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			glutWireCube(PLAYER_RAD*2);
+			//glutWireCube(PLAYER_RAD*2);
+			m_thisPlayer->drawModel();
 		glPopMatrix();
 	}
 
@@ -168,10 +220,16 @@ namespace sg {
 
 	void Player::drawAsOtherPlayer(glm::mat4 mv) {
 		// load updated mv matrix and draw shape for player
+		if (this->getPlayerID() % 2 == 0)
+			m_otherPlayer->setColor(glm::vec4(0.75, 0, 0, 1));
+		else
+			m_otherPlayer->setColor(glm::vec4(0, 0, 0.75, 1));
+
 		glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
+			/*
 			glPushMatrix();
 				glTranslatef(0, 0, -PLAYER_RAD);
 				glScalef(1, 1, 0.1f);
@@ -181,6 +239,10 @@ namespace sg {
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			glutSolidCube(PLAYER_RAD*2);
+			*/
+
+			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
+			m_otherPlayer->drawModel();
 		glPopMatrix();
 	}
 
@@ -193,7 +255,7 @@ namespace sg {
 	}
 
 	void Player::handleMovement(unsigned char key) {
-		this->getPlayer()->handleMovement(key);
+		//this->getPlayer()->handleMovement(key);
 	}
 
 	void Player::move(glm::vec3 delta) {
@@ -234,32 +296,40 @@ namespace sg {
 		
 		p.id = this->getPlayerID();
 		p.health = this->getHealth();
-		p.x = this->getPosition().x;
-		p.y = this->getPosition().y;
-		p.z = this->getPosition().z;
-		p.aabb.minX = this->getPlayer()->getAABB()->m_minX;
-		p.aabb.minY = this->getPlayer()->getAABB()->m_minY;
-		p.aabb.minZ = this->getPlayer()->getAABB()->m_minZ;
-		p.aabb.maxX = this->getPlayer()->getAABB()->m_maxX;
-		p.aabb.maxY = this->getPlayer()->getAABB()->m_maxY;
-		p.aabb.maxZ = this->getPlayer()->getAABB()->m_maxZ;
-		p.lookX = this->getCamera()->getCameraLookAt().x;
-		p.lookY = this->getCamera()->getCameraLookAt().y;
-		p.lookZ = this->getCamera()->getCameraLookAt().z;
-		p.centerX = this->getCamera()->getCameraCenter().x;
-		p.centerY = this->getCamera()->getCameraCenter().y;
-		p.centerZ = this->getCamera()->getCameraCenter().z;
-		p.upX = this->getCamera()->getCameraUp().x;
-		p.upY = this->getCamera()->getCameraUp().y;
-		p.upZ = this->getCamera()->getCameraUp().z;
-		p.xRotated = this->getCamera()->getXRotated();
-		p.yRotated = this->getCamera()->getYRotated();
+		p.position = glm::vec3(this->getPosition());
+		p.aabb.minX = this->getPlayer()->getAABB()->minX;
+		p.aabb.minY = this->getPlayer()->getAABB()->minY;
+		p.aabb.minZ = this->getPlayer()->getAABB()->minZ;
+		p.aabb.maxX = this->getPlayer()->getAABB()->maxX;
+		p.aabb.maxY = this->getPlayer()->getAABB()->maxY;
+		p.aabb.maxZ = this->getPlayer()->getAABB()->maxZ;
+		p.cameraObject.cameraLookAt = this->getCamera()->getCameraLookAt();
+		p.cameraObject.cameraCenter = this->getCamera()->getCameraCenter();
+		p.cameraObject.cameraUp = this->getCamera()->getCameraUp();
+		p.cameraObject.xRotated = this->getCamera()->getXRotated();
+		p.cameraObject.yRotated = this->getCamera()->getYRotated();
 		p.stunDuration = m_player->m_stunDuration;
 		p.slowDuration = m_player->m_slowDuration;
 		p.timeUntilRespawn = m_player->m_timeUntilRespawn;
 		p.onTopOfBuildingId = m_player->m_onTopOfBuildingId;
 		p.deathState = m_player->m_deathState;
+		p.cameraObject.camZ = m_player->getCamera()->m_camZ;
+
 		return p;
+	}
+
+	struct cameraObject Player::getCameraObjectForNetworking()
+	{
+		struct cameraObject cam = {};
+		cam.cameraCenter = this->getCamera()->getCameraCenter();
+		cam.cameraLookAt = this->getCamera()->getCameraLookAt();
+		cam.cameraUp = this->getCamera()->getCameraUp();
+		cam.camX = this->getCamera()->m_camX;
+		cam.camZ = this->getCamera()->m_camZ;
+		cam.xRotated = this->getCamera()->getXRotated();
+		cam.yRotated = this->getCamera()->getYRotated();
+
+		return cam;
 	}
 
 	int Player::getHealth() {

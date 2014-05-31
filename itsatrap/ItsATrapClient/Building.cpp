@@ -11,6 +11,7 @@ namespace sg {
 		if (ENABLE_SHADER) {
 			shader = new Shader();
 			light = shader->lightShader("../Shaders/phongandtexture.frag", "../Shaders/phongandtexture.vert");
+
 		}
 
 		//this let the shaders on texture, so when you try to use shader on texture you add this on eline of a code
@@ -139,7 +140,7 @@ namespace sg {
 			}
 			glEnd();
 		}
-		
+
 		//cout << max_ele << endl;
 		glDisable(GL_TEXTURE_2D);
 	}
@@ -183,7 +184,7 @@ namespace sg {
 
 		glm::vec3 tmpPos = glm::vec3((maxx-minx)/2, (maxy-miny)/2, (maxz-minz)/2);
 
-		m_physics = Physics(tmpPos, FLT_MAX);
+		//m_physics = Physics(tmpPos, FLT_MAX);
 	}
 
 	bool Building::isInside(glm::vec3 point) {		
@@ -194,9 +195,9 @@ namespace sg {
 		return (m_boundingBox.nearTop(point));
 	}
 
-	bool Building::clearedTop(AABB* other) {
+	/*bool Building::clearedTop(AABB* other) {
 		return (m_boundingBox.clearedTop(other));
-	}
+	}*/
 
 	glm::vec3 Building::intersects(glm::vec3 from, glm::vec3 goTo) {
 		return (m_boundingBox.intersects(from, goTo));
@@ -211,7 +212,7 @@ namespace sg {
 	}
 
 	bool Building::onTopOf(AABB* other) {
-		return (m_boundingBox.onTopOf(other));
+		return (m_boundingBox.onTopOfPointer(other));
 	}
 
 	int Building::collidesWith(AABB* other) {

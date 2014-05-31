@@ -14,7 +14,7 @@
 #include "Group.h"
 #include "Utilities.h"
 #include "tiny_obj_loader.h"
-#include "World.h"
+#include "../Common/World.h"
 #include "Building.h"
 
 using namespace std;
@@ -30,7 +30,7 @@ namespace sg {
 
 			float m_cityScale;
 			float m_canScale;
-			float m_defaultScale;
+			glm::vec3 m_defaultScale;
 
 			int* m_nVertices;
 			float** m_vertices;
