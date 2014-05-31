@@ -11,7 +11,6 @@
 #include "tiny_obj_loader.h"
 #include "Geode.h"
 #include "Texture.h"
-#include "SOIL.h"
 
 using namespace std;
 
