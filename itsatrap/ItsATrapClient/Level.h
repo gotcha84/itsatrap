@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#include "dirent.h"
 #include "SceneGraph.h"
 #include "../Common/World.h"
 
@@ -34,6 +35,7 @@
 
 #define BLOCKS			"../Models/Blocks/"
 #define POLYNOIDS		"../Models/Polynoid/"
+#define LEVEL			"../Models/Level/"
 #define CLIMBBLOCK		"../Models/Blocks/ClimbBlock.obj"
 #define CROSSBAR		"../Models/Blocks/CrossBar.obj"
 #define LARGERAMP		"../Models/Blocks/LargeRamp.obj"
@@ -49,6 +51,7 @@ class Level {
 		sg::MatrixTransform *root;
 		sg::MatrixTransform *ground;
 		vector<sg::MatrixTransform *> xForms;
+		vector<sg::ObjNode *> levelNodes;
 		vector<sg::Cube *> buildings;
 		vector<sg::Cube *> walls;
 		vector<sg::ResourceNode *> resources;

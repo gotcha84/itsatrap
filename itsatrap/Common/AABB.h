@@ -60,7 +60,7 @@ class COMMON_API AABB {
 		int reflectionIntersection(glm::vec3 from, glm::vec3 goTo);
 		float angleIntersection(glm::vec3 from, glm::vec3 goTo);
 
-		void drawBoundingBox(AABB bb);
+		void draw();
 		void update(glm::vec3 pos, AABB *offset);
 
 		void print();

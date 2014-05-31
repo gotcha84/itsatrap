@@ -242,6 +242,8 @@ namespace sg {
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			m_otherPlayer->drawModel();
+
+			m_otherPlayer->getBoundingBox().draw();
 		glPopMatrix();
 	}
 

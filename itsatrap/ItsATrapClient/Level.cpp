@@ -23,14 +23,27 @@ Level::~Level() {
 }
 
 void Level::initLevel0() {
-	sg::MatrixTransform *xForm = new sg::MatrixTransform();
+	DIR *dir;
+	struct dirent *ent;
+	glm::vec4 levelColor(0.8, 0.8, 0.8, 0.5);
 
+	sg::MatrixTransform *xForm = new sg::MatrixTransform();
 	ground->addChild(xForm);
 
-	sg::ObjNode *wholeLevel = new sg::ObjNode("../Models/Level/MajorScene.obj", "../Models/Level/");
-	wholeLevel->setName("whole level");
-	wholeLevel->getModel()->setColor(glm::vec4(0.8, 0.8, 0.8, 0.5));
-	xForm->addChild(wholeLevel);
+	if ((dir = opendir("..\\Models\\Level")) != NULL) {
+		while ((ent = readdir(dir)) != NULL) {
+			string fileName(ent->d_name);
+			if (fileName.size() > 3 && fileName.substr(fileName.find_first_of('.')).compare(".obj") == 0) {
+				levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
+				levelNodes.back()->setName("ObjNode: " + fileName);
+				levelNodes.back()->getModel()->setColor(levelColor);
+				xForm->addChild(levelNodes.back());
+			}
+		}
+		closedir(dir);
+	} else {
+		cout << "[ERROR]: Level.cpp - Could not read in Level obj files!" << endl;
+	}
 }
 
 void Level::initLevel() {
