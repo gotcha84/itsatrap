@@ -6,7 +6,7 @@ Sound::Sound() {
 	if (!engine)
 		perror("error starting up the engine");
 
-	path = "../SoundFiles/background.wav";
+	path = "../Sound/background.wav";
 	radius = 5;
 }
 
