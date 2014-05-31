@@ -150,21 +150,23 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
 			tmp.aabb.print();
 
-			if (dynamicWorld.getNumStaticObjects() >= 31) {
-				vector<AABB> buildings;
-				vector<AABB> ramps;
-				
-				for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
-					buildings.push_back(dynamicWorld.getStaticObjectBB(i));
-				}
+			int id = dynamicWorld.getNumStaticObjects() - 1;
+			World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
 
-				for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
-					ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
-				}
+			//if (dynamicWorld.getNumStaticObjects() >= 31) {
+			//	vector<AABB> buildings;
+			//	vector<AABB> ramps;
+			//	
+			//	for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
+			//		buildings.push_back(dynamicWorld.getStaticObjectBB(i));
+			//	}
 
-				World::superHeightMapInit(buildings, ramps);
-			}
+			//	for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
+			//		ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
+			//	}
 
+			//	World::superHeightMapInit(buildings, ramps);
+			//}
 		}
 	}
 	else if (p->eventId == STATIC_WALL_OBJECT_CREATION_EVENT)

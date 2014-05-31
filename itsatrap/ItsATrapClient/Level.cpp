@@ -38,14 +38,18 @@ void Level::initLevel0() {
 				levelNodes.back()->setName("ObjNode: " + fileName);
 				levelNodes.back()->getModel()->setColor(levelColor);
 				xForm->addChild(levelNodes.back());
-
-				levelNodes.back()->calculateBoundingBox();
-				levelNodes.back()->enableDrawBB();
 			}
 		}
 		closedir(dir);
 	} else {
 		cout << "[ERROR]: Level.cpp - Could not read in Level obj files!" << endl;
+	}
+
+	for (int i = 0; i < levelNodes.size(); ++i) {
+		levelNodes[i]->calculateBoundingBox();
+		levelNodes[i]->enableDrawBB();
+
+		World::updateStructuresMap(levelNodes[i]->getBoundingBox(), i);
 	}
 }
 

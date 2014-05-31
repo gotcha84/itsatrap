@@ -40,7 +40,6 @@ private:
 	bool								playerLock[MAX_PLAYERS];
 	map<int, AABB>						aabbOffsets;
 	
-	// 
 	bool checkCollision(struct aabb a, struct aabb b);
 	int checkCollisionsWithAllNonTraps(struct playerObject *e);
 	int checkSideCollisionsWithAllBuildings(struct playerObject *e);
