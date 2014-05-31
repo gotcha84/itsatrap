@@ -1,7 +1,7 @@
-﻿Build started 5/30/2014 10:28:34 PM.
+﻿Build started 5/31/2014 1:39:47 AM.
      1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>InitializeBuildStatus:
-         Creating "Debug\Common.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+         Touching "Debug\Common.tlog\unsuccessfulbuild".
        ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ConfigSettings.cpp DynamicWorld.cpp Stopwatch.cpp
          Stopwatch.cpp
@@ -52,4 +52,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:08.95
+Time Elapsed 00:00:09.08

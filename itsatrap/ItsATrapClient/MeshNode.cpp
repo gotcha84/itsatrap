@@ -44,6 +44,8 @@ namespace sg {
 			m_boneLocation[i] = GetUniformLocation(Name);
 			cout << m_boneLocation[i] << endl;
 		}
+
+		m_proj = glm::perspective(90.0f, 3.0f / 3.0f, 0.1f, 100.0f);
 	}
 
 	Mesh *MeshNode::getMesh() {
@@ -71,6 +73,7 @@ namespace sg {
 			for (uint i = 0 ; i < Transforms.size() ; i++) {
 				SetBoneTransform(i, Transforms[i]);
 			}
+
 			// ANURAG IS NOOB
 			//Pipeline p;
 			//p.SetCamera(m_pGameCamera->GetPos(), m_pGameCamera->GetTarget(), m_pGameCamera->GetUp());
@@ -84,8 +87,7 @@ namespace sg {
 			//SetWVP(p.GetWVPTrans());
 			//SetWorldMatrix(p.GetWorldTrans());
 
-			glm::mat4 proj = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-			SetWVP(glm::inverse(cam) * proj);
+			SetWVP(parent * glm::inverse(cam) * m_proj);
 			SetWorldMatrix(parent);
 
 			m_mesh->Render();
@@ -112,7 +114,7 @@ namespace sg {
 	}
 
 	void MeshNode::SetBoneTransform(uint Index, const glm::mat4& Transform) {
-		assert(Index < MAX_BONES);
+		//assert(Index < MAX_BONES);
 		//Transform.Print();
 		glUniformMatrix4fv(m_boneLocation[Index], 1, GL_TRUE, glm::value_ptr(Transform));
 		//cout << glm::to_string(Transform) << endl;

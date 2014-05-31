@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	//glFrustum(-10.0, 10.0, -10.0, 10.0, 10, 1000.0);
-	gluPerspective(90.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	gluPerspective(90.0f, 3.0f / 3.0f, 0.1f, 100.0f);
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
 	glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
@@ -122,12 +122,12 @@ int main(int argc, char *argv[]) {
 	ground.setColor(glm::vec4(0,1,0,1));
 	//groundXForm.addChild(&ground);
 
-	sg::MatrixTransform meshXForm = sg::MatrixTransform();
+	//sg::MatrixTransform meshXForm = sg::MatrixTransform();
 	//meshXForm.setMatrix(glm::translate(glm::vec3(75,0,0)));
-	client->root->addChild(&meshXForm);
+	//client->root->addChild(&meshXForm);
 
-	sg::MeshNode *mesh = new sg::MeshNode("test.dae");
-	meshXForm.addChild(mesh);
+	sg::MeshNode *mesh = new sg::MeshNode("model.dae");
+	client->root->addChild(mesh);
 
 	//client->printPlayers();
 	client->printSceneGraph();

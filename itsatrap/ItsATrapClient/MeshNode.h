@@ -19,6 +19,8 @@ namespace sg {
 			static const uint MAX_BONES = 100;
 			GLuint m_boneLocation[MAX_BONES];
 
+			glm::mat4 m_proj;
+
 			MeshNode();
 			MeshNode(std::string filename);
 			~MeshNode();
