@@ -104,9 +104,9 @@ int main(int argc, char *argv[]) {
 	sbXForm.setMatrix(model);
 	client->root->addChild(&sbXForm);
 
-	sg::ObjNode skybox = sg::ObjNode();
-	skybox.setName("skybox");
+	sg::Skybox skybox = sg::Skybox();
 	skybox.loadModel("../Models/Skybox/skybox.obj", "../Models/Skybox/");
+	skybox.loadTexture("../Models/Skybox/skybox.ppm");
 	skybox.getModel()->setColor(glm::vec4(1,1,1,1));
 	sbXForm.addChild(&skybox);
 

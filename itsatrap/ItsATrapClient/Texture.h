@@ -22,8 +22,8 @@ class Texture {
 		Texture();
 		~Texture();
 			
-		GLuint loadTexture(char* the_texture);
-		unsigned char* loadPPM(char* filename, int& width, int& height);
+		GLuint loadTexture(const char *the_texture);
+		unsigned char* loadPPM(const char *filename, int& width, int& height);
 
 };
 

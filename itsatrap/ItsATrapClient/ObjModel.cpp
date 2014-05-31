@@ -5,6 +5,7 @@ ObjModel::ObjModel() {
 
 	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
+	m_textureID = 0;
 }
 
 ObjModel::ObjModel(int id) {
@@ -130,29 +131,28 @@ void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
 }
 
 void ObjModel::drawModel() {
-
-	glEnable(GL_TEXTURE_2D);
-
 	// change order of vertices for backface culling for can
 	if (this->m_objFilename == "../Models/Can.obj") {
 		glFrontFace(GL_CW);
 	}
 
-	//cout << "nverts is : " << m_nIndices[0] << endl;
 	int p = 0;
 	int k = 0;
 	int l = 0;
 	int t = 0;
-	//cout << m_nm_indices << endl;
 	int max_ele = 10000;
 			
-	// bind texture here
-	glBindTexture(GL_TEXTURE_2D, m_textureID);
+	// bind texture
+	if (m_textureID != 0) {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, m_textureID);
 
-	// if city and want colorful ObjModels!
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+
 	glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 
-	//cout << "m_id: " << m_id << endl;
 	glMaterialfv( GL_FRONT, GL_AMBIENT, m_material.m_ambient);
 	glMaterialfv( GL_FRONT, GL_DIFFUSE, m_material.m_diffuse);
 	glMaterialfv( GL_FRONT, GL_SPECULAR, m_material.m_specular);
@@ -162,20 +162,21 @@ void ObjModel::drawModel() {
 	for (int k = 0; k < m_nIndices.size(); k++) {
 		for (int i = 0; i < m_nIndices[k]/3; i++) {
 			glBegin(GL_TRIANGLES);
-			for (int j = 0; j < 3; j++) {
-				//cout << i << ", " << j << ", " << k << endl;
-				//cout << "1 " << endl;
-				glNormal3f(m_normals[k][3*m_indices[k][3*i+j]], m_normals[k][3*m_indices[k][3*i+j]+1], m_normals[k][3*m_indices[k][3*i+j]+2]);
-				//cout << "2 " << endl;
-				glTexCoord2f(m_texcoords[k][2*m_indices[k][t]], m_texcoords[k][2*m_indices[k][t]+1]);
-				//cout << "3 " << endl;
-				glVertex3f(m_vertices[k][3*m_indices[k][3*i+j]], m_vertices[k][3*m_indices[k][3*i+j]+1], m_vertices[k][3*m_indices[k][3*i+j]+2]);
-				t++;
-			}
+				for (int j = 0; j < 3; j++) {
+					glNormal3f(m_normals[k][3*m_indices[k][3*i+j]], m_normals[k][3*m_indices[k][3*i+j]+1], m_normals[k][3*m_indices[k][3*i+j]+2]);
+					glTexCoord2f(m_texcoords[k][2*m_indices[k][t]], m_texcoords[k][2*m_indices[k][t]+1]);
+					glVertex3f(m_vertices[k][3*m_indices[k][3*i+j]], m_vertices[k][3*m_indices[k][3*i+j]+1], m_vertices[k][3*m_indices[k][3*i+j]+2]);
+					t++;
+				}
 			glEnd();
 		}
 	}
-	//cout << max_ele << endl;	
+
+	// unbind texture
+	if (m_textureID != 0) {
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_TEXTURE_2D);
+	}
 
 	// reset backface culling
 	glFrontFace(GL_CCW);
@@ -236,35 +237,14 @@ void ObjModel::loadModel() {
 		cout << "\t[tinyobj] " << err << endl;
 	}
 
-	m_textureID = m_texture->loadTexture("../Models/Skybox/skybox.ppm");
-
 	int indicesCount = 0;
 	int verticesCount = 0;
 	int texturesCount = 0;
 	int normalsCount = 0;
 	int max_ele = -1;
 	int added = 0;
-	//int added = 0;
-	//string tmp;
-	//stringstream ss;
 
 	for (int j = 0; j < shapes.size(); j++) {
-		/*
-		vector<float> tmpArr;
-
-		if (m_filename == "city.obj") {
-			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_cityScale, 0.0f, -1.0f, 0.0f);
-		}
-		else if (m_filename == "Can.obj") {
-			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_canScale, 0.0f, 0.0f, 0.0f);
-		}
-		else if (m_filename == "turtle_obj.obj") {
-			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_turtleScale, 0.0f, 0.0f, 0.0f);
-		}
-		else {
-			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_defaultScale, 0.0f, 0.0f, 0.0f);
-		}
-		*/
 		vector<int> tmpArr2;
 
 		for (int i = 0; i < shapes[j].mesh.indices.size(); i++) {
@@ -276,28 +256,22 @@ void ObjModel::loadModel() {
 		setTexcoords(shapes[j].mesh.texcoords);
 		setIndices(tmpArr2);
 
-		/*while (!tmpArr.empty()) {
-			tmpArr.pop_back();
-		}
-
-		while (!tmpArr2.empty()) {
-			tmpArr2.pop_back();
-		}*/
-			
-		//cout << "sizes: " << shapes[j].mesh.indices.size() << endl;
 		added++;
 
 	}
-	//cout << "please: "<< m_vertices[1][379] << ", " << m_vertices[1][381] << endl;
-	//Utilities::writeIntArrayToFile(m_nVertices, added, "nverts.txt");
-		
-	//updateHeightMap();
 
 	calculateBoundingBox();
 	setMaterial();
+}
 
-	// TODO: send new bounding box to server and see if can make trap at that location
-		
+void ObjModel::loadTexture(string filename) {
+	cout << "[ObjModel] loading texture : " << filename << endl;
+
+	m_textureID = m_texture->loadTexture(filename.c_str());
+
+	if (m_textureID == 0) {
+		cout << "[ObjModel] \tFAILED loading texture : " << filename << endl;
+	}
 }
 
 void ObjModel::calculateBoundingBox() {
@@ -309,7 +283,7 @@ void ObjModel::calculateBoundingBox() {
 	float maxz = -1.0f*FLT_MAX;
 
 	for (int k = 0; k < m_nVertices.size(); k++) {
-		for (int i = 0; i < m_nVertices[k]/*-m_nVertices[k]%12*/; i+=3) {
+		for (int i = 0; i < m_nVertices[k]; i+=3) {
 			if (m_vertices[k][i] < minx) {
 				minx = m_vertices[k][i];
 			}
@@ -325,14 +299,8 @@ void ObjModel::calculateBoundingBox() {
 			if (m_vertices[k][i+1] > maxy) {
 				maxy = m_vertices[k][i+1];
 			}
-			//if (k == 7) {
-			//	cout << m_vertices[k][i+2] << endl;
-			//}
 			if (m_vertices[k][i+2] > maxz) {
 				maxz = m_vertices[k][i+2];
-				/*if (k == 7) {
-					cout << "i'm working" << endl;
-				}*/
 			}
 		}
 	}

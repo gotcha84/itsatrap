@@ -19,6 +19,7 @@ namespace sg {
 
 			void loadModel(std::string objFilename);
 			void loadModel(std::string objFilename, std::string mtlFilename);
+			void loadTexture(std::string filename);
 			ObjModel *getModel();
 
 			void draw(glm::mat4 parent, glm::mat4 cam);

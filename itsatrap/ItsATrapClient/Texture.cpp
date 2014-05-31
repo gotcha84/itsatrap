@@ -6,7 +6,7 @@ Texture::Texture(){
 			
 Texture::~Texture(){}
 
-GLuint Texture::loadTexture(char* the_texture) {
+GLuint Texture::loadTexture(const char* the_texture) {
 	//GLuint texture;			 // storage for one texture
 	int twidth, theight;   // texture width/height [pixels]
 	unsigned char* tdata;  // texture pixel data
@@ -37,7 +37,7 @@ GLuint Texture::loadTexture(char* the_texture) {
 }
 
 
-unsigned char* Texture::loadPPM(char* filename, int& width, int& height) {
+unsigned char* Texture::loadPPM(const char* filename, int& width, int& height) {
 	const int BUFSIZE = 128;
 	FILE* fp;
 	unsigned int read;
@@ -47,7 +47,7 @@ unsigned char* Texture::loadPPM(char* filename, int& width, int& height) {
 	size_t retval_sscanf;
 
 	if ( (fp=fopen(filename, "rb")) == NULL) {
-		std::cerr << "error reading ppm file, could not locate " << filename << std::endl;
+		std::cout << "error reading ppm file, could not locate " << filename << std::endl;
 		width = 0;
 		height = 0;
 		return NULL;
@@ -74,7 +74,7 @@ unsigned char* Texture::loadPPM(char* filename, int& width, int& height) {
 	read = fread(rawData, width * height * 3, 1, fp);
 	fclose(fp);
 	if (read != 1) {
-		std::cerr << "error parsing ppm file, incomplete data" << std::endl;
+		std::cout << "error parsing ppm file, incomplete data" << std::endl;
 		delete[] rawData;
 		width = 0;
 		height = 0;

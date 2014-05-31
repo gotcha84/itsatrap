@@ -11,6 +11,7 @@
 #include "tiny_obj_loader.h"
 #include "Geode.h"
 #include "Texture.h"
+#include "SOIL.h"
 
 using namespace std;
 
@@ -23,15 +24,12 @@ class ObjModel : public sg::Geode {
 		glm::vec3 m_scaleVec;
 
 		glm::vec3 m_position;
-
 		int m_id;
 		string m_objFilename;
 		string m_mtlFilename;
 		
 		Texture *m_texture;
 		GLuint m_textureID;
-
-		//Physics m_physics;
 
 		vector<vector<float>> m_vertices;
 		vector<vector<float>> m_normals;
@@ -67,6 +65,8 @@ class ObjModel : public sg::Geode {
 		void loadModel(string objFilename);
 		void loadModel(string objFilename, string mtlFilename);
 		void loadModel();
+
+		void loadTexture(string filename);
 
 		void print();
 			
