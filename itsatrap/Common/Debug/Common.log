@@ -1,8 +1,6 @@
-﻿Build started 5/30/2014 10:01:19 PM.
-     1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Rebuild target(s)).
-     1>_PrepareForClean:
-         Deleting file "Debug\Common.tlog\Common.lastbuildstate".
-       InitializeBuildStatus:
+﻿Build started 5/30/2014 10:28:34 PM.
+     1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
+     1>InitializeBuildStatus:
          Creating "Debug\Common.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ConfigSettings.cpp DynamicWorld.cpp Stopwatch.cpp
@@ -50,8 +48,8 @@
        FinalizeBuildStatus:
          Deleting file "Debug\Common.tlog\unsuccessfulbuild".
          Touching "Debug\Common.tlog\Common.lastbuildstate".
-     1>Done Building Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" (Rebuild target(s)).
+     1>Done Building Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:04.10
+Time Elapsed 00:00:08.95
