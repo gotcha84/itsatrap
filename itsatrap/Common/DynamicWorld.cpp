@@ -101,6 +101,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	ConfigSettings::getConfig()->getValue("StartingResources", p.resources);
 	p.knifeDelay = 0;
 	p.timeUntilRegen = 0;
+	p.flashDuration = 0;
 
 	playerMap[p.id] = p;
 	cout << "newplayer aabb: ";
@@ -366,7 +367,11 @@ void DynamicWorld::addTrap(struct trapObject t)
 		ConfigSettings::getConfig()->getValue("CostPortalTrap", cost);
 		break;
 	}
-
+	case TYPE_FLASH_TRAP:
+	{
+		ConfigSettings::getConfig()->getValue("CostFlashTrap", cost);
+		break;
+	}
 	default:
 		cost = 10;
 		break;
@@ -592,6 +597,8 @@ void DynamicWorld::updateTimings(int timeDiff)
 			}
 		}
 		
+		if (p.flashDuration > 0)
+			p.flashDuration -= timeDiff;
 	}
 
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); ++it)
@@ -1462,6 +1469,15 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 
 						break;
 					}
+					case TYPE_FLASH_TRAP:
+					{
+						float flashDuration = 0;
+						ConfigSettings::getConfig()->getValue("FlashTrapDuration", flashDuration);
+
+						p->flashDuration = flashDuration;
+
+						break;
+					}
 					default:
 						break;
 				}
@@ -1481,6 +1497,6 @@ void DynamicWorld::addAABBInfo(int type, AABB aabb)
 {
 	printf("[COMMON]: Got AABB info: type %d: ", type); 
 	aabb.print();
-
+	aabb.maxY = 10;
 	aabbOffsets[type] = aabb;
 }

@@ -43,6 +43,7 @@ void handlePlayerUpdate(struct playerObject p)
 		client->players[p.id]->m_player->m_stunDuration = p.stunDuration;
 		client->players[p.id]->m_player->m_slowDuration = p.slowDuration;
 		client->players[p.id]->m_player->m_timeUntilRespawn = p.timeUntilRespawn;
+		client->players[p.id]->m_player->m_flashDuration = p.flashDuration;
 
 		// RESOURCES
 		client->players[p.id]->m_player->m_resources = p.resources;
@@ -157,6 +158,9 @@ void handleAddTrap(struct trapObject t)
 		break;
 	case TYPE_PORTAL_TRAP:
 		filename = PORTAL_TRAP_OBJ;
+		break;
+	case TYPE_FLASH_TRAP:
+		filename = FLASH_TRAP_OBJ;
 		break;
 	default:
 		break;

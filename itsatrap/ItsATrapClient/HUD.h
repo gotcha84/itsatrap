@@ -10,6 +10,8 @@
 
 #include <string>
 
+
+
 //#include "Texture.h"
 
 class HUD {
@@ -21,14 +23,14 @@ class HUD {
 		Scoreboard *board;
 		int m_progressTime;
 
-		void draw(int health, int resources, int spawnTime, int flashTime);
+		void draw(int health, int resources, int spawnTime, float flashFade);
 		
 		void drawCrossHair(); 
 		void drawHealthBar(int health);
 		void drawResource(int resource);
 		void drawDeathTimer(int respawnTime);
 		void drawProgressBar(int time);
-		void drawFlashbag(int time); // max 10 to 0
+		void drawFlashbag(float fade); // between 0 and 1
 		void drawKillSymbol(bool hit);
 		// GLuint loadAndBufferImage( const char *filename);
 };

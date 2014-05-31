@@ -1,4 +1,5 @@
 #define PLAYER_RAD 5.0f
+#define FLASH_FADE_OUT 3000
 
 #include "PlayerNode.h"
 #include "ClientInstance.h"
@@ -188,7 +189,17 @@ namespace sg {
 			}
 			board->draw();
 		}
-		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, 5, 0);
+
+		// Flashbang stuff
+		float flash = 0;
+		if (getPlayer()->m_flashDuration > FLASH_FADE_OUT)
+			flash = 1;
+		else
+			flash = (float)getPlayer()->m_flashDuration / FLASH_FADE_OUT;
+		if (flash < 0)
+			flash = 0;
+
+		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, 5, flash);
 	}
 
 	void Player::drawAsCurrentPlayer(glm::mat4 mv) {

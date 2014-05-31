@@ -119,7 +119,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			player.clientAddress = *source;
 			player.playerId = playerCount;
 			player.active = true;
-			ConfigSettings::getConfig()->getValue("TimeUntilInactive", player.timeUntilInactive);
+			ConfigSettings::getConfig()->getValue("TimeUntilDisconnect", player.timeUntilInactive);
 			players[playerCount] = player;
 				
 			// Creating response message
@@ -221,7 +221,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	else if (p->eventId == REFRESH_EVENT)
 	{
 		struct refreshPacket *rPkt = (struct refreshPacket *)p;
-		ConfigSettings::getConfig()->getValue("TimeUntilInactive", players[rPkt->playerId].timeUntilInactive);
+		ConfigSettings::getConfig()->getValue("TimeUntilDisconnect", players[rPkt->playerId].timeUntilInactive);
 	}
 	else if (p->eventId == AABB_INFO)
 	{

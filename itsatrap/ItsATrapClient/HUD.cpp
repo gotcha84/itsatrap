@@ -14,7 +14,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources, int spawnTime, int flashTime) {
+void HUD::draw(int health, int resources, int spawnTime, float flashFade) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -33,7 +33,7 @@ void HUD::draw(int health, int resources, int spawnTime, int flashTime) {
 				drawHealthBar(health);
 				drawResource(resources);
 				if( m_progressTime > -1 ) drawProgressBar(m_progressTime);
-				drawFlashbag(flashTime);
+				drawFlashbag(flashFade);
 				
 			}
 			
@@ -143,8 +143,7 @@ void HUD::drawProgressBar(int time) {
 	}
 }
 
-void HUD::drawFlashbag(int time) {
-	float fade = time * 0.1;
+void HUD::drawFlashbag(float fade) {
 	glColor4f(1.0f, 1.0f, 1.0f, fade);
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, 0.0f);
