@@ -59,8 +59,6 @@ struct miniStateInfo {
 	glm::vec3 camUpIncrement;
 	glm::vec3 velocityDiff;
 	int counter;
-
-
 };
 
 struct HolderInfo {

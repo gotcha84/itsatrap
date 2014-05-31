@@ -214,6 +214,7 @@ void ObjModel::loadModel(string objFilename, string mtlFilename) {
 }
 
 void ObjModel::loadModel() {
+	
 	vector<tinyobj::shape_t> shapes;
 
 	string err;
@@ -246,9 +247,9 @@ void ObjModel::loadModel() {
 	//stringstream ss;
 		
 	for (int j = 0; j < shapes.size(); j++) {
+		
+		
 		/*
-		vector<float> tmpArr;
-
 		if (m_filename == "city.obj") {
 			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_cityScale, 0.0f, -1.0f, 0.0f);
 		}
@@ -262,12 +263,23 @@ void ObjModel::loadModel() {
 			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_defaultScale, 0.0f, 0.0f, 0.0f);
 		}
 		*/
+
+
+
 		vector<int> tmpArr2;
 
 		for (int i = 0; i < shapes[j].mesh.indices.size(); i++) {
 			tmpArr2.push_back(shapes[j].mesh.indices[i]);
 		}
 
+		/*if (m_objFilename == "../Models/Avatar.obj" || m_objFilename == "../Models/Headless_Avatar.obj") {
+			vector<float> tmpArr;
+			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_defaultScale, 0.0f, -5.0f, 0.0f);
+			setVertices(tmpArr);
+		}
+		else {
+			setVertices(shapes[j].mesh.positions);
+		}*/
 		setVertices(shapes[j].mesh.positions);
 		setNormals(shapes[j].mesh.normals);
 		setTexcoords(shapes[j].mesh.texcoords);
@@ -290,7 +302,7 @@ void ObjModel::loadModel() {
 		
 	//updateHeightMap();
 
-	//calculateBoundingBox();
+	calculateBoundingBox();
 	setMaterial();
 	//m_boundingBox.print();
 
@@ -299,7 +311,12 @@ void ObjModel::loadModel() {
 }
 
 void ObjModel::calculateBoundingBox() {
+
 	this->calculateBoundingBox(glm::mat4());
+	if (m_objFilename == "../Models/Avatar.obj" || m_objFilename == "../Models/Headless_Avatar.obj") {
+		m_boundingBox.print();
+		cout << "HUEHUEHUE" << endl;
+	}
 }
 
 void ObjModel::calculateBoundingBox(glm::mat4 model) {
@@ -350,9 +367,6 @@ void ObjModel::calculateBoundingBox(glm::mat4 model) {
 	maxz = maxVec.z;
 
 	m_boundingBox.setAABB(minx, miny, minz, maxx, maxy, maxz);
-
-	cout << "set aabb: ";
-	m_boundingBox.print();
 }
 
 bool ObjModel::isInside(glm::vec3 point) {		

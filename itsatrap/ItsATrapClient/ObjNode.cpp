@@ -43,7 +43,6 @@ namespace sg {
 
 	void ObjNode::calculateBoundingBox() {
 		m_model->calculateBoundingBox(this->getWorldTransformMatrix());
-		//m_model->getBoundingBox().print();
 	}
 
 	void ObjNode::draw(glm::mat4 parent, glm::mat4 cam) {

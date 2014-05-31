@@ -29,6 +29,7 @@ class HUD {
 		void drawDeathTimer(int respawnTime);
 		void drawProgressBar(int time);
 		void drawFlashbag(int time); // max 10 to 0
+		void drawKillSymbol(bool hit);
 		// GLuint loadAndBufferImage( const char *filename);
 };
 

@@ -415,7 +415,7 @@ void Level::initLevel() {
 
 	walls.push_back(new sg::Cube());
 	walls.back()->setName("Wall 0: (-21, 48, 0)");
-	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 1));
+	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 0.5));
 	xForms.back()->addChild(walls.back());
 
 	// Wall 1: (21, 48, 0)
@@ -425,7 +425,7 @@ void Level::initLevel() {
 
 	walls.push_back(new sg::Cube());
 	walls.back()->setName("Wall 1: (21, 48, 0)");
-	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 1));
+	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 0.5));
 	xForms.back()->addChild(walls.back());
 
 	// Wall 2: (0, 48, -21)
@@ -435,7 +435,7 @@ void Level::initLevel() {
 
 	walls.push_back(new sg::Cube());
 	walls.back()->setName("Wall 2: (21, 48, 0)");
-	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 1));
+	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 0.5));
 	xForms.back()->addChild(walls.back());
 
 	// Wall 3: (0, 48, 21)
@@ -445,7 +445,7 @@ void Level::initLevel() {
 
 	walls.push_back(new sg::Cube());
 	walls.back()->setName("Wall 3: (21, 48, 0)");
-	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 1));
+	walls.back()->setColor(glm::vec4(0.7, 0.3, 0.6, 0.5));
 	xForms.back()->addChild(walls.back());
 
 	// Note: Ramp needs to be reduced by 45% in the y-axis to match unit_size. 55% for other axis
@@ -534,6 +534,18 @@ void Level::initLevel() {
 	// Resource Nodes
 	for (int i = 0; i < resources.size(); ++i) {
 		//resources[i]->calculateBoundingBox();
+	}
+
+	float xLength;
+	float zLength;
+	// HARDCODING STUFF GET OUT OF MY WAY BITCHES
+	for (int i = 0; i < resources.size(); ++i) {
+		xLength = resources[i]->m_boundingBox.maxX - resources[i]->m_boundingBox.minX;
+		zLength = resources[i]->m_boundingBox.maxZ - resources[i]->m_boundingBox.minZ;
+		resources[i]->m_boundingBox.minX += xLength / 4.0f;
+		resources[i]->m_boundingBox.minZ += zLength / 4.0f;
+		resources[i]->m_boundingBox.maxX -= xLength / 4.0f;
+		resources[i]->m_boundingBox.maxZ -= zLength / 4.0f;
 	}
 
 	// Ramp Height Map
