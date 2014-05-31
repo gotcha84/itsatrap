@@ -1442,6 +1442,15 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 
 						playerDamage(&playerMap[it->second.ownerId], p, power);
 
+						// Flashes everyone
+						int flashEffect = 0;
+						ConfigSettings::getConfig()->getValue("LightningTrapFlashEffect", flashEffect);
+						for (map<int, struct playerObject>::iterator iterator = playerMap.begin(); iterator != playerMap.end(); iterator++)
+						{
+							if (iterator->second.flashDuration < flashEffect)
+								iterator->second.flashDuration = flashEffect;
+						}
+
 						break;
 					}
 					case TYPE_PORTAL_TRAP:

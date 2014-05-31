@@ -1,5 +1,4 @@
 #define PLAYER_RAD 5.0f
-#define FLASH_FADE_OUT 3000
 
 #include "PlayerNode.h"
 #include "ClientInstance.h"
@@ -192,10 +191,12 @@ namespace sg {
 
 		// Flashbang stuff
 		float flash = 0;
-		if (getPlayer()->m_flashDuration > FLASH_FADE_OUT)
+		int flashFadeOut = 0;
+		ConfigSettings::getConfig()->getValue("FlashFadeOut", flashFadeOut);
+		if (getPlayer()->m_flashDuration > flashFadeOut)
 			flash = 1;
 		else
-			flash = (float)getPlayer()->m_flashDuration / FLASH_FADE_OUT;
+			flash = (float)getPlayer()->m_flashDuration / flashFadeOut;
 		if (flash < 0)
 			flash = 0;
 
