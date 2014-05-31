@@ -135,8 +135,6 @@ void ObjModel::drawModel() {
 		glFrontFace(GL_CW);
 	}
 
-
-
 	//cout << "nverts is : " << m_nIndices[0] << endl;
 	int p = 0;
 	int k = 0;
@@ -152,11 +150,11 @@ void ObjModel::drawModel() {
 	glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 
 	//cout << "m_id: " << m_id << endl;
-	glMaterialfv( GL_FRONT, GL_AMBIENT, m_material.m_ambient);
-	glMaterialfv( GL_FRONT, GL_DIFFUSE, m_material.m_diffuse);
-	glMaterialfv( GL_FRONT, GL_SPECULAR, m_material.m_specular);
-	glMaterialfv( GL_FRONT, GL_EMISSION, m_material.m_emission);
-	glMaterialf( GL_FRONT, GL_SHININESS, m_material.m_shininess);
+	glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, m_material.m_ambient);
+	glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, m_material.m_diffuse);
+	glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, m_material.m_specular);
+	glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, m_material.m_emission);
+	glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, m_material.m_shininess);
 
 	for (int k = 0; k < m_nIndices.size(); k++) {
 		for (int i = 0; i < m_nIndices[k]/3; i++) {
@@ -214,7 +212,7 @@ void ObjModel::loadModel(string objFilename, string mtlFilename) {
 }
 
 void ObjModel::loadModel() {
-	
+
 	vector<tinyobj::shape_t> shapes;
 
 	string err;
@@ -242,72 +240,37 @@ void ObjModel::loadModel() {
 	int normalsCount = 0;
 	int max_ele = -1;
 	int added = 0;
-	//int added = 0;
-	//string tmp;
-	//stringstream ss;
-		
+
 	for (int j = 0; j < shapes.size(); j++) {
-		
-		
-		/*
-		if (m_filename == "city.obj") {
-			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_cityScale, 0.0f, -1.0f, 0.0f);
-		}
-		else if (m_filename == "Can.obj") {
-			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_canScale, 0.0f, 0.0f, 0.0f);
-		}
-		else if (m_filename == "turtle_obj.obj") {
-			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_turtleScale, 0.0f, 0.0f, 0.0f);
-		}
-		else {
-			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_defaultScale, 0.0f, 0.0f, 0.0f);
-		}
-		*/
-
-
-
 		vector<int> tmpArr2;
 
 		for (int i = 0; i < shapes[j].mesh.indices.size(); i++) {
 			tmpArr2.push_back(shapes[j].mesh.indices[i]);
 		}
 
-		/*if (m_objFilename == "../Models/Avatar.obj" || m_objFilename == "../Models/Headless_Avatar.obj") {
-			vector<float> tmpArr;
-			tmpArr = Utilities::modifyVec(shapes[j].mesh.positions, m_defaultScale, 0.0f, -5.0f, 0.0f);
-			setVertices(tmpArr);
-		}
-		else {
-			setVertices(shapes[j].mesh.positions);
-		}*/
 		setVertices(shapes[j].mesh.positions);
 		setNormals(shapes[j].mesh.normals);
 		setTexcoords(shapes[j].mesh.texcoords);
 		setIndices(tmpArr2);
 
-		/*while (!tmpArr.empty()) {
-			tmpArr.pop_back();
-		}
-
-		while (!tmpArr2.empty()) {
-			tmpArr2.pop_back();
-		}*/
-			
 		//cout << "sizes: " << shapes[j].mesh.indices.size() << endl;
 		added++;
 
 	}
 	//cout << "please: "<< m_vertices[1][379] << ", " << m_vertices[1][381] << endl;
 	//Utilities::writeIntArrayToFile(m_nVertices, added, "nverts.txt");
-		
+
 	//updateHeightMap();
 
 	calculateBoundingBox();
-	setMaterial();
+	setMaterial(shapes[0].material.ambient, 
+		shapes[0].material.diffuse, 
+		shapes[0].material.specular, 
+		shapes[0].material.emission, 
+		shapes[0].material.shininess);
 	//m_boundingBox.print();
 
 	// TODO: send new bounding box to server and see if can make trap at that location
-		
 }
 
 void ObjModel::calculateBoundingBox() {
@@ -380,9 +343,17 @@ bool ObjModel::collidesWith(ObjModel* o) {
 void ObjModel::setMaterial() {
 	m_material.setAmbient(0.7f, 0.7f, 0.7f, 1.0f); 
 	m_material.setDiffuse(0.1f, 0.5f, 0.8f, 1.0f);
-	m_material.setDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+	m_material.setSpecular(1.0f, 1.0f, 1.0f, 1.0f);
 	m_material.setEmission(0.3f, 0.2f, 0.2f, 0.0f);
 	m_material.setShininess(128.0f);
+}
+
+void ObjModel::setMaterial(float ambient[4], float diffuse[4], float specular[4], float emission[4], float shininess) {
+	m_material.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
+	m_material.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
+	m_material.setSpecular(specular[0], specular[1], specular[2], specular[3]);
+	m_material.setEmission(emission[0], emission[1], emission[2], emission[3]);
+	m_material.setShininess(shininess);
 }
 
 void ObjModel::print() {

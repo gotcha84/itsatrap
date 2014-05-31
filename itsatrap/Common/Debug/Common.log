@@ -1,30 +1,9 @@
-﻿Build started 5/30/2014 10:14:57 PM.
+﻿Build started 5/30/2014 11:00:33 PM.
      1>Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glm/ /IC:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glut/include/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AABB.cpp ConfigSettings.cpp DynamicWorld.cpp InputEvents.cpp Physics.cpp StateLogic.cpp Stopwatch.cpp World.cpp
-         Skipping... (no relevant changes detected)
-         World.cpp
-         Stopwatch.cpp
-         StateLogic.cpp
-         Physics.cpp
-         InputEvents.cpp
-         DynamicWorld.cpp
-         ConfigSettings.cpp
-         AABB.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\ /LIBPATH:C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\glut/lib freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\AABB.obj
-         Debug\ConfigSettings.obj
-         Debug\DynamicWorld.obj
-         Debug\InputEvents.obj
-         Debug\Physics.obj
-         Debug\StateLogic.obj
-         Debug\Stopwatch.obj
-         Debug\World.obj
-     1>AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
-            Creating library C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.lib and object C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.exp
+     1>Link:
          Common.vcxproj -> C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll
      1>Done Building Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.62
+Time Elapsed 00:00:00.18
