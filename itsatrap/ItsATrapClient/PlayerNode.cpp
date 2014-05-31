@@ -147,7 +147,6 @@ namespace sg {
 		//cout << "velocity: " << glm::to_string(this->getPlayer()->getPhysics()->m_velocity) << endl;
 		//cout << "velocity diff: " << glm::to_string(this->getPlayer()->getPhysics()->m_velocityDiff) << endl << endl;
 		
-
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
 
@@ -189,6 +188,10 @@ namespace sg {
 			board->draw();
 		}
 		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, 5, 0);
+
+		if (m_drawBB) {
+			//m_thisPlayer->getBoundingBox().draw();
+		}
 	}
 
 	void Player::drawAsCurrentPlayer(glm::mat4 mv) {
@@ -215,6 +218,10 @@ namespace sg {
 		glm::mat4 mv = glm::inverse(cam) * new_model;
 		
 		this->drawAsOtherPlayer(mv);
+
+		if (m_drawBB) {
+			m_otherPlayer->getBoundingBox().draw();
+		}
 	}
 
 	void Player::drawAsOtherPlayer(glm::mat4 mv) {
@@ -277,6 +284,14 @@ namespace sg {
 
 	void Player::setUp(glm::vec3 direction) {
 		this->getCamera()->m_cameraUp = direction;
+	}
+
+	void Player::enableDrawBB() {
+		m_drawBB = true;
+	}
+
+	void Player::disableDrawBB() {
+		m_drawBB = false;
 	}
 
 	void Player::print() {

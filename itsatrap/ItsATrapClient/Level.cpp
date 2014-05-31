@@ -38,6 +38,9 @@ void Level::initLevel0() {
 				levelNodes.back()->setName("ObjNode: " + fileName);
 				levelNodes.back()->getModel()->setColor(levelColor);
 				xForm->addChild(levelNodes.back());
+
+				levelNodes.back()->calculateBoundingBox();
+				levelNodes.back()->enableDrawBB();
 			}
 		}
 		closedir(dir);

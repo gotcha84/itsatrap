@@ -135,8 +135,6 @@ void ObjModel::drawModel() {
 		glFrontFace(GL_CW);
 	}
 
-
-
 	//cout << "nverts is : " << m_nIndices[0] << endl;
 	int p = 0;
 	int k = 0;
@@ -178,6 +176,10 @@ void ObjModel::drawModel() {
 
 	// reset backface culling
 	glFrontFace(GL_CCW);
+
+	if (m_drawBB) {
+		this->getBoundingBox().draw();
+	}
 }
 
 void ObjModel::loadFilename(string objFilename) {

@@ -64,6 +64,14 @@ namespace sg {
 		m_boundingBox.setAABB(boundingBox.minX, boundingBox.minY, boundingBox.minZ, boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ);
 	}
 
+	void Geode::enableDrawBB() {
+		m_drawBB = true;
+	}
+
+	void Geode::disableDrawBB() {
+		m_drawBB = false;
+	}
+
 	void Geode::print() {
 		cout << "(" << this->getObjectID() << " Geode: " << this->getName() << ")";
 	}

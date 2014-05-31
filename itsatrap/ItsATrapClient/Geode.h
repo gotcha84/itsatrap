@@ -25,6 +25,7 @@ namespace sg {
 			glm::mat4 m_model;
 			glm::vec4 m_color;
 
+			bool m_drawBB;
 			//// textures
 			//Texture *texture;
 			//GLuint texturePPM;
@@ -47,6 +48,9 @@ namespace sg {
 			AABB getBoundingBox();
 			void setBoundingBox(glm::vec3 pos, float rad);
 			void setBoundingBox(AABB boundingBox);
+
+			void enableDrawBB();
+			void disableDrawBB();
 
 			Geode();
 			~Geode();
