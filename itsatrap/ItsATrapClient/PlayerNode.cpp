@@ -71,6 +71,8 @@ namespace sg {
 		// m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
 		m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
 		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
+
+		m_thisPlayer->disableDrawBB();
 	}
 
 	void Player::setColor(glm::vec4 color) {
@@ -235,22 +237,8 @@ namespace sg {
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
-			/*
-			glPushMatrix();
-				glTranslatef(0, 0, -PLAYER_RAD);
-				glScalef(1, 1, 0.1f);
-				glColor4f(10,0,0,1);
-				glutSolidCube(PLAYER_RAD*2);
-			glPopMatrix();
-
-			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			glutSolidCube(PLAYER_RAD*2);
-			*/
-
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			m_otherPlayer->drawModel();
-
-			m_otherPlayer->getBoundingBox().draw();
 		glPopMatrix();
 	}
 
