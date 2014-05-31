@@ -1,6 +1,7 @@
 #ifndef AABB_H
 #define AABB_H
 
+#include <GL/glut.h>
 #include <cmath>
 #include <stdio.h>
 #include <stdlib.h>
@@ -57,6 +58,8 @@ class COMMON_API AABB {
 		glm::vec3 intersects(glm::vec3 from, glm::vec3 goTo);
 		int reflectionIntersection(glm::vec3 from, glm::vec3 goTo);
 		float angleIntersection(glm::vec3 from, glm::vec3 goTo);
+
+		void drawBoundingBox(AABB bb);
 
 		void print();
 };

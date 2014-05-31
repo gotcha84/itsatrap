@@ -392,6 +392,20 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 	}
 }
 
+void AABB::drawBoundingBox(AABB bb) {
+	glColor4f(1, 1, 1, 1);
+	glBegin(GL_LINE_LOOP);
+		glVertex3f(bb.minX, bb.minY, bb.minZ);
+		glVertex3f(bb.minX, bb.maxY, bb.minZ);
+		glVertex3f(bb.maxX, bb.maxY, bb.minZ);
+		glVertex3f(bb.maxX, bb.minY, bb.minZ);
+		glVertex3f(bb.maxX, bb.minY, bb.maxZ);
+		glVertex3f(bb.minX, bb.minY, bb.maxZ);
+		glVertex3f(bb.minX, bb.maxY, bb.maxZ);
+		glVertex3f(bb.maxX, bb.maxY, bb.maxZ);
+	glEnd();
+}
+
 void AABB::print() {
 	cout << "(" << minX << ", " << minY << ", " << minZ << ") (" << maxX << ", " << maxY << ", " << maxZ << ")" << endl;
 }

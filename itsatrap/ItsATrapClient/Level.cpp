@@ -11,7 +11,7 @@ Level::Level() {
 	ground->setName("LEVEL GROUND");
 	root->addChild(ground);
 
-	this->initLevel();
+	this->initLevel0();
 }
 
 Level::~Level() {
@@ -20,6 +20,17 @@ Level::~Level() {
 	ground = nullptr;
 	delete root;
 	root = nullptr;
+}
+
+void Level::initLevel0() {
+	sg::MatrixTransform *xForm = new sg::MatrixTransform();
+
+	ground->addChild(xForm);
+
+	sg::ObjNode *wholeLevel = new sg::ObjNode("../Models/MajorScene.obj", "../Models/");
+	wholeLevel->setName("whole level");
+	wholeLevel->getModel()->setColor(glm::vec4(0.8, 0.8, 0.8, 0.5));
+	xForm->addChild(wholeLevel);
 }
 
 void Level::initLevel() {
@@ -533,7 +544,7 @@ void Level::initLevel() {
 
 	// Resource Nodes
 	for (int i = 0; i < resources.size(); ++i) {
-		//resources[i]->calculateBoundingBox();
+		resources[i]->calculateBoundingBox();
 	}
 
 	float xLength;

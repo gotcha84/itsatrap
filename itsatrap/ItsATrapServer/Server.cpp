@@ -149,6 +149,22 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			dynamicWorld.addStaticObject(tmp);
 			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
 			tmp.aabb.print();
+
+			if (dynamicWorld.getNumStaticObjects() >= 31) {
+				vector<AABB> buildings;
+				vector<AABB> ramps;
+				
+				for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
+					buildings.push_back(dynamicWorld.getStaticObjectBB(i));
+				}
+
+				for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
+					ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
+				}
+
+				World::superHeightMapInit(buildings, ramps);
+			}
+
 		}
 	}
 	else if (p->eventId == STATIC_WALL_OBJECT_CREATION_EVENT)
@@ -175,20 +191,20 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			tmp.aabb.print();
 			printf("Slope: %f\n", tmp.slope);
 
-			if (dynamicWorld.getNumStaticRampObjects() >= 7) {
-				vector<AABB> buildings;
-				vector<AABB> ramps;
-				
-				for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
-					buildings.push_back(dynamicWorld.getStaticObjectBB(i));
-				}
+			//if (dynamicWorld.getNumStaticRampObjects() >= 7) {
+			//	vector<AABB> buildings;
+			//	vector<AABB> ramps;
+			//	
+			//	for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
+			//		buildings.push_back(dynamicWorld.getStaticObjectBB(i));
+			//	}
 
-				for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
-					ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
-				}
+			//	for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
+			//		ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
+			//	}
 
-				World::superHeightMapInit(buildings, ramps);
-			}
+			//	World::superHeightMapInit(buildings, ramps);
+			//}
 		}
 	}
 	else if (p->eventId == STATIC_RESOURCE_OBJECT_CREATION_EVENT)

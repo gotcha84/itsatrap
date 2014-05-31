@@ -59,6 +59,7 @@ class Level {
 		~Level();
 
 		void initLevel();
+		void initLevel0();
 		void destroyLevel();
 
 		sg::MatrixTransform* getRoot();

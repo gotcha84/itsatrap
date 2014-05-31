@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	for (int i = 0; i < client->level.ramps.size(); ++i) {
-		Client::sendStaticRampObject(client->level.ramps[i]->getBoundingBox(), client->level.rampSlopes[i]);
+		//Client::sendStaticRampObject(client->level.ramps[i]->getBoundingBox(), client->level.rampSlopes[i]);
 	}
 
 	for (int i = 0; i < client->level.resources.size(); ++i) {
