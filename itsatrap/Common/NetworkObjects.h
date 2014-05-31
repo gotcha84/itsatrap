@@ -9,6 +9,7 @@
 
 #define EVENT_ADD_TRAP 1
 #define EVENT_REMOVE_TRAP 2
+#define EVENT_UPDATE_TRAP 3
 
 #define TYPE_FREEZE_TRAP 1
 #define TYPE_TRAMPOLINE_TRAP 2
@@ -16,6 +17,7 @@
 #define TYPE_PUSH_TRAP 4
 #define TYPE_LIGHTNING_TRAP 5
 #define TYPE_PORTAL_TRAP 6
+#define TYPE_PLAYER 9
 
 enum CameraStates {
 	Client = 0,

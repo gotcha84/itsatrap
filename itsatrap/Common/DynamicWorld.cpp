@@ -659,13 +659,23 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 }
 
 void DynamicWorld::computeAABB(struct playerObject *p)
-{	
-	p->aabb.minX = p->position.x - 10.0f;
-	p->aabb.maxX = p->position.x + 10.0f;
-	p->aabb.minY = p->position.y - 13.0f;
-	p->aabb.maxY = p->position.y + 13.0f;
-	p->aabb.minZ = p->position.z - 8.0f;
-	p->aabb.maxZ = p->position.z + 8.0f;
+{
+	p->aabb.update(p->position, &aabbOffsets[TYPE_PLAYER]);
+	static int counter = 0;
+	if (counter == 100)
+	{
+		counter = 0;
+		printf("PLAYER: ");
+		p->aabb.print();
+	}
+	counter++;
+}
+
+void DynamicWorld::computeAABB(struct trapObject *t)
+{
+	t->aabb.update(t->pos, &aabbOffsets[t->type]);
+	printf("TRAP: "); 
+	t->aabb.print();
 }
 
 void DynamicWorld::applyCollisions() {
@@ -1037,11 +1047,12 @@ void DynamicWorld::applyTrapGravity() {
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); ++it)
 	{
 		struct trapObject &t = it->second;
+		glm::vec3 oldPos = t.pos;
 
 		float gravityConstant = 0;
 		ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
 
-		t.pos -= glm::vec3(0.0f, gravityConstant, 0.0f);
+		t.pos += glm::vec3(0.0f, gravityConstant, 0.0f);
 
 		if (t.aabb.minY < World::m_heightMap[(int)(t.pos.x) + World::m_heightMapXShift][(int)(t.pos.z) + World::m_heightMapZShift]) {
 			float diff = World::m_heightMap[(int)(t.pos.x) + World::m_heightMapXShift][(int)(t.pos.z) + World::m_heightMapZShift] - t.aabb.minY;
@@ -1049,6 +1060,15 @@ void DynamicWorld::applyTrapGravity() {
 			t.aabb.maxY += diff;
 			t.aabb.minY += diff;
 			// TODO: check for collisions?
+		}
+
+		if (t.pos.y < 0)
+			t.pos = oldPos;
+
+		if (t.pos != oldPos)
+		{
+			computeAABB(&t);
+			t.eventCode = EVENT_UPDATE_TRAP;
 		}
 	}
 }
@@ -1455,4 +1475,12 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 			} // end of if hit
 		}
 	}
+}
+
+void DynamicWorld::addAABBInfo(int type, AABB aabb)
+{
+	printf("[COMMON]: Got AABB info: type %d: ", type); 
+	aabb.print();
+
+	aabbOffsets[type] = aabb;
 }

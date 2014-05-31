@@ -439,3 +439,14 @@ DWORD WINAPI Client::channelingThread(LPVOID arg) {
 	channelingResourceId = -1;
 	return 0;
 }
+
+void Client::sendAABBInfo(int type, AABB aabb)
+{
+	struct aabbInfoPacket p;
+	p.eventId = AABB_INFO;
+	p.playerId = getPlayerId();
+	p.type = type;
+	p.aabb = aabb;
+
+	sendMsg((char *)&p, sizeof(p));
+}

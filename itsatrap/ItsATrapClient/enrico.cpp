@@ -178,6 +178,20 @@ void handleAddTrap(struct trapObject t)
 	client->objects[t.id] = newTrap;
 }
 
+void handleUpdateTrap(struct trapObject t)
+{
+	if (client != nullptr)
+	{
+		if (client->objects[t.id] != nullptr)
+		{
+			sg::Trap *trap = (sg::Trap *) client->objects[t.id];
+			trap->setPosition(t.pos);
+		}
+		else
+			handleAddTrap(t);
+	}
+}
+
 void handleRemoveTrap(struct trapObject t)
 {
 	printf("[CLIENT]: Removing trap %d\n", t.id);
@@ -198,6 +212,8 @@ void handleUpdateWorldFromServer(DynamicWorld *world)
 	for (map<int, struct trapObject>::iterator it = world->trapMap.begin(); it != world->trapMap.end(); ++it) {
 		if (it->second.eventCode == EVENT_ADD_TRAP)
 			handleAddTrap(it->second);
+		else if (it->second.eventCode == EVENT_UPDATE_TRAP)
+			handleUpdateTrap(it->second);
 		else if (it->second.eventCode == EVENT_REMOVE_TRAP)
 			handleRemoveTrap(it->second);
 	}

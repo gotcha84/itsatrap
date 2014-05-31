@@ -30,6 +30,16 @@ AABB::AABB(glm::vec3 pos, float rad) {
 	initCommon();
 }
 
+AABB::AABB(AABB *a)
+{
+	minX = a->minX;
+	minY = a->minY;
+	minZ = a->minZ;
+	maxX = a->maxX;
+	maxY = a->maxY;
+	maxZ = a->maxZ;
+}
+
 AABB::~AABB() {
 
 }
@@ -394,4 +404,15 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 
 void AABB::print() {
 	cout << "(" << minX << ", " << minY << ", " << minZ << ") (" << maxX << ", " << maxY << ", " << maxZ << ")" << endl;
+}
+
+void AABB::update(glm::vec3 pos, AABB *offset)
+{
+	minX = pos.x + offset->minX;
+	minY = pos.y + offset->minY;
+	minZ = pos.z + offset->minZ;
+
+	maxX = pos.x + offset->maxX;
+	maxY = pos.y + offset->maxY;
+	maxZ = pos.z + offset->maxZ;
 }

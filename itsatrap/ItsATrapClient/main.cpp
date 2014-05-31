@@ -33,6 +33,48 @@ void initLevel() {
 
 }
 
+void sendAABBInfo()
+{
+	// Player AABB
+	MyPlayer *p = new MyPlayer();
+	AABB *playerAABB = new AABB(p->getAABB());
+	Client::sendAABBInfo(TYPE_PLAYER, playerAABB);
+	delete p;
+	delete playerAABB;
+
+	string dir = TRAP_DIR;
+
+	// Freeze trap
+	sg::Trap *t = new sg::Trap(0, glm::vec3(0,0,0), 0, dir + FREEZE_TRAP_OBJ);
+	Client::sendAABBInfo(TYPE_FREEZE_TRAP, t->getTrapObjectForNetworking().aabb);
+	delete t;
+
+	// Trampoline trap
+	t = new sg::Trap(0, glm::vec3(0, 0, 0), 0, dir + TRAMPOLINE_TRAP_OBJ);
+	Client::sendAABBInfo(TYPE_TRAMPOLINE_TRAP, t->getTrapObjectForNetworking().aabb);
+	delete t;
+
+	// Slow trap
+	t = new sg::Trap(0, glm::vec3(0, 0, 0), 0, dir + SLOW_TRAP_OBJ);
+	Client::sendAABBInfo(TYPE_SLOW_TRAP, t->getTrapObjectForNetworking().aabb);
+	delete t;
+
+	// Push trap
+	t = new sg::Trap(0, glm::vec3(0, 0, 0), 0, dir + PUSH_TRAP_OBJ);
+	Client::sendAABBInfo(TYPE_PUSH_TRAP, t->getTrapObjectForNetworking().aabb);
+	delete t;
+
+	// Lightning trap
+	t = new sg::Trap(0, glm::vec3(0, 0, 0), 0, dir + DEATH_TRAP_OBJ);
+	Client::sendAABBInfo(TYPE_LIGHTNING_TRAP, t->getTrapObjectForNetworking().aabb);
+	delete t;
+
+	// Portal trap
+	t = new sg::Trap(0, glm::vec3(0, 0, 0), 0, dir + PORTAL_TRAP_OBJ);
+	Client::sendAABBInfo(TYPE_PORTAL_TRAP, t->getTrapObjectForNetworking().aabb);
+	delete t;
+}
+
 int main(int argc, char *argv[]) {
 
 	Sleep(1000);
@@ -52,6 +94,7 @@ int main(int argc, char *argv[]) {
 	starting = starting + glm::vec3(250, 25, 0);
 	client->root->moveTo(glm::vec3(starting.x, starting.y + 2, starting.z));
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+	sendAABBInfo();
 
 	glutInit(&argc, argv);                      // initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
