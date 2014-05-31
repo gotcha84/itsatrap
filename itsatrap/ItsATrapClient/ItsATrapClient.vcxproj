@@ -54,11 +54,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-<<<<<<< HEAD
-      <AdditionalIncludeDirectories>$(SolutionDir)/dirent/include/;$(SolutionDir)/freeType2/include/;$(SolutionDir)/ftgl/include/;$(SolutionDir)/sound/include/;$(SolutionDir)/glm/;$(SolutionDir)/glut/include/;$(SolutionDir)/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-=======
-      <AdditionalIncludeDirectories>$(SolutionDir)/freeType2/include/;$(SolutionDir)/ftgl/include/;$(SolutionDir)/irrKlang/include/;$(SolutionDir)/glm/;$(SolutionDir)/glut/include/;$(SolutionDir)/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
->>>>>>> 9130074a37e27c1b90628dc46e2ad47019fe45f4
+      <AdditionalIncludeDirectories>$(SolutionDir)/dirent/include/;$(SolutionDir)/freeType2/include/;$(SolutionDir)/ftgl/include/;$(SolutionDir)/irrKlang/include/;$(SolutionDir)/glm/;$(SolutionDir)/glut/include/;$(SolutionDir)/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>

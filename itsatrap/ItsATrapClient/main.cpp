@@ -1,4 +1,4 @@
-#define FULLSCREEN 0
+#define FULLSCREEN 1
 
 #include <GL/glut.h>
 #include <glm/glm.hpp>

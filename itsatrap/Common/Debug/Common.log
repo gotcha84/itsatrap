@@ -1,12 +1,18 @@
-<<<<<<< HEAD
-﻿Build started 5/30/2014 10:10:48 PM.
-     1>Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
+﻿Build started 5/30/2014 10:18:35 PM.
+     1>Project "C:\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glut/include/ /IC:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AABB.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\itsatrap\itsatrap\/glut/include/ /IC:\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AABB.cpp DynamicWorld.cpp InputEvents.cpp Physics.cpp StateLogic.cpp World.cpp
          AABB.cpp
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\aabb.cpp(255): warning C4715: 'AABB::collidesWithRampInside' : not all control paths return a value
+         Generating Code...
+     1>c:\itsatrap\itsatrap\common\aabb.cpp(255): warning C4715: 'AABB::collidesWithRampInside' : not all control paths return a value
+         Skipping... (no relevant changes detected)
+         World.cpp
+         StateLogic.cpp
+         Physics.cpp
+         InputEvents.cpp
+         DynamicWorld.cpp
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glut/lib/ /LIBPATH:C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\ freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\AABB.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\itsatrap\itsatrap\/glut/lib/ /LIBPATH:C:\itsatrap\itsatrap\Debug\ freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\AABB.obj
          Debug\ConfigSettings.obj
          Debug\DynamicWorld.obj
          Debug\InputEvents.obj
@@ -15,21 +21,10 @@
          Debug\Stopwatch.obj
          Debug\World.obj
      1>AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
-            Creating library C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.lib and object C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.exp
-         Common.vcxproj -> C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll
-     1>Done Building Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" (Build target(s)).
+            Creating library C:\itsatrap\itsatrap\Debug\Common.lib and object C:\itsatrap\itsatrap\Debug\Common.exp
+         Common.vcxproj -> C:\itsatrap\itsatrap\Debug\Common.dll
+     1>Done Building Project "C:\itsatrap\itsatrap\Common\Common.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.19
-=======
-﻿Build started 5/30/2014 8:58:50 PM.
-     1>Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Clean target(s)).
-     1>_PrepareForClean:
-         Deleting file "Debug\Common.tlog\Common.lastbuildstate".
-     1>Done Building Project "C:\Users\Anurag\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" (Clean target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:00.09
->>>>>>> 9130074a37e27c1b90628dc46e2ad47019fe45f4
+Time Elapsed 00:00:01.68
