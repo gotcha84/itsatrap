@@ -267,12 +267,16 @@ void ObjModel::loadModel() {
 	//updateHeightMap();
 
 	calculateBoundingBox();
-	//setMaterial(shapes[0].material.ambient, 
-	//	shapes[0].material.diffuse, 
-	//	shapes[0].material.specular, 
-	//	shapes[0].material.emission, 
-	//	shapes[0].material.shininess);
-	//m_boundingBox.print();
+	if (shapes.size() != 0) {
+		setMaterial(shapes[0].material.ambient,
+			shapes[0].material.diffuse,
+			shapes[0].material.specular,
+			shapes[0].material.emission,
+			shapes[0].material.shininess);
+	} else {
+		setMaterial();
+	}
+	m_boundingBox.print();
 
 	// TODO: send new bounding box to server and see if can make trap at that location
 }
