@@ -28,24 +28,31 @@ void Level::initLevel0() {
 
 	int counter = 0;
 	float alpha = 0.9f;
+
 	sg::MatrixTransform *xForm = new sg::MatrixTransform();
 	ground->addChild(xForm);
 
-	// change level on link 35, 39 to obelisk to see obelisk's
-	if ((dir = opendir("..\\Models\\Level")) != NULL) {
+	if ((dir = opendir(LEVEL_DIR))!= NULL) {
+	//if ((dir = opendir(OBELISK_DIR))!= NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			string fileName(ent->d_name);
-			if (fileName.size() > 3 && fileName.substr(fileName.find_first_of('.')).compare(".obj") == 0) {
-				levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
-				levelNodes.back()->setName("ObjNode: " + fileName);
-				if (counter%27 == 0) {
-					counter++;
+
+			if (fileName.size() > 3) {
+				string extension(fileName.substr(fileName.find_first_of('.')));
+
+				if (extension == ".obj") {
+					levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
+					//levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
+					levelNodes.back()->setName("ObjNode: " + fileName);
+					if (counter % 27 == 0) {
+						++counter;
+					}
+					string color = Utilities::intToBaseThree(counter % 27);
+					levelNodes.back()->getModel()->setColor(glm::vec4(0.5f*(float)(color[0] - '0'), 0.5f*(float)(color[1] - '0'), 0.5f*(float)(color[2] - '0'), alpha));
+					xForm->addChild(levelNodes.back());
 				}
-				string color = Utilities::intToBaseThree(counter%27);
-				levelNodes.back()->getModel()->setColor(glm::vec4(0.5f*(float)(color[0]-'0'), 0.5f*(float)(color[1]-'0'), 0.5f*(float)(color[2]-'0'), alpha));
-				xForm->addChild(levelNodes.back());
+				++counter;
 			}
-			counter++;
 		}
 		closedir(dir);
 	}
@@ -64,8 +71,6 @@ void Level::initLevel0() {
 		cout << "i: " << i << ", name: " << levelNodes[i]->getName();
 		levelNodes[i]->getBoundingBox().print();*/
 		levelNodes[i]->enableDrawBB();
-
-		World::updateStructuresMap(levelNodes[i]->getBoundingBox(), i);
 	}
 }
 

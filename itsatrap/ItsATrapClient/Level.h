@@ -33,6 +33,9 @@
 #define UNIT_40			UNIT_SIZE * 40
 #define UNIT_48			UNIT_SIZE * 48
 
+#define LEVEL_DIR		"..\\Models\\Level"
+#define OBELISK_DIR		"..\\Models\\Obelisk"
+
 #define BLOCKS			"../Models/Blocks/"
 #define POLYNOIDS		"../Models/Polynoid/"
 #define LEVEL			"../Models/Level/"

@@ -149,7 +149,6 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticObject(tmp);
 
-
 			int id = dynamicWorld.getNumStaticObjects() - 1;
 			World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
 

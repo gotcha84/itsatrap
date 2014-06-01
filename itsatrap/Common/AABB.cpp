@@ -72,6 +72,7 @@ void AABB::setAABB(glm::vec3 pos, float rad) {
 
 	//Client::sendStaticObject(minX, minY, minZ, maxX, maxY, maxZ);
 }
+
 // this = obj ie building. other = player
 bool AABB::collidesWith(AABB other) {
 	bool tmp = (other.maxX >= minX && other.minX <= maxX
