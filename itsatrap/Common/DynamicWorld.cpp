@@ -1004,6 +1004,14 @@ void DynamicWorld::applyGravity()
 			//p.feetPlanted = true;
 			p.velocity.y = 0.0f;
 			p.velocityDiff.y = 0.0f;
+			
+			p.health = 0;
+			p.numDeaths++;
+			p.deathState = true;
+			
+			int respawnTime = 0;
+			ConfigSettings::getConfig()->getValue("RespawnTime", respawnTime);
+			p.timeUntilRespawn = respawnTime;
 			//p.canClimb = true;
 			return;
 		}

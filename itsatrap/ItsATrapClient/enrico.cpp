@@ -6,6 +6,16 @@ using namespace std;
 
 extern ClientInstance *client; // 'client' is a global var in main.cpp
 
+
+ISoundEngine *engineTrap = createIrrKlangDevice(); //declare loop, pause, and track
+ISound *freezeTrapSound1;
+ISound *pushTrapSound;
+ISound *tramTrapSound;
+ISound *slowTrapSound;
+ISound *lightningTrapSound;
+ISound *portalTrapSound;
+
+
 void handleNewPlayer(struct playerObject p)
 {
 	printf("[CLIENT]: New player (ID:%d) has joined!\n", p.id);
@@ -162,6 +172,29 @@ void handleRemoveTrap(struct trapObject t)
 	printf("[CLIENT]: Removing trap %d\n", t.id);
 	if (client->objects[t.id] != nullptr)
 	{
+		switch (t.type)
+		{
+		case TYPE_FREEZE_TRAP:
+			freezeTrapSound1 = engineTrap->play2D("../Sound/freeze.wav", true, true, true);
+			break;
+		case TYPE_TRAMPOLINE_TRAP:
+			tramTrapSound = engineTrap->play2D("../Sound/tram.wav", false, false, true);
+			break;
+		case TYPE_SLOW_TRAP:
+			slowTrapSound = engineTrap->play2D("../Sound/slow.wav", false, false, true);
+			break;
+		case TYPE_PUSH_TRAP:
+			pushTrapSound = engineTrap->play2D("../Sound/push.wav", false, false, true);
+			break;
+		case 5:
+			lightningTrapSound = engineTrap->play2D("../Sound/lightning.wav", false, false, true);
+			break;
+		case TYPE_PORTAL_TRAP:
+			portalTrapSound = engineTrap->play2D("../Sound/portal.wav", false, false, true);
+			break;
+		default:
+			break;
+		}
 		client->root->removeChild(client->objects[t.id]);
 		client->objects[t.id] = nullptr;
 	}

@@ -9,7 +9,7 @@
 #include <FTGL/ftgl.h>
 
 #include <string>
-
+#include "Sound.h"
 
 
 //#include "Texture.h"
@@ -22,6 +22,8 @@ class HUD {
 		FTGLPixmapFont *font;
 		Scoreboard *board;
 		int m_progressTime;
+		ISoundEngine *engine;
+		ISound *deathSound;
 
 		void draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration);
 		
