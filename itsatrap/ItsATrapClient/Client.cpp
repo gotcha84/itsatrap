@@ -271,12 +271,11 @@ void Client::sendSpawnTrapEvent(struct trapObject t)
 	sendMsg((char *)&p, sizeof(struct spawnTrapPacket));
 }
 
-void Client::sendKnifeHitEvent(int targetId)
+void Client::sendKnifeHitEvent()
 {
 	struct knifeHitPacket p;
 	p.eventId = KNIFE_HIT_EVENT;
 	p.playerId = getPlayerId();
-	p.targetId = targetId;
 
 	sendMsg((char *)&p, sizeof(struct knifeHitPacket));
 }

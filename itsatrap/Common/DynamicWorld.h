@@ -117,6 +117,7 @@ public:
 	void checkForStateChanges(struct playerObject *e);
 
 	void addAABBInfo(int type, AABB aabb);
+	void handleKnifeEvent(int knifer);
 };
 
 #endif

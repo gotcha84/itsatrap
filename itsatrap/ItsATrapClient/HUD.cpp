@@ -14,7 +14,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources, int spawnTime, float flashFade) {
+void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -28,7 +28,10 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade) {
 				
 				drawDeathTimer(spawnTime);
 			}else {
-				//sdrawKillSymbol(true);
+				if (hitCrosshairDuration > 0)
+					drawKillSymbol(true);
+				else
+					drawKillSymbol(false);
 				drawCrossHair();
 				drawHealthBar(health);
 				drawResource(resources);

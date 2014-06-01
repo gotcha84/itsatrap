@@ -450,11 +450,7 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 					}
 
 					// Player Hits
-					for (unordered_map<int, sg::Player *>::iterator it = client->players.begin(); it != client->players.end(); ++it) {
-						if (it->second->m_playerID != client->root->getPlayerID()) {
-							Client::sendKnifeHitEvent(it->second->m_playerID);
-						}
-					}
+					Client::sendKnifeHitEvent();
 					break;
 				}
 				default:

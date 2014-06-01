@@ -64,7 +64,7 @@ public:
 	static void sendStaticResourceObject(AABB resourceBB, int id);
 	static void sendPlayerUpdate(struct playerObject);
 	static void sendSpawnTrapEvent(struct trapObject);
-	static void sendKnifeHitEvent(int targetId);
+	static void sendKnifeHitEvent();
 	static void sendChannelAttemptEvent(int resourceId);
 	static void sendChannelCompletedEvent(int resourceId);
 	static void sendReloadConfigFile();

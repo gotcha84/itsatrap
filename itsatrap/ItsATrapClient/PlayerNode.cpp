@@ -200,7 +200,7 @@ namespace sg {
 		if (flash < 0)
 			flash = 0;
 
-		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, 5, flash);
+		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, 5, flash, getPlayer()->m_hitCrosshairDuration);
 	}
 
 	void Player::drawAsCurrentPlayer(glm::mat4 mv) {

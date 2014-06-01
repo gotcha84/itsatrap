@@ -23,7 +23,7 @@ class HUD {
 		Scoreboard *board;
 		int m_progressTime;
 
-		void draw(int health, int resources, int spawnTime, float flashFade);
+		void draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration);
 		
 		void drawCrossHair(); 
 		void drawHealthBar(int health);
