@@ -81,7 +81,6 @@ struct knifeHitPacket
 {
 	int eventId;
 	int playerId;
-	int targetId;
 };
 
 struct resourceHitPacket

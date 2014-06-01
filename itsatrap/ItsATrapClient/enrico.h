@@ -12,6 +12,8 @@
 #include "Window.h"
 #include "SceneGraph.h"
 
+#include "Sound.h"
+
 // networking
 #include "Client.h"
 #include "DynamicWorld.h"

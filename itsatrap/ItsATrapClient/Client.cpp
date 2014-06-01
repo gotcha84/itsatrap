@@ -198,17 +198,17 @@ int Client::getPlayerId()
 	return playerId;
 }
 
-void Client::sendStaticObject(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
+void Client::sendStaticObject(AABB objectBB)
 {
 	struct staticObjectPacket packet = {};
 	packet.eventId = STATIC_OBJECT_CREATION_EVENT;
 	packet.playerId = playerId;
-	packet.object.aabb.minX = minX;
-	packet.object.aabb.minY = minY;
-	packet.object.aabb.minZ = minZ;
-	packet.object.aabb.maxX = maxX;
-	packet.object.aabb.maxY = maxY;
-	packet.object.aabb.maxZ = maxZ;
+	packet.object.aabb.minX = objectBB.minX;
+	packet.object.aabb.minY = objectBB.minY;
+	packet.object.aabb.minZ = objectBB.minZ;
+	packet.object.aabb.maxX = objectBB.maxX;
+	packet.object.aabb.maxY = objectBB.maxY;
+	packet.object.aabb.maxZ = objectBB.maxZ;
 
 	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
 }
@@ -271,12 +271,11 @@ void Client::sendSpawnTrapEvent(struct trapObject t)
 	sendMsg((char *)&p, sizeof(struct spawnTrapPacket));
 }
 
-void Client::sendKnifeHitEvent(int targetId)
+void Client::sendKnifeHitEvent()
 {
 	struct knifeHitPacket p;
 	p.eventId = KNIFE_HIT_EVENT;
 	p.playerId = getPlayerId();
-	p.targetId = targetId;
 
 	sendMsg((char *)&p, sizeof(struct knifeHitPacket));
 }

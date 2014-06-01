@@ -73,6 +73,11 @@ void sendAABBInfo()
 	t = new sg::Trap(0, glm::vec3(0, 0, 0), 0, dir + PORTAL_TRAP_OBJ);
 	Client::sendAABBInfo(TYPE_PORTAL_TRAP, t->getTrapObjectForNetworking().aabb);
 	delete t;
+
+	// Flash trap
+	t = new sg::Trap(0, glm::vec3(0, 0, 0), 0, dir + FLASH_TRAP_OBJ);
+	Client::sendAABBInfo(TYPE_FLASH_TRAP, t->getTrapObjectForNetworking().aabb);
+	delete t;
 }
 
 int main(int argc, char *argv[]) {
@@ -91,8 +96,8 @@ int main(int argc, char *argv[]) {
 	client = new ClientInstance(Client::getPlayerId());
 	window = new Window();
 	glm::vec3 starting = client->root->getPosition();
-	starting = starting + glm::vec3(250, 25, 0);
-	client->root->moveTo(glm::vec3(starting.x, starting.y + 2, starting.z));
+	starting = starting + glm::vec3(200, 500, -300);
+	client->root->moveTo(starting);
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	sendAABBInfo();
 
@@ -172,23 +177,42 @@ int main(int argc, char *argv[]) {
 	//client->printSceneGraph();
 
 	client->root->addChild(client->level.getRoot());
-	for (int i = 0; i < client->level.buildings.size(); ++i) {
-		Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,
-			client->level.buildings[i]->getBoundingBox().minZ, client->level.buildings[i]->getBoundingBox().maxX,
-			client->level.buildings[i]->getBoundingBox().maxY, client->level.buildings[i]->getBoundingBox().maxZ);
+//<HEAD
+	for (int i = 0; i < client->level.levelNodes.size(); ++i) {
+		Client::sendStaticObject(client->level.levelNodes[i]->getBoundingBox());
+//=======
+//
+//	Client::sendStaticObject(client->level.groundCube->getBoundingBox().minX,
+//		client->level.groundCube->getBoundingBox().minY,
+//		client->level.groundCube->getBoundingBox().minZ,
+//		client->level.groundCube->getBoundingBox().maxX,
+//		client->level.groundCube->getBoundingBox().maxY,
+//		client->level.groundCube->getBoundingBox().maxZ);
+//
+//	for (int i = 0; i < client->level.buildings.size(); ++i) {
+//		Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,
+//			client->level.buildings[i]->getBoundingBox().minZ, client->level.buildings[i]->getBoundingBox().maxX,
+//			client->level.buildings[i]->getBoundingBox().maxY, client->level.buildings[i]->getBoundingBox().maxZ);
+//> origin/enrico-temp
 	}
 
-	for (int i = 0; i < client->level.ramps.size(); ++i) {
-		Client::sendStaticRampObject(client->level.ramps[i]->getBoundingBox(), client->level.rampSlopes[i]);
-	}
+	//for (int i = 0; i < client->level.buildings.size(); ++i) {
+	//	Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,
+	//		client->level.buildings[i]->getBoundingBox().minZ, client->level.buildings[i]->getBoundingBox().maxX,
+	//		client->level.buildings[i]->getBoundingBox().maxY, client->level.buildings[i]->getBoundingBox().maxZ);
+	//}
 
-	for (int i = 0; i < client->level.resources.size(); ++i) {
-		Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), client->level.resources[i]->getResourceId());
-	}
+	//for (int i = 0; i < client->level.ramps.size(); ++i) {
+	//	//Client::sendStaticRampObject(client->level.ramps[i]->getBoundingBox(), client->level.rampSlopes[i]);
+	//}
 
-	for (int i = 0; i < client->level.walls.size(); ++i) {
-		Client::sendStaticWallObject(client->level.walls[i]->getBoundingBox());
-	}
+	//for (int i = 0; i < client->level.resources.size(); ++i) {
+	//	Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), client->level.resources[i]->getResourceId());
+	//}
+
+	//for (int i = 0; i < client->level.walls.size(); ++i) {
+	//	Client::sendStaticWallObject(client->level.walls[i]->getBoundingBox());
+	//}
 
 	//client->printPlayers();
 	//client->printSceneGraph();
@@ -196,7 +220,7 @@ int main(int argc, char *argv[]) {
 	otherPlayerSound = new Sound("footstep.wav");
 	sound = new Sound();
 	otherPlayerSound->playMusic(false, false, true);
-	sound->playMusic();
+	//sound->playMusic();
 	otherPlayerSound->setCenterPosition();
 	// hardcode the distance value for now, it will be the input from the server
 	otherPlayerSound->changePosition(-1.0f);

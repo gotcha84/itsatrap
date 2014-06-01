@@ -182,6 +182,10 @@ void ObjModel::drawModel() {
 
 	// reset backface culling
 	glFrontFace(GL_CCW);
+
+	if (m_drawBB) {
+		this->getBoundingBox().draw();
+	}
 }
 
 void ObjModel::loadFilename(string objFilename) {
@@ -262,21 +266,24 @@ void ObjModel::loadModel() {
 		added++;
 	}
 
-	if (m_objFilename == "../Models/Headless_Avatar.obj") {
-		cout << "HARRO" << endl;
-		Utilities::writeFloatVectorToFile(shapes[0].mesh.texcoords, "poop.txt");
-	}
-	
 	calculateBoundingBox();
-	setMaterial(shapes[0].material.ambient,
-		shapes[0].material.diffuse,
-		shapes[0].material.specular,
-		shapes[0].material.emission,
-		shapes[0].material.shininess);
+
+	// TODO: Check if material file exists!
+	//setMaterial(shapes[0].material.ambient,
+	//	shapes[0].material.diffuse,
+	//	shapes[0].material.specular,
+	//	shapes[0].material.emission,
+	//	shapes[0].material.shininess);
 }
 
 void ObjModel::loadTexture(string filename) {
 	cout << "[ObjModel] loading texture : " << filename << endl;
+	//setMaterial(shapes[0].material.ambient, 
+	//	shapes[0].material.diffuse, 
+	//	shapes[0].material.specular, 
+	//	shapes[0].material.emission, 
+	//	shapes[0].material.shininess);
+	//m_boundingBox.print();
 
 	m_textureID = m_texture->loadTexture(filename.c_str());
 
@@ -288,10 +295,6 @@ void ObjModel::loadTexture(string filename) {
 void ObjModel::calculateBoundingBox() {
 
 	this->calculateBoundingBox(glm::mat4());
-	if (m_objFilename == "../Models/Avatar.obj" || m_objFilename == "../Models/Headless_Avatar.obj") {
-		m_boundingBox.print();
-		cout << "HUEHUEHUE" << endl;
-	}
 }
 
 void ObjModel::calculateBoundingBox(glm::mat4 model) {

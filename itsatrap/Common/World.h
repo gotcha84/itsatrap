@@ -20,6 +20,9 @@
 #define MAP_Z_LENGTH	40
 #define UNIT_SIZE		27
 
+#define MAP_X_LENGTH_MIKE 1500
+#define MAP_Z_LENGTH_MIKE 2500
+
 using namespace std;
 
 class COMMON_API World {
@@ -27,12 +30,17 @@ class COMMON_API World {
 		static int m_heightMapXShift;
 		static int m_heightMapZShift;
 
+		static int m_structuresMapXShift;
+		static int m_structuresMapZShift;
+
 		static float m_heightMap[UNIT_SIZE * MAP_X_LENGTH + 1][UNIT_SIZE * MAP_Z_LENGTH + 1];
+		static vector<int> m_structuresMap[MAP_X_LENGTH_MIKE][MAP_Z_LENGTH_MIKE];
 		static vector<AABB> m_boundingBoxes;
+
+		static void updateStructuresMap(AABB boundingBox, int id);
 
 		static void initializeHeightMap();
 		static void superHeightMapInit(vector<AABB> buildings, vector<AABB> ramps);
-		static void updateHeightMap(AABB boundingBox, float offset);
 		static void updateHeightMap(AABB boundingBox);
 		static float updateHeightMapRamp(AABB boundingBox, int rotation);
 		static float updateHeightMapRamp0(AABB boundingBox);

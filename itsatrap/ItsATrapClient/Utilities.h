@@ -38,6 +38,7 @@ class Utilities {
 		static glm::vec3 findAverage(string inputfile);
 		static glm::mat4 rotateY(float theta);
 		static float degreesToRad(float deg);
+		static string intToBaseThree(int num);
 		//static int getMaxDepth(sg::Node *node);
 };
 

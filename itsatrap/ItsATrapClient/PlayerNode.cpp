@@ -72,6 +72,8 @@ namespace sg {
 		m_otherPlayer->loadTexture("../Textures/1.ppm");
 		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
 		m_thisPlayer->loadTexture("../Textures/1.ppm");
+
+		m_thisPlayer->disableDrawBB();
 	}
 
 	void Player::setColor(glm::vec4 color) {
@@ -96,7 +98,14 @@ namespace sg {
 
 	glm::mat4 Player::getModelMatrix() {
 		m_translate = this->getPosition();
-		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x-1.0f, m_translate.y-16.0f, m_translate.z));
+		//glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x-1.0f, m_translate.y-16.0f, m_translate.z));
+		// ANDRE
+
+		int PlayerHeight = 0;
+		ConfigSettings::getConfig()->getValue("PlayerHeight", PlayerHeight);
+		//cout << "camxrot: " << this->getCamera()->getXRotated() << endl;
+		glm::vec3 camcam = this->getCamera()->getCameraCenter();
+		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x - 1.0f, m_translate.y - 7.0f /*camcam.y - PlayerHeight*/, m_translate.z));
 
 		this->getCamera()->calculateAxis();
 		glm::mat4 rotatedX = Utilities::rotateY(this->getCamera()->m_xRotated);
@@ -148,7 +157,6 @@ namespace sg {
 		//cout << "velocity: " << glm::to_string(this->getPlayer()->getPhysics()->m_velocity) << endl;
 		//cout << "velocity diff: " << glm::to_string(this->getPlayer()->getPhysics()->m_velocityDiff) << endl << endl;
 		
-
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
 
@@ -189,7 +197,19 @@ namespace sg {
 			}
 			board->draw();
 		}
-		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, 5, 0);
+
+		// Flashbang stuff
+		float flash = 0;
+		int flashFadeOut = 0;
+		ConfigSettings::getConfig()->getValue("FlashFadeOut", flashFadeOut);
+		if (getPlayer()->m_flashDuration > flashFadeOut)
+			flash = 1;
+		else
+			flash = (float)getPlayer()->m_flashDuration / flashFadeOut;
+		if (flash < 0)
+			flash = 0;
+
+		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, getPlayer()->m_hitCrosshairDuration);
 	}
 
 	void Player::drawAsCurrentPlayer(glm::mat4 mv) {
@@ -206,7 +226,7 @@ namespace sg {
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			//glutWireCube(PLAYER_RAD*2);
-			m_thisPlayer->drawModel();
+			//m_thisPlayer->drawModel();
 		glPopMatrix();
 	}
 
@@ -216,6 +236,10 @@ namespace sg {
 		glm::mat4 mv = glm::inverse(cam) * new_model;
 		
 		this->drawAsOtherPlayer(mv);
+
+		if (m_drawBB) {
+			m_otherPlayer->getBoundingBox().draw();
+		}
 	}
 
 	void Player::drawAsOtherPlayer(glm::mat4 mv) {
@@ -228,18 +252,6 @@ namespace sg {
 		glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
-
-			/*
-			glPushMatrix();
-				glTranslatef(0, 0, -PLAYER_RAD);
-				glScalef(1, 1, 0.1f);
-				glColor4f(10,0,0,1);
-				glutSolidCube(PLAYER_RAD*2);
-			glPopMatrix();
-
-			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			glutSolidCube(PLAYER_RAD*2);
-			*/
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			m_otherPlayer->drawModel();
@@ -276,6 +288,14 @@ namespace sg {
 
 	void Player::setUp(glm::vec3 direction) {
 		this->getCamera()->m_cameraUp = direction;
+	}
+
+	void Player::enableDrawBB() {
+		m_drawBB = true;
+	}
+
+	void Player::disableDrawBB() {
+		m_drawBB = false;
 	}
 
 	void Player::print() {

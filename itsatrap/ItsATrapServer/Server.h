@@ -57,6 +57,7 @@ private:
 	static int					currentResourceOwner;
 	static int					channelingPlayer;
 	static bool					isChanneling;
+	static bool					physicsReady;
 
 	// Functions
 	static int initialize();

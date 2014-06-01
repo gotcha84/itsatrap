@@ -17,6 +17,8 @@ namespace sg {
 			HUD *m_hud;
 			Scoreboard *board;
 			
+			bool	m_drawBB;
+
 			glm::vec4 m_color;
 			glm::vec3 m_translate;
 			glm::quat m_rotate;
@@ -65,6 +67,9 @@ namespace sg {
 			void lookAt(glm::vec3 point);
 
 			void setUp(glm::vec3 direction);
+
+			void enableDrawBB();
+			void disableDrawBB();
 
 			void print();
 

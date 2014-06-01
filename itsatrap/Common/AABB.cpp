@@ -72,6 +72,7 @@ void AABB::setAABB(glm::vec3 pos, float rad) {
 
 	//Client::sendStaticObject(minX, minY, minZ, maxX, maxY, maxZ);
 }
+
 // this = obj ie building. other = player
 bool AABB::collidesWith(AABB other) {
 	bool tmp = (other.maxX >= minX && other.minX <= maxX
@@ -452,8 +453,76 @@ void AABB::print() {
 	cout << "(" << minX << ", " << minY << ", " << minZ << ") (" << maxX << ", " << maxY << ", " << maxZ << ")" << endl;
 }
 
+bool AABB::cameFromTop(glm::vec3 from, glm::vec3 goTo, AABB player, int buildingId) {
+
+	int checkId1 = -1;
+	int checkId2 = -2;
+	int checkId3 = -3;
+
+	if (buildingId == checkId1 || buildingId == checkId2 || buildingId == checkId3) {
+		cout << "buildingid: " << buildingId << endl;
+		cout << "from: " << glm::to_string(from) << endl;
+		cout << "to: " << glm::to_string(goTo) << endl;
+		cout << "my AABB: ";
+		print();
+		cout << "player AABB: ";
+		player.print();
+	}
+
+	bool fromInter = (from.x > minX && from.x < maxX && from.z > minZ && from.z < maxZ);
+	bool goToInter = (goTo.x > minX && goTo.x < maxX && goTo.z > minZ && goTo.z < maxZ);
+
+	if (!collidesWith(player) && !(from.y > maxY && goTo.y < minY && (fromInter || goToInter))) {
+		if (buildingId == checkId1 || buildingId == checkId2 || buildingId == checkId3) {
+			cout << !collidesWith(player) << endl << endl;
+		}
+		return false;
+	}
+
+	glm::vec3 direction = goTo - from;
+
+	float xMinCoeff = FLT_MAX;
+	float xMaxCoeff = FLT_MAX;
+	float yMinCoeff = FLT_MAX;
+	float yMaxCoeff = FLT_MAX;
+	float zMinCoeff = FLT_MAX;
+	float zMaxCoeff = FLT_MAX;
+
+	if (direction.x != 0) {
+		xMinCoeff = ((minX - from.x) / direction.x > 0) ? ((minX - from.x) / direction.x) : FLT_MAX;
+		xMaxCoeff = ((maxX - from.x) / direction.x > 0) ? ((maxX - from.x) / direction.x) : FLT_MAX;
+	}
+	if (direction.y != 0) {
+		yMinCoeff = ((minY - from.y) / direction.y > 0) ? ((minY - from.y) / direction.y) : FLT_MAX;
+		yMaxCoeff = ((maxY - from.y) / direction.y > 0) ? ((maxY - from.y) / direction.y) : FLT_MAX;
+	}
+	if (direction.z != 0) {
+		zMinCoeff = ((minZ - from.z) / direction.z > 0) ? ((minZ - from.z) / direction.z) : FLT_MAX;
+		zMaxCoeff = ((maxZ - from.z) / direction.z > 0) ? ((maxZ - from.z) / direction.z) : FLT_MAX;
+	}
+	float coeff = min(min(min(xMinCoeff, xMaxCoeff), min(yMinCoeff, yMaxCoeff)), min(zMinCoeff, zMaxCoeff));
+
+	if (coeff == yMaxCoeff) {
+		if (buildingId == checkId1 || buildingId == checkId2 || buildingId == checkId3) {
+			cout << "Was true" << endl << endl;
+		}
+		return true;
+	}
+	if (buildingId == checkId1 || buildingId == checkId2 || buildingId == checkId3) {
+		cout << "Was false" << endl << endl;
+	}
+	return false;
+}
+
 void AABB::update(glm::vec3 pos, AABB *offset)
 {
+	/*cout << "offset->minX: " << offset->minX << endl;
+	cout << "offset->minY: " << offset->minY << endl;
+	cout << "offset->minZ: " << offset->minZ << endl;
+	cout << "offset->maxX: " << offset->maxX << endl;
+	cout << "offset->maxY: " << offset->maxY << endl;
+	cout << "offset->maxZ: " << offset->maxZ << endl;*/
+
 	minX = pos.x + offset->minX;
 	minY = pos.y + offset->minY;
 	minZ = pos.z + offset->minZ;
