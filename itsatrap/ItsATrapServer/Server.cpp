@@ -120,7 +120,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			player.clientAddress = *source;
 			player.playerId = playerCount;
 			player.active = true;
-			ConfigSettings::getConfig()->getValue("TimeUntilInactive", player.timeUntilInactive);
+			ConfigSettings::getConfig()->getValue("TimeUntilDisconnect", player.timeUntilInactive);
 			players[playerCount] = player;
 				
 			// Creating response message
@@ -227,7 +227,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	else if (p->eventId == REFRESH_EVENT)
 	{
 		struct refreshPacket *rPkt = (struct refreshPacket *)p;
-		ConfigSettings::getConfig()->getValue("TimeUntilInactive", players[rPkt->playerId].timeUntilInactive);
+		ConfigSettings::getConfig()->getValue("TimeUntilDisconnect", players[rPkt->playerId].timeUntilInactive);
 	}
 	else if (p->eventId == AABB_INFO)
 	{
@@ -341,30 +341,7 @@ void Server::processBuffer()
 			case KNIFE_HIT_EVENT:
 			{
 				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
-
-				playerObject *player = &dynamicWorld.playerMap[knifePkt->playerId];
-				playerObject *target = &dynamicWorld.playerMap[knifePkt->targetId];
-
-				// Make sure they're on different teams & knife is ready
-				if (player->knifeDelay <= 0 && player->id % 2 != target->id % 2 && players[target->id].active)
-				{
-					ConfigSettings::getConfig()->getValue("KnifeDelay", player->knifeDelay);
-
-					float knifeRange = 0.0f;
-					ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
-
-					glm::vec3 lookAt = player->cameraObject.cameraLookAt;
-					glm::vec3 center = player->cameraObject.cameraCenter;
-					glm::vec3 difVec = lookAt - center;
-					glm::vec3 hitPt = center + (knifeRange * difVec);
-
-					if (hitPt.x >= target->aabb.minX && hitPt.x <= target->aabb.maxX
-						&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
-						&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
-					{
-						dynamicWorld.playerDamage(player, target, KNIFE_HIT_DMG);
-					}
-				}
+				dynamicWorld.handleKnifeEvent(knifePkt->playerId);
 				break;
 			}
 			case RESOURCE_HIT_EVENT:

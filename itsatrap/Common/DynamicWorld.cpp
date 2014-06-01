@@ -101,6 +101,8 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	ConfigSettings::getConfig()->getValue("StartingResources", p.resources);
 	p.knifeDelay = 0;
 	p.timeUntilRegen = 0;
+	p.flashDuration = 0;
+	p.hitCrosshair = 0;
 
 	playerMap[p.id] = p;
 	cout << "newplayer aabb: ";
@@ -366,7 +368,11 @@ void DynamicWorld::addTrap(struct trapObject t)
 		ConfigSettings::getConfig()->getValue("CostPortalTrap", cost);
 		break;
 	}
-
+	case TYPE_FLASH_TRAP:
+	{
+		ConfigSettings::getConfig()->getValue("CostFlashTrap", cost);
+		break;
+	}
 	default:
 		cost = 10;
 		break;
@@ -498,6 +504,11 @@ void DynamicWorld::updateTimings(int timeDiff)
 			}
 		}
 		
+		if (p.flashDuration > 0)
+			p.flashDuration -= timeDiff;
+
+		if (p.hitCrosshair > 0)
+			p.hitCrosshair -= timeDiff;
 	}
 
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); ++it)
@@ -520,6 +531,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 
 	target->health -= damage;
 	ConfigSettings::getConfig()->getValue("HealthRegenWaitAfterDamage", target->timeUntilRegen);
+	ConfigSettings::getConfig()->getValue("HitCrosshairDuration", attacker->hitCrosshair);
 
 	if (target->health <= 0)
 	{
@@ -567,6 +579,8 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 void DynamicWorld::computeAABB(struct playerObject *p)
 {
 	p->aabb.update(p->position, &aabbOffsets[TYPE_PLAYER]);
+
+	/*
 	static int counter = 0;
 	if (counter == 100)
 	{
@@ -575,13 +589,12 @@ void DynamicWorld::computeAABB(struct playerObject *p)
 		p->aabb.print();
 	}
 	counter++;
+	*/
 }
 
 void DynamicWorld::computeAABB(struct trapObject *t)
 {
 	t->aabb.update(t->pos, &aabbOffsets[t->type]);
-	/*printf("TRAP: "); 
-	t->aabb.print();*/
 }
 
 void DynamicWorld::applyCollisions() {
@@ -1063,7 +1076,7 @@ void DynamicWorld::applyAdjustments() {
 		/*cout << "player aabb:";
 		p.aabb.print();*/
 		//ANDRE
-		cout << "p.cameraObject.xrotated: " << p.cameraObject.xRotated << endl;
+		//cout << "p.cameraObject.xrotated: " << p.cameraObject.xRotated << endl;
 		p.cameraObject.cameraCenter = glm::vec3(p.position.x, p.aabb.minY + playerHeight, p.position.z);
 		p.cameraObject.cameraLookAt = p.cameraObject.cameraCenter + p.cameraObject.camZ;
 
@@ -1304,6 +1317,15 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 
 						playerDamage(&playerMap[it->second.ownerId], p, power);
 
+						// Flashes everyone
+						int flashEffect = 0;
+						ConfigSettings::getConfig()->getValue("LightningTrapFlashEffect", flashEffect);
+						for (map<int, struct playerObject>::iterator iterator = playerMap.begin(); iterator != playerMap.end(); iterator++)
+						{
+							if (iterator->second.flashDuration < flashEffect)
+								iterator->second.flashDuration = flashEffect;
+						}
+
 						break;
 					}
 					case TYPE_PORTAL_TRAP:
@@ -1331,6 +1353,15 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 
 						break;
 					}
+					case TYPE_FLASH_TRAP:
+					{
+						float flashDuration = 0;
+						ConfigSettings::getConfig()->getValue("FlashTrapDuration", flashDuration);
+
+						p->flashDuration = flashDuration;
+
+						break;
+					}
 					default:
 						break;
 				}
@@ -1338,6 +1369,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 				if (okToRemove)
 				{
 					it->second.eventCode = EVENT_REMOVE_TRAP;
+					ConfigSettings::getConfig()->getValue("HitCrosshairDuration", playerMap[it->second.ownerId].hitCrosshair);
 					return;
 				}
 
@@ -1358,5 +1390,37 @@ void DynamicWorld::addAABBInfo(int type, AABB aabb)
 	}
 	else {
 		aabbOffsets[type] = aabb;
+	}
+}
+
+void DynamicWorld::handleKnifeEvent(int knifer)
+{
+	playerObject *player = &playerMap[knifer];
+
+	
+	for (map<int, struct playerObject>::iterator pit = playerMap.begin(); pit != playerMap.end(); pit++)
+	{
+		struct playerObject *target = &pit->second;
+
+		// Make sure they're on different teams & knife is ready
+		if (/*player->knifeDelay <= 0 &&*/ player->id % 2 != target->id % 2)
+		{
+			ConfigSettings::getConfig()->getValue("KnifeDelay", player->knifeDelay);
+
+			float knifeRange = 0.0f;
+			ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
+
+			glm::vec3 lookAt = player->cameraObject.cameraLookAt;
+			glm::vec3 center = player->cameraObject.cameraCenter;
+			glm::vec3 difVec = lookAt - center;
+			glm::vec3 hitPt = center + (knifeRange * difVec);
+
+			if (hitPt.x >= target->aabb.minX && hitPt.x <= target->aabb.maxX
+				&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
+				&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
+			{
+				playerDamage(player, target, KNIFE_HIT_DMG);
+			}
+		}
 	}
 }

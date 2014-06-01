@@ -402,6 +402,52 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 	}
 }
 
+void AABB::draw() {
+	glm::vec3 p0(this->minX, this->minY, this->minZ);
+	glm::vec3 p1(this->minX, this->minY, this->maxZ);
+	glm::vec3 p2(this->maxX, this->minY, this->maxZ);
+	glm::vec3 p3(this->maxX, this->minY, this->minZ);
+	glm::vec3 p4(this->maxX, this->maxY, this->minZ);
+	glm::vec3 p5(this->minX, this->maxY, this->minZ);
+	glm::vec3 p6(this->minX, this->maxY, this->maxZ);
+	glm::vec3 p7(this->maxX, this->maxY, this->maxZ);
+
+	glColor4f(1, 0, 0, 1);
+	glBegin(GL_LINE_LOOP);
+		glVertex3f(p0.x, p0.y, p0.z);
+		glVertex3f(p1.x, p1.y, p1.z);
+		glVertex3f(p2.x, p2.y, p2.z);
+		glVertex3f(p3.x, p3.y, p3.z);
+	glEnd();
+
+	glBegin(GL_LINE_LOOP);
+		glVertex3f(p4.x, p4.y, p4.z);
+		glVertex3f(p5.x, p5.y, p5.z);
+		glVertex3f(p6.x, p6.y, p6.z);
+		glVertex3f(p7.x, p7.y, p7.z);
+	glEnd();
+
+	glBegin(GL_LINES);
+		glVertex3f(p0.x, p0.y, p0.z);
+		glVertex3f(p5.x, p5.y, p5.z);
+	glEnd();
+	
+	glBegin(GL_LINES);
+		glVertex3f(p1.x, p1.y, p1.z);
+		glVertex3f(p6.x, p6.y, p6.z);
+	glEnd();
+
+	glBegin(GL_LINES);
+		glVertex3f(p2.x, p2.y, p2.z);
+		glVertex3f(p7.x, p7.y, p7.z);
+	glEnd();
+
+	glBegin(GL_LINES);
+		glVertex3f(p3.x, p3.y, p3.z);
+		glVertex3f(p4.x, p4.y, p4.z);
+	glEnd();
+}
+
 void AABB::print() {
 	cout << "(" << minX << ", " << minY << ", " << minZ << ") (" << maxX << ", " << maxY << ", " << maxZ << ")" << endl;
 }
