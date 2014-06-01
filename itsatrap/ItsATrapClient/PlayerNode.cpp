@@ -96,7 +96,7 @@ namespace sg {
 
 	glm::mat4 Player::getModelMatrix() {
 		m_translate = this->getPosition();
-		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x-1.0f, -6.0f, m_translate.z));
+		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x-1.0f, m_translate.y-16.0f, m_translate.z));
 
 		this->getCamera()->calculateAxis();
 		glm::mat4 rotatedX = Utilities::rotateY(this->getCamera()->m_xRotated);
