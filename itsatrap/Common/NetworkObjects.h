@@ -17,6 +17,7 @@
 #define TYPE_PUSH_TRAP 4
 #define TYPE_LIGHTNING_TRAP 5
 #define TYPE_PORTAL_TRAP 6
+#define TYPE_FLASH_TRAP 7
 #define TYPE_PLAYER 9
 
 enum CameraStates {
@@ -122,7 +123,7 @@ struct cameraObject {
 
 struct playerObject {
     int				id, health, numKills, numDeaths;
-	int				stunDuration, slowDuration;
+	int				stunDuration, slowDuration, flashDuration, hitCrosshair;
 	int				timeUntilRespawn, timeUntilRegen;
 	int				knifeDelay;
 	int				resources;

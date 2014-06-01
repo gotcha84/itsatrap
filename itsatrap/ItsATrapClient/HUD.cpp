@@ -7,6 +7,7 @@ HUD::HUD() {
 	font = new FTGLPixmapFont("C:/Windows/Fonts/Arial.ttf");
 	board = new Scoreboard();
 	m_progressTime = -1;
+	engine = createIrrKlangDevice(); //declare loop, pause, and track
 }
 
 // destructor
@@ -14,7 +15,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources, int spawnTime, int flashTime) {
+void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -23,17 +24,20 @@ void HUD::draw(int health, int resources, int spawnTime, int flashTime) {
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 			glLoadIdentity();
-			int health1 = 5;
-			if (health1 <= 0) {
+			if (health <= 0) {
 				
 				drawDeathTimer(spawnTime);
+				deathSound = engine->play2D("../Sound/death.wav", false, false, true);
 			}else {
-				//sdrawKillSymbol(true);
+				if (hitCrosshairDuration > 0)
+					drawKillSymbol(true);
+				else
+					drawKillSymbol(false);
 				drawCrossHair();
 				drawHealthBar(health);
 				drawResource(resources);
 				if( m_progressTime > -1 ) drawProgressBar(m_progressTime);
-				drawFlashbag(flashTime);
+				drawFlashbag(flashFade);
 				
 			}
 			
@@ -115,7 +119,7 @@ void HUD::drawDeathTimer(int respawnTime) {
 	font->FaceSize(50);
 	font->CharMap(ft_encoding_symbol);
 	glRasterPos2f(-0.05f, -0.3f);
-	std::string  text = std::to_string(respawnTime);
+	std::string  text = std::to_string(respawnTime/1000);
 	font->Render(text.c_str());
 
 	glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
@@ -143,8 +147,7 @@ void HUD::drawProgressBar(int time) {
 	}
 }
 
-void HUD::drawFlashbag(int time) {
-	float fade = time * 0.1;
+void HUD::drawFlashbag(float fade) {
 	glColor4f(1.0f, 1.0f, 1.0f, fade);
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, 0.0f);

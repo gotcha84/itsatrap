@@ -36,6 +36,7 @@
 #define BLOCKS			"../Models/Blocks/"
 #define POLYNOIDS		"../Models/Polynoid/"
 #define LEVEL			"../Models/Level/"
+#define OBELISK			"../Models/Obelisk/"
 #define CLIMBBLOCK		"../Models/Blocks/ClimbBlock.obj"
 #define CROSSBAR		"../Models/Blocks/CrossBar.obj"
 #define LARGERAMP		"../Models/Blocks/LargeRamp.obj"
@@ -50,6 +51,7 @@ class Level {
 		int activeResourceNode;
 		sg::MatrixTransform *root;
 		sg::MatrixTransform *ground;
+		sg::Cube * groundCube;
 		vector<sg::MatrixTransform *> xForms;
 		vector<sg::ObjNode *> levelNodes;
 		vector<sg::Cube *> buildings;

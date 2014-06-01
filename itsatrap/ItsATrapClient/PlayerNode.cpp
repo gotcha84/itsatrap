@@ -97,7 +97,13 @@ namespace sg {
 
 	glm::mat4 Player::getModelMatrix() {
 		m_translate = this->getPosition();
-		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x-1.0f, -6.0f, m_translate.z));
+		// ANDRE
+
+		int PlayerHeight = 0;
+		ConfigSettings::getConfig()->getValue("PlayerHeight", PlayerHeight);
+		//cout << "camxrot: " << this->getCamera()->getXRotated() << endl;
+		glm::vec3 camcam = this->getCamera()->getCameraCenter();
+		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x - 1.0f, m_translate.y - 7.0f /*camcam.y - PlayerHeight*/, m_translate.z));
 
 		this->getCamera()->calculateAxis();
 		glm::mat4 rotatedX = Utilities::rotateY(this->getCamera()->m_xRotated);
@@ -189,11 +195,19 @@ namespace sg {
 			}
 			board->draw();
 		}
-		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, 5, 0);
 
-		if (m_drawBB) {
-			//m_thisPlayer->getBoundingBox().draw();
-		}
+		// Flashbang stuff
+		float flash = 0;
+		int flashFadeOut = 0;
+		ConfigSettings::getConfig()->getValue("FlashFadeOut", flashFadeOut);
+		if (getPlayer()->m_flashDuration > flashFadeOut)
+			flash = 1;
+		else
+			flash = (float)getPlayer()->m_flashDuration / flashFadeOut;
+		if (flash < 0)
+			flash = 0;
+
+		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, getPlayer()->m_hitCrosshairDuration);
 	}
 
 	void Player::drawAsCurrentPlayer(glm::mat4 mv) {
@@ -210,7 +224,7 @@ namespace sg {
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			//glutWireCube(PLAYER_RAD*2);
-			m_thisPlayer->drawModel();
+			//m_thisPlayer->drawModel();
 		glPopMatrix();
 	}
 

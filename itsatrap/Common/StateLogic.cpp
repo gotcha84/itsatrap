@@ -569,12 +569,14 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				StateLogic::statesInfo[p->id].Start.counter++;
 				if (StateLogic::statesInfo[p->id].Start.counter >= StateLogic::statesInfo[p->id].Start.fraction*StateLogic::statesInfo[p->id].numFrames) {
 					cout << "switching to mid" << endl;
+					cout << "with xrotated: " << p->cameraObject.xRotated << endl;
 					p->currInnerState = innerStates::Mid;
 				}
 			}
 			else {
 				StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
-				cout << "switching to ending from starting" << endl;
+				cout << "switching from starting to ending" << endl;
+				cout << "with xrotated: " << p->cameraObject.xRotated << endl;
 				p->currInnerState = innerStates::Ending;
 			}
 			break;
@@ -586,6 +588,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 			else {
 				StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
 				cout << "switching to ending from mid" << endl;
+				cout << "with xrotated: " << p->cameraObject.xRotated << endl;
 				p->currInnerState = innerStates::Ending;
 			}
 			break;
@@ -608,7 +611,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				// technically shouldnt need line below.. but w/e hardcoding ftw
 				p->cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 				//cout << "ended with up as: " << glm::to_string(p->cameraObject.cameraUp) << endl;
-				//cout << "ended with: x: " << p->cameraObject.xRotated << endl;
+				cout << "with xrotated: " << p->cameraObject.xRotated << endl;
 				//cout << "ended with: y: " << p->cameraObject.yRotated << endl;
 				//cout << "ended with: camX: " << glm::to_string(p->cameraObject.camX) << endl;
 				//cout << "ended with: camZ: " << glm::to_string(p->cameraObject.camZ) << endl;
@@ -622,6 +625,12 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 
 
 void StateLogic::handleXRotation(struct playerObject *e, float angle) {
+	static int counter = 0;
+
+	if (counter == 0) {
+		cout << "COUNTER 0: " << e->cameraObject.xRotated << endl;
+	}
+
 	glm::vec3 tmp_camZ = glm::vec3(e->cameraObject.camZ.x, 0.0f, e->cameraObject.camZ.z);
 
 	tmp_camZ = glm::rotateY(tmp_camZ, angle);
@@ -631,6 +640,10 @@ void StateLogic::handleXRotation(struct playerObject *e, float angle) {
 	e->cameraObject.cameraLookAt = e->cameraObject.cameraCenter + e->cameraObject.camZ;
 
 	e->cameraObject.xRotated += angle;
+
+	//StateLogic::calculateAxis(e);
+
+	counter++;
 }
 
 void StateLogic::handleYRotation(struct playerObject *e, float angle) {
@@ -647,6 +660,8 @@ void StateLogic::handleYRotation(struct playerObject *e, float angle) {
 	e->cameraObject.cameraLookAt = e->cameraObject.cameraCenter + e->cameraObject.camZ;
 
 	//cout << "after: " << glm::to_string(m_cameraLookAt) << endl << endl;
+
+	//StateLogic::calculateAxis(e);
 }
 
 void StateLogic::calculateAxis(struct playerObject *e) {

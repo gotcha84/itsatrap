@@ -6,7 +6,7 @@
 Level::Level() {
 	root = new sg::MatrixTransform();
 	root->setName("LEVEL ROOT");
-	
+
 	ground = new sg::MatrixTransform();
 	ground->setName("LEVEL GROUND");
 	root->addChild(ground);
@@ -25,28 +25,44 @@ Level::~Level() {
 void Level::initLevel0() {
 	DIR *dir;
 	struct dirent *ent;
-	glm::vec4 levelColor(0.8, 0.8, 0.8, 0.5);
 
+	int counter = 0;
+	float alpha = 0.9f;
 	sg::MatrixTransform *xForm = new sg::MatrixTransform();
 	ground->addChild(xForm);
 
+	// change level on link 35, 39 to obelisk to see obelisk's
 	if ((dir = opendir("..\\Models\\Level")) != NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			string fileName(ent->d_name);
 			if (fileName.size() > 3 && fileName.substr(fileName.find_first_of('.')).compare(".obj") == 0) {
 				levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
 				levelNodes.back()->setName("ObjNode: " + fileName);
-				levelNodes.back()->getModel()->setColor(levelColor);
+				if (counter%27 == 0) {
+					counter++;
+				}
+				string color = Utilities::intToBaseThree(counter%27);
+				levelNodes.back()->getModel()->setColor(glm::vec4(0.5f*(float)(color[0]-'0'), 0.5f*(float)(color[1]-'0'), 0.5f*(float)(color[2]-'0'), alpha));
 				xForm->addChild(levelNodes.back());
 			}
+			counter++;
 		}
 		closedir(dir);
-	} else {
+	}
+	else {
 		cout << "[ERROR]: Level.cpp - Could not read in Level obj files!" << endl;
 	}
 
 	for (int i = 0; i < levelNodes.size(); ++i) {
 		levelNodes[i]->calculateBoundingBox();
+
+		// ANDRE
+		/*if (levelNodes[i]->m_boundingBox.minX < 200 && levelNodes[i]->m_boundingBox.maxX > 200 &&
+			levelNodes[i]->m_boundingBox.minZ < -300 && levelNodes[i]->m_boundingBox.maxZ > -300) {
+			cout << "COLLIDED!!!! i: " << i << ", name: " << levelNodes[i]->getName() << endl;
+		}
+		cout << "i: " << i << ", name: " << levelNodes[i]->getName();
+		levelNodes[i]->getBoundingBox().print();*/
 		levelNodes[i]->enableDrawBB();
 
 		World::updateStructuresMap(levelNodes[i]->getBoundingBox(), i);
@@ -66,9 +82,9 @@ void Level::initLevel() {
 
 	ground->addChild(groundXForm);
 
-	sg::Cube *groundCube = new sg::Cube();
+	groundCube = new sg::Cube();
 	groundCube->setName("ground cube");
-	groundCube->setColor(glm::vec4(0,1,0,1));
+	groundCube->setColor(glm::vec4(0, 1, 0, 1));
 	groundXForm->addChild(groundCube);
 
 	// Add obstacles + buildings to level
@@ -131,14 +147,14 @@ void Level::initLevel() {
 
 	// Building 0: (0, 0, 0)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_12/2, 0)) * glm::scale(glm::vec3(UNIT_16, UNIT_12, UNIT_8)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_12 / 2, 0)) * glm::scale(glm::vec3(UNIT_16, UNIT_12, UNIT_8)));
 	root->addChild(xForms.back());
 
 	buildings.push_back(new sg::Cube());
 	buildings.back()->setName("Building 0: (0, 0, 0)");
 	buildings.back()->setColor(glm::vec4(0.5, 0.3, 0.5, 1));
 	xForms.back()->addChild(buildings.back());
-	
+
 	// Building 1: (-15, 8, 7)
 	xForms.push_back(new sg::MatrixTransform());
 	xForms.back()->setMatrix(glm::translate(glm::vec3(-15 * UNIT_SIZE, UNIT_8 / 2, 7 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_6, UNIT_8, UNIT_6)));
@@ -441,7 +457,7 @@ void Level::initLevel() {
 
 	// Wall 0: (-21, 48, 0)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(-21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2, UNIT_48*4, UNIT_40)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(-21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2, UNIT_48 * 4, UNIT_40)));
 	root->addChild(xForms.back());
 
 	walls.push_back(new sg::Cube());
@@ -451,7 +467,7 @@ void Level::initLevel() {
 
 	// Wall 1: (21, 48, 0)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2, UNIT_48*4, UNIT_40)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(21 * UNIT_SIZE, UNIT_48 / 2, 0)) * glm::scale(glm::vec3(UNIT_2, UNIT_48 * 4, UNIT_40)));
 	root->addChild(xForms.back());
 
 	walls.push_back(new sg::Cube());
@@ -461,7 +477,7 @@ void Level::initLevel() {
 
 	// Wall 2: (0, 48, -21)
 	xForms.push_back(new sg::MatrixTransform());
-	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, -21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48*4, UNIT_2)));
+	xForms.back()->setMatrix(glm::translate(glm::vec3(0, UNIT_48 / 2, -21 * UNIT_SIZE)) * glm::scale(glm::vec3(UNIT_40, UNIT_48 * 4, UNIT_2)));
 	root->addChild(xForms.back());
 
 	walls.push_back(new sg::Cube());
@@ -552,6 +568,8 @@ void Level::initLevel() {
 	xForms.back()->addChild(ramps.back());
 
 	// Update Bounding Boxes and Height Map
+	groundCube->calculateBoundingBox();
+
 	// Building Height Map
 	for (int i = 0; i < buildings.size(); ++i) {
 		buildings[i]->calculateBoundingBox();

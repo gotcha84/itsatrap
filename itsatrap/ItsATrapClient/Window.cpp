@@ -222,25 +222,25 @@ void Window::keyDown(unsigned char key, int x, int y)
 		switch (key)
 		{
 		case '1':
-			freezeTrapSound->setIsPaused(false);
+			//freezeTrapSound->setIsPaused(false);
 			break;
 		case '2':
-			tramSound->setIsPaused(false);
+			//tramSound->setIsPaused(false);
 			break;
 		case '3':
-			slowSound->setIsPaused(false);
+			//slowSound->setIsPaused(false);
 			break;
 		case '4':
-			pushSound->setIsPaused(false);
+			//pushSound->setIsPaused(false);
 			break;
 		case '5':
-			lightningSound->setIsPaused(false);
+			//lightningSound->setIsPaused(false);
 			break;
 		case '6':
-			freezeTrapSound->setIsPaused(false);
+			//freezeTrapSound->setIsPaused(false);
 			break;
 		default:
-			freezeTrapSound->setIsPaused(false);
+			//freezeTrapSound->setIsPaused(false);
 			break;
 		}
 	}
@@ -255,41 +255,46 @@ void Window::keyUp(unsigned char key, int x, int y) {
 	if (key >= '1' && key <= '9') {
 		string filename = TRAMPOLINE_TRAP_OBJ;
 		int type = 0;
+
 		switch (key)
 		{
 		case '1':
 			type = TYPE_FREEZE_TRAP;
 			filename = FREEZE_TRAP_OBJ;
-			freezeTrapSound->setIsPaused(true);
+			//freezeTrapSound->setIsPaused(true);
 			break;
 		case '2':
 			type = TYPE_TRAMPOLINE_TRAP;
 			filename = TRAMPOLINE_TRAP_OBJ;
-			tramSound->setIsPaused(true);
+			//tramSound->setIsPaused(true);
 			break;
 		case '3':
 			type = TYPE_SLOW_TRAP;
 			filename = SLOW_TRAP_OBJ;
-			slowSound->setIsPaused(true);
+			//slowSound->setIsPaused(true);
 			break;
 		case '4':
 			type = TYPE_PUSH_TRAP;
 			filename = PUSH_TRAP_OBJ;
-			pushSound->setIsPaused(true);
+			//pushSound->setIsPaused(true);
 			break;
 		case '5':
 			type = TYPE_LIGHTNING_TRAP;
 			filename = DEATH_TRAP_OBJ;
-			lightningSound->setIsPaused(true);
+			//lightningSound->setIsPaused(true);
 			break;
 		case '6':
 			type = TYPE_PORTAL_TRAP;
 			filename = PORTAL_TRAP_OBJ;
 			break;
+		case '7':
+			type = TYPE_FLASH_TRAP;
+			filename = FLASH_TRAP_OBJ;
+			break;
 		default:
 			type = TYPE_FREEZE_TRAP;
 			filename = TRAMPOLINE_TRAP_OBJ;
-			freezeTrapSound->setIsPaused(true);
+			//freezeTrapSound->setIsPaused(true);
 			break;
 		}
 		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated, TRAP_DIR + filename);
@@ -445,11 +450,7 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 					}
 
 					// Player Hits
-					for (unordered_map<int, sg::Player *>::iterator it = client->players.begin(); it != client->players.end(); ++it) {
-						if (it->second->m_playerID != client->root->getPlayerID()) {
-							Client::sendKnifeHitEvent(it->second->m_playerID);
-						}
-					}
+					Client::sendKnifeHitEvent();
 					break;
 				}
 				default:
