@@ -255,6 +255,7 @@ void Window::keyUp(unsigned char key, int x, int y) {
 	if (key >= '1' && key <= '9') {
 		string filename = TRAMPOLINE_TRAP_OBJ;
 		int type = 0;
+
 		switch (key)
 		{
 		case '1':
@@ -285,6 +286,10 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		case '6':
 			type = TYPE_PORTAL_TRAP;
 			filename = PORTAL_TRAP_OBJ;
+			break;
+		case '7':
+			type = TYPE_FLASH_TRAP;
+			filename = FLASH_TRAP_OBJ;
 			break;
 		default:
 			type = TYPE_FREEZE_TRAP;
@@ -445,11 +450,7 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 					}
 
 					// Player Hits
-					for (unordered_map<int, sg::Player *>::iterator it = client->players.begin(); it != client->players.end(); ++it) {
-						if (it->second->m_playerID != client->root->getPlayerID()) {
-							Client::sendKnifeHitEvent(it->second->m_playerID);
-						}
-					}
+					Client::sendKnifeHitEvent();
 					break;
 				}
 				default:

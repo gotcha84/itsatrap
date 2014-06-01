@@ -1,5 +1,4 @@
 #include "Server.h"
-
 using namespace std;
 
 // Static Vars
@@ -26,6 +25,7 @@ int					Server::currentResourceOwner;
 int					Server::channelingPlayer;
 bool				Server::isChanneling;
 
+bool				Server::physicsReady;
 // Private Vars
 HANDLE		packetBufMutex;
 
@@ -93,6 +93,7 @@ int Server::initialize() {
 	currentResourceOwner = -1;
 	channelingPlayer = -1;
 	isChanneling = false;
+	physicsReady = false;
 
 	// Load Height Map
 	string heightMapFile;
@@ -119,7 +120,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			player.clientAddress = *source;
 			player.playerId = playerCount;
 			player.active = true;
-			ConfigSettings::getConfig()->getValue("TimeUntilInactive", player.timeUntilInactive);
+			ConfigSettings::getConfig()->getValue("TimeUntilDisconnect", player.timeUntilInactive);
 			players[playerCount] = player;
 				
 			// Creating response message
@@ -147,8 +148,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticObject(tmp);
-			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
-			tmp.aabb.print();
+
 
 			int id = dynamicWorld.getNumStaticObjects() - 1;
 			World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
@@ -167,6 +167,14 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 
 			//	World::superHeightMapInit(buildings, ramps);
 			//}
+
+			/*printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			tmp.aabb.print();*/
+		}
+		int MaxBuildings = 0;
+		ConfigSettings::getConfig()->getValue("MaxBuildings", MaxBuildings);
+		if (dynamicWorld.getNumStaticObjects() >= MaxBuildings) {
+			physicsReady = true;
 		}
 	}
 	else if (p->eventId == STATIC_WALL_OBJECT_CREATION_EVENT)
@@ -177,8 +185,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticWallObject(tmp);
-			printf("[SERVER]: Added a static wall object. Now have %d static wall objects\n", dynamicWorld.getNumStaticWallObjects());
-			tmp.aabb.print();
+			/*printf("[SERVER]: Added a static wall object. Now have %d static wall objects\n", dynamicWorld.getNumStaticWallObjects());
+			tmp.aabb.print();*/
 		}
 	}
 	else if (p->eventId == STATIC_RAMP_OBJECT_CREATION_EVENT)
@@ -189,9 +197,9 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticRampObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticRampObject));
 			dynamicWorld.addStaticRampObject(tmp);
-			printf("[SERVER]: Added a static ramp object. Now have %d static ramp objects\n", dynamicWorld.getNumStaticRampObjects());
+			/*printf("[SERVER]: Added a static ramp object. Now have %d static ramp objects\n", dynamicWorld.getNumStaticRampObjects());
 			tmp.aabb.print();
-			printf("Slope: %f\n", tmp.slope);
+			printf("Slope: %f\n", tmp.slope);*/
 
 			//if (dynamicWorld.getNumStaticRampObjects() >= 7) {
 			//	vector<AABB> buildings;
@@ -217,9 +225,9 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticResourceObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
 			dynamicWorld.addStaticResourceObject(tmp);
-			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
+			/*printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
 			tmp.aabb.print();
-			printf("ResourceId: %d\n", tmp.id);
+			printf("ResourceId: %d\n", tmp.id);*/
 
 			resourceNodeLocations.push_back(tmp.id);
 			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
@@ -239,7 +247,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 	else if (p->eventId == REFRESH_EVENT)
 	{
 		struct refreshPacket *rPkt = (struct refreshPacket *)p;
-		ConfigSettings::getConfig()->getValue("TimeUntilInactive", players[rPkt->playerId].timeUntilInactive);
+		ConfigSettings::getConfig()->getValue("TimeUntilDisconnect", players[rPkt->playerId].timeUntilInactive);
 	}
 	else if (p->eventId == AABB_INFO)
 	{
@@ -353,30 +361,7 @@ void Server::processBuffer()
 			case KNIFE_HIT_EVENT:
 			{
 				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
-
-				playerObject *player = &dynamicWorld.playerMap[knifePkt->playerId];
-				playerObject *target = &dynamicWorld.playerMap[knifePkt->targetId];
-
-				// Make sure they're on different teams & knife is ready
-				if (player->knifeDelay <= 0 && player->id % 2 != target->id % 2 && players[target->id].active)
-				{
-					ConfigSettings::getConfig()->getValue("KnifeDelay", player->knifeDelay);
-
-					float knifeRange = 0.0f;
-					ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
-
-					glm::vec3 lookAt = player->cameraObject.cameraLookAt;
-					glm::vec3 center = player->cameraObject.cameraCenter;
-					glm::vec3 difVec = lookAt - center;
-					glm::vec3 hitPt = center + (knifeRange * difVec);
-
-					if (hitPt.x >= target->aabb.minX && hitPt.x <= target->aabb.maxX
-						&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
-						&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
-					{
-						dynamicWorld.playerDamage(player, target, KNIFE_HIT_DMG);
-					}
-				}
+				dynamicWorld.handleKnifeEvent(knifePkt->playerId);
 				break;
 			}
 			case RESOURCE_HIT_EVENT:
@@ -446,14 +431,16 @@ void Server::processBuffer()
 	if (playerCount > 0) {
 		broadcastDynamicWorld();
 	}
-
-	dynamicWorld.applyMoveEvents();
-	dynamicWorld.applyTrapGravity();
-	dynamicWorld.applyCollisions();
-	dynamicWorld.applyPhysics();
-	dynamicWorld.applyGravity();
-	dynamicWorld.applyAdjustments();
-	dynamicWorld.checkPlayersCollideWithTrap();
+	
+	if (physicsReady) {
+		dynamicWorld.applyMoveEvents();
+		dynamicWorld.applyTrapGravity();
+		dynamicWorld.applyCollisions();
+		dynamicWorld.applyPhysics();
+		dynamicWorld.applyGravity();
+		dynamicWorld.applyAdjustments();
+		dynamicWorld.checkPlayersCollideWithTrap();
+	}
 
 	// Release Mutex
 	ReleaseMutex(packetBufMutex);
@@ -537,8 +524,8 @@ void Server::checkConnection()
 		{
 			players[i].timeUntilInactive -= MAX_SERVER_PROCESS_RATE;
 
-			if (players[i].timeUntilInactive <= 0)
-				disconnectPlayer(i);
+			/*if (players[i].timeUntilInactive <= 0)
+				disconnectPlayer(i);*/
 		}
 	}
 }

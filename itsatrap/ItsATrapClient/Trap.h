@@ -17,7 +17,8 @@
 #define FREEZE_TRAP_OBJ "Freeze_Trap.obj"
 #define SLOW_TRAP_OBJ "Stun_Trap.obj"
 #define PUSH_TRAP_OBJ "Pad_Trap.obj"
-#define PORTAL_TRAP_OBJ "Flash_Trap.obj"
+#define PORTAL_TRAP_OBJ "Trip_Trap.obj"
+#define FLASH_TRAP_OBJ "Flash_Trap.obj"
 
 namespace sg {
 	class Trap : public Geode {
