@@ -35,7 +35,7 @@ void Level::initLevel() {
 
 	ground->addChild(groundXForm);
 
-	sg::Cube *groundCube = new sg::Cube();
+	groundCube = new sg::Cube();
 	groundCube->setName("ground cube");
 	groundCube->setColor(glm::vec4(0,1,0,1));
 	groundXForm->addChild(groundCube);
@@ -522,6 +522,8 @@ void Level::initLevel() {
 	xForms.back()->addChild(ramps.back());
 
 	// Update Bounding Boxes and Height Map
+	groundCube->calculateBoundingBox();
+
 	// Building Height Map
 	for (int i = 0; i < buildings.size(); ++i) {
 		buildings[i]->calculateBoundingBox();

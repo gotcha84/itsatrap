@@ -48,6 +48,7 @@ class Level {
 		int activeResourceNode;
 		sg::MatrixTransform *root;
 		sg::MatrixTransform *ground;
+		sg::Cube * groundCube;
 		vector<sg::MatrixTransform *> xForms;
 		vector<sg::Cube *> buildings;
 		vector<sg::Cube *> walls;

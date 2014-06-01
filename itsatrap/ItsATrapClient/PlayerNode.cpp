@@ -95,7 +95,13 @@ namespace sg {
 
 	glm::mat4 Player::getModelMatrix() {
 		m_translate = this->getPosition();
-		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x-1.0f, -6.0f, m_translate.z));
+		// ANDRE
+
+		int PlayerHeight = 0;
+		ConfigSettings::getConfig()->getValue("PlayerHeight", PlayerHeight);
+		cout << "camxrot: " << this->getCamera()->getXRotated() << endl;
+		glm::vec3 camcam = this->getCamera()->getCameraCenter();
+		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x - 1.0f, camcam.y - PlayerHeight, m_translate.z));
 
 		this->getCamera()->calculateAxis();
 		glm::mat4 rotatedX = Utilities::rotateY(this->getCamera()->m_xRotated);

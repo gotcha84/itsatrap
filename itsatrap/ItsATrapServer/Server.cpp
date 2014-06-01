@@ -1,5 +1,4 @@
 #include "Server.h"
-
 using namespace std;
 
 // Static Vars
@@ -26,6 +25,7 @@ int					Server::currentResourceOwner;
 int					Server::channelingPlayer;
 bool				Server::isChanneling;
 
+bool				Server::physicsReady;
 // Private Vars
 HANDLE		packetBufMutex;
 
@@ -93,6 +93,7 @@ int Server::initialize() {
 	currentResourceOwner = -1;
 	channelingPlayer = -1;
 	isChanneling = false;
+	physicsReady = false;
 
 	// Load Height Map
 	string heightMapFile;
@@ -147,8 +148,13 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticObject(tmp);
-			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
-			tmp.aabb.print();
+			/*printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			tmp.aabb.print();*/
+		}
+		int MaxBuildings = 0;
+		ConfigSettings::getConfig()->getValue("MaxBuildings", MaxBuildings);
+		if (dynamicWorld.getNumStaticObjects() >= MaxBuildings) {
+			physicsReady = true;
 		}
 	}
 	else if (p->eventId == STATIC_WALL_OBJECT_CREATION_EVENT)
@@ -159,8 +165,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticWallObject(tmp);
-			printf("[SERVER]: Added a static wall object. Now have %d static wall objects\n", dynamicWorld.getNumStaticWallObjects());
-			tmp.aabb.print();
+			/*printf("[SERVER]: Added a static wall object. Now have %d static wall objects\n", dynamicWorld.getNumStaticWallObjects());
+			tmp.aabb.print();*/
 		}
 	}
 	else if (p->eventId == STATIC_RAMP_OBJECT_CREATION_EVENT)
@@ -171,9 +177,9 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticRampObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticRampObject));
 			dynamicWorld.addStaticRampObject(tmp);
-			printf("[SERVER]: Added a static ramp object. Now have %d static ramp objects\n", dynamicWorld.getNumStaticRampObjects());
+			/*printf("[SERVER]: Added a static ramp object. Now have %d static ramp objects\n", dynamicWorld.getNumStaticRampObjects());
 			tmp.aabb.print();
-			printf("Slope: %f\n", tmp.slope);
+			printf("Slope: %f\n", tmp.slope);*/
 
 			if (dynamicWorld.getNumStaticRampObjects() >= 7) {
 				vector<AABB> buildings;
@@ -199,9 +205,9 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticResourceObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
 			dynamicWorld.addStaticResourceObject(tmp);
-			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
+			/*printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
 			tmp.aabb.print();
-			printf("ResourceId: %d\n", tmp.id);
+			printf("ResourceId: %d\n", tmp.id);*/
 
 			resourceNodeLocations.push_back(tmp.id);
 			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
@@ -428,14 +434,16 @@ void Server::processBuffer()
 	if (playerCount > 0) {
 		broadcastDynamicWorld();
 	}
-
-	dynamicWorld.applyMoveEvents();
-	dynamicWorld.applyTrapGravity();
-	dynamicWorld.applyCollisions();
-	dynamicWorld.applyPhysics();
-	dynamicWorld.applyGravity();
-	dynamicWorld.applyAdjustments();
-	dynamicWorld.checkPlayersCollideWithTrap();
+	
+	if (physicsReady) {
+		dynamicWorld.applyMoveEvents();
+		dynamicWorld.applyTrapGravity();
+		dynamicWorld.applyCollisions();
+		dynamicWorld.applyPhysics();
+		dynamicWorld.applyGravity();
+		dynamicWorld.applyAdjustments();
+		dynamicWorld.checkPlayersCollideWithTrap();
+	}
 
 	// Release Mutex
 	ReleaseMutex(packetBufMutex);

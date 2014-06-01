@@ -313,10 +313,6 @@ void ObjModel::loadModel() {
 void ObjModel::calculateBoundingBox() {
 
 	this->calculateBoundingBox(glm::mat4());
-	if (m_objFilename == "../Models/Avatar.obj" || m_objFilename == "../Models/Headless_Avatar.obj") {
-		m_boundingBox.print();
-		cout << "HUEHUEHUE" << endl;
-	}
 }
 
 void ObjModel::calculateBoundingBox(glm::mat4 model) {

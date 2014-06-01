@@ -161,6 +161,14 @@ int main(int argc, char *argv[]) {
 	//client->root->addChild(&city);
 
 	client->root->addChild(client->level.getRoot());
+
+	Client::sendStaticObject(client->level.groundCube->getBoundingBox().minX,
+		client->level.groundCube->getBoundingBox().minY,
+		client->level.groundCube->getBoundingBox().minZ,
+		client->level.groundCube->getBoundingBox().maxX,
+		client->level.groundCube->getBoundingBox().maxY,
+		client->level.groundCube->getBoundingBox().maxZ);
+
 	for (int i = 0; i < client->level.buildings.size(); ++i) {
 		Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,
 			client->level.buildings[i]->getBoundingBox().minZ, client->level.buildings[i]->getBoundingBox().maxX,
