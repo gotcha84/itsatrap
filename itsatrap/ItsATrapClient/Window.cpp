@@ -23,12 +23,8 @@ int Window::modifierKey = 0;
 ISoundEngine *engine;
 ISoundEngine *jumpSound;
 ISoundEngine *knifeSound;
+ISoundEngine *createTrapSound;
 ISound *walk;
-ISound *freezeTrapSound;
-ISound *pushSound;
-ISound *tramSound;
-ISound *slowSound;
-ISound *lightningSound;
 bool jump;
 
 
@@ -41,12 +37,8 @@ Window::Window() {
 	engine = createIrrKlangDevice(); //declare loop, pause, and track
 	jumpSound = createIrrKlangDevice();
 	knifeSound = createIrrKlangDevice();
+	createTrapSound = createIrrKlangDevice();
 	walk = engine->play2D("../Sound/footstep.wav", true, true, true);
-	freezeTrapSound = engine->play2D("../Sound/trap.wav", true, true, true);
-	pushSound = engine->play2D("../Sound/push.wav", true, true, true);
-	tramSound = engine->play2D("../Sound/tram.wav", true, true, true);
-	slowSound = engine->play2D("../Sound/slow.wav", true, true, true);
-	lightningSound = engine->play2D("../Sound/lightning.wav", true, true, true);
 	jump = true;
 }
 
@@ -221,26 +213,9 @@ void Window::keyDown(unsigned char key, int x, int y)
 	if (key >= '1' && key <= '9') {
 		switch (key)
 		{
-		case '1':
-			//freezeTrapSound->setIsPaused(false);
-			break;
-		case '2':
-			//tramSound->setIsPaused(false);
-			break;
-		case '3':
-			//slowSound->setIsPaused(false);
-			break;
-		case '4':
-			//pushSound->setIsPaused(false);
-			break;
-		case '5':
-			//lightningSound->setIsPaused(false);
-			break;
-		case '6':
-			//freezeTrapSound->setIsPaused(false);
-			break;
 		default:
-			//freezeTrapSound->setIsPaused(false);
+			if (!createTrapSound->isCurrentlyPlaying("../Sound/hammer.wav"))
+				createTrapSound->play2D("../Sound/hammer.wav", false, false, true);
 			break;
 		}
 	}
@@ -251,7 +226,6 @@ void Window::keyUp(unsigned char key, int x, int y) {
 	keyEventTriggered[key] = false;
 	jump = true;
 	walk->setIsPaused(true);
-
 	if (key >= '1' && key <= '9') {
 		string filename = TRAMPOLINE_TRAP_OBJ;
 		int type = 0;

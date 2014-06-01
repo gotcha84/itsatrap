@@ -22,8 +22,8 @@ class HUD {
 		FTGLPixmapFont *font;
 		Scoreboard *board;
 		int m_progressTime;
-		ISoundEngine *engine;
-		ISound *deathSound;
+		ISoundEngine *ouchSound;
+		ISoundEngine *deathSound;
 
 		void draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration);
 		
