@@ -61,6 +61,7 @@ class COMMON_API AABB {
 		float angleIntersection(glm::vec3 from, glm::vec3 goTo);
 
 		bool cameFromTop(glm::vec3 from, glm::vec3 goTo, AABB player, int buildingId);
+		bool cameFromBottom(glm::vec3 from, glm::vec3 goTo, AABB player, int buildingId);
 		void draw();
 		void update(glm::vec3 pos, AABB *offset);
 

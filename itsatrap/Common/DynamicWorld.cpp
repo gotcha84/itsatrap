@@ -18,8 +18,8 @@ DynamicWorld::DynamicWorld()
 		cleanStateInfo(i);
 	}
 
-	team1RespawnPoints.push_back(glm::vec3(0, 50, 19 * UNIT_SIZE));
-	team2RespawnPoints.push_back(glm::vec3(0, 50, -19 * UNIT_SIZE));
+	team1RespawnPoints.push_back(glm::vec3(0, 50, -500 + 20 * UNIT_SIZE));
+	team2RespawnPoints.push_back(glm::vec3(0, 50, -500 + -20 * UNIT_SIZE));
 }
 
 /*
@@ -1033,10 +1033,22 @@ void DynamicWorld::applyGravity()
 			computeAABB(&p);
 			p.position = oldPos;
 			for (int i = 0; i < staticObjects.size(); i++) {
+
+				// hit a ceiling
+				if (staticObjects[i].aabb.cameFromBottom(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
+					p.position.y = staticObjects[i].aabb.minY - YOFFSET; // technically not needed
+					p.velocity.y = 0.0f;
+					p.velocityDiff.y = 0.0f;
+					cout << "Hit ceiling" << endl;
+					break;
+
+				}
+
+				// landed
 				if (staticObjects[i].aabb.cameFromTop(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
 					p.position.y = staticObjects[i].aabb.maxY + YOFFSET; // on ground
-					/*cout << "landed: " << i << endl;
-					cout << "pposition: " << glm::to_string(p.position) << endl;*/
+					//cout << "landed: " << i << endl;
+					//cout << "pposition: " << glm::to_string(p.position) << endl;
 					p.feetPlanted = true;
 					p.velocity.y = 0.0f;
 					p.velocityDiff.y = 0.0f;
