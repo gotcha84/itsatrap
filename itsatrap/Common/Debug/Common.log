@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿Build started 6/2/2014 5:56:35 AM.
+﻿Build started 6/2/2014 6:07:46 AM.
      1>Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glut/include/ /IC:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AABB.cpp ConfigSettings.cpp DynamicWorld.cpp InputEvents.cpp Physics.cpp StateLogic.cpp Stopwatch.cpp World.cpp
@@ -135,19 +134,19 @@
                  [
                      _Ty=infoMsg
                  ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(206): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(228): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(256): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(338): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(429): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(437): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(446): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(455): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(470): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(961): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1048): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1363): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1408): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(207): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(229): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(257): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(339): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(430): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(438): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(447): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(456): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(471): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(962): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1061): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1387): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1432): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
          GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
          ConfigSettings.cpp
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
@@ -180,170 +179,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:05.59
-=======
-﻿  World.cpp
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.h(37): warning C4251: 'World::m_structuresMap' : class 'std::vector<int,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
-          with
-          [
-              _Ty=int
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.h(38): warning C4251: 'World::m_boundingBoxes' : class 'std::vector<AABB,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
-          with
-          [
-              _Ty=AABB
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(20): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(24): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(56): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(57): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(64): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(65): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(96): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(99): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(113): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(116): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(132): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(135): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(149): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(152): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(190): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(192): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(193): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(195): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(205): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(207): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.cpp(216): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-  Stopwatch.cpp
-  StateLogic.cpp
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<std::string,std::string,stdext::hash_compare<_Kty,std::less<_Kty>>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-          with
-          [
-              _Kty=std::string
-  ,            _Ty=std::string
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\statelogic.h(47): warning C4091: 'static ' : ignored on left of 'StateLogic' when no variable is declared
-  GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
-  GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
-  Physics.cpp
-  InputEvents.cpp
-  DynamicWorld.cpp
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<std::string,std::string,stdext::hash_compare<_Kty,std::less<_Kty>>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-          with
-          [
-              _Kty=std::string
-  ,            _Ty=std::string
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\statelogic.h(47): warning C4091: 'static ' : ignored on left of 'StateLogic' when no variable is declared
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.h(37): warning C4251: 'World::m_structuresMap' : class 'std::vector<int,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
-          with
-          [
-              _Ty=int
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\world.h(38): warning C4251: 'World::m_boundingBoxes' : class 'std::vector<AABB,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
-          with
-          [
-              _Ty=AABB
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(39): warning C4251: 'DynamicWorld::staticObjects' : class 'std::vector<staticObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=staticObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(40): warning C4251: 'DynamicWorld::staticWallObjects' : class 'std::vector<staticObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=staticObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(41): warning C4251: 'DynamicWorld::staticRampObjects' : class 'std::vector<staticRampObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=staticRampObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(42): warning C4251: 'DynamicWorld::staticResourceObjects' : class 'std::vector<staticResourceObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=staticResourceObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(43): warning C4251: 'DynamicWorld::team1RespawnPoints' : class 'std::vector<glm::vec3,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=glm::vec3
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(43): warning C4251: 'DynamicWorld::team2RespawnPoints' : class 'std::vector<glm::vec3,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=glm::vec3
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(44): warning C4251: 'DynamicWorld::portalMap' : class 'std::map<int,trapObject *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Kty=int
-  ,            _Ty=trapObject *
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(46): warning C4251: 'DynamicWorld::aabbOffsets' : class 'std::map<int,AABB,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Kty=int
-  ,            _Ty=AABB
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(64): warning C4251: 'DynamicWorld::trapMap' : class 'std::map<int,trapObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Kty=int
-  ,            _Ty=trapObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(65): warning C4251: 'DynamicWorld::playerMap' : class 'std::map<int,playerObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Kty=int
-  ,            _Ty=playerObject
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.h(66): warning C4251: 'DynamicWorld::infoMsgQueue' : class 'std::vector<infoMsg,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-          with
-          [
-              _Ty=infoMsg
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(207): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(229): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(257): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(339): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(430): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(438): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(447): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(456): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(471): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(962): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(1061): warning C4018: '<' : signed/unsigned mismatch
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(1387): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-c:\users\alvin\desktop\125\merging\itsatrap\common\dynamicworld.cpp(1432): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-  GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
-  ConfigSettings.cpp
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<std::string,std::string,stdext::hash_compare<_Kty,std::less<_Kty>>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-          with
-          [
-              _Kty=std::string
-  ,            _Ty=std::string
-          ]
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-c:\users\alvin\desktop\125\merging\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
-  AABB.cpp
-  Generating Code...
-c:\users\alvin\desktop\125\merging\itsatrap\common\aabb.cpp(256): warning C4715: 'AABB::collidesWithRampInside' : not all control paths return a value
-AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
-     Creating library C:\Users\alvin\Desktop\125\merging\itsatrap\Debug\Common.lib and object C:\Users\alvin\Desktop\125\merging\itsatrap\Debug\Common.exp
-  Common.vcxproj -> C:\Users\alvin\Desktop\125\merging\itsatrap\Debug\Common.dll
->>>>>>> d895d2bb490b2b38876bdafde91c91cfb2a6666a
+Time Elapsed 00:00:06.01

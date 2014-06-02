@@ -150,11 +150,6 @@ void ObjModel::drawModel() {
 	glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 
 	//cout << "m_id: " << m_id << endl;
-	//glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, m_material.m_ambient);
-	//glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, m_material.m_diffuse);
-	//glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, m_material.m_specular);
-	//glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, m_material.m_emission);
-	//glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, m_material.m_shininess);
 
 	for (int k = 0; k < m_nIndices.size(); k++) {
 		int temp = m_materials.size();
@@ -172,7 +167,7 @@ void ObjModel::drawModel() {
 				//cout << "1 " << endl;
 				glNormal3f(m_normals[k][3*m_indices[k][3*i+j]], m_normals[k][3*m_indices[k][3*i+j]+1], m_normals[k][3*m_indices[k][3*i+j]+2]);
 				//cout << "2 " << endl;
-				glTexCoord2f(m_texcoords[k][2*m_indices[k][t]], m_texcoords[k][2*m_indices[k][t]+1]);
+				//glTexCoord2f(m_texcoords[k][2*m_indices[k][t]], m_texcoords[k][2*m_indices[k][t]+1]);
 				//cout << "3 " << endl;
 				glVertex3f(m_vertices[k][3*m_indices[k][3*i+j]], m_vertices[k][3*m_indices[k][3*i+j]+1], m_vertices[k][3*m_indices[k][3*i+j]+2]);
 				t++;

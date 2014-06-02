@@ -89,10 +89,9 @@ int main(int argc, char *argv[]) {
 	// opengl lighting
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
-	//float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
-	GLfloat position[]  = {0.0, 1000.0, 0.0, 0.0};  // lightsource position
-	GLfloat ambientColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-
+	float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
+	//GLfloat position[]  = {0.0, 1000.0, 0.0, 0.0};  // lightsource position
+	//GLfloat ambientColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
 	// Initialize networking for client
 	Client::initializeClient();
@@ -134,7 +133,7 @@ int main(int argc, char *argv[]) {
 	
 	// Generate light source:
 	//glDisable(GL_LIGHTING);
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
