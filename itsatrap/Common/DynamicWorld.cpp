@@ -24,6 +24,7 @@ DynamicWorld::DynamicWorld()
 	portalMap.clear();
 	playerMap.clear();
 	trapMap.clear();
+
 }
 
 /*
@@ -960,7 +961,17 @@ void DynamicWorld::applyTrapGravity() {
 
 		for (int i = 0; i < staticObjects.size(); i++) {
 			if (staticObjects[i].aabb.cameFromTop(oldPos, t.pos, t.aabb, i)) {
-				t.pos = oldPos;
+
+				//t.pos = oldPos;
+
+				//cout << "trap aabb: " << endl;
+				//t.aabb.print();
+				//cout << "building thing " << endl;
+				//staticObjects[1].aabb.print();
+				float yLength = t.aabb.maxY - t.aabb.minY;
+				t.pos.y = staticObjects[i].aabb.maxY+(yLength/2);
+				//cout << "updated to: " << glm::to_string(t.pos) << endl;
+				
 				break;
 			}
 		}
@@ -1029,16 +1040,18 @@ void DynamicWorld::applyGravity()
 			return;
 		}
 
-		if (p.currPhysState != PhysicsStates::Climbing && p.currPhysState != PhysicsStates::HoldingEdge &&
-		p.currPhysState != PhysicsStates::PullingUp && p.currPhysState != PhysicsStates::WallRunning) {
+		/*if (p.currPhysState != PhysicsStates::Climbing && p.currPhysState != PhysicsStates::HoldingEdge &&
+		p.currPhysState != PhysicsStates::PullingUp && p.currPhysState != PhysicsStates::WallRunning) {*/
 			
 			/*cout << "player aabb:";
 			p.aabb.print();*/
 
 			float gravityConstant = 0;
 			ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
+			if (p.currPhysState == PhysicsStates::None) {
+				p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
+			}
 
-			p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
 			//cout << "falling at: " << glm::to_string(p.position) << endl;
 			//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
 			//cout << "p.velo+p.velodiff: " << glm::to_string(p.velocity + p.velocityDiff) << endl;
@@ -1053,11 +1066,16 @@ void DynamicWorld::applyGravity()
 					p.velocity.y = 0.0f;
 					p.velocityDiff.y = 0.0f;
 					cout << "Hit ceiling" << endl;
+					if (p.currPhysState != PhysicsStates::None) {
+						StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+						p.currInnerState = innerStates::Ending;
+					}
 					break;
 
 				}
+				//if (p.currPhysState == PhysicsStates::None) {
 
-				// landed
+					// landed
 				if (staticObjects[i].aabb.cameFromTop(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
 					p.position.y = staticObjects[i].aabb.maxY + YOFFSET; // on ground
 					//cout << "landed: " << i << endl;
@@ -1066,10 +1084,15 @@ void DynamicWorld::applyGravity()
 					p.velocity.y = 0.0f;
 					p.velocityDiff.y = 0.0f;
 					p.canClimb = true;
+					if (p.currPhysState != PhysicsStates::None) {
+						StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+						p.currInnerState = innerStates::Ending;
+					}
 					break;
 				}
+				//}
 			}
-		}
+		//}
 
 	}
 
@@ -1242,7 +1265,8 @@ void DynamicWorld::processLookEvent(int playerId, struct cameraObject *cam)
 	struct playerObject *p = &playerMap[playerId];
 
 	memcpy(&p->cameraObject, cam, sizeof(struct cameraObject));
-	
+	StateLogic::handleXRotation(p, cam->xAngle);
+	StateLogic::handleYRotation(p, cam->yAngle);
 	/*cout << "xrotated: " << p->cameraObject.xRotated << endl;
 	cout << "yrotated: " << p->cameraObject.yRotated << endl;*/
 }
@@ -1477,4 +1501,5 @@ void DynamicWorld::addInfoMessage(int destination, string msg)
 	info.destination = destination;
 	info.msg = msg;
 	infoMsgQueue.push_back(info);
+
 }

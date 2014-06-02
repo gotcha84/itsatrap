@@ -119,6 +119,9 @@ struct cameraObject {
 	float xRotated;
 	float yRotated;
 	
+	float xAngle;  // changes
+	float yAngle;
+
 };
 
 struct playerObject {

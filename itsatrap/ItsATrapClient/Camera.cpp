@@ -69,6 +69,14 @@ void Camera::setYRotated(float yrot) {
 	m_yRotated = yrot;
 }
 
+float Camera::calculateXRotated() {
+	return 0.0f;
+}
+
+float Camera::calculateYRotated() {
+	return 0.0f;
+}
+
 void Camera::handleXRotation(float magnitude) {
 	glm::vec3 tmp_camZ = glm::vec3(m_camZ.x, 0.0f, m_camZ.z);
 

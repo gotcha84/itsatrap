@@ -168,7 +168,6 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 
 			//	World::superHeightMapInit(buildings, ramps);
 			//}
-
 			//printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
 			//tmp.aabb.print();
 		}
@@ -442,10 +441,8 @@ void Server::processBuffer()
 		dynamicWorld.applyAdjustments();
 		dynamicWorld.checkPlayersCollideWithTrap();
 	}
-
 	// Send info messages
 	sendInfoMessages();
-
 	// Release Mutex
 	ReleaseMutex(packetBufMutex);
 }
@@ -528,8 +525,8 @@ void Server::checkConnection()
 		{
 			players[i].timeUntilInactive -= MAX_SERVER_PROCESS_RATE;
 
-			if (players[i].timeUntilInactive <= 0)
-				disconnectPlayer(i);
+			/*if (players[i].timeUntilInactive <= 0)
+				disconnectPlayer(i);*/
 		}
 	}
 }

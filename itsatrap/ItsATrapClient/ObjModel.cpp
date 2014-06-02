@@ -277,6 +277,7 @@ void ObjModel::loadModel() {
 		setMaterial();
 	}
 	//m_boundingBox.print();
+	m_boundingBox.print();
 
 	// TODO: send new bounding box to server and see if can make trap at that location
 }

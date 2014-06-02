@@ -14,11 +14,11 @@ using namespace std;
 
 class Material {
 	public:
-		float* m_ambient;
-		float* m_diffuse;
-		float* m_specular;
-		float* m_emission;
-		float m_shininess;
+		GLfloat* m_ambient;
+		GLfloat* m_diffuse;
+		GLfloat* m_specular;
+		GLfloat* m_emission;
+		GLfloat m_shininess;
 
 		Material();
 		~Material();

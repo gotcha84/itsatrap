@@ -103,27 +103,35 @@ void Window::displayCallback(void)
 	
 	// TODO: lock movement if looking up?
 	if (client->root->m_xAngleChange != 0.0f) {
-		client->root->handleXRotation(client->root->m_xAngleChange);
-		client->root->m_xAngleChange = 0.0f;
+		client->root->getCamera()->m_xRotationAngle = client->root->m_xAngleChange;
+		//client->root->handleXRotation(client->root->m_xAngleChange);
+		//client->root->m_xAngleChange = 0.0f;
 		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 		lookChanged = true;
+	}
+	else {
+		client->root->getCamera()->m_xRotationAngle = 0.0f;
 	}
 	
 	if (client->root->m_yAngleChange != 0.0f) {
-		client->root->handleYRotation(client->root->m_yAngleChange);
-		client->root->m_yAngleChange = 0.0f;
+		client->root->getCamera()->m_yRotationAngle = client->root->m_yAngleChange;
+		//client->root->handleYRotation(client->root->m_yAngleChange);
+		//client->root->m_yAngleChange = 0.0f;
 		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 
 		lookChanged = true;
 	}
-
-	if (oldXRotated != client->root->getCamera()->getXRotated() || oldYRotated != client->root->getCamera()->getYRotated()) {
-		sendUpdate = true;
-		lookChanged = true;
-		/*if (oldYRotated != client->root->getCamera()->getYRotated()) {
-			cout << "yrotated: " << client->root->getCamera()->getYRotated() << endl;
-		}*/
+	else {
+		client->root->getCamera()->m_yRotationAngle = 0.0f;
 	}
+
+	//if (oldXRotated != client->root->getCamera()->getXRotated() || oldYRotated != client->root->getCamera()->getYRotated()) {
+	//	sendUpdate = true;
+	//	lookChanged = true;
+	//	/*if (oldYRotated != client->root->getCamera()->getYRotated()) {
+	//		cout << "yrotated: " << client->root->getCamera()->getYRotated() << endl;
+	//	}*/
+	//}
 	
 	//client->root->getPlayer()->applyCamAdjustments();
 	
@@ -150,19 +158,21 @@ void Window::displayCallback(void)
 	
 	//client->root->getPlayer()->getPhysics()->m_velocity = glm::vec3(0.0f, client->root->getPlayer()->getPhysics()->m_velocity.y, 0.0f);
 	
-	if (oldPos != client->root->getPlayer()->getPosition()) {		
-		//client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
-		client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPosition()/* + client->root->getPlayer()->getPhysics()->m_velocity*/));
-		client->root->getPlayer()->updateBoundingBox();
-		sendUpdate = true;
-	}
+	//if (oldPos != client->root->getPlayer()->getPosition()) {		
+	//	//client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
+	//	client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPosition()/* + client->root->getPlayer()->getPhysics()->m_velocity*/));
+	//	client->root->getPlayer()->updateBoundingBox();
+	//	sendUpdate = true;
+	//}
 
 	//if (sendUpdate) {
 	//	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	//}
-	if (lookChanged)
+	if (lookChanged) {
 		Client::sendLookEvent(client->root->getCameraObjectForNetworking());
-
+		/*client->root->m_xAngleChange = 0.0f;
+		client->root->m_yAngleChange = 0.0f;*/
+	}
 	/*if (client->root->getPlayer()->getCamera()->m_cameraCenter != oldPos) {
 		cout << "oldpos: " << glm::to_string(oldPos) << endl;
 		cout << "cam center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;

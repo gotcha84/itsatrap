@@ -16,6 +16,7 @@ HUD::~HUD() {
 }
 
 void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration, string msg) {
+
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();

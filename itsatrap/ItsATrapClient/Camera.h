@@ -69,6 +69,9 @@ class Camera {
 		glm::vec3 getCameraLookAt();
 		glm::vec3 getCameraUp();
 
+		float calculateXRotated();
+		float calculateYRotated();
+		
 		float getXRotated();
 		void setXRotated(float xrot);
 		float getYRotated();

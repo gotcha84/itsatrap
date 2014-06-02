@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
 	client = new ClientInstance(Client::getPlayerId());
 	window = new Window();
 	glm::vec3 starting = client->root->getPosition();
-	starting = starting + glm::vec3(200, 500, -300);
+	starting = starting + glm::vec3(200, 200, -300);
 	client->root->moveTo(starting);
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	sendAABBInfo();
