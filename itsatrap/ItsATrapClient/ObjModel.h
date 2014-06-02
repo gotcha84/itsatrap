@@ -73,7 +73,7 @@ class ObjModel : public sg::Geode {
 		bool isInside(glm::vec3 point);
 		bool collidesWith(ObjModel* o);
 		void setMaterial();
-		void setMaterial(GLfloat ambient[4], GLfloat diffuse[4], GLfloat specular[4], GLfloat emission[4], GLfloat shininess);
+		void addMaterial(GLfloat ambient[4], GLfloat diffuse[4], GLfloat specular[4], GLfloat emission[4], GLfloat shininess);
 };
 
 #endif

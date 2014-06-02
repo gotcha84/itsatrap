@@ -150,13 +150,25 @@ void ObjModel::drawModel() {
 	glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 
 	//cout << "m_id: " << m_id << endl;
-	glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, m_material.m_ambient);
-	glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, m_material.m_diffuse);
-	glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, m_material.m_specular);
-	glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, m_material.m_emission);
-	glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, m_material.m_shininess);
+	//glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, m_material.m_ambient);
+	//glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, m_material.m_diffuse);
+	//glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, m_material.m_specular);
+	//glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, m_material.m_emission);
+	//glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, m_material.m_shininess);
 
 	for (int k = 0; k < m_nIndices.size(); k++) {
+		int temp = m_materials.size();
+
+		if (temp > 1) {
+			int x = 5;
+		}
+
+		glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, m_materials[k].m_ambient);
+		glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, m_materials[k].m_diffuse);
+		glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, m_materials[k].m_specular);
+		glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, m_materials[k].m_emission);
+		glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, m_materials[k].m_shininess);
+
 		for (int i = 0; i < m_nIndices[k]/3; i++) {
 			glBegin(GL_TRIANGLES);
 			for (int j = 0; j < 3; j++) {
@@ -260,6 +272,14 @@ void ObjModel::loadModel() {
 		//cout << "sizes: " << shapes[j].mesh.indices.size() << endl;
 		added++;
 
+		// Add materials for given model part in same order
+		Material * temp = new Material(shapes[j].material.ambient, 
+			shapes[j].material.diffuse, 
+			shapes[j].material.specular,
+			shapes[j].material.emission,
+			shapes[j].material.shininess);
+
+		addMaterial(temp->m_ambient, temp->m_diffuse, temp->m_specular, temp->m_emission, temp->m_shininess);
 	}
 	//cout << "please: "<< m_vertices[1][379] << ", " << m_vertices[1][381] << endl;
 	//Utilities::writeIntArrayToFile(m_nVertices, added, "nverts.txt");
@@ -267,15 +287,6 @@ void ObjModel::loadModel() {
 	//updateHeightMap();
 
 	calculateBoundingBox();
-	if (shapes.size() != 0) {
-		setMaterial(shapes[0].material.ambient,
-			shapes[0].material.diffuse,
-			shapes[0].material.specular,
-			shapes[0].material.emission,
-			shapes[0].material.shininess);
-	} else {
-		setMaterial();
-	}
 	//m_boundingBox.print();
 
 	// TODO: send new bounding box to server and see if can make trap at that location
@@ -352,7 +363,9 @@ void ObjModel::setMaterial() {
 	//m_material.setShininess(128.0f);
 }
 
-void ObjModel::setMaterial(float ambient[4], float diffuse[4], float specular[4], float emission[4], float shininess) {
+void ObjModel::addMaterial(GLfloat ambient[4], GLfloat diffuse[4], GLfloat specular[4], GLfloat emission[4], GLfloat shininess) {
+	m_materials.push_back(Material(ambient, diffuse, specular, emission, shininess));
+
 	//m_material.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
 	//m_material.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
 	//m_material.setSpecular(specular[0], specular[1], specular[2], specular[3]);

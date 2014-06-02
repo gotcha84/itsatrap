@@ -105,11 +105,11 @@ namespace sg {
 
 		//cout << "m_id: " << m_id << endl;
 
-		glMaterialfv( GL_FRONT, GL_AMBIENT, m_material.m_ambient);
-		glMaterialfv( GL_FRONT, GL_DIFFUSE, m_material.m_diffuse);
-		glMaterialfv( GL_FRONT, GL_SPECULAR, m_material.m_specular);
-		glMaterialfv( GL_FRONT, GL_EMISSION, m_material.m_emission);
-		glMaterialf( GL_FRONT, GL_SHININESS, m_material.m_shininess);
+		//glMaterialfv( GL_FRONT, GL_AMBIENT, m_material.m_ambient);
+		//glMaterialfv( GL_FRONT, GL_DIFFUSE, m_material.m_diffuse);
+		//glMaterialfv( GL_FRONT, GL_SPECULAR, m_material.m_specular);
+		//glMaterialfv( GL_FRONT, GL_EMISSION, m_material.m_emission);
+		//glMaterialf( GL_FRONT, GL_SHININESS, m_material.m_shininess);
 
 		//glColor4f(((m_id%8)%4)%2, (m_id%4)%2, m_id%2, 1);
 

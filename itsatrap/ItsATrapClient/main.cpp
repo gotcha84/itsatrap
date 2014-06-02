@@ -89,7 +89,8 @@ int main(int argc, char *argv[]) {
 	// opengl lighting
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
-	float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
+	//float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
+	float position[]  = {0.0, 500.0, 0.0, 0.0};  // lightsource position
 
 	// Initialize networking for client
 	Client::initializeClient();
