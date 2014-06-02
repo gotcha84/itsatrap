@@ -38,6 +38,12 @@ int Server::startServer()
 	}
 	printf("[SERVER]: Server is running.\n");
 
+	// Load Height Map
+	string heightMapFile;
+	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
+	//World::readInHeightMapFromFile(heightMapFile); // ANURAG
+	printf("[SERVER]: Height map loaded.\n");
+
 	while(1) {
 		struct sockaddr_in source;
 		if (Server::receiveMsg(c_msg, &source) == 0)	
@@ -95,11 +101,6 @@ int Server::initialize() {
 	isChanneling = false;
 	physicsReady = false;
 
-	// Load Height Map
-	string heightMapFile;
-	ConfigSettings::getConfig()->getValue("HeightMapFile", heightMapFile);
-	//World::readInHeightMapFromFile(heightMapFile); // ANURAG
-	
 	return 0;
 }
 
@@ -149,8 +150,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
 			dynamicWorld.addStaticObject(tmp);
 
-			int id = dynamicWorld.getNumStaticObjects() - 1;
-			World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
+			//int id = dynamicWorld.getNumStaticObjects() - 1;
+			//World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
 
 			//if (dynamicWorld.getNumStaticObjects() >= 31) {
 			//	vector<AABB> buildings;

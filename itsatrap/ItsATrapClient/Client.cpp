@@ -61,16 +61,29 @@ int Client::initializeClient() {
 	printf("[CLIENT]: Init request sent\n");
 	
 	// Receives Server response
-	Client::receiveMsg(); // TODO: what if server doesn't respond?
-
-	struct packet *p = (struct packet *)c_msg;
-	if (p->eventId == INIT_RESPONSE_EVENT)
+	bool good = false;
+	while (!good)
 	{
-		// Init response
-		struct initResponsePacket *irp = (struct initResponsePacket *)p;
-		printf("[CLIENT]: Server gave me ID: %d\n", irp->givenPlayerId);
-		playerId = irp->givenPlayerId;
+		Client::receiveMsg();
+
+		struct packet *p = (struct packet *)c_msg;
+		if (p->eventId == INIT_RESPONSE_EVENT)
+		{
+			// Init response
+			struct initResponsePacket *irp = (struct initResponsePacket *)p;
+			printf("[CLIENT]: Server gave me ID: %d\n", irp->givenPlayerId);
+			playerId = irp->givenPlayerId;
+			good = true;
+		}
+		else
+		{
+			Client::sendMsg((char *)&initPacket, sizeof(initPacket));
+			printf("[CLIENT]: Init request sent again\n");
+		}
+
+		Sleep(1000);
 	}
+	
 
 	okChannel = false;
 
