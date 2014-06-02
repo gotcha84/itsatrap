@@ -21,9 +21,11 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hi
 	glPushMatrix();
 		glLoadIdentity();
 		gluOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f);
-		cout << "Hello this is spawnTime: " << spawnTime << endl;
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
+
+			
+
 			glLoadIdentity();
 			if (health <= 0) {
 				
@@ -117,9 +119,10 @@ void HUD::drawResource(int resource) {
 
 void HUD::drawDeathTimer(int respawnTime) {
 
+	glColor3f(1, 0, 0); // green
 	font->FaceSize(50);
 	font->CharMap(ft_encoding_symbol);
-	glRasterPos2f(-0.55f, 0.0f);
+	glRasterPos2f(-0.20f, 0.0f);
 	font->Render("You are Dead");
 
 	font->FaceSize(50);

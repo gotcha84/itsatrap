@@ -434,6 +434,22 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 		default:
 			break;
 	}
+	if (button == 3) {
+		//client->scrollUp++;
+		client->scrollUp = true;
+		//if (state == GLUT_UP) client->scrollUp = true;
+		//if (state == GLUT_DOWN) client->scrollUp = false;
+		//if (state == GLUT_UP) cout << "GLUT_UP" << endl;
+		//if (state == GLUT_DOWN) cout << "GLUT_DOWN" << endl;
+		//trapMenu->draw();
+	}
+	else if (button == 4) {
+		client->scrollDown = true;
+		//if (state == GLUT_UP) client->scrollDown = false;
+		//if (state == GLUT_DOWN) client->scrollDown = true;
+		//if (state == GLUT_UP) cout << "GLUT_UP" << endl;
+		//if (state == GLUT_DOWN) cout << "GLUT_DOWN" << endl;
+	}
 }
 
 void Window::processMouseMove(int x, int y) {

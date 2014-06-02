@@ -23,6 +23,8 @@ namespace sg {
 		m_xAngleChangeFactor = 20.0f;
 		m_yAngleChangeFactor = 20.0f;
 
+		trapMenu = new TrapMenu();
+
 		initModels();
 	}
 
@@ -42,6 +44,8 @@ namespace sg {
 		m_color = glm::vec4(10,10,10,1);
 		m_xAngleChangeFactor = 20.0f;
 		m_yAngleChangeFactor = 20.0f;
+
+		trapMenu = new TrapMenu();
 
 		initModels();
 	}
@@ -65,6 +69,9 @@ namespace sg {
 
 		delete board;
 		board = nullptr;
+
+		delete trapMenu;
+		trapMenu = nullptr;
 	}
 
 	void Player::initModels() {
@@ -195,6 +202,22 @@ namespace sg {
 			}
 			board->draw();
 		}
+
+		trapMenu->draw();
+		if (client->scrollUp) {
+			//trapMenu->setInfoState(trapMenu->getInfoState()+1);
+			if ((trapMenu->getInfoState() + 1) == 7) trapMenu->setInfoState(0);
+			else trapMenu->setInfoState( trapMenu->getInfoState()+1);
+			client->scrollUp = false;
+		}
+		if (client->scrollDown) {
+			if ((trapMenu->getInfoState() - 1) < 0) trapMenu->setInfoState(6);
+			else trapMenu->setInfoState(trapMenu->getInfoState() - 1);
+			client->scrollDown = false;
+		}
+
+		//if (client->scrollUp) cout << "playerNode: scrollUp" << endl;
+		//if (client->scrollDown) cout << "playerNode: scrollDown" << endl;
 
 		// Flashbang stuff
 		float flash = 0;

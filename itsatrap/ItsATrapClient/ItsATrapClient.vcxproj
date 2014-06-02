@@ -114,6 +114,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="tiny_obj_loader.cc" />
     <ClCompile Include="Trap.cpp" />
+    <ClCompile Include="TrapMenu.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Building.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="TrapMenu.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Building.h" />

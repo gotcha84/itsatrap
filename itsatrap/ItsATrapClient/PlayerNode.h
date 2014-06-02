@@ -8,6 +8,7 @@
 #include "HUD.h"
 #include "Scoreboard.h"
 #include "ObjModel.h"
+#include "TrapMenu.h"
 
 namespace sg {
 	class Player : public Group {
@@ -16,7 +17,7 @@ namespace sg {
 			MyPlayer *m_player;
 			HUD *m_hud;
 			Scoreboard *board;
-			
+			TrapMenu *trapMenu;
 			bool	m_drawBB;
 
 			glm::vec4 m_color;
