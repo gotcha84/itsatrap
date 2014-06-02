@@ -290,6 +290,54 @@ void Window::keyUp(unsigned char key, int x, int y) {
 			Client::sendChannelAttemptEvent(client->level.resources[i]->getResourceId());
 		}
 	}
+	else if (key == 't')
+	{
+		cout << "PRESSED T" << endl;
+		cout << "getInfoState() " << client->root->trapMenu->getInfoState() << endl;
+		string filename = TRAMPOLINE_TRAP_OBJ;
+		int type = 0;
+		switch (client->root->trapMenu->getInfoState())
+		{
+			case 0:
+				type = TYPE_FREEZE_TRAP;
+				filename = FREEZE_TRAP_OBJ;
+				break;
+			case 1:
+				type = TYPE_TRAMPOLINE_TRAP;
+				filename = TRAMPOLINE_TRAP_OBJ;
+				break;
+			case 2:
+				type = TYPE_SLOW_TRAP;
+				filename = SLOW_TRAP_OBJ;
+				break;
+			case 3:
+				type = TYPE_PUSH_TRAP;
+				filename = PUSH_TRAP_OBJ;
+				break;
+			case 4:
+				type = TYPE_LIGHTNING_TRAP;
+				filename = DEATH_TRAP_OBJ;
+				break;
+			case 5:
+				type = TYPE_PORTAL_TRAP;
+				filename = PORTAL_TRAP_OBJ;
+				break;
+			case 6:
+				type = TYPE_FLASH_TRAP;
+				filename = FLASH_TRAP_OBJ;
+				break;
+			default:
+				type = TYPE_FREEZE_TRAP;
+				filename = TRAMPOLINE_TRAP_OBJ;
+				break;
+		}
+		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated, TRAP_DIR + filename);
+		struct trapObject t = trap->getTrapObjectForNetworking();
+		t.type = type;
+		Client::sendSpawnTrapEvent(t);
+		delete trap;
+		trap = nullptr;
+	}
 }
 
 void Window::specialKeyDown(int key, int x, int y) {
@@ -435,20 +483,10 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 			break;
 	}
 	if (button == 3) {
-		//client->scrollUp++;
 		client->scrollUp = true;
-		//if (state == GLUT_UP) client->scrollUp = true;
-		//if (state == GLUT_DOWN) client->scrollUp = false;
-		//if (state == GLUT_UP) cout << "GLUT_UP" << endl;
-		//if (state == GLUT_DOWN) cout << "GLUT_DOWN" << endl;
-		//trapMenu->draw();
 	}
 	else if (button == 4) {
 		client->scrollDown = true;
-		//if (state == GLUT_UP) client->scrollDown = false;
-		//if (state == GLUT_DOWN) client->scrollDown = true;
-		//if (state == GLUT_UP) cout << "GLUT_UP" << endl;
-		//if (state == GLUT_DOWN) cout << "GLUT_DOWN" << endl;
 	}
 }
 

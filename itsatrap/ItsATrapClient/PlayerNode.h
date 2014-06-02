@@ -9,6 +9,7 @@
 #include "Scoreboard.h"
 #include "ObjModel.h"
 #include "TrapMenu.h"
+#include "GameOver.h"
 
 namespace sg {
 	class Player : public Group {
@@ -18,6 +19,7 @@ namespace sg {
 			HUD *m_hud;
 			Scoreboard *board;
 			TrapMenu *trapMenu;
+			GameOver *gameOver;
 			bool	m_drawBB;
 
 			glm::vec4 m_color;

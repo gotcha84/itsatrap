@@ -1,6 +1,6 @@
 #pragma once
-#ifndef SSCOREBOARD_H
-#define SCOREBOARD_H
+#ifndef TRAPMENU_H
+#define TRAPMENU_H
 
 //Scoreboard.h
 #include <string>
@@ -14,6 +14,7 @@
 class TrapMenu {
 public:
 
+	int infoState;
 
 	TrapMenu();
 	~TrapMenu();
@@ -25,7 +26,7 @@ public:
 	int getInfoState();
 
 private:
-	int infoState;
+	
 };
 
 #endif
