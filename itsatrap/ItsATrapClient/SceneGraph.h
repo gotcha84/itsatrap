@@ -18,7 +18,6 @@
 #include "Building.h"
 #include "Trap.h"
 #include "ObjNode.h"
-#include "Skybox.h"
 #include "ResourceNode.h"
 
 #endif

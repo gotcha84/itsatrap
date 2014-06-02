@@ -123,7 +123,7 @@ void ParticleSystem::initParticles() {
 
 	m_particles.clear();
 	m_particles.resize(m_numParticles);
-	for (int i = 0; i < m_particles.size(); i++) {
+	for (int i = 0; i < m_numParticles; i++) {
 		m_particles[i] = Particle(i, m_origin, m_color);
 	}
 }
@@ -172,7 +172,7 @@ void ParticleSystem::reset() {
 
 void ParticleSystem::draw() {
 	if (m_enabled) {
-		for (int i = 0; i < m_particles.size(); i++) {
+		for (int i = 0; i < m_numParticles; i++) {
 			m_particles[i].draw();
 			m_particles[i].step();
 		}

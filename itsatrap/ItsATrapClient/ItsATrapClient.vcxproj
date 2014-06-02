@@ -54,7 +54,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/freeType2/include;$(SolutionDir)/ftgl/include/;$(SolutionDir)/irrKlang/include/;$(SolutionDir)/glm/;$(SolutionDir)/glut/include/;$(SolutionDir)/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/dirent/include/;$(SolutionDir)/freeType2/include/;$(SolutionDir)/ftgl/include/;$(SolutionDir)/irrKlang/include/;$(SolutionDir)/glm/;$(SolutionDir)/glut/include/;$(SolutionDir)/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -62,7 +62,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)/freeType2/lib;$(SolutionDir)/ftgl/lib;$(SolutionDir)/irrKlang/lib/;$(SolutionDir)/glut/lib/;$(SolutionDir)$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/ftgl/lib/;$(SolutionDir)/freeType2/lib/;$(SolutionDir)/irrKlang/lib/;$(SolutionDir)/glut/lib/;$(SolutionDir)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freetype253_D.lib;ftgl_D.lib;irrKlang.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;Common.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <StackReserveSize>
       </StackReserveSize>
@@ -109,7 +109,6 @@
     <ClCompile Include="ResourceNode.cpp" />
     <ClCompile Include="Scoreboard.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -129,8 +128,8 @@
     <ClInclude Include="ResourceNode.h" />
     <ClInclude Include="Scoreboard.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Skybox.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="City.h" />
@@ -151,6 +150,20 @@
     <ClInclude Include="Building.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\phong.frag" />
+    <None Include="..\..\phong.vert" />
+    <None Include="can.frag">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="can.vert">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="gouraud.frag" />
+    <None Include="gouraud.vert" />
+    <None Include="phongandtexture.frag" />
+    <None Include="phongandtexture.vert" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -158,16 +171,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shaders\can.frag" />
-    <None Include="..\Shaders\can.vert" />
-    <None Include="..\Shaders\gouraud.frag" />
-    <None Include="..\Shaders\gouraud.vert" />
-    <None Include="..\Shaders\pass1.frag" />
-    <None Include="..\Shaders\pass1.vert" />
-    <None Include="..\Shaders\pass2blur.frag" />
-    <None Include="..\Shaders\pass2blur.vert" />
-    <None Include="..\Shaders\phongandtexture.frag" />
-    <None Include="..\Shaders\phongandtexture.vert" />
     <None Include="..\Shaders\simple.frag" />
     <None Include="..\Shaders\simple.vert" />
   </ItemGroup>

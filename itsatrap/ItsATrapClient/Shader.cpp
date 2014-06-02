@@ -116,53 +116,6 @@ Shader::Shader(void)
 {
 }
 
-Shader::Shader(string vertFile, string fragFile) {
-	shaderInit();
-
-	// create vert+frag shaders
-	GLuint vert = glCreateShader(GL_VERTEX_SHADER);
-	GLuint frag = glCreateShader(GL_FRAGMENT_SHADER);
-
-	// read source code
-	readShaderSource(vert, vertFile);
-	readShaderSource(frag, fragFile);
-
-	// compile shaders
-	GLint compiled;
-	glCompileShader(vert);
-	glGetShaderiv(vert, GL_COMPILE_STATUS, &compiled);
-	printShaderInfoLog(vert);
-	if (compiled == GL_FALSE) {
-		cout << "Compile error in vertex shader." << endl;
-	}
-
-	glCompileShader(frag);
-	glGetShaderiv(frag, GL_COMPILE_STATUS, &compiled);
-	printShaderInfoLog(frag);
-	if (compiled == GL_FALSE) {
-		cout << "Compile error in fragment shader." << endl;
-	}
-
-	// create program and attach shaders
-	GLuint prog = glCreateProgram();
-	glAttachShader(prog, vert);
-	glAttachShader(prog, frag);
-
-	// attached to program, don't need refs to shaders anymore
-	glDeleteShader(vert);
-	glDeleteShader(frag);
-
-	// link program
-	GLint linked = GL_TRUE;
-	glLinkProgram(prog);
-	glGetProgramiv(prog, GL_LINK_STATUS, &linked);
-	printProgramInfoLog(prog);
-	if (linked == GL_FALSE) {
-		cout << "Link error in shader program." << endl;
-	}
-
-	m_prog = prog;
-}
 
 Shader::~Shader(void)
 {
@@ -280,7 +233,7 @@ int Shader::shaderInit(void)
 /*
  *	Thies function reads a souce program of shader into memory 
  */
-int Shader::readShaderSource(GLuint shader, string file)
+int Shader::readShaderSource(GLuint shader, char *file)
 {
   FILE *fp;
   const GLchar *source;
@@ -288,9 +241,9 @@ int Shader::readShaderSource(GLuint shader, string file)
   int ret;
 
   /* Opens input file */
-  fp = fopen(file.c_str(), "rb");
+  fp = fopen(file, "rb");
   if (fp == NULL) {
-    perror(file.c_str());
+    perror(file);
     return -1;
   }
 
@@ -445,6 +398,3 @@ GLuint Shader::lightShader(char* fragFile, char* vertFile){
   return gl2Program;
 }
 
-GLuint Shader::getShader() {
-	return m_prog;
-}

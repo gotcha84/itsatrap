@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#include "dirent.h"
 #include "SceneGraph.h"
 #include "../Common/World.h"
 
@@ -32,8 +33,13 @@
 #define UNIT_40			UNIT_SIZE * 40
 #define UNIT_48			UNIT_SIZE * 48
 
+#define LEVEL_DIR		"..\\Models\\Level"
+#define OBELISK_DIR		"..\\Models\\Obelisk"
+
 #define BLOCKS			"../Models/Blocks/"
 #define POLYNOIDS		"../Models/Polynoid/"
+#define LEVEL			"../Models/Level/"
+#define OBELISK			"../Models/Obelisk/"
 #define CLIMBBLOCK		"../Models/Blocks/ClimbBlock.obj"
 #define CROSSBAR		"../Models/Blocks/CrossBar.obj"
 #define LARGERAMP		"../Models/Blocks/LargeRamp.obj"
@@ -48,7 +54,9 @@ class Level {
 		int activeResourceNode;
 		sg::MatrixTransform *root;
 		sg::MatrixTransform *ground;
+		sg::Cube * groundCube;
 		vector<sg::MatrixTransform *> xForms;
+		vector<sg::ObjNode *> levelNodes;
 		vector<sg::Cube *> buildings;
 		vector<sg::Cube *> walls;
 		vector<sg::ResourceNode *> resources;
@@ -59,6 +67,7 @@ class Level {
 		~Level();
 
 		void initLevel();
+		void initLevel0();
 		void destroyLevel();
 
 		sg::MatrixTransform* getRoot();

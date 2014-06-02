@@ -29,10 +29,6 @@ namespace sg {
 		m_model->loadModel(objFilename, mtlFilename);
 	}
 
-	void ObjNode::loadTexture(std::string filename) {
-		m_model->loadTexture(filename);
-	}
-
 	ObjModel *ObjNode::getModel() {
 		return m_model;
 	}

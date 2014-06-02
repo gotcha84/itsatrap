@@ -2,6 +2,7 @@
 #define XOFFSET 10.0f
 #define YOFFSET 13.0f
 #define ZOFFSET 8.0f
+#define SMALLESTWIDTH 1.0f
 
 #define HEADER_SIZE (3 * sizeof(int))
 
@@ -17,8 +18,8 @@ DynamicWorld::DynamicWorld()
 		cleanStateInfo(i);
 	}
 
-	team1RespawnPoints.push_back(glm::vec3(0, 50, 19 * UNIT_SIZE));
-	team2RespawnPoints.push_back(glm::vec3(0, 50, -19 * UNIT_SIZE));
+	team1RespawnPoints.push_back(glm::vec3(0, 50, -500 + 20 * UNIT_SIZE));
+	team2RespawnPoints.push_back(glm::vec3(0, 50, -500 + -20 * UNIT_SIZE));
 }
 
 /*
@@ -78,7 +79,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 		computeAABB(&p);
 		
 	}
-
+	cout << "pos: " << glm::to_string(p.position) << endl;
 	// why not update resources?
 	p.health = 100;
 	p.numKills = 0;
@@ -88,7 +89,6 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.feetPlanted = true;
 	p.interactingWithBuildingId = -1;
 	p.interactingWithBuildingFace = -1;
-	p.interactingWithRampId = -1;
 	p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 	p.feetPlanted = true;
@@ -101,6 +101,10 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	ConfigSettings::getConfig()->getValue("StartingResources", p.resources);
 	p.knifeDelay = 0;
 	p.timeUntilRegen = 0;
+	p.flashDuration = 0;
+	p.hitCrosshair = 0;
+	//p.position.x = 0.0f;
+	//p.position.y = 500.0f;
 
 	playerMap[p.id] = p;
 	cout << "newplayer aabb: ";
@@ -110,6 +114,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 
 void DynamicWorld::updatePlayer(struct playerObject p)
 {
+	
 	if (playerLock[p.id] == true)
 		return;
 
@@ -136,7 +141,6 @@ void DynamicWorld::updatePlayer(struct playerObject p)
 	p.triedForward = playerMap[p.id].triedForward;
 	p.interactingWithBuildingId = playerMap[p.id].interactingWithBuildingId;
 	p.interactingWithBuildingFace = playerMap[p.id].interactingWithBuildingFace;
-	p.interactingWithRampId = playerMap[p.id].interactingWithRampId;
 	p.currInnerState = playerMap[p.id].currInnerState;
 	p.currPhysState = playerMap[p.id].currPhysState;
 	p.currCamState = playerMap[p.id].currCamState;
@@ -185,7 +189,7 @@ int DynamicWorld::serialize(char *ptr)
 	{
 		if (it->second.eventCode != 0)
 		{
-			printf("Sending event %d about trap %d\n", it->second.eventCode, it->second.id);
+			//printf("Sending event %d about trap %d\n", it->second.eventCode, it->second.id);
 			trapsToSend.push_back(it->second);
 
 			if (it->second.eventCode == EVENT_REMOVE_TRAP)
@@ -366,7 +370,11 @@ void DynamicWorld::addTrap(struct trapObject t)
 		ConfigSettings::getConfig()->getValue("CostPortalTrap", cost);
 		break;
 	}
-
+	case TYPE_FLASH_TRAP:
+	{
+		ConfigSettings::getConfig()->getValue("CostFlashTrap", cost);
+		break;
+	}
 	default:
 		cost = 10;
 		break;
@@ -463,100 +471,6 @@ int DynamicWorld::checkSideCollisionsWithAllBuildings(struct playerObject *e)
 }
 
 
-int DynamicWorld::checkCollisionsWithAllRampsEntrance(struct playerObject *e)
-{
-	/*if (staticRampObjects.size() > 0 && staticRampObjects[0].aabb.collidesWithRampEntrance(e->position, e->aabb, 4)) {
-		return 0;
-	}
-	return -1;*/
-
-	int entrance;
-	for (int i = 0; i < staticRampObjects.size(); i++)
-	{
-		switch (i) {
-			case 0:
-				entrance = 4;
-				break;
-			case 1:
-				entrance = 5;
-				break;
-			case 2:
-				entrance = 4;
-				break;
-			case 3:
-				entrance = 4;
-				break;
-			case 4:
-				entrance = 0;
-				break;
-			case 5:
-				entrance = 0;
-				break;
-			case 6:
-				entrance = 5;
-				break;
-			default:
-				break;
-		}
-		
-		if (staticRampObjects[i].aabb.collidesWithRampEntrance(e->position, e->aabb, entrance))
-		{
-			printf("Collision: player %d with static object %d\n", e->id, i);
-			return i;
-		}
-		
-	}
-
-	return -1;
-}
-
-int DynamicWorld::checkCollisionsWithAllRampsInside(struct playerObject *e)
-{
-	
-	/*if (e->aabb.collidesWithRampInside(staticRampObjects[4].aabb, 0, staticRampObjects[4].slope))
-	{
-		printf("Collision: player %d with static ramp object %d\n", e->id, 4);
-		return 4;
-	}
-	return -1;*/
-
-	int entrance;
-	for (int i = 0; i < staticRampObjects.size(); i++)
-	{
-		switch (i) {
-		case 0:
-			entrance = 4;
-			break;
-		case 1:
-			entrance = 5;
-			break;
-		case 2:
-			entrance = 4;
-			break;
-		case 3:
-			entrance = 4;
-			break;
-		case 4:
-			entrance = 0;
-			break;
-		case 5:
-			entrance = 0;
-			break;
-		case 6:
-			entrance = 5;
-			break;
-		}
-
-		if (e->aabb.collidesWithRampInside(staticRampObjects[i].aabb, entrance, staticRampObjects[i].slope))
-		{
-			//printf("Collision: player %d with static object %d\n", e->id, i);
-			return i;
-		}
-
-	}
-
-	return -1;
-}
 
 
 
@@ -592,6 +506,11 @@ void DynamicWorld::updateTimings(int timeDiff)
 			}
 		}
 		
+		if (p.flashDuration > 0)
+			p.flashDuration -= timeDiff;
+
+		if (p.hitCrosshair > 0)
+			p.hitCrosshair -= timeDiff;
 	}
 
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); ++it)
@@ -614,6 +533,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 
 	target->health -= damage;
 	ConfigSettings::getConfig()->getValue("HealthRegenWaitAfterDamage", target->timeUntilRegen);
+	ConfigSettings::getConfig()->getValue("HitCrosshairDuration", attacker->hitCrosshair);
 
 	if (target->health <= 0)
 	{
@@ -661,6 +581,8 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 void DynamicWorld::computeAABB(struct playerObject *p)
 {
 	p->aabb.update(p->position, &aabbOffsets[TYPE_PLAYER]);
+
+	/*
 	static int counter = 0;
 	if (counter == 100)
 	{
@@ -669,13 +591,12 @@ void DynamicWorld::computeAABB(struct playerObject *p)
 		p->aabb.print();
 	}
 	counter++;
+	*/
 }
 
 void DynamicWorld::computeAABB(struct trapObject *t)
 {
 	t->aabb.update(t->pos, &aabbOffsets[t->type]);
-	printf("TRAP: "); 
-	t->aabb.print();
 }
 
 void DynamicWorld::applyCollisions() {
@@ -696,44 +617,11 @@ void DynamicWorld::applyCollisions() {
 			p.position = oldPos;
 			p.position.y += YOFFSET;
 			int collisionId = checkCollisionsWithAllNonTraps(&p);
-			int rampId;
-			// if not on ramp
-			if (p.interactingWithRampId == -1) {
-
-				// check for entrance
-				rampId = checkCollisionsWithAllRampsEntrance(&p);
-
-				// hit side of ramp
-				if (rampId == -1 && checkCollisionsWithAllRampsInside(&p) != -1) {
-					//cout << "not on ramp, found hit side" << endl;
-					p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-					p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-					p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
-					p.position = oldPos;
-					computeAABB(&p);
-					return;
-				}
-				/*
-				if (rampId == -1) {
-				cout << "not on ramp, did not find entrance. did not hit side" << endl;
-				}
-				else {
-				cout << "not no ramp, found entrance" << endl;
-				}
-				*/
-				p.interactingWithRampId = rampId;
-			}
-			// if already on ramp
-			else {
-				rampId = checkCollisionsWithAllRampsInside(&p);
-				cout << "on ramp, checking: " << rampId << endl;
-				p.interactingWithRampId = rampId;
-			}
 			p.position = oldPos;
 			computeAABB(&p);
 			//cout << "collision id: " << collisionId << endl;
-			if (collisionId != -1 && rampId == -1) {
-				cout << "collision id: " << collisionId << endl;
+			if (collisionId != -1) {
+				//cout << "collision id: " << collisionId << endl;
 				p.position = proposedNewPos;
 				//p.position.y += YOFFSET;
 				computeAABB(&p);
@@ -743,9 +631,9 @@ void DynamicWorld::applyCollisions() {
 				p.position = oldPos;
 				computeAABB(&p);
 				if (buildingId != -1) {
-					cout << "collided with building" << endl;
-					cout << "xz: " << proposedNewPos.x << ", " << proposedNewPos.z << endl;
-					cout << "heightmap at that location: " << World::m_heightMap[(int)proposedNewPos.x + World::m_heightMapXShift][(int)proposedNewPos.z + World::m_heightMapXShift];
+					//cout << "collided with building" << endl;
+					//cout << "xz: " << proposedNewPos.x << ", " << proposedNewPos.z << endl;
+					//cout << "heightmap at that location: " << World::m_heightMap[(int)proposedNewPos.x + World::m_heightMapXShift][(int)proposedNewPos.z + World::m_heightMapXShift];
 					// TODO: check guy is facing wall too, at rest
 					if (!p.feetPlanted /*&& !(m_physics->atRest()) */ && p.triedForward) {
 						if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
@@ -1037,7 +925,6 @@ void DynamicWorld::resetWorldInfo() {
 			default:
 				//p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 				break;
-
 		}
 		
 	}
@@ -1053,21 +940,31 @@ void DynamicWorld::applyTrapGravity() {
 		ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
 
 		t.pos += glm::vec3(0.0f, gravityConstant, 0.0f);
+		computeAABB(&t);
+		//cout << ""
+		/*cout << "taabb: ";
+		t.aabb.print();*/
 
-		if (t.aabb.minY < World::m_heightMap[(int)(t.pos.x) + World::m_heightMapXShift][(int)(t.pos.z) + World::m_heightMapZShift]) {
-			float diff = World::m_heightMap[(int)(t.pos.x) + World::m_heightMapXShift][(int)(t.pos.z) + World::m_heightMapZShift] - t.aabb.minY;
-			t.pos.y += diff;
-			t.aabb.maxY += diff;
-			t.aabb.minY += diff;
-			// TODO: check for collisions?
+		for (int i = 0; i < staticObjects.size(); i++) {
+			if (staticObjects[i].aabb.cameFromTop(oldPos, t.pos, t.aabb, i)) {
+				cout << "trap aabb: " << endl;
+				t.aabb.print();
+				cout << "building thing " << endl;
+				staticObjects[1].aabb.print();
+				float yLength = t.aabb.maxY - t.aabb.minY;
+				t.pos.y = staticObjects[i].aabb.maxY+(yLength/2);
+				cout << "updated to: " << glm::to_string(t.pos) << endl;
+				
+				break;
+			}
 		}
 
-		if (t.pos.y < 0)
-			t.pos = oldPos;
+		/*if (t.pos.y < 0)
+			t.pos = oldPos;*/
 
 		if (t.pos != oldPos)
 		{
-			computeAABB(&t);
+			//computeAABB(&t);
 			t.eventCode = EVENT_UPDATE_TRAP;
 		}
 	}
@@ -1087,6 +984,7 @@ void DynamicWorld::applyGravity()
 			cout << "pvelodiff: " << glm::to_string(p.velocityDiff) << endl;
 			}*/
 
+		glm::vec3 oldPos = p.position;
 
 		int xIndex1 = (int)floor(p.position.x + p.velocity.x + p.velocityDiff.x /*- 5.0f*/);
 		int zIndex1 = (int)floor(p.position.z + p.velocity.z + p.velocityDiff.z /*- 5.0f*/);
@@ -1094,65 +992,89 @@ void DynamicWorld::applyGravity()
 		int xIndex2 = xIndex1 + 1/*0*/;
 		int zIndex2 = zIndex1 + 1/*0*/;
 
-		int worldHeightMapNegXBound = -535;
+	/*	int worldHeightMapNegXBound = -535;
 		int worldHeightMapPosXBound = 535;
 		int worldHeightMapNegZBound = -535;
-		int worldHeightMapPosZBound = 535;
+		int worldHeightMapPosZBound = 535;*/
 
-		if (xIndex1 < worldHeightMapNegXBound || xIndex1 > worldHeightMapPosXBound || zIndex1 < worldHeightMapNegZBound || zIndex1 > worldHeightMapPosZBound) {
+		/*if (xIndex1 < worldHeightMapNegXBound || xIndex1 > worldHeightMapPosXBound || zIndex1 < worldHeightMapNegZBound || zIndex1 > worldHeightMapPosZBound) {
 			cout << "OUT OF BOUNDS!" << endl;
 			p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 			p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 			p.currInnerState = innerStates::Off;
 			p.currPhysState = PhysicsStates::None;
 			return;
-		}
-
-		float heightMap11 = World::m_heightMap[xIndex1 + World::m_heightMapXShift][zIndex1 + World::m_heightMapZShift];
-		float heightMap12 = World::m_heightMap[xIndex1 + World::m_heightMapXShift][zIndex2 + World::m_heightMapZShift];
-		float heightMap21 = World::m_heightMap[xIndex2 + World::m_heightMapXShift][zIndex1 + World::m_heightMapZShift];
-		float heightMap22 = World::m_heightMap[xIndex2 + World::m_heightMapXShift][zIndex2 + World::m_heightMapZShift];
-
-		float heightMap = min((heightMap11, heightMap12), min(heightMap21, heightMap22));
-
-		if (p.interactingWithRampId != -1) {
-			p.feetPlanted = true;
+		}*/
+		// safety net for test
+		if (p.position.y <= -500.0f) {
+			p.position = glm::vec3(200, 500, -300);
+			//p.feetPlanted = true;
 			p.velocity.y = 0.0f;
 			p.velocityDiff.y = 0.0f;
-			p.canClimb = true;
-			p.position.y = heightMap + YOFFSET; // on ground
-			cout << "on ramp, adjusted to heightmap" << endl;
+			
+			p.health = 0;
+			p.numDeaths++;
+			p.deathState = true;
+			
+			int respawnTime = 0;
+			ConfigSettings::getConfig()->getValue("RespawnTime", respawnTime);
+			p.timeUntilRespawn = respawnTime;
+			//p.canClimb = true;
 			return;
 		}
 
-		else if (p.currPhysState != PhysicsStates::Climbing && p.currPhysState != PhysicsStates::HoldingEdge &&
-			p.currPhysState != PhysicsStates::PullingUp && p.currPhysState != PhysicsStates::WallRunning) {
+		/*if (p.currPhysState != PhysicsStates::Climbing && p.currPhysState != PhysicsStates::HoldingEdge &&
+		p.currPhysState != PhysicsStates::PullingUp && p.currPhysState != PhysicsStates::WallRunning) {*/
 			
+			/*cout << "player aabb:";
+			p.aabb.print();*/
+
 			float gravityConstant = 0;
 			ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
-
-			p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
-
-			//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
-
-			if (heightMap > p.position.y + p.velocity.y + p.velocityDiff.y - YOFFSET) {
-				//cout << "landed: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
-				//cout << "landed\n";
-				p.position.y = heightMap + YOFFSET; // on ground
-				p.feetPlanted = true;
-				p.velocity.y = 0.0f;
-				p.velocityDiff.y = 0.0f;
-				p.canClimb = true;
-				
-				int rampId = checkCollisionsWithAllRampsInside(&p);
-				//cout << "setting ramp id: " << rampId << endl;
-				int oldInteractingWithRampId = p.interactingWithRampId;
-				p.interactingWithRampId = rampId;
-				if (oldInteractingWithRampId != rampId) {
-					cout << "changed from: " << oldInteractingWithRampId << " to " << rampId << endl;
-				}
+			if (p.currPhysState == PhysicsStates::None) {
+				p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
 			}
-		}
+			//cout << "falling at: " << glm::to_string(p.position) << endl;
+			//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
+			//cout << "p.velo+p.velodiff: " << glm::to_string(p.velocity + p.velocityDiff) << endl;
+			p.position += p.velocity + p.velocityDiff;
+			computeAABB(&p);
+			p.position = oldPos;
+			for (int i = 0; i < staticObjects.size(); i++) {
+
+				// hit a ceiling
+				if (staticObjects[i].aabb.cameFromBottom(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
+					p.position.y = staticObjects[i].aabb.minY - YOFFSET; // technically not needed
+					p.velocity.y = 0.0f;
+					p.velocityDiff.y = 0.0f;
+					cout << "Hit ceiling" << endl;
+					if (p.currPhysState != PhysicsStates::None) {
+						StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+						p.currInnerState = innerStates::Ending;
+					}
+					break;
+
+				}
+				//if (p.currPhysState == PhysicsStates::None) {
+
+					// landed
+				if (staticObjects[i].aabb.cameFromTop(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
+					p.position.y = staticObjects[i].aabb.maxY + YOFFSET; // on ground
+					//cout << "landed: " << i << endl;
+					//cout << "pposition: " << glm::to_string(p.position) << endl;
+					p.feetPlanted = true;
+					p.velocity.y = 0.0f;
+					p.velocityDiff.y = 0.0f;
+					p.canClimb = true;
+					if (p.currPhysState != PhysicsStates::None) {
+						StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+						p.currInnerState = innerStates::Ending;
+					}
+					break;
+				}
+				//}
+			}
+		//}
 
 	}
 
@@ -1169,7 +1091,7 @@ void DynamicWorld::applyAdjustments() {
 		int xIndex2 = xIndex1 /*+ 2*XOFFSET*/;
 		int zIndex2 = zIndex1 /*+ 2*ZOFFSET*/;
 
-		int worldHeightMapNegXBound = -535;
+		/*int worldHeightMapNegXBound = -535;
 		int worldHeightMapPosXBound = 535;
 		int worldHeightMapNegZBound = -535;
 		int worldHeightMapPosZBound = 535;
@@ -1181,14 +1103,14 @@ void DynamicWorld::applyAdjustments() {
 			p.currInnerState = innerStates::Off;
 			p.currPhysState = PhysicsStates::None;
 			return;
-		}
+		}*/
 
-		//cout << "player pos: ";
-		//p.aabb.print();
+		/*cout << "player pos: ";
+		p.aabb.print();*/
 
 		float playerHeight = 0;
 		ConfigSettings::getConfig()->getValue("PlayerHeight", playerHeight);
-
+		
 		float velocityDecayFactor = 0.95f;
 		//ConfigSettings::getConfig()->getValue("velocityDecayFactor ", velocityDecayFactor );
 
@@ -1201,6 +1123,10 @@ void DynamicWorld::applyAdjustments() {
 
 		computeAABB(&p);
 
+		/*cout << "player aabb:";
+		p.aabb.print();*/
+		//ANDRE
+		//cout << "p.cameraObject.xrotated: " << p.cameraObject.xRotated << endl;
 		p.cameraObject.cameraCenter = glm::vec3(p.position.x, p.aabb.minY + playerHeight, p.position.z);
 		p.cameraObject.cameraLookAt = p.cameraObject.cameraCenter + p.cameraObject.camZ;
 
@@ -1242,7 +1168,6 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 	ConfigSettings::getConfig()->getValue("holdingEdgeMaxDuration", holdingEdgeMaxDuration);
 	switch (p->currPhysState) {
 	case PhysicsStates::Climbing:
-		
 		if (staticObjects[p->interactingWithBuildingId].aabb.nearTop(p->position)) {
 			StateLogic::startHoldingEdge(p, p->interactingWithBuildingId);
 			return;
@@ -1316,8 +1241,14 @@ void DynamicWorld::processJumpEvent(int playerId)
 
 void DynamicWorld::processLookEvent(int playerId, struct cameraObject *cam)
 {
+	//cout << "process" << endl;
+	
 	struct playerObject *p = &playerMap[playerId];
 	memcpy(&p->cameraObject, cam, sizeof(struct cameraObject));
+	StateLogic::handleXRotation(p, cam->xAngle);
+	StateLogic::handleYRotation(p, cam->yAngle);
+	/*cout << "xrotated: " << p->cameraObject.xRotated << endl;
+	cout << "yrotated: " << p->cameraObject.yRotated << endl;*/
 }
 
 void DynamicWorld::noneJumpEvent(int playerId) {
@@ -1435,6 +1366,15 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 
 						playerDamage(&playerMap[it->second.ownerId], p, power);
 
+						// Flashes everyone
+						int flashEffect = 0;
+						ConfigSettings::getConfig()->getValue("LightningTrapFlashEffect", flashEffect);
+						for (map<int, struct playerObject>::iterator iterator = playerMap.begin(); iterator != playerMap.end(); iterator++)
+						{
+							if (iterator->second.flashDuration < flashEffect)
+								iterator->second.flashDuration = flashEffect;
+						}
+
 						break;
 					}
 					case TYPE_PORTAL_TRAP:
@@ -1462,6 +1402,15 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 
 						break;
 					}
+					case TYPE_FLASH_TRAP:
+					{
+						float flashDuration = 0;
+						ConfigSettings::getConfig()->getValue("FlashTrapDuration", flashDuration);
+
+						p->flashDuration = flashDuration;
+
+						break;
+					}
 					default:
 						break;
 				}
@@ -1469,6 +1418,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 				if (okToRemove)
 				{
 					it->second.eventCode = EVENT_REMOVE_TRAP;
+					ConfigSettings::getConfig()->getValue("HitCrosshairDuration", playerMap[it->second.ownerId].hitCrosshair);
 					return;
 				}
 
@@ -1482,5 +1432,44 @@ void DynamicWorld::addAABBInfo(int type, AABB aabb)
 	printf("[COMMON]: Got AABB info: type %d: ", type); 
 	aabb.print();
 
-	aabbOffsets[type] = aabb;
+	if (type == TYPE_PLAYER) {
+		cout << "player's ";
+		AABB tmp = AABB(-1*XOFFSET, -1*YOFFSET, -1*ZOFFSET, XOFFSET, YOFFSET, ZOFFSET);
+		aabbOffsets[type] = tmp;
+	}
+	else {
+		aabbOffsets[type] = aabb;
+	}
+}
+
+void DynamicWorld::handleKnifeEvent(int knifer)
+{
+	playerObject *player = &playerMap[knifer];
+
+	
+	for (map<int, struct playerObject>::iterator pit = playerMap.begin(); pit != playerMap.end(); pit++)
+	{
+		struct playerObject *target = &pit->second;
+
+		// Make sure they're on different teams & knife is ready
+		if (/*player->knifeDelay <= 0 &&*/ player->id % 2 != target->id % 2)
+		{
+			ConfigSettings::getConfig()->getValue("KnifeDelay", player->knifeDelay);
+
+			float knifeRange = 0.0f;
+			ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
+
+			glm::vec3 lookAt = player->cameraObject.cameraLookAt;
+			glm::vec3 center = player->cameraObject.cameraCenter;
+			glm::vec3 difVec = lookAt - center;
+			glm::vec3 hitPt = center + (knifeRange * difVec);
+
+			if (hitPt.x >= target->aabb.minX && hitPt.x <= target->aabb.maxX
+				&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
+				&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
+			{
+				playerDamage(player, target, KNIFE_HIT_DMG);
+			}
+		}
+	}
 }

@@ -209,6 +209,23 @@ float Utilities::degreesToRad(float deg) {
 	return (atan(1.0f)*4.0f)*deg/180.0f;
 }
 
+string Utilities::intToBaseThree(int num) {
+	int oldNum = num;
+	string result = "";
+	int rem;
+	string tmpstr;
+	while (num > 0) {
+		rem = num % 3;
+		tmpstr = to_string(rem);
+		result.append(tmpstr);
+		num /= 3;
+	}
+	while (result.length() != 3) {
+		result.append("0");
+	}
+	return result;
+}
+
 /*
 int Utilities::getMaxDepth(sg::Node *node) {
 	sg::Group *group = dynamic_cast<sg::Group*>(node);

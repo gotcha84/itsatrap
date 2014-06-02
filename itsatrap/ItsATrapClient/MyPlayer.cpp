@@ -74,162 +74,162 @@ void MyPlayer::setAABB(AABB *bbox) {
 
 
 void MyPlayer::handleSliding() {
-/*	
+	/*
 	AABB* oldAABB = this->getAABB();
 
 	clock_t end = clock();
 	glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
-	
+
 	if (m_physics->m_currentState == PhysicsStates::Sliding) {
-		
-		if (((float)(end - m_physics->m_lastSlid) / CLOCKS_PER_SEC) > m_physics->m_slideDelay) {
-			cout << "ending SLIDE TIMES FORWARD:" << ((float)(end - m_physics->m_lastSlid) / CLOCKS_PER_SEC) << endl;
-			m_physics->m_currentState = PhysicsStates::None;
-		}
-		else {
-			cout << "SLIDING IN PROGRESS " << endl;
-			glm::vec3 proposedNewPos = m_physics->m_position + m_slideFactor*m_zWalkFactor*tmp_camZ;
-			m_physics->m_velocityDiff = m_slideFactor*m_zWalkFactor*tmp_camZ;
 
-			glm::vec3 oldPos = m_physics->m_position;
-			glm::vec3 newPos;
+	if (((float)(end - m_physics->m_lastSlid) / CLOCKS_PER_SEC) > m_physics->m_slideDelay) {
+	cout << "ending SLIDE TIMES FORWARD:" << ((float)(end - m_physics->m_lastSlid) / CLOCKS_PER_SEC) << endl;
+	m_physics->m_currentState = PhysicsStates::None;
+	}
+	else {
+	cout << "SLIDING IN PROGRESS " << endl;
+	glm::vec3 proposedNewPos = m_physics->m_position + m_slideFactor*m_zWalkFactor*tmp_camZ;
+	m_physics->m_velocityDiff = m_slideFactor*m_zWalkFactor*tmp_camZ;
 
-			m_physics->m_position = proposedNewPos;
-			this->updateBoundingBox();
-			int buildingId = m_physics->handleCollisionDetection(this->getAABB());
+	glm::vec3 oldPos = m_physics->m_position;
+	glm::vec3 newPos;
 
-			m_physics->m_position = oldPos;
+	m_physics->m_position = proposedNewPos;
+	this->updateBoundingBox();
+	int buildingId = m_physics->handleCollisionDetection(this->getAABB());
 
-			if (buildingId != -1) {
-				newPos = oldPos;
-				m_physics->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-				cout << "ending SLIDE HIT SOMETHING" << endl;
-				m_physics->m_currentState = PhysicsStates::None;
-			}
-			else {
-				newPos = proposedNewPos;
-			}
+	m_physics->m_position = oldPos;
 
-			m_physics->m_velocity+=m_physics->m_velocityDiff;
+	if (buildingId != -1) {
+	newPos = oldPos;
+	m_physics->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+	cout << "ending SLIDE HIT SOMETHING" << endl;
+	m_physics->m_currentState = PhysicsStates::None;
+	}
+	else {
+	newPos = proposedNewPos;
+	}
 
-			glm::vec3 moved = newPos - oldPos;
+	m_physics->m_velocity+=m_physics->m_velocityDiff;
 
-			// people are 4 feet tall apparently
-			m_cam->m_cameraCenter+=moved; // glm::vec3(m_physics->m_position.x, m_physics->m_position.y, m_physics->m_position.z);
-			//cout << "before: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
-	
-			// anurag
-			m_cam->m_cameraLookAt+=moved;
+	glm::vec3 moved = newPos - oldPos;
 
-			//cout << "after: " << glm::to_string(m_cam->m_cameraLookAt) << endl << endl;
-			//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
-			m_cam->updateCameraMatrix();
+	// people are 4 feet tall apparently
+	m_cam->m_cameraCenter+=moved; // glm::vec3(m_physics->m_position.x, m_physics->m_position.y, m_physics->m_position.z);
+	//cout << "before: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
 
-			this->setModelMatrix(glm::translate(newPos));
-			//Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
-			this->updateBoundingBox();
-		}
+	// anurag
+	m_cam->m_cameraLookAt+=moved;
+
+	//cout << "after: " << glm::to_string(m_cam->m_cameraLookAt) << endl << endl;
+	//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
+	m_cam->updateCameraMatrix();
+
+	this->setModelMatrix(glm::translate(newPos));
+	//Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
+	this->updateBoundingBox();
+	}
 
 	}
 
 	else if (m_physics->m_currentState == PhysicsStates::None && ((float)(end - m_physics->m_lastSlid) / CLOCKS_PER_SEC) > m_physics->m_slideDelay) {
-		cout << "WEE STARTING TO SLIDE" << endl;
-		m_physics->m_lastSlid = clock();
+	cout << "WEE STARTING TO SLIDE" << endl;
+	m_physics->m_lastSlid = clock();
 
-		m_physics->m_currentState = PhysicsStates::Sliding;
+	m_physics->m_currentState = PhysicsStates::Sliding;
 
-		glm::vec3 proposedNewPos = m_physics->m_position + m_slideFactor*m_zWalkFactor*tmp_camZ;
-		m_physics->m_velocityDiff = m_slideFactor*m_zWalkFactor*tmp_camZ;
+	glm::vec3 proposedNewPos = m_physics->m_position + m_slideFactor*m_zWalkFactor*tmp_camZ;
+	m_physics->m_velocityDiff = m_slideFactor*m_zWalkFactor*tmp_camZ;
 
-		glm::vec3 oldPos = m_physics->m_position;
-		glm::vec3 newPos;
-		m_physics->m_position = proposedNewPos;
-		this->updateBoundingBox();
-		int buildingId = m_physics->handleCollisionDetection(this->getAABB());
-		m_physics->m_position = oldPos;
+	glm::vec3 oldPos = m_physics->m_position;
+	glm::vec3 newPos;
+	m_physics->m_position = proposedNewPos;
+	this->updateBoundingBox();
+	int buildingId = m_physics->handleCollisionDetection(this->getAABB());
+	m_physics->m_position = oldPos;
 
-		if (buildingId != -1) {
-			newPos = oldPos;
-			m_physics->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-			cout << "ending SLIDE HIT SOMETHING" << endl;
-			m_physics->m_currentState = PhysicsStates::None;
-		}
-		else {
-			newPos = proposedNewPos;
-		}
-
-		m_physics->m_velocity+=m_physics->m_velocityDiff;
-
-		glm::vec3 moved = newPos - oldPos;
-
-		// people are 4 feet tall apparently
-		m_cam->m_cameraCenter+=moved; // glm::vec3(m_physics->m_position.x, m_physics->m_position.y, m_physics->m_position.z);
-		//cout << "before: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
-	
-		// anurag
-		m_cam->m_cameraLookAt+=moved;
-
-		//cout << "after: " << glm::to_string(m_cam->m_cameraLookAt) << endl << endl;
-		//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
-		m_cam->updateCameraMatrix();
-
-		this->setModelMatrix(glm::translate(newPos));
-		//Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
-		this->updateBoundingBox();
+	if (buildingId != -1) {
+	newPos = oldPos;
+	m_physics->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+	cout << "ending SLIDE HIT SOMETHING" << endl;
+	m_physics->m_currentState = PhysicsStates::None;
 	}
-*/	
+	else {
+	newPos = proposedNewPos;
+	}
+
+	m_physics->m_velocity+=m_physics->m_velocityDiff;
+
+	glm::vec3 moved = newPos - oldPos;
+
+	// people are 4 feet tall apparently
+	m_cam->m_cameraCenter+=moved; // glm::vec3(m_physics->m_position.x, m_physics->m_position.y, m_physics->m_position.z);
+	//cout << "before: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
+
+	// anurag
+	m_cam->m_cameraLookAt+=moved;
+
+	//cout << "after: " << glm::to_string(m_cam->m_cameraLookAt) << endl << endl;
+	//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
+	m_cam->updateCameraMatrix();
+
+	this->setModelMatrix(glm::translate(newPos));
+	//Client::sendStateUpdate(Client::getPlayerId(), newPos.x, newPos.y, newPos.z);
+	this->updateBoundingBox();
+	}
+	*/
 
 }
 
 void MyPlayer::handleTeleport() {
-	
+
 	/*
 	clock_t end = clock();
 	if (((float)(end - m_physics->m_lastTeleported) / CLOCKS_PER_SEC) > m_physics->m_teleportDelay) {
 
-		m_physics->m_lastTeleported = clock();
+	m_physics->m_lastTeleported = clock();
 
-		glm::vec3 proposedNewPos;
-		glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
+	glm::vec3 proposedNewPos;
+	glm::vec3 tmp_camZ = glm::vec3(m_cam->m_camZ.x, 0.0f, m_cam->m_camZ.z);
 
-		proposedNewPos = m_physics->m_position + m_teleportFactor*tmp_camZ;
-		m_physics->m_velocityDiff = m_teleportFactor*tmp_camZ;
+	proposedNewPos = m_physics->m_position + m_teleportFactor*tmp_camZ;
+	m_physics->m_velocityDiff = m_teleportFactor*tmp_camZ;
 
-		glm::vec3 oldPos = m_physics->m_position;
-		glm::vec3 newPos;
-		m_physics->m_position = proposedNewPos;
-		this->updateBoundingBox();
-		int buildingId = m_physics->handleCollisionDetection(this->getAABB());
-		m_physics->m_position = oldPos;
+	glm::vec3 oldPos = m_physics->m_position;
+	glm::vec3 newPos;
+	m_physics->m_position = proposedNewPos;
+	this->updateBoundingBox();
+	int buildingId = m_physics->handleCollisionDetection(this->getAABB());
+	m_physics->m_position = oldPos;
 
-		if (buildingId != -1) {
-			newPos = oldPos;
-			m_physics->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-		}
-		else {
-			newPos = proposedNewPos;
-		}
-
-		m_physics->m_velocity+=m_physics->m_velocityDiff;
-
-		glm::vec3 moved = newPos - oldPos;
-
-		// people are 4 feet tall apparently
-		m_cam->m_cameraCenter+=moved; // 
-		//cout << "before: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
-	
-		// anurag
-		m_cam->m_cameraLookAt+=moved;
-
-		//cout << "after: " << glm::to_string(m_cam->m_cameraLookAt) << endl << endl;
-		//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
-		m_cam->updateCameraMatrix();
-
-		this->setModelMatrix(glm::translate(newPos));
-		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-		this->updateBoundingBox();
+	if (buildingId != -1) {
+	newPos = oldPos;
+	m_physics->m_velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 	}
-*/
+	else {
+	newPos = proposedNewPos;
+	}
+
+	m_physics->m_velocity+=m_physics->m_velocityDiff;
+
+	glm::vec3 moved = newPos - oldPos;
+
+	// people are 4 feet tall apparently
+	m_cam->m_cameraCenter+=moved; //
+	//cout << "before: " << glm::to_string(m_cam->m_cameraLookAt) << endl;
+
+	// anurag
+	m_cam->m_cameraLookAt+=moved;
+
+	//cout << "after: " << glm::to_string(m_cam->m_cameraLookAt) << endl << endl;
+	//m_cam->m_cameraLookAt = m_cam->m_cameraCenter + m_cam->m_camZ;
+	m_cam->updateCameraMatrix();
+
+	this->setModelMatrix(glm::translate(newPos));
+	//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+	this->updateBoundingBox();
+	}
+	*/
 }
 
 void MyPlayer::handleXRotation(float magnitude) {
@@ -258,23 +258,23 @@ void MyPlayer::setModelMatrix(glm::mat4 m) {
 }
 
 void MyPlayer::setProjectionMatrix() {
-	float fov = 3.141592654*90.0/180.0;
-	
+	float fov = 3.141592654*90.0 / 180.0;
+
 	float aspect;
 	/*if (fullscreen) {
-		aspect = 1366.0/768.0;
+	aspect = 1366.0/768.0;
 	}
 	else { */
-		aspect = 512.0/512.0;
+	aspect = 512.0 / 512.0;
 	//}
 	float nearv = 0.1;
 	float farv = 10000.0;
 
 	m_projectionMatrix = glm::mat4(
-			1.0/(aspect), 0, 0, 0,
-			0, 1.0, 0, 0,
-			0, 0, (nearv+farv)/(nearv-farv), 2*nearv*farv/(nearv-farv),
-			0, 0, -1, 0);
+		1.0 / (aspect), 0, 0, 0,
+		0, 1.0, 0, 0,
+		0, 0, (nearv + farv) / (nearv - farv), 2 * nearv*farv / (nearv - farv),
+		0, 0, -1, 0);
 
 	m_projectionMatrix = glm::transpose(m_projectionMatrix);
 
@@ -292,11 +292,11 @@ void MyPlayer::setViewportMatrix() {
 	float x0 = 0;
 	float y0 = 0;
 
-	getViewportMatrix() = 
-		Matrix4((x-x0)/2, 0, 0, (x+x0)/2,
-				0, (y-y0)/2, 0, (y+y0)/2,
-				0, 0, 0.5, 0.5,
-				0, 0, 0, 1);*/
+	getViewportMatrix() =
+	Matrix4((x-x0)/2, 0, 0, (x+x0)/2,
+	0, (y-y0)/2, 0, (y+y0)/2,
+	0, 0, 0.5, 0.5,
+	0, 0, 0, 1);*/
 }
 
 Camera *MyPlayer::getCamera() {
@@ -348,9 +348,10 @@ void MyPlayer::move(glm::vec3 delta) {
 }
 
 void MyPlayer::moveTo(glm::vec3 pos) {
+	m_position = pos;
 	m_cam->moveTo(pos);
 	//m_physics->moveTo(pos);
-	m_position = pos;
+	
 	this->updateBoundingBox();
 	this->setModelMatrix(glm::translate(pos));
 }
