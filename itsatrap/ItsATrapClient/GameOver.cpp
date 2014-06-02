@@ -31,6 +31,7 @@ void GameOver::draw() {
 
 	font->Render("Thanks for playing");	
 	displayWin();
+	displayCredits();
 	drawCube(0.0f, 0.0f, 0.0f);
 
 	glPopMatrix();
@@ -64,4 +65,26 @@ void GameOver::displayWin() {
 	else if (team1 == team2) {
 		glColor3f(1.0f, 0.0f, 0.0f);		font->FaceSize(75);		font->CharMap(ft_encoding_symbol);		glRasterPos2f(-0.05f, 0.5);		font->Render("Tie");
 	}
+}
+
+void GameOver::displayCredits() {
+	glColor4f(1.0f, 1.0f, 1.0f, 0.4f);
+	font->FaceSize(50);	font->CharMap(ft_encoding_symbol);
+	glRasterPos2f(-0.1f, 0.2f);
+	font->Render("Group 5");
+	glRasterPos2f(-0.5f, 0.0f);
+	font->Render("Enrico Bern Hardy Tanuwidjaja");
+	glRasterPos2f(-0.5f, -0.2f);
+	font->Render("Anurag Thrush Kalavakunta");
+	glRasterPos2f(-0.5f, -0.4f);
+	font->Render("Kevin Ngo");
+	glRasterPos2f(-0.5f, -0.6f);
+	font->Render("Mike Boulricea");
+	glRasterPos2f(0.3f, 0.0f);
+	font->Render("Andre So");
+	glRasterPos2f(0.3f, -0.2f);
+	font->Render("Yukitoshi Murase");
+	glRasterPos2f(0.3f, -0.4f);
+	font->Render("Michael Yao");
+
 }

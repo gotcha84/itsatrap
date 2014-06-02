@@ -206,7 +206,7 @@ int main(int argc, char *argv[]) {
 	//client->printPlayers();
 	//client->printSceneGraph();
 	// setup background music and other player's footstep
-	otherPlayerSound = new Sound("footstep.wav");
+	otherPlayerSound = new Sound("../Sound/footstep.wav");
 	sound = new Sound();
 	otherPlayerSound->playMusic(false, false, true);
 	//sound->playMusic();

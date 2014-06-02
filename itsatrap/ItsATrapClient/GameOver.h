@@ -23,6 +23,7 @@ public:
 	void trapInfo(int state);
 	void setTeamScore(int one, int two);
 	void displayWin();
+	void displayCredits();
 private:
 	int team1;
 	int team2;
