@@ -17,10 +17,10 @@ Material::Material() {
 Material::Material(GLfloat* ambient, GLfloat* diffuse, GLfloat* specular, GLfloat* emission, GLfloat shininess) {
 	//Material();
 	
-	//m_ambient = new GLfloat[3];
-	//m_specular = new GLfloat[3];
-	//m_diffuse = new GLfloat[3];
-	//m_emission = new GLfloat[3];
+	m_ambient = new GLfloat[3];
+	m_specular = new GLfloat[3];
+	m_diffuse = new GLfloat[3];
+	m_emission = new GLfloat[3];
 
 	//m_ambient = { 0, 0, 0, 0 };
 
