@@ -20,6 +20,10 @@ DynamicWorld::DynamicWorld()
 
 	team1RespawnPoints.push_back(glm::vec3(0, 50, -500 + 20 * UNIT_SIZE));
 	team2RespawnPoints.push_back(glm::vec3(0, 50, -500 + -20 * UNIT_SIZE));
+
+	portalMap.clear();
+	playerMap.clear();
+	trapMap.clear();
 }
 
 /*
@@ -388,6 +392,15 @@ void DynamicWorld::addTrap(struct trapObject t)
 
 	trapOwner->resources -= cost;
 
+	t.eventCode = EVENT_ADD_TRAP;
+	t.id = currentId;
+	int timeTillActive = 0;
+	ConfigSettings::getConfig()->getValue("TrapInactivePeriod", timeTillActive);
+	t.timeTillActive = timeTillActive;
+	trapMap[currentId] = t;
+	
+	playerLock[t.ownerId] = true;
+
 	// Special case for portal trap
 	if (t.type == TYPE_PORTAL_TRAP)
 	{
@@ -398,17 +411,14 @@ void DynamicWorld::addTrap(struct trapObject t)
 			portalMap.erase(t.ownerId);
 		}
 		portalMap[t.ownerId] = &trapMap[t.id];
-	}
 
-	t.eventCode = EVENT_ADD_TRAP;
-	t.id = currentId;
-	int timeTillActive = 0;
-	ConfigSettings::getConfig()->getValue("TrapInactivePeriod", timeTillActive);
-	t.timeTillActive = timeTillActive;
-	trapMap[currentId] = t;
-	
-	playerLock[t.ownerId] = true;
-	cost = 
+		// Announce this new portal
+		for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
+		{
+			if (it->second.id != t.ownerId && it->second.id % 2 == t.ownerId % 2)
+				addInfoMessage(it->second.id, "Your teammate (player " + to_string(t.ownerId) + ") deployed a portal");
+		}
+	}
 
 	currentId++;
 }
@@ -534,9 +544,6 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 	target->health -= damage;
 	ConfigSettings::getConfig()->getValue("HealthRegenWaitAfterDamage", target->timeUntilRegen);
 	ConfigSettings::getConfig()->getValue("HitCrosshairDuration", attacker->hitCrosshair);
-	
-	addInfoMessage(attacker->id, "You attacked!");
-	
 
 	if (target->health <= 0)
 	{
@@ -553,6 +560,9 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		target->aabb.minY = 0;
 		target->aabb.minZ = 0;
 		target->deathState = true;
+
+		addInfoMessage(attacker->id, "You have killed player " + to_string(target->id));
+		addInfoMessage(target->id, "You have been killed by player " + to_string(attacker->id));
 
 		if (attacker->id % 2 != target->id % 2)
 		{
@@ -1376,6 +1386,8 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 								// Found teammate's portal, teleport successful!
 								if (portalItr->second->ownerId != p->id && portalItr->second->ownerId % 2 == p->id % 2)
 								{
+									addInfoMessage(portalItr->second->ownerId, "Player " + to_string(p->id) + " used your portal");
+
 									okToRemove = true;
 									p->position = portalItr->second->pos;
 									portalItr->second->eventCode = EVENT_REMOVE_TRAP;

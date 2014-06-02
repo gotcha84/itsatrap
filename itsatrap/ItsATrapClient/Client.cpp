@@ -119,7 +119,6 @@ void Client::startRefresherThread()
 
 DWORD WINAPI Client::receiverThread(LPVOID param)
 {
-	printf("[CLIENT]: Receiver thread started\n");
 	while (1)
 	{
 		if (Client::receiveMsg() == 0)
@@ -290,6 +289,7 @@ void Client::sendSpawnTrapEvent(struct trapObject t)
 
 	printf("Sending trap with type %d\n", t.type);
 
+	p.trap.ownerId = getPlayerId();
 	sendMsg((char *)&p, sizeof(struct spawnTrapPacket));
 }
 

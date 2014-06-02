@@ -116,7 +116,7 @@ void HUD::drawInfoMessage(string msg) {
 	glLoadIdentity();
 
 	glColor4f(0.9, 0.9, 0.9, 1); // green
-	font->FaceSize(50);
+	font->FaceSize(30);
 	font->CharMap(ft_encoding_symbol);
 	glRasterPos2f(-0.9f, 0.6f);
 	font->Render(msg.c_str());
