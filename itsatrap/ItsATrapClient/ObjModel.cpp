@@ -221,12 +221,12 @@ void ObjModel::loadModel() {
 
 	string err;
 	if (!m_objFilename.empty() && !m_mtlFilename.empty()) {
-		cout << "[ObjModel] loading obj : " << m_objFilename << endl;
-		cout << "[ObjModel] loading mtl : " << m_mtlFilename << endl;
+		//cout << "[ObjModel] loading obj : " << m_objFilename << endl;
+		//cout << "[ObjModel] loading mtl : " << m_mtlFilename << endl;
 		err = tinyobj::LoadObj(shapes, m_objFilename.c_str(), m_mtlFilename.c_str());
 	}
 	else if (!m_objFilename.empty()) {
-		cout << "[ObjModel] loading obj : " << m_objFilename << endl;
+		//cout << "[ObjModel] loading obj : " << m_objFilename << endl;
 		err = tinyobj::LoadObj(shapes, m_objFilename.c_str());
 	}
 	else {
@@ -276,7 +276,7 @@ void ObjModel::loadModel() {
 	} else {
 		setMaterial();
 	}
-	m_boundingBox.print();
+	//m_boundingBox.print();
 
 	// TODO: send new bounding box to server and see if can make trap at that location
 }

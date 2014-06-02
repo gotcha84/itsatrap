@@ -28,6 +28,7 @@
 #define NEW_OWNER_RESOURCE_UPDATE_EVENT 22
 #define CLEAR_CHANNEL_BAR 23
 #define AABB_INFO 24
+#define INFO_MESSAGE_EVENT 25
 
 
 // Superclass of all packets
@@ -136,6 +137,13 @@ struct aabbInfoPacket
 	int playerId;
 	int type;
 	AABB aabb;
+};
+
+#define MAX_MSG_LENGTH 32
+struct infoMsgPacket
+{
+	int eventId;
+	char msg[MAX_MSG_LENGTH];
 };
 
 #endif

@@ -79,6 +79,8 @@ private:
 	static void sendNewResourceOwnerUpdate(int playerId, int resourceId);
 	static void sendClearChannelingProgressBar(int playerId);
 	static void resetChanneling();
+	static void sendInfoMessages();
+	static void sendInfoMessage(int destination, string msg);
 
 public:
 

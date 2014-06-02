@@ -66,6 +66,8 @@ void MyPlayer::initCommon() {
 	m_wallJumpingBuildingId = -1;
 	m_onTopOfBuildingId = -1;
 
+	m_infoMsg.setMessage("Welcome!");
+
 }
 
 void MyPlayer::setAABB(AABB *bbox) {

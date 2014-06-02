@@ -20,6 +20,11 @@
 
 using namespace std;
 
+struct infoMsg {
+	int destination;
+	string msg;
+};
+
 /*
  * class DynamicWorld
  *
@@ -50,6 +55,7 @@ private:
 	void respawnPlayer(struct playerObject *p);
 	void computeAABB(struct playerObject *p);
 	void computeAABB(struct trapObject *t);
+	void addInfoMessage(int destination, string msg);
 
 	//float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, struct aabb other, int buildingId);
 
@@ -57,6 +63,7 @@ public:
 	// Variables
 	map<int, struct trapObject>		trapMap;
 	map<int, struct playerObject>	playerMap;
+	vector<struct infoMsg>			infoMsgQueue;
 
 	// Functions
 	DynamicWorld();

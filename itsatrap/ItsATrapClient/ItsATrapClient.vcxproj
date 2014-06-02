@@ -96,6 +96,7 @@
     <ClCompile Include="Geode.cpp" />
     <ClCompile Include="Group.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="InfoMessage.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -120,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HUD.h" />
+    <ClInclude Include="InfoMessage.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="ObjModel.h" />

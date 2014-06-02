@@ -15,7 +15,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration) {
+void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration, string msg) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -36,6 +36,7 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hi
 				drawCrossHair();
 				drawHealthBar(health);
 				drawResource(resources);
+				drawInfoMessage(msg);
 				if( m_progressTime > -1 ) drawProgressBar(m_progressTime);
 				drawFlashbag(flashFade);
 				
@@ -105,6 +106,20 @@ void HUD::drawResource(int resource) {
 		font->CharMap(ft_encoding_symbol);
 		glRasterPos2f(0.65f, 0.8f);
 		font->Render(to_string(resource).c_str());
+
+	glPopMatrix();
+}
+
+void HUD::drawInfoMessage(string msg) {
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	glColor4f(0.9, 0.9, 0.9, 1); // green
+	font->FaceSize(50);
+	font->CharMap(ft_encoding_symbol);
+	glRasterPos2f(-0.9f, 0.6f);
+	font->Render(msg.c_str());
 
 	glPopMatrix();
 }

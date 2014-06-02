@@ -87,9 +87,10 @@ int Client::initializeClient() {
 
 	okChannel = false;
 
+	Client::startRefresherThread();
 	Client::startReceiverThread();
 	Client::startSenderThread();
-	Client::startRefresherThread();
+	
 
 	return 0;
 	
@@ -99,18 +100,21 @@ void Client::startReceiverThread()
 {
 	DWORD tmp = 0;
 	CreateThread(NULL, 0, Client::receiverThread, NULL, 0, &tmp);
+	cout << "[CLIENT]: Receiver thread started" << endl;
 }
 
 void Client::startSenderThread()
 {
 	DWORD tmp = 0;
 	CreateThread(NULL, 0, Client::senderThread, NULL, 0, &tmp);
+	cout << "[CLIENT]: Sender thread started" << endl;
 }
 
 void Client::startRefresherThread()
 {
 	DWORD tmp = 0;
 	CreateThread(NULL, 0, Client::refresherThread, NULL, 0, &tmp);
+	cout << "[CLIENT]: Refresher thread started" << endl;
 }
 
 DWORD WINAPI Client::receiverThread(LPVOID param)
@@ -161,6 +165,11 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				struct refreshPacket *packet = (struct refreshPacket *) p;
 				okChannel = false;
 				client->root->m_hud->m_progressTime = -1;
+			}
+			else if (p->eventId == INFO_MESSAGE_EVENT)
+			{
+				struct infoMsgPacket *info = (struct infoMsgPacket *)p;
+				client->root->getPlayer()->m_infoMsg.setMessage(info->msg);
 			}
 		}
 	}
@@ -395,7 +404,7 @@ DWORD WINAPI Client::refresherThread(LPVOID)
 {
 	while (true)
 	{
-		int clientRefreshInterval = 1000;
+		int clientRefreshInterval = 200;
 		ConfigSettings::getConfig()->getValue("ClientRefreshInterval", clientRefreshInterval);
 		Sleep(clientRefreshInterval);
 		struct refreshPacket p = {};

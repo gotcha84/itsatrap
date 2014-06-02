@@ -18,6 +18,7 @@
 //#include "Physics.h"
 #include "NetworkObjects.h"
 #include "ConfigSettings.h"
+#include "InfoMessage.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ using namespace std;
 class MyPlayer {
 	public:
 		int m_numKills, m_numDeaths, m_health, m_stunDuration, m_slowDuration, m_resources, m_timeUntilRespawn, m_flashDuration, m_hitCrosshairDuration;
+		InfoMessage m_infoMsg;
 		bool m_deathState;
 
 		Camera *m_cam;

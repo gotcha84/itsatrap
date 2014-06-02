@@ -121,7 +121,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			player.clientAddress = *source;
 			player.playerId = playerCount;
 			player.active = true;
-			ConfigSettings::getConfig()->getValue("TimeUntilDisconnect", player.timeUntilInactive);
+			player.timeUntilInactive = 10000;
+			//ConfigSettings::getConfig()->getValue("TimeUntilDisconnect", player.timeUntilInactive);
 			players[playerCount] = player;
 				
 			// Creating response message
@@ -168,8 +169,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			//	World::superHeightMapInit(buildings, ramps);
 			//}
 
-			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
-			tmp.aabb.print();
+			//printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			//tmp.aabb.print();
 		}
 		int MaxBuildings = 0;
 		ConfigSettings::getConfig()->getValue("MaxBuildings", MaxBuildings);
@@ -442,6 +443,9 @@ void Server::processBuffer()
 		dynamicWorld.checkPlayersCollideWithTrap();
 	}
 
+	// Send info messages
+	sendInfoMessages();
+
 	// Release Mutex
 	ReleaseMutex(packetBufMutex);
 }
@@ -524,8 +528,8 @@ void Server::checkConnection()
 		{
 			players[i].timeUntilInactive -= MAX_SERVER_PROCESS_RATE;
 
-			/*if (players[i].timeUntilInactive <= 0)
-				disconnectPlayer(i);*/
+			if (players[i].timeUntilInactive <= 0)
+				disconnectPlayer(i);
 		}
 	}
 }
@@ -624,4 +628,23 @@ void Server::resetChanneling() {
 
 	isChanneling = false;
 	channelingPlayer = -1;
+}
+
+void Server::sendInfoMessage(int destination, string msg)
+{
+	struct infoMsgPacket p = {};
+	p.eventId = INFO_MESSAGE_EVENT;
+
+	strncpy(p.msg, msg.c_str(), sizeof(p.msg));
+	p.msg[sizeof(p.msg)-1] = 0;
+
+	Server::sendMsg((char *)&p, sizeof(p), &players[destination].clientAddress);
+}
+
+void Server::sendInfoMessages()
+{
+	for (int i = 0; i < dynamicWorld.infoMsgQueue.size(); i++)
+		sendInfoMessage(dynamicWorld.infoMsgQueue[i].destination, dynamicWorld.infoMsgQueue[i].msg);
+
+	dynamicWorld.infoMsgQueue.clear();
 }

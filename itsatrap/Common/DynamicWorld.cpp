@@ -107,8 +107,8 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	//p.position.y = 500.0f;
 
 	playerMap[p.id] = p;
-	cout << "newplayer aabb: ";
-	p.aabb.print();
+	//cout << "newplayer aabb: ";
+	//p.aabb.print();
 }
 
 
@@ -534,6 +534,9 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 	target->health -= damage;
 	ConfigSettings::getConfig()->getValue("HealthRegenWaitAfterDamage", target->timeUntilRegen);
 	ConfigSettings::getConfig()->getValue("HitCrosshairDuration", attacker->hitCrosshair);
+	
+	addInfoMessage(attacker->id, "You attacked!");
+	
 
 	if (target->health <= 0)
 	{
@@ -1412,11 +1415,10 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 
 void DynamicWorld::addAABBInfo(int type, AABB aabb)
 {
-	printf("[COMMON]: Got AABB info: type %d: ", type); 
-	aabb.print();
+	//printf("[COMMON]: Got AABB info: type %d: ", type); 
+	//aabb.print();
 
 	if (type == TYPE_PLAYER) {
-		cout << "player's ";
 		AABB tmp = AABB(-1*XOFFSET, -1*YOFFSET, -1*ZOFFSET, XOFFSET, YOFFSET, ZOFFSET);
 		aabbOffsets[type] = tmp;
 	}
@@ -1455,4 +1457,12 @@ void DynamicWorld::handleKnifeEvent(int knifer)
 			}
 		}
 	}
+}
+
+void DynamicWorld::addInfoMessage(int destination, string msg)
+{
+	struct infoMsg info = {};
+	info.destination = destination;
+	info.msg = msg;
+	infoMsgQueue.push_back(info);
 }
