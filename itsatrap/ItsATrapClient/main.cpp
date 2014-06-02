@@ -124,16 +124,16 @@ int main(int argc, char *argv[]) {
 	glFrontFace(GL_CCW);
 	
 	// Generate material properties:
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	//glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+	//glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glEnable(GL_COLOR_MATERIAL);
 	
 	// Generate light source:
-	glDisable(GL_LIGHTING);
-	//glLightfv(GL_LIGHT0, GL_POSITION, position);
-	//glEnable(GL_LIGHTING);
-	//glEnable(GL_LIGHT0);
+	//glDisable(GL_LIGHTING);
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 	
 	// Install callback functions:
 	glutDisplayFunc(window->displayCallback);

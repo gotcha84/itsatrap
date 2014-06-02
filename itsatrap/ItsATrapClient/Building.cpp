@@ -228,10 +228,10 @@ namespace sg {
 	}
 	
 	void Building::setMaterial() {
-		m_material.setAmbient(0.7f, 0.7f, 0.7f, 1.0f); 
-		m_material.setDiffuse(0.1f, 0.5f, 0.8f, 1.0f);
-		m_material.setSpecular(1.0f, 1.0f, 1.0f, 1.0f);
-		m_material.setEmission(0.3f, 0.2f, 0.2f, 0.0f);
-		m_material.setShininess(128.0f);
+		//m_material.setAmbient(0.7f, 0.7f, 0.7f, 1.0f); 
+		//m_material.setDiffuse(0.1f, 0.5f, 0.8f, 1.0f);
+		//m_material.setSpecular(1.0f, 1.0f, 1.0f, 1.0f);
+		//m_material.setEmission(0.3f, 0.2f, 0.2f, 0.0f);
+		//m_material.setShininess(128.0f);
 	}
 }

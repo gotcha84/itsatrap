@@ -345,19 +345,19 @@ bool ObjModel::collidesWith(ObjModel* o) {
 }
 	
 void ObjModel::setMaterial() {
-	m_material.setAmbient(0.7f, 0.7f, 0.7f, 1.0f); 
-	m_material.setDiffuse(0.1f, 0.5f, 0.8f, 1.0f);
-	m_material.setSpecular(1.0f, 1.0f, 1.0f, 1.0f);
-	m_material.setEmission(0.3f, 0.2f, 0.2f, 0.0f);
-	m_material.setShininess(128.0f);
+	//m_material.setAmbient(0.7f, 0.7f, 0.7f, 1.0f); 
+	//m_material.setDiffuse(0.1f, 0.5f, 0.8f, 1.0f);
+	//m_material.setSpecular(1.0f, 1.0f, 1.0f, 1.0f);
+	//m_material.setEmission(0.3f, 0.2f, 0.2f, 0.0f);
+	//m_material.setShininess(128.0f);
 }
 
 void ObjModel::setMaterial(float ambient[4], float diffuse[4], float specular[4], float emission[4], float shininess) {
-	m_material.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
-	m_material.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
-	m_material.setSpecular(specular[0], specular[1], specular[2], specular[3]);
-	m_material.setEmission(emission[0], emission[1], emission[2], emission[3]);
-	m_material.setShininess(shininess);
+	//m_material.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
+	//m_material.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
+	//m_material.setSpecular(specular[0], specular[1], specular[2], specular[3]);
+	//m_material.setEmission(emission[0], emission[1], emission[2], emission[3]);
+	//m_material.setShininess(shininess);
 }
 
 void ObjModel::print() {

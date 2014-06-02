@@ -19,7 +19,8 @@ namespace sg {
 	class Geode : public Node {
 		public:
 			AABB m_boundingBox;
-			Material m_material;
+			vector<Material> m_materials;
+			//Material m_material;
 
 			glm::vec3 m_position;
 			glm::mat4 m_model;
