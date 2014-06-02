@@ -7,6 +7,12 @@ Material::Material() {
 	//m_diffuse = new GLfloat[3];
 	//m_emission = new GLfloat[3];
 
+	m_ambient = new GLfloat[4];
+	m_specular = new GLfloat[4];
+	m_diffuse = new GLfloat[4];
+	m_emission = new GLfloat[4];
+
+
 	//setAmbient(-1.0f, -1.0f, -1.0f, -1.0f);
 	//setSpecular(-1.0f, -1.0f, -1.0f, -1.0f);
 	//setDiffuse(-1.0f, -1.0f, -1.0f, -1.0f);

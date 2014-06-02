@@ -103,7 +103,7 @@ namespace sg {
 		ConfigSettings::getConfig()->getValue("PlayerHeight", PlayerHeight);
 		//cout << "camxrot: " << this->getCamera()->getXRotated() << endl;
 		glm::vec3 camcam = this->getCamera()->getCameraCenter();
-		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x - 1.0f, m_translate.y - 7.0f /*camcam.y - PlayerHeight*/, m_translate.z));
+		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x - 1.0f, /*m_translate.y - 10.0f*/ camcam.y - PlayerHeight, m_translate.z));
 
 		this->getCamera()->calculateAxis();
 		glm::mat4 rotatedX = Utilities::rotateY(this->getCamera()->m_xRotated);
@@ -223,8 +223,8 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			//glutWireCube(PLAYER_RAD*2);
-			//m_thisPlayer->drawModel();
+			glutWireCube(PLAYER_RAD*2);
+			m_thisPlayer->drawModel();
 		glPopMatrix();
 	}
 
@@ -332,7 +332,9 @@ namespace sg {
 		p.onTopOfBuildingId = m_player->m_onTopOfBuildingId;
 		p.deathState = m_player->m_deathState;
 		p.cameraObject.camZ = m_player->getCamera()->m_camZ;
-
+		p.cameraObject.camX = m_player->getCamera()->m_camX;
+		p.cameraObject.xAngle = m_player->getCamera()->m_xRotationAngle;
+		p.cameraObject.yAngle = m_player->getCamera()->m_yRotationAngle;
 		return p;
 	}
 
@@ -346,6 +348,8 @@ namespace sg {
 		cam.camZ = this->getCamera()->m_camZ;
 		cam.xRotated = this->getCamera()->getXRotated();
 		cam.yRotated = this->getCamera()->getYRotated();
+		cam.xAngle = this->getCamera()->m_xRotationAngle;
+		cam.yAngle = this->getCamera()->m_yRotationAngle;
 
 		return cam;
 	}
