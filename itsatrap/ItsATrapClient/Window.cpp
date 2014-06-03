@@ -493,10 +493,10 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 			break;
 	}
 	if (button == 3) {
-		client->scrollUp = true;
+		client->scrollDown = true;
 	}
 	else if (button == 4) {
-		client->scrollDown = true;
+		client->scrollUp = true;
 	}
 }
 

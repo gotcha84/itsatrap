@@ -1,4 +1,4 @@
-#define FULLSCREEN 0
+#define FULLSCREEN 1
 
 #include <GL/glut.h>
 #include <glm/glm.hpp>
@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
 	glutPassiveMotionFunc(window->processMouseMove);
 
 	// hide mouse cursor
-	//glutSetCursor(GLUT_CURSOR_NONE);
+	glutSetCursor(GLUT_CURSOR_NONE);
 
 	// Sending AABBs to server
 	client->root->addChild(client->level.getRoot());

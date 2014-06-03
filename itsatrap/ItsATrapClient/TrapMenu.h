@@ -10,6 +10,7 @@
 #include "MyPlayer.h"
 #include "Texture.h"
 #include <FTGL/ftgl.h>
+#include "Stopwatch.h"
 
 class TrapMenu {
 public:
@@ -20,7 +21,7 @@ public:
 	~TrapMenu();
 	void draw();
 	void drawCube(float x, float y, float z);
-	void trapInfo(int state);
+	void trapInfo(int state, float y, float r, float g, float b);
 
 	void setInfoState(int state);
 	int getInfoState();

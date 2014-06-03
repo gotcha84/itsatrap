@@ -680,7 +680,7 @@ void DynamicWorld::applyCollisions() {
 							return;
 						}
 
-						else if (abs(90.0f - angle) >= 45.0f) {
+						else /*if (abs(90.0f - angle) >= 45.0f) */ {
 							// 0,1 = x, -1 = y, 4,5 = z
 							int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
 							if (newDirection != -1 && p.currPhysState != PhysicsStates::WallRunning) {
@@ -692,10 +692,10 @@ void DynamicWorld::applyCollisions() {
 								p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 							}
 						}
-						else {
+						/*else {
 							p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 							p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
-						}
+						}*/
 					}
 					else {
 						p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -991,14 +991,14 @@ void DynamicWorld::applyTrapGravity() {
 		for (int i = 0; i < staticObjects.size(); i++) {
 			if (staticObjects[i].aabb.cameFromTop(oldPos, t.pos, t.aabb, i)) {
 
-				t.pos = oldPos;
+				//t.pos = oldPos;
 
 				//cout << "trap aabb: " << endl;
 				//t.aabb.print();
 				//cout << "building thing " << endl;
 				//staticObjects[1].aabb.print();
-				//float yLength = t.aabb.maxY - t.aabb.minY;
-				//t.pos.y = staticObjects[i].aabb.maxY+(yLength/2);
+				float yLength = t.aabb.maxY - t.aabb.minY;
+				t.pos.y = staticObjects[i].aabb.maxY+(yLength/2);
 				//cout << "updated to: " << glm::to_string(t.pos) << endl;
 
 				break;

@@ -191,7 +191,7 @@ void ObjModel::drawModel() {
 	//glFrontFace(GL_CCW);
 
 	if (m_drawBB) {
-		this->getBoundingBox().draw();
+		//this->getBoundingBox().draw();
 	}
 }
 
