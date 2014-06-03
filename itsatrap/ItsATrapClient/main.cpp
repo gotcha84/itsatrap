@@ -163,10 +163,7 @@ int main(int argc, char *argv[]) {
 	// hide mouse cursor
 	//glutSetCursor(GLUT_CURSOR_NONE);
 
-	//sg::City city = sg::City();
-	//city.loadData("../Models/city.obj");
-	//client->root->addChild(&city);
-
+	// Sending AABBs to server
 	client->root->addChild(client->level.getRoot());
 	for (int i = 0; i < client->level.levelNodes.size(); ++i) {
 		Client::sendStaticObject(client->level.levelNodes[i]->getBoundingBox());
@@ -176,38 +173,6 @@ int main(int argc, char *argv[]) {
 		Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), 
 			client->level.resources[i]->getResourceId());
 	}
-//=======
-//
-//	Client::sendStaticObject(client->level.groundCube->getBoundingBox().minX,
-//		client->level.groundCube->getBoundingBox().minY,
-//		client->level.groundCube->getBoundingBox().minZ,
-//		client->level.groundCube->getBoundingBox().maxX,
-//		client->level.groundCube->getBoundingBox().maxY,
-//		client->level.groundCube->getBoundingBox().maxZ);
-//
-//	for (int i = 0; i < client->level.buildings.size(); ++i) {
-//		Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,
-//			client->level.buildings[i]->getBoundingBox().minZ, client->level.buildings[i]->getBoundingBox().maxX,
-//			client->level.buildings[i]->getBoundingBox().maxY, client->level.buildings[i]->getBoundingBox().maxZ);
-//> origin/enrico-temp
-
-	//for (int i = 0; i < client->level.buildings.size(); ++i) {
-	//	Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,
-	//		client->level.buildings[i]->getBoundingBox().minZ, client->level.buildings[i]->getBoundingBox().maxX,
-	//		client->level.buildings[i]->getBoundingBox().maxY, client->level.buildings[i]->getBoundingBox().maxZ);
-	//}
-
-	//for (int i = 0; i < client->level.ramps.size(); ++i) {
-	//	//Client::sendStaticRampObject(client->level.ramps[i]->getBoundingBox(), client->level.rampSlopes[i]);
-	//}
-
-	//for (int i = 0; i < client->level.resources.size(); ++i) {
-	//	Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), client->level.resources[i]->getResourceId());
-	//}
-
-	//for (int i = 0; i < client->level.walls.size(); ++i) {
-	//	Client::sendStaticWallObject(client->level.walls[i]->getBoundingBox());
-	//}
 
 	//sg::ObjNode node = sg::ObjNode();
 	//node.m_model->loadModel("../Models/Avatar.obj", "../Models/");
