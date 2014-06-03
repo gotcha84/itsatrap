@@ -70,8 +70,11 @@ namespace sg {
 	void Player::initModels() {
 		// m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
 		m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
-		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
+		
+		//m_otherPlayer = new ObjModel("../Models/Test Chest/Test_Chest.obj", "../Models/Test Chest/");
+		//m_otherPlayer->loadTexture("../Textures/Chest_Diffuse.ppm");
 
+		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
 		m_thisPlayer->disableDrawBB();
 	}
 

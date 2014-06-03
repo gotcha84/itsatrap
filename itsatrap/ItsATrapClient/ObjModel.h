@@ -10,6 +10,7 @@
 
 #include "tiny_obj_loader.h"
 #include "Geode.h"
+#include "Texture.h"
 #include "Utilities.h"
 
 using namespace std;
@@ -19,7 +20,6 @@ class ObjModel : public sg::Geode {
 		float m_cityScale;
 		float m_canScale;
 		float m_defaultScale;
-
 		float m_turtleScale;
 		glm::vec3 m_scaleVec;
 
@@ -29,7 +29,8 @@ class ObjModel : public sg::Geode {
 		string m_objFilename;
 		string m_mtlFilename;
 
-		//Physics m_physics;
+		Texture *m_texture;
+		GLuint m_textureID;
 
 		vector<vector<float>> m_vertices;
 		vector<vector<float>> m_normals;
@@ -48,7 +49,7 @@ class ObjModel : public sg::Geode {
 		ObjModel(int id, string objFilename, string mtlFilename);
 		~ObjModel();
 
-		void initScales();
+		void initCommon();
 
 		void setVertices(vector<float> arr);
 		void setNormals(vector<float> arr);
@@ -65,6 +66,8 @@ class ObjModel : public sg::Geode {
 		void loadModel(string objFilename);
 		void loadModel(string objFilename, string mtlFilename);
 		void loadModel();
+		
+		void loadTexture(string filename);
 
 		void print();
 		
@@ -73,6 +76,7 @@ class ObjModel : public sg::Geode {
 		bool isInside(glm::vec3 point);
 		bool collidesWith(ObjModel* o);
 		void setMaterial();
+		void setMaterial(float ambient[4], float diffuse[4], float specular[4], float emission[4], float shininess);
 		void addMaterial(GLfloat ambient[4], GLfloat diffuse[4], GLfloat specular[4], GLfloat emission[4], GLfloat shininess);
 };
 

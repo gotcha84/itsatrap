@@ -17,7 +17,7 @@ namespace sg {
 			HUD *m_hud;
 			Scoreboard *board;
 			
-			bool	m_drawBB;
+			bool m_drawBB;
 
 			glm::vec4 m_color;
 			glm::vec3 m_translate;
