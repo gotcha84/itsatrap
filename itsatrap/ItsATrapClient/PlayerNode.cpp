@@ -69,10 +69,10 @@ namespace sg {
 
 	void Player::initModels() {
 		// m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
-		m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
+		//m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
 		
-		//m_otherPlayer = new ObjModel("../Models/Test Chest/Test_Chest.obj", "../Models/Test Chest/");
-		//m_otherPlayer->loadTexture("../Textures/Chest_Diffuse.ppm");
+		m_otherPlayer = new ObjModel("../Models/New Folder/chest.obj", "../Models/New Folder/");
+		m_otherPlayer->loadTexture("../Textures/skybox.ppm");
 
 		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
 		m_thisPlayer->disableDrawBB();
@@ -226,7 +226,6 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			glutWireCube(PLAYER_RAD*2);
 			m_thisPlayer->drawModel();
 		glPopMatrix();
 	}
@@ -245,10 +244,11 @@ namespace sg {
 
 	void Player::drawAsOtherPlayer(glm::mat4 mv) {
 		// load updated mv matrix and draw shape for player
-		if (this->getPlayerID() % 2 == 0)
-			m_otherPlayer->setColor(glm::vec4(0.75, 0, 0, 1));
-		else
-			m_otherPlayer->setColor(glm::vec4(0, 0, 0.75, 1));
+		//if (this->getPlayerID() % 2 == 0)
+			//m_otherPlayer->setColor(glm::vec4(0.75, 0, 0, 1));
+		//else
+			//m_otherPlayer->setColor(glm::vec4(0, 0, 0.75, 1));
+		m_otherPlayer->setColor(glm::vec4(1, 1, 1, 1));
 
 		glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);
