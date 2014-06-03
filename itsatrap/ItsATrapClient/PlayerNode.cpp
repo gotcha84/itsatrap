@@ -197,10 +197,10 @@ namespace sg {
 					m_child[i]->draw(glm::mat4(), this->getPlayer()->getCameraMatrix());
 				}
 			}
-			else
+			/*else
 			{
 				cout << "DEAD! Time till respawn " << m_player->m_timeUntilRespawn <<endl;
-			}
+			}*/
 
 			// draw player avatar
 			glm::mat4 mv = glm::inverse(this->getCamera()->getCameraMatrix()) * this->getModelMatrix();

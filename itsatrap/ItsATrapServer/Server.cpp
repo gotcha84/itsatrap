@@ -171,12 +171,13 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 
 			//	World::superHeightMapInit(buildings, ramps);
 			//}
-			//printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
-			//tmp.aabb.print();
+			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			tmp.aabb.print();
 		}
 		int MaxBuildings = 0;
 		ConfigSettings::getConfig()->getValue("MaxBuildings", MaxBuildings);
 		if (dynamicWorld.getNumStaticObjects() >= MaxBuildings) {
+			cout << "physics ready yo" << endl;
 			physicsReady = true;
 		}
 	}
@@ -442,7 +443,7 @@ void Server::processBuffer()
 		dynamicWorld.applyTrapGravity();
 		dynamicWorld.applyCollisions();
 		dynamicWorld.applyPhysics();
-		dynamicWorld.applyGravity();
+		//dynamicWorld.applyGravity();
 		dynamicWorld.applyAdjustments();
 		dynamicWorld.checkPlayersCollideWithTrap();
 	}
@@ -532,6 +533,7 @@ void Server::checkConnection()
 
 			if (players[i].timeUntilInactive <= 0)
 				disconnectPlayer(i);
+				//int k = 0;
 		}
 	}
 }

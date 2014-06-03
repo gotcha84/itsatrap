@@ -10,7 +10,7 @@ GLuint Texture::loadTexture(const char* the_texture) {
 
 	static int counter = 0;
 
-	GLuint texture = counter;			 // storage for one texture
+	GLuint texture;			 // storage for one texture
 	int twidth, theight;   // texture width/height [pixels]
 	unsigned char* tdata;  // texture pixel data
 

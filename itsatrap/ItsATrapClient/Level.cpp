@@ -33,11 +33,11 @@ void Level::initLevel0() {
 	sg::MatrixTransform *xForm = new sg::MatrixTransform();
 	ground->addChild(xForm);
 
-	//if ((dir = opendir(LEVEL_DIR))!= NULL) {
-	if ((dir = opendir(OBELISK_DIR))!= NULL) {
+	if ((dir = opendir(LEVEL_DIR))!= NULL) {
+	//if ((dir = opendir(OBELISK_DIR))!= NULL) {
+	//if ((dir = opendir(OBELISK2_DIR)) != NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			string fileName(ent->d_name);
-
 			if (fileName.size() > 3) {
 				string part(fileName.substr(0, fileName.find_first_of('_')));
 				string extension(fileName.substr(fileName.find_first_of('.')));
@@ -47,8 +47,9 @@ void Level::initLevel0() {
 						sg::ResourceNode *rs; // temp var to reference resource nodes
 
 						rs = new sg::ResourceNode(resourceCounter, NUMPARTICLES);
-						//rs->loadModel(LEVEL + fileName, LEVEL);
-						rs->loadModel(OBELISK + fileName, OBELISK);
+						rs->loadModel(LEVEL + fileName, LEVEL);
+						//rs->loadModel(OBELISK + fileName, OBELISK);
+						//rs->loadModel(OBELISK + fileName, OBELISK2);
 						rs->getParticleSystem()->setColor(glm::vec4(1, 0, 0, 1));
 						rs->m_particles2->setColor(glm::vec4(0, 1, 0, 1));
 						rs->m_particles2->reverse();
@@ -71,16 +72,18 @@ void Level::initLevel0() {
 
 						++resourceCounter;
 					} else if (part != "Ramp") {
-						//levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
-						levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
+						levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
+						//levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
+						//levelNodes.push_back(new sg::ObjNode(OBELISK2 + fileName, OBELISK2));
 						levelNodes.back()->setName("ObjNode: " + fileName);
 
-						if (counter % 27 == 0) {
+						if (counter % 1000 == 0) {
 							++counter;
 						}
 
-						string color = Utilities::intToBaseThree(counter % 27);
-						levelNodes.back()->getModel()->setColor(glm::vec4(0.5f*(float)(color[0] - '0'), 0.5f*(float)(color[1] - '0'), 0.5f*(float)(color[2] - '0'), alpha));
+						//string color = Utilities::intToBaseThree(counter % 27);
+						levelNodes.back()->getModel()->setColor(glm::vec4(0.1f*(float)(counter/100), 0.1f*(float)((counter%100)/10), 0.5f+0.05*(float)(counter%10), alpha));
+						//levelNodes.back()->loadTexture("../Models/Polynoid_Updated/animus.ppm");
 						xForm->addChild(levelNodes.back());
 					} 
 				}
@@ -92,7 +95,7 @@ void Level::initLevel0() {
 	else {
 		cout << "[ERROR]: Level.cpp - Could not read in Level obj files!" << endl;
 	}
-
+	cout << "size: " << levelNodes.size() << endl;
 	for (int i = 0; i < levelNodes.size(); ++i) {
 		levelNodes[i]->calculateBoundingBox();
 
@@ -100,9 +103,12 @@ void Level::initLevel0() {
 		/*if (levelNodes[i]->m_boundingBox.minX < 200 && levelNodes[i]->m_boundingBox.maxX > 200 &&
 			levelNodes[i]->m_boundingBox.minZ < -300 && levelNodes[i]->m_boundingBox.maxZ > -300) {
 			cout << "COLLIDED!!!! i: " << i << ", name: " << levelNodes[i]->getName() << endl;
-		}
-		cout << "i: " << i << ", name: " << levelNodes[i]->getName();
-		levelNodes[i]->getBoundingBox().print();*/
+		/*}
+		/*
+		if (i < 200) {
+			cout << "i: " << i;
+			levelNodes[i]->getBoundingBox().print();
+		}*/
 		levelNodes[i]->enableDrawBB();
 	}
 

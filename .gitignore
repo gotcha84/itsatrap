@@ -9,8 +9,5 @@ itsatrap/ipch/
 *.pdb
 *.idb
 itsatrap/Common/ConfigSettings.ini
-<<<<<<< HEAD
 itsatrap/Models/*.ppm
-=======
 itsatrap/Textures/
->>>>>>> origin/enrico-temp
