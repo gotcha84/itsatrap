@@ -962,14 +962,14 @@ void DynamicWorld::applyTrapGravity() {
 		for (int i = 0; i < staticObjects.size(); i++) {
 			if (staticObjects[i].aabb.cameFromTop(oldPos, t.pos, t.aabb, i)) {
 
-				//t.pos = oldPos;
+				t.pos = oldPos;
 
 				//cout << "trap aabb: " << endl;
 				//t.aabb.print();
 				//cout << "building thing " << endl;
 				//staticObjects[1].aabb.print();
-				float yLength = t.aabb.maxY - t.aabb.minY;
-				t.pos.y = staticObjects[i].aabb.maxY+(yLength/2);
+				//float yLength = t.aabb.maxY - t.aabb.minY;
+				//t.pos.y = staticObjects[i].aabb.maxY+(yLength/2);
 				//cout << "updated to: " << glm::to_string(t.pos) << endl;
 				
 				break;
