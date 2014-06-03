@@ -44,6 +44,7 @@ private:
 	static int					packetBufferCount;
 	static DynamicWorld			dynamicWorld;
 	static Stopwatch			stopwatch;
+	static int					maxServerProcessRate;
 
 	static int					timeUntilResourceBonus;
 	static int					timeUntilHotSpotChange;

@@ -32,8 +32,8 @@ void Level::initLevel0() {
 	sg::MatrixTransform *xForm = new sg::MatrixTransform();
 	ground->addChild(xForm);
 
-	//if ((dir = opendir(LEVEL_DIR))!= NULL) {
-	if ((dir = opendir(OBELISK_DIR))!= NULL) {
+	if ((dir = opendir(LEVEL_DIR))!= NULL) {
+	//if ((dir = opendir(OBELISK_DIR))!= NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			string fileName(ent->d_name);
 
@@ -41,8 +41,8 @@ void Level::initLevel0() {
 				string extension(fileName.substr(fileName.find_first_of('.')));
 
 				if (extension == ".obj") {
-					//levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
-					levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
+					levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
+					//levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
 					levelNodes.back()->setName("ObjNode: " + fileName);
 					if (counter % 27 == 0) {
 						++counter;

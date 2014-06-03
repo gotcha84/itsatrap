@@ -149,7 +149,7 @@ void StateLogic::startHoldingEdge(struct playerObject *e, int buildingId) {
 	//ConfigSettings::getConfig()->getValue("HEnumFrames", HEnumFrames);
 
 	// start
-	float HEStartlookY = 70.0f - HEinitialY;
+	float HEStartlookY = 0.0f - HEinitialY;
 
 	float HEStartfraction = 1.0f;
 
@@ -160,7 +160,7 @@ void StateLogic::startHoldingEdge(struct playerObject *e, int buildingId) {
 
 	// End
 	float HEEndlookX = 180.0f;// calculate
-	float HEEndlookY = -70.0f;
+	float HEEndlookY = 0.0f-e->cameraObject.yRotated;
 
 	float HEEndfraction = 0.1f;
 
@@ -174,6 +174,8 @@ void StateLogic::startHoldingEdge(struct playerObject *e, int buildingId) {
 	glm::vec3 HEEndVeloDiff = glm::vec3(-1.0f*HEHoldervelocityDiff.x, bounceFactor, -1.0f*HEHoldervelocityDiff.z);
 
 	int HEEndCounter = 0;
+
+	e->velocity.y = 0.0f;
 
 	StateLogic::statesInfo[e->id].initialX = HEinitialX;
 	StateLogic::statesInfo[e->id].initialY = HEinitialY;
@@ -607,7 +609,7 @@ void StateLogic::applyWallRunning(struct playerObject *p) {
 				p->interactingWithBuildingId = -1;
 				p->velocity += StateLogic::statesInfo[p->id].Holder.velocityDiff;
 				//cout << "added a velo of: " << glm::to_string(StateLogic::statesInfo[p->id].Holder.velocityDiff) << endl;
-				cout << "ended pulling up: " << endl;
+				cout << "ended wallrunning up: " << endl;
 				// technically shouldnt need line below.. but w/e hardcoding ftw
 				p->cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 				//cout << "ended with up as: " << glm::to_string(p->cameraObject.cameraUp) << endl;

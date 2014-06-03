@@ -132,11 +132,11 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_COLOR_MATERIAL);
 	
 	// Generate light source:
-	//glDisable(GL_LIGHTING);
+	glDisable(GL_LIGHTING);
 	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+	//glLightfv(GL_LIGHT0, GL_POSITION, position);
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT0);
 	
 	// Install callback functions:
 	glutDisplayFunc(window->displayCallback);

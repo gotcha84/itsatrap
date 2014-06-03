@@ -47,7 +47,7 @@ private:
 	
 	bool checkCollision(struct aabb a, struct aabb b);
 	int checkCollisionsWithAllNonTraps(struct playerObject *e);
-	int checkSideCollisionsWithAllBuildings(struct playerObject *e);
+	int checkSideCollisionsWithAllBuildings(glm::vec3 from, glm::vec3 goTo, struct playerObject *e);
 	int checkCollisionsWithAllRampsEntrance(struct playerObject *e);
 	//int checkOnTopOfWithAllRamps(struct playerObject *e);
 	int checkCollisionsWithAllRampsInside(struct playerObject *e);

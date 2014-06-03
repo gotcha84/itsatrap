@@ -194,7 +194,7 @@ void Window::displayCallback(void)
 		//client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
 	//}
 
-
+	
 	// updates player view
 	client->root->getPlayer()->getCamera()->updateCameraMatrix();
 	client->root->getPlayer()->updateModelViewMatrix();
