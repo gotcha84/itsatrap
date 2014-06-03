@@ -150,6 +150,8 @@ struct playerObject {
 	int interactingWithBuildingId;
 	int interactingWithBuildingFace; //-x = 0, +x = 1 etc. will be used for ramps
 	int interactingWithRampId;
+
+	float xRotatedOffset, yRotatedOffset;
 };
 
 struct trapObject {

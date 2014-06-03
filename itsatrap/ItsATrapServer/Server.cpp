@@ -150,7 +150,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			dynamicWorld.addStaticObject(tmp);
 
 			int id = dynamicWorld.getNumStaticObjects() - 1;
-			World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
+			//World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
 
 			//if (dynamicWorld.getNumStaticObjects() >= 31) {
 			//	vector<AABB> buildings;

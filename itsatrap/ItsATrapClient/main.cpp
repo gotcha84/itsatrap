@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
 	glutPassiveMotionFunc(window->processMouseMove);
 
 	// hide mouse cursor
-	glutSetCursor(GLUT_CURSOR_NONE);
+	//glutSetCursor(GLUT_CURSOR_NONE);
 
 	sg::MatrixTransform sbXForm = sg::MatrixTransform();
 	glm::mat4 model = glm::mat4();

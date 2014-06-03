@@ -125,6 +125,21 @@ void Window::displayCallback(void)
 		}*/
 	}
 	
+	if (client->root->getCamera()->m_xRotatedOffset != 0.0f) {
+		client->root->getCamera()->handleXRotationOffset(client->root->getCamera()->m_xRotatedOffset);
+		client->root->getCamera()->m_xRotatedTotalOffset += client->root->getCamera()->m_xRotatedOffset;
+		client->root->getCamera()->m_xRotatedOffset = 0.0f;
+	}
+	
+	/*
+	if (client->root->getCamera()->m_yRotatedOffset != 0.0f) {
+		client->root->getCamera()->handleYRotationOffset(client->root->getCamera()->m_yRotatedOffset);
+		client->root->getCamera()->m_yRotatedTotalOffset += client->root->getCamera()->m_yRotatedOffset;
+		client->root->getCamera()->m_yRotatedOffset = 0.0f;
+	}*/
+	
+	
+
 	//client->root->getPlayer()->applyCamAdjustments();
 	
 	int buildingId = -2; //client->root->getPlayer()->getPhysics()->applyGravity(client->root->getPlayer()->getAABB());

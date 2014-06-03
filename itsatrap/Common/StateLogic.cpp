@@ -639,7 +639,7 @@ void StateLogic::handleXRotation(struct playerObject *e, float angle) {
 	e->cameraObject.camZ = glm::vec3(tmp_camZ.x, e->cameraObject.camZ.y, tmp_camZ.z);
 	e->cameraObject.cameraLookAt = e->cameraObject.cameraCenter + e->cameraObject.camZ;
 
-	e->cameraObject.xRotated += angle;
+	e->xRotatedOffset = angle;
 
 	//StateLogic::calculateAxis(e);
 
@@ -648,13 +648,13 @@ void StateLogic::handleXRotation(struct playerObject *e, float angle) {
 
 void StateLogic::handleYRotation(struct playerObject *e, float angle) {
 	// TODO modify upvector too for confuse ray
-	if (!(e->cameraObject.yRotated > 80.0f && angle > 0) && !(e->cameraObject.yRotated < -80.0f && angle < 0)) {
+	//if (!(e->cameraObject.yRotated > 80.0f && angle > 0) && !(e->cameraObject.yRotated < -80.0f && angle < 0)) {
 
 		//m_camZ.y+=magnitude*m_yRotationAngle; // both this and the two lines below seem okay
 		e->cameraObject.camZ = glm::rotate(e->cameraObject.camZ, angle, e->cameraObject.camX);
-		e->cameraObject.yRotated += angle;
+		e->yRotatedOffset = angle;
 		//cout << "ROTATING CAM: " << m_yRotated << ", " << glm::radians(80.0f) << endl;
-	}
+	//}
 	//cout << "mcamX: " << glm::to_string(m_camX) << endl;
 	//cout << "before: " << glm::to_string(m_cameraLookAt) << endl;
 	e->cameraObject.cameraLookAt = e->cameraObject.cameraCenter + e->cameraObject.camZ;

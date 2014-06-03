@@ -105,10 +105,10 @@ namespace sg {
 		ConfigSettings::getConfig()->getValue("PlayerHeight", PlayerHeight);
 		//cout << "camxrot: " << this->getCamera()->getXRotated() << endl;
 		glm::vec3 camcam = this->getCamera()->getCameraCenter();
-		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x - 1.0f, m_translate.y - 7.0f /*camcam.y - PlayerHeight*/, m_translate.z));
+		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x - 1.0f, /*m_translate.y - 7.0f*/ camcam.y - PlayerHeight, m_translate.z));
 
 		this->getCamera()->calculateAxis();
-		glm::mat4 rotatedX = Utilities::rotateY(this->getCamera()->m_xRotated);
+		glm::mat4 rotatedX = Utilities::rotateY(this->getCamera()->m_xRotated + getCamera()->m_xRotatedTotalOffset);
 		//glm::mat4 rotatedY = this->rotate(this->getCamera()->m_camX, this->getCamera()->m_yRotated);
 		glm::mat4 rotationMatrix = rotatedX;
 		
@@ -225,8 +225,10 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			//glutWireCube(PLAYER_RAD*2);
-			//m_thisPlayer->drawModel();
+			glutWireCube(PLAYER_RAD*2);
+			cout << "xRotated: " << getPlayer()->getCamera()->getXRotated() + getPlayer()->getCamera()->m_xRotatedTotalOffset << endl;
+			//cout << "yRotated: " << getPlayer()->getCamera()->getYRotated() + getPlayer()->getCamera()->m_yRotatedTotalOffset << endl;
+			m_thisPlayer->drawModel();
 		glPopMatrix();
 	}
 

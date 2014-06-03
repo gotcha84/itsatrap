@@ -54,8 +54,8 @@ class Camera {
 		float m_xRotationAngle;
 		float m_yRotationAngle;
 
-		float m_xRotated;
-		float m_yRotated;
+		float m_xRotated, m_xRotatedOffset, m_xRotatedTotalOffset;
+		float m_yRotated, m_yRotatedOffset, m_yRotatedTotalOffset;
 		float m_xRotatedWallRunHolder;
 		float m_yRotatedWallRunHolder;
 
@@ -74,6 +74,8 @@ class Camera {
 		float getYRotated();
 		void setYRotated(float yrot);
 
+		void handleXRotationOffset(float magnitude);
+		void handleYRotationOffset(float magnitude);
 		void handleXRotation(float magnitude);
 		void handleYRotation(float magnitude);
 		void calculateAxis();

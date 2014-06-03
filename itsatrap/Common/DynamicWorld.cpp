@@ -105,6 +105,8 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.hitCrosshair = 0;
 	//p.position.x = 0.0f;
 	//p.position.y = 500.0f;
+	p.xRotatedOffset = 0;
+	p.yRotatedOffset = 0;
 
 	playerMap[p.id] = p;
 	cout << "newplayer aabb: ";
@@ -220,6 +222,13 @@ int DynamicWorld::serialize(char *ptr)
 		memcpy(movingPtr, &it->second, sizeof(struct playerObject));
 		//it->second.toAdd = glm::vec3(0, 0, 0);
 		movingPtr += sizeof(struct playerObject);
+
+		cout << "Offset+xRotated: " << it->second.cameraObject.xRotated + it->second.xRotatedOffset << endl;
+		//cout << "Offset+yRotated: " << it->second.cameraObject.yRotated + it->second.yRotatedOffset << endl;
+
+		// Reset offsets to 0
+		it->second.xRotatedOffset = 0.0f;
+		it->second.yRotatedOffset = 0.0f;
 	}
 	for (int i = 0; i < trapsToSend.size(); i++)
 	{

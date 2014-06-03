@@ -64,6 +64,8 @@ void handlePlayerUpdate(struct playerObject p)
 		client->players[p.id]->getCamera()->m_cameraLookAt = p.cameraObject.cameraLookAt;
 		client->players[p.id]->moveTo(p.position);
 		client->players[p.id]->getPlayer()->setAABB(&p.aabb);
+		client->players[p.id]->getPlayer()->getCamera()->m_xRotatedOffset = p.xRotatedOffset;
+		client->players[p.id]->getPlayer()->getCamera()->m_yRotatedOffset = p.yRotatedOffset;
 		//cout << "pos: " << glm::to_string(p.position) << endl;
 
 		if (client->root->getPlayerID() != p.id) {

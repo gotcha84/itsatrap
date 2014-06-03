@@ -34,6 +34,11 @@ void Camera::initCommon() {
 
 	m_yRotated = 0.0f;
 
+	m_xRotatedOffset = 0.0f;
+	m_xRotatedTotalOffset = 0.0f;
+	m_yRotatedOffset = 0.0f;
+	m_yRotatedTotalOffset = 0.0f;
+
 	updateCameraMatrix();
 }
 
@@ -68,6 +73,38 @@ float Camera::getYRotated() {
 void Camera::setYRotated(float yrot) {
 	m_yRotated = yrot;
 }
+
+void Camera::handleXRotationOffset(float magnitude) {
+	glm::vec3 tmp_camZ = glm::vec3(m_camZ.x, 0.0f, m_camZ.z);
+
+	tmp_camZ = glm::rotateY(tmp_camZ, magnitude);
+	m_camX = glm::rotateY(m_camX, magnitude);
+
+	m_camZ = glm::vec3(tmp_camZ.x, m_camZ.y, tmp_camZ.z);
+	m_cameraLookAt = m_cameraCenter + m_camZ;
+
+	//m_xRotated += magnitude*m_xRotationAngle;
+
+	updateCameraMatrix();
+}
+
+void Camera::handleYRotationOffset(float magnitude) {
+	// TODO modify upvector too for confuse ray
+	//if (!(m_yRotated > 80.0f && magnitude > 0) && !(m_yRotated < -80.0f && magnitude < 0)) {
+
+		//m_camZ.y+=magnitude*m_yRotationAngle; // both this and the two lines below seem okay
+		m_camZ = glm::rotate(m_camZ, magnitude, m_camX);
+		//m_yRotated += glm::degrees(magnitude);
+		//cout << "ROTATING CAM: " << m_yRotated << ", " << glm::radians(80.0f) << endl;
+	//}
+	//cout << "mcamX: " << glm::to_string(m_camX) << endl;
+	//cout << "before: " << glm::to_string(m_cameraLookAt) << endl;
+	m_cameraLookAt = m_cameraCenter + m_camZ;
+	//cout << "after: " << glm::to_string(m_cameraLookAt) << endl << endl;
+
+	updateCameraMatrix();
+}
+
 
 void Camera::handleXRotation(float magnitude) {
 	glm::vec3 tmp_camZ = glm::vec3(m_camZ.x, 0.0f, m_camZ.z);
