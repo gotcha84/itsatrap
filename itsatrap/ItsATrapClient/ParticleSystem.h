@@ -71,6 +71,8 @@ class ParticleSystem {
 		glm::vec4 getColor();
 		void setColor(glm::vec4 color);
 
+		void particlesReset();
+
 		void reset();
 		void draw();
 
