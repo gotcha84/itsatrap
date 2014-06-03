@@ -1459,6 +1459,8 @@ void DynamicWorld::addAABBInfo(int type, AABB aabb)
 		aabbOffsets[type] = tmp;
 	}
 	else {
+		if (aabb.maxY < 5) 
+			aabb.maxY = 5;
 		aabbOffsets[type] = aabb;
 	}
 }
