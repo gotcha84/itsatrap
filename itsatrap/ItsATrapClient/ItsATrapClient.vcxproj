@@ -93,6 +93,7 @@
     <ClCompile Include="Cone.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="enrico.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Geode.cpp" />
     <ClCompile Include="Group.cpp" />
     <ClCompile Include="HUD.cpp" />
@@ -116,11 +117,13 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="tiny_obj_loader.cc" />
     <ClCompile Include="Trap.cpp" />
+    <ClCompile Include="TrapMenu.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Building.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="InfoMessage.h" />
     <ClInclude Include="Level.h" />
@@ -149,6 +152,7 @@
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="TrapMenu.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Building.h" />

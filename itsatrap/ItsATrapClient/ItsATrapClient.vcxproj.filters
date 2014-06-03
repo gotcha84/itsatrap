@@ -133,6 +133,11 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InfoMessage.cpp">
+	</ClCompile>
+    <ClCompile Include="TrapMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Skybox.cpp">
@@ -228,6 +233,11 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InfoMessage.h">
+	</ClInclude>
+    <ClInclude Include="TrapMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Skybox.h">
