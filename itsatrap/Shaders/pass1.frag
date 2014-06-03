@@ -9,8 +9,8 @@ varying vec4 specular;                                                // 鏡面�
  
 void main(void)
 {
-  gl_FragData[0] = diffuse;
+  /*gl_FragData[0] = diffuse;
   gl_FragData[1] = specular;
-  gl_FragData[2] = ambient;
+  gl_FragData[2] = ambient;*/
   //gl_FragColor = vec4(1.0,0.0,0.0,1.0);
 }

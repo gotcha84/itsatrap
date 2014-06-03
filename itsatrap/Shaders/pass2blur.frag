@@ -2,24 +2,24 @@
 uniform sampler2D image;  
 varying vec4 position;
 varying vec3 normal; 
-
-/* uniform float offset[5] = float[]( 0.0, 1.0, 2.0, 3.0, 4.0 );  
+ 
+ uniform float offset[5] = float[]( 0.0, 1.0, 2.0, 3.0, 4.0 );  
  uniform float weight[5] = float[]( 0.2270270270, 0.1945945946, 0.1216216216,  
                                     0.0540540541, 0.0162162162 );  
                                     
- void main(void)  
+ /*void main(void)  
 
  {  
 	for(int j = 0; j < 10; j++){
-     gl_FragColor = texture2D( image, vec2(gl_FragCoord)/512.0 ) * weight[0];  
-     for (int i=1; i<5; i++) {  
-         gl_FragColor +=  
-             texture2D( image, ( vec2(gl_FragCoord)+vec2(0.0, offset[i]) )/512.0 )  
-                 * weight[i];  
-         gl_FragColor +=  
-             texture2D( image, ( vec2(gl_FragCoord)-vec2(0.0, offset[i]) )/512.0 )  
-                 * weight[i];  
-     }  
+		gl_FragColor = texture2D( image, vec2(gl_FragCoord)/512.0 ) * weight[0];  
+		for (int i=1; i<5; i++) {  
+			gl_FragColor +=  
+				texture2D( image, ( vec2(gl_FragCoord)+vec2(0.0, offset[i]) )/512.0 )  
+					* weight[i];  
+			gl_FragColor +=  
+				texture2D( image, ( vec2(gl_FragCoord)-vec2(0.0, offset[i]) )/512.0 )  
+					* weight[i];  
+		}  
 	 }
 
  } */
@@ -37,8 +37,6 @@ varying vec3 normal;
 	 gl_FragColor = vec4(0.0,0.0,0.0,1.0);
  }*/
 
-// uniform sampler2D image;
-
 void main()
 {
    vec4 sum = vec4(0);
@@ -53,19 +51,24 @@ void main()
             sum += texture2D(image, texcoord + vec2(j, i)*0.004) * 0.25;
         }
    }
-       if (texture2D(image, texcoord).b < 0.3)
+    if (texture2D(image, texcoord).r > 0.5 && texture2D(image, texcoord).g > 0.5 && 
+	texture2D(image, texcoord).b > 0.5)
     {
        gl_FragColor = sum*sum*0.09 + texture2D(image, texcoord);
     }
     else
     {
-        if (texture2D(image, texcoord).b < 0.7)
+        if(texture2D(image, texcoord).r > 0.7 && texture2D(image, texcoord).g > 0.7 &&
+		texture2D(image, texcoord).b > 0.7)
         {
             gl_FragColor = sum*sum*0.059 + texture2D(image, texcoord);
         }
-        else
+        else (texture2D(image, texcoord).r > 0.9 && texture2D(image, texcoord).g > 0.9 &&
+		texture2D(image, texcoord).b > 0.9)
         {
             gl_FragColor = sum*sum*0.0275 + texture2D(image, texcoord);
         }
     }
+	
+	//gl_FragColor = color;
 }

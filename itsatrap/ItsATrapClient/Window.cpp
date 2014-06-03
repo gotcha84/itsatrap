@@ -132,7 +132,7 @@ void Window::displayCallback(void)
 	glViewport(0, 0, fbOWIDTH, fbOHEIGHT);
 
 	// 隠面消去を有効にする
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 
 	// 陰影付けを有効にする
 	//glEnable(GL_LIGHTING);
@@ -187,14 +187,14 @@ void Window::displayCallback(void)
 	}
 
 	glFlush();  
-	glutSwapBuffers();
+	//glutSwapBuffers();
 
 	//glUseProgram(0);
 	
 	// フレームバッファオブジェクトの結合を解除する
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
-	//glDisable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
 	// レンダーターゲットを元に戻す
 	//glDrawBuffer(GL_FRONT);
 
