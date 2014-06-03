@@ -58,12 +58,15 @@ class Level {
 		sg::MatrixTransform *ground;
 		sg::Cube * groundCube;
 		vector<sg::MatrixTransform *> xForms;
-		vector<sg::ObjNode *> levelNodes;
 		vector<sg::Cube *> buildings;
 		vector<sg::Cube *> walls;
-		vector<sg::ResourceNode *> resources;
 		vector<sg::ObjNode *> ramps;
 		vector<float> rampSlopes;
+
+		vector<sg::ResourceNode *> resources;
+
+		vector<sg::ObjNode *> levelNodes;
+		vector<sg::ObjNode *> decorationNodes;
 
 		Level();
 		~Level();

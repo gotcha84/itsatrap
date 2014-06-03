@@ -171,8 +171,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 
 			//	World::superHeightMapInit(buildings, ramps);
 			//}
-			//printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
-			//tmp.aabb.print();
+			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			tmp.aabb.print();
 		}
 		int MaxBuildings = 0;
 		ConfigSettings::getConfig()->getValue("MaxBuildings", MaxBuildings);

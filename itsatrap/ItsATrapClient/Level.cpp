@@ -70,7 +70,7 @@ void Level::initLevel0() {
 						resources.back()->setParticleSystemOrigin(glm::vec3(x, y, z + 25.0f));
 
 						++resourceCounter;
-					} else if (part != "Ramp") {
+					} else if (part != "Ramp" && part != "UD") {
 						//levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
 						levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
 						levelNodes.back()->setName("ObjNode: " + fileName);
