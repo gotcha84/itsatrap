@@ -168,9 +168,14 @@ int main(int argc, char *argv[]) {
 	//client->root->addChild(&city);
 
 	client->root->addChild(client->level.getRoot());
-//<HEAD
 	for (int i = 0; i < client->level.levelNodes.size(); ++i) {
 		Client::sendStaticObject(client->level.levelNodes[i]->getBoundingBox());
+	}
+
+	for (int i = 0; i < client->level.resources.size(); ++i) {
+		Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), 
+			client->level.resources[i]->getResourceId());
+	}
 //=======
 //
 //	Client::sendStaticObject(client->level.groundCube->getBoundingBox().minX,
@@ -185,7 +190,6 @@ int main(int argc, char *argv[]) {
 //			client->level.buildings[i]->getBoundingBox().minZ, client->level.buildings[i]->getBoundingBox().maxX,
 //			client->level.buildings[i]->getBoundingBox().maxY, client->level.buildings[i]->getBoundingBox().maxZ);
 //> origin/enrico-temp
-	}
 
 	//for (int i = 0; i < client->level.buildings.size(); ++i) {
 	//	Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,

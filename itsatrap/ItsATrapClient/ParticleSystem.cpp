@@ -44,7 +44,7 @@ void Particle::init() {
 	m_vel = glm::vec3(0, 0, 0);
 	m_color = glm::vec4(1, 1, 1, 1);
 	m_age = 0;
-	m_life = 1000;
+	m_life = 4000;
 	m_reversed = false;
 
 	reset();
@@ -62,13 +62,13 @@ void Particle::reset() {
 	m_age = 0;
 	m_theta = 0;
 	if (m_reversed) {
-		m_rad = -1 * (rand() % 100 + 1) / 500.0f;
+		m_rad = ((rand() % 100 + 1) * -0.0025f) - 0.25;
 	}
 	else {
-		m_rad = (rand() % 100 + 1) / 500.0f;
+		m_rad = ((rand() % 100 + 1) * 0.0025f) + 0.25;
 	}
-	m_pos = glm::vec3(m_rad, 0, 10);
-	m_vel = glm::vec3(0, 0.1f, 0.1f);
+	m_pos = m_origin + glm::vec3(m_rad, 0, 0);
+	m_vel = glm::vec3(0, 0.1f, 0.0f);
 	m_color.a = 1.0f;
 }
 
@@ -79,7 +79,7 @@ void Particle::step() {
 		reset();
 	}
 	else {
-		m_vel = glm::vec3(m_rad, 0.1f, 0);
+		m_vel = glm::vec3(m_rad, 0.2f, 0);
 		m_vel = glm::rotateY(m_vel, m_theta);
 
 		m_color.a = 1.0f - m_pos.y / (0.1f*m_life); // turn particles black toward the top
@@ -87,11 +87,11 @@ void Particle::step() {
 		m_pos += m_vel;
 		if (m_reversed) {
 			m_theta -= 1.0f;
-			m_rad -= 0.5f / m_life;
+			m_rad -= 0.1f / m_life;
 		}
 		else {
 			m_theta += 1.0f;
-			m_rad += 0.5f / m_life;
+			m_rad += 0.1f / m_life;
 		}
 	}
 }
@@ -119,8 +119,6 @@ ParticleSystem::~ParticleSystem() {
 };
 
 void ParticleSystem::initParticles() {
-	m_color = glm::vec4(1, 1, 1, 1);
-
 	m_particles.clear();
 	m_particles.resize(m_numParticles);
 	for (int i = 0; i < m_numParticles; i++) {
@@ -166,6 +164,14 @@ void ParticleSystem::setColor(glm::vec4 color) {
 	}
 }
 
+void ParticleSystem::particlesReset() {
+	for (int i = 0; i < m_particles.size(); ++i) {
+		m_particles[i].reset();
+		m_particles[i].initAge();
+	}
+
+}
+
 void ParticleSystem::reset() {
 	initParticles();
 }
@@ -185,18 +191,6 @@ bool ParticleSystem::isEnabled() {
 
 void ParticleSystem::enable() {
 	m_enabled = true;
-
-	// restart particles from the bottom
-	//for (int i = 0; i < m_particles.size(); i++) {
-	//	m_particles[i].m_pos = glm::vec3(m_particles[i].m_rad, 0, 0);
-	//	m_particles[i].m_theta = 0;
-	//	if (m_particles[i].m_reversed) {
-	//		m_particles[i].m_rad = -1 * (rand() % 100 + 1) / 500.0f;
-	//	}
-	//	else {
-	//		m_particles[i].m_rad = (rand() % 100 + 1) / 500.0f;
-	//	}
-	//}
 }
 
 void ParticleSystem::disable() {

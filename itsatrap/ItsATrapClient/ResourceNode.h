@@ -21,6 +21,7 @@ namespace sg {
 
 			ParticleSystem *getParticleSystem();
 			void setParticleSystem(ParticleSystem *p);
+			void setParticleSystemOrigin(glm::vec3 origin);
 			void enableParticles();
 			void disableParticles();
 		

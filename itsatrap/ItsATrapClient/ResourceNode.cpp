@@ -27,6 +27,15 @@ namespace sg {
 		m_particles = p;
 	}
 
+	void ResourceNode::setParticleSystemOrigin(glm::vec3 origin) {
+		m_particles->setOrigin(origin);
+		m_particles2->setOrigin(origin);
+
+		m_particles->reset();
+		m_particles2->reset();
+		m_particles2->reverse();
+	}
+
 	void ResourceNode::enableParticles() {
 		m_particles->enable();
 		m_particles2->enable();
@@ -43,8 +52,11 @@ namespace sg {
 
 	void ResourceNode::setOwnerColor(int playerId)
 	{
+		bool team1 = false;
 		float r, g, b, a;
+
 		if (playerId % 2 == 0) {
+			team1 = true;
 			ConfigSettings::getConfig()->getValue("Team1R", r);
 			ConfigSettings::getConfig()->getValue("Team1G", g);
 			ConfigSettings::getConfig()->getValue("Team1B", b);
@@ -60,8 +72,8 @@ namespace sg {
 		enableParticles();
 
 		this->m_model->setColor(glm::vec4(r, g, b, a));
-		this->m_particles->setColor(glm::vec4(r, g, b, a));
-		this->m_particles2->setColor(glm::vec4(r, g, b, a));
+		this->m_particles->setColor(glm::vec4(r + 0.2f, g + 0.2f, b + 0.2f, a));
+		this->m_particles2->setColor(glm::vec4(r + 0.2f, g + 0.2f, b + 0.2f, a));
 	}
 
 	void ResourceNode::resetOwnerColor()

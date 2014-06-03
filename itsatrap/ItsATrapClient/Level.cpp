@@ -28,28 +28,61 @@ void Level::initLevel0() {
 
 	int counter = 0;
 	float alpha = 0.9f;
+	int resourceCounter = 0;
 
 	sg::MatrixTransform *xForm = new sg::MatrixTransform();
 	ground->addChild(xForm);
 
-	if ((dir = opendir(LEVEL_DIR))!= NULL) {
-	//if ((dir = opendir(OBELISK_DIR))!= NULL) {
+	//if ((dir = opendir(LEVEL_DIR))!= NULL) {
+	if ((dir = opendir(OBELISK_DIR))!= NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			string fileName(ent->d_name);
 
 			if (fileName.size() > 3) {
+				string part(fileName.substr(0, fileName.find_first_of('_')));
 				string extension(fileName.substr(fileName.find_first_of('.')));
 
 				if (extension == ".obj") {
-					levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
-					//levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
-					levelNodes.back()->setName("ObjNode: " + fileName);
-					if (counter % 27 == 0) {
-						++counter;
-					}
-					string color = Utilities::intToBaseThree(counter % 27);
-					levelNodes.back()->getModel()->setColor(glm::vec4(0.5f*(float)(color[0] - '0'), 0.5f*(float)(color[1] - '0'), 0.5f*(float)(color[2] - '0'), alpha));
-					xForm->addChild(levelNodes.back());
+					if (part == "ResourceTower") {
+						sg::ResourceNode *rs; // temp var to reference resource nodes
+
+						rs = new sg::ResourceNode(resourceCounter, NUMPARTICLES);
+						//rs->loadModel(LEVEL + fileName, LEVEL);
+						rs->loadModel(OBELISK + fileName, OBELISK);
+						rs->getParticleSystem()->setColor(glm::vec4(1, 0, 0, 1));
+						rs->m_particles2->setColor(glm::vec4(0, 1, 0, 1));
+						rs->m_particles2->reverse();
+						if (!ENABLE_PARTICLES) {
+							rs->getParticleSystem()->disable();
+							rs->m_particles2->disable();
+						}
+						resources.push_back(rs);
+						resources.back()->setName("Resource Tower " + resourceCounter);
+						resources.back()->getModel()->setColor(glm::vec4(1, 1, 1, 1));
+						xForm->addChild(resources.back());
+
+						resources.back()->calculateBoundingBox();
+
+						float x = (resources.back()->getBoundingBox().minX + resources.back()->getBoundingBox().maxX) / 2.0f;
+						float z = (resources.back()->getBoundingBox().minZ + resources.back()->getBoundingBox().maxZ) / 2.0f;
+						float y = resources.back()->getBoundingBox().minY;
+
+						resources.back()->setParticleSystemOrigin(glm::vec3(x, y, z + 25.0f));
+
+						++resourceCounter;
+					} else if (part != "Ramp") {
+						//levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
+						levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
+						levelNodes.back()->setName("ObjNode: " + fileName);
+
+						if (counter % 27 == 0) {
+							++counter;
+						}
+
+						string color = Utilities::intToBaseThree(counter % 27);
+						levelNodes.back()->getModel()->setColor(glm::vec4(0.5f*(float)(color[0] - '0'), 0.5f*(float)(color[1] - '0'), 0.5f*(float)(color[2] - '0'), alpha));
+						xForm->addChild(levelNodes.back());
+					} 
 				}
 				++counter;
 			}
@@ -72,6 +105,8 @@ void Level::initLevel0() {
 		levelNodes[i]->getBoundingBox().print();*/
 		levelNodes[i]->enableDrawBB();
 	}
+
+	disableAllResourceNodes();
 }
 
 void Level::initLevel() {
