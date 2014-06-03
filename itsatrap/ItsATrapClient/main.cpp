@@ -169,6 +169,10 @@ int main(int argc, char *argv[]) {
 		Client::sendStaticObject(client->level.levelNodes[i]->getBoundingBox());
 	}
 
+	for (int i = 0; i < client->level.decorationNodes.size(); ++i) {
+
+	}
+
 	for (int i = 0; i < client->level.resources.size(); ++i) {
 		Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), 
 			client->level.resources[i]->getResourceId());
