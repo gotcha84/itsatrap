@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 	// opengl lighting
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
-	float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
+	//float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
 	//GLfloat position[]  = {0.0, 1000.0, 0.0, 0.0};  // lightsource position
 	//GLfloat ambientColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
@@ -208,6 +208,7 @@ int main(int argc, char *argv[]) {
 	sg::ObjNode node = sg::ObjNode();
 	node.m_model->loadModel("../Models/Avatar.obj", "../Models/");
 	node.m_model->loadTexture("../Textures/lightning.ppm");
+	node.m_model->setColor(glm::vec4(1, 1, 1, 1));
 
 	sg::MatrixTransform nodeXForm = sg::MatrixTransform();
 	nodeXForm.addChild(&node);
