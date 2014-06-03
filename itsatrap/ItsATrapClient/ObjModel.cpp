@@ -135,6 +135,13 @@ void ObjModel::drawModel() {
 		glFrontFace(GL_CW);
 	}
 
+	if (getName() == "penis") {
+		int kkk = 0;
+	}
+	else if (getName() == "not a penis") {
+		int lll = 0;
+	}
+
 	int p = 0;
 	int k = 0;
 	int l = 0;
@@ -181,7 +188,7 @@ void ObjModel::drawModel() {
 	}
 
 	// reset backface culling
-	glFrontFace(GL_CCW);
+	//glFrontFace(GL_CCW);
 
 	if (m_drawBB) {
 		this->getBoundingBox().draw();
@@ -241,7 +248,7 @@ void ObjModel::loadModel() {
 	}
 
 	if (!err.empty()) {
-		cout << "\t[tinyobj] " << err << endl;
+		cout << "\t[tinyobj] " << err << " (" << m_objFilename << ")" << endl;
 	}
 
 	int indicesCount = 0;

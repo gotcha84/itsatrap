@@ -83,11 +83,14 @@ namespace sg {
 		//m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
 		//m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
 		
-		m_otherPlayer = new ObjModel("../Models/New Folder/chest.obj", "../Models/New Folder/");
-		m_otherPlayer->loadTexture("../Textures/skybox.ppm");
+		m_otherPlayer = new ObjModel();
+		m_otherPlayer->loadModel("../Models/Avatar.obj", "../Models/");
+		//m_otherPlayer->loadTexture("../Models/Polynoid_Updated/Default Material_Flattened_Diffuse.ppm");
+		m_otherPlayer->loadTexture("../Models/Polynoid_Updated/animus.ppm");
+		m_otherPlayer->setName("not a penis");
 
-		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
-		m_thisPlayer->disableDrawBB();
+		m_thisPlayer = new ObjModel();
+		m_thisPlayer->loadModel("../Models/Headless_Avatar.obj", "../Models/");
 	}
 
 	void Player::setColor(glm::vec4 color) {
@@ -280,18 +283,17 @@ namespace sg {
 		
 		this->drawAsOtherPlayer(mv);
 
-		if (m_drawBB) {
-			m_otherPlayer->getBoundingBox().draw();
-		}
+		//if (m_drawBB) {
+			//m_otherPlayer->getBoundingBox().draw();
+		//}
 	}
 
 	void Player::drawAsOtherPlayer(glm::mat4 mv) {
 		// load updated mv matrix and draw shape for player
-		//if (this->getPlayerID() % 2 == 0)
-			//m_otherPlayer->setColor(glm::vec4(0.75, 0, 0, 1));
-		//else
-			//m_otherPlayer->setColor(glm::vec4(0, 0, 0.75, 1));
-		m_otherPlayer->setColor(glm::vec4(1, 1, 1, 1));
+		if (this->getPlayerID() % 2 == 0)
+			m_otherPlayer->setColor(glm::vec4(0.75, 0, 0, 1));
+		else
+			m_otherPlayer->setColor(glm::vec4(0, 0, 0.75, 1));
 
 		glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);

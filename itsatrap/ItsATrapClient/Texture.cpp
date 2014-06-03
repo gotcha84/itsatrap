@@ -7,7 +7,10 @@ Texture::Texture(){
 Texture::~Texture(){}
 
 GLuint Texture::loadTexture(const char* the_texture) {
-	//GLuint texture;			 // storage for one texture
+
+	static int counter = 0;
+
+	GLuint texture = counter;			 // storage for one texture
 	int twidth, theight;   // texture width/height [pixels]
 	unsigned char* tdata;  // texture pixel data
 
@@ -19,10 +22,10 @@ GLuint Texture::loadTexture(const char* the_texture) {
 	if (tdata == NULL) return i;
 	//int num;
 
-	glGenTextures(1, &m_textureID);
+	glGenTextures(1, &texture);
 
 	// Set this texture to be the one we are working with
-	glBindTexture(GL_TEXTURE_2D, m_textureID);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	// Generate the texture
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, twidth, theight, 0, GL_RGB, GL_UNSIGNED_BYTE, tdata);
@@ -33,9 +36,11 @@ GLuint Texture::loadTexture(const char* the_texture) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 
-	return m_textureID;
+	return texture;
+
+	counter++;
 }
 
 

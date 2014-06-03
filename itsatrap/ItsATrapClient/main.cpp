@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
 	//float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
-	//GLfloat position[]  = {0.0, 1000.0, 0.0, 0.0};  // lightsource position
+	GLfloat position[]  = {0.0, 1000.0, 0.0, 0.0};  // lightsource position
 	//GLfloat ambientColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
 	// Initialize networking for client
@@ -132,11 +132,11 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_COLOR_MATERIAL);
 	
 	// Generate light source:
-	glDisable(GL_LIGHTING);
+	//glDisable(GL_LIGHTING);
 	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
-	//glLightfv(GL_LIGHT0, GL_POSITION, position);
-	//glEnable(GL_LIGHTING);
-	//glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 	
 	// Install callback functions:
 	glutDisplayFunc(window->displayCallback);
@@ -205,14 +205,15 @@ int main(int argc, char *argv[]) {
 	//	Client::sendStaticWallObject(client->level.walls[i]->getBoundingBox());
 	//}
 
-	sg::ObjNode node = sg::ObjNode();
-	node.m_model->loadModel("../Models/Avatar.obj", "../Models/");
-	node.m_model->loadTexture("../Textures/lightning.ppm");
-	node.m_model->setColor(glm::vec4(1, 1, 1, 1));
-
-	sg::MatrixTransform nodeXForm = sg::MatrixTransform();
-	nodeXForm.addChild(&node);
-	client->root->addChild(&nodeXForm);
+	//sg::ObjNode node = sg::ObjNode();
+	//node.m_model->loadModel("../Models/Avatar.obj", "../Models/");
+	////node.m_model->loadTexture("../Textures/Avatar_Diffuse.ppm");
+	//node.m_model->loadTexture("../Models/Polynoid_Updated/animus.ppm");
+	//node.m_model->setColor(glm::vec4(1, 1, 1, 1));
+	//node.m_model->setName("penis");
+	//sg::MatrixTransform nodeXForm = sg::MatrixTransform();
+	//nodeXForm.addChild(&node);
+	//client->root->addChild(&nodeXForm);
 
 	// skybox
 	sg::MatrixTransform sbXForm = sg::MatrixTransform();

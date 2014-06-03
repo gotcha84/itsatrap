@@ -18,8 +18,8 @@ DynamicWorld::DynamicWorld()
 		cleanStateInfo(i);
 	}
 
-	team1RespawnPoints.push_back(glm::vec3(0, 50, -500 + 20 * UNIT_SIZE));
-	team2RespawnPoints.push_back(glm::vec3(0, 50, -500 + -20 * UNIT_SIZE));
+	team1RespawnPoints.push_back(glm::vec3(200, 200, -300));
+	team2RespawnPoints.push_back(glm::vec3(200, 200, -300));
 
 	portalMap.clear();
 	playerMap.clear();
@@ -495,7 +495,7 @@ void DynamicWorld::updateTimings(int timeDiff)
 		if (p.timeUntilRespawn > 0)
 		{
 			p.timeUntilRespawn -= timeDiff;
-			if (p.timeUntilRespawn < 0)
+			if (p.timeUntilRespawn <= 0)
 				respawnPlayer(&p);
 		}
 
@@ -573,6 +573,8 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 }
 
 void DynamicWorld::respawnPlayer(struct playerObject *p) {
+
+	cout << "RESPAWNING PLAYER " << p->id << endl;
 	
 	if (p->id % 2 == 0)
 		p->position = team1RespawnPoints[rand() % team1RespawnPoints.size()];
