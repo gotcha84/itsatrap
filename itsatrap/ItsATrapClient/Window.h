@@ -14,7 +14,7 @@
 
 #include "MyPlayer.h"
 #include "SceneGraph.h"
-
+#include "Shader.h"
 #include "Sound.h"
 
 class Window {
@@ -29,6 +29,9 @@ class Window {
 		static bool *specialKeyState;
 		static bool *specialKeyEventTriggered;
 		static int modifierKey;
+
+		static GLuint cb, rb, fb, ab, sb, pass1, pass2, pass3, diffuse, specular, ambient;
+		Shader shasderPass1, shaderPass2;
 
 		Window();
 		~Window();

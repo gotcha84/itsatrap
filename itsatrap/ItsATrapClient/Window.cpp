@@ -1,7 +1,9 @@
+#include <GL/glew.h>
 #include "Window.h"
 #include "ClientInstance.h"
 #include "Client.h"
 #include "ConfigSettings.h"
+#include "Shader.h"
 
 extern ClientInstance *client;
 
@@ -31,6 +33,24 @@ ISound *slowSound;
 ISound *lightningSound;
 bool jump;
 
+#define fbOWIDTH  512       // width of fbo
+#define fbOHEIGHT 512       // hight of fbo
+
+GLuint Window::fb = 0;           // fbo
+GLuint Window::cb = 0;           // texture for color buffer
+GLuint Window::rb = 0;           // render buffer for depth buffer
+GLuint Window::pass1 = 0;
+GLuint Window::pass2 = 0;
+GLuint Window::diffuse = 0;
+GLuint Window::specular = 0;
+GLuint Window::ambient = 0;
+GLuint tex2;
+
+static const GLenum bufs[] = {
+	GL_COLOR_ATTACHMENT0_EXT, //   カラーバッファ (拡散反射光)
+	/*GL_COLOR_ATTACHMENT1_EXT, //   鏡面反射光
+	GL_COLOR_ATTACHMENT2_EXT,*/ //   環境光の反射光
+};
 
 Window::Window() {
 	for (int i=0; i<256; i++) {
@@ -97,6 +117,34 @@ void Window::displayCallback(void)
 	//cout << "position: " << glm::to_string(client->root->getPlayer()->getPosition()) << endl;
 	processKeys();
 
+	// 透視変換行列の設定
+	/*glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(30.0, (GLdouble)m_width / (GLdouble)m_height, 1.0, 10.0);
+
+	// モデルビュー変換行列の設定
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);*/
+
+
+	// ビューポートの設定
+	glViewport(0, 0, fbOWIDTH, fbOHEIGHT);
+
+	// 隠面消去を有効にする
+	//glEnable(GL_DEPTH_TEST);
+
+	// 陰影付けを有効にする
+	//glEnable(GL_LIGHTING);
+
+	// フレームバッファオブジェクトを結合する
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+
+	// レンダーターゲットを指定する
+	//glDrawBuffers(sizeof bufs / sizeof bufs[0], bufs);
+
+	//glUseProgram(pass1);
+
 	//PhysicsStates curr_state = client->root->getPlayer()->getPhysics()->m_currentState;
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
@@ -104,9 +152,6 @@ void Window::displayCallback(void)
 	// TODO: lock movement if looking up?
 	if (client->root->m_xAngleChange != 0.0f) {
 		client->root->getCamera()->m_xRotationAngle = client->root->m_xAngleChange;
-		//client->root->handleXRotation(client->root->m_xAngleChange);
-		//client->root->m_xAngleChange = 0.0f;
-		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 		lookChanged = true;
 	}
 	else {
@@ -115,103 +160,23 @@ void Window::displayCallback(void)
 	
 	if (client->root->m_yAngleChange != 0.0f) {
 		client->root->getCamera()->m_yRotationAngle = client->root->m_yAngleChange;
-		//client->root->handleYRotation(client->root->m_yAngleChange);
-		//client->root->m_yAngleChange = 0.0f;
-		//Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-
 		lookChanged = true;
 	}
 	else {
 		client->root->getCamera()->m_yRotationAngle = 0.0f;
 	}
 
-	//if (oldXRotated != client->root->getCamera()->getXRotated() || oldYRotated != client->root->getCamera()->getYRotated()) {
-	//	sendUpdate = true;
-	//	lookChanged = true;
-	//	/*if (oldYRotated != client->root->getCamera()->getYRotated()) {
-	//		cout << "yrotated: " << client->root->getCamera()->getYRotated() << endl;
-	//	}*/
-	//}
-	
-	//client->root->getPlayer()->applyCamAdjustments();
-	
-	int buildingId = -2; //client->root->getPlayer()->getPhysics()->applyGravity(client->root->getPlayer()->getAABB());
+	int buildingId = -2; 
 
-	/*if (client->root->getPlayer()->m_timeUntilRespawn <= 0) {
-		if (buildingId != -2 && oldBuildingId != buildingId) {
-			sendUpdate = true;
-			client->root->getPlayer()->m_onTopOfBuildingId = buildingId;
-			cout << "old building id: " << oldBuildingId << endl;
-			cout << "new building id:" << client->root->getPlayer()->m_onTopOfBuildingId << endl;
-		}
-
-	}*/
-
-	
-
-	/*if (client->root->getPlayer()->getPhysics()->m_velocity.x != client->root->getPlayer()->getPhysics()->m_velocityDiff.x || client->root->getPlayer()->getPhysics()->m_velocity.z != client->root->getPlayer()->getPhysics()->m_velocityDiff.z) {
-
-		cout << "velo: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocity) << endl;
-		cout << "velocityDiff: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_velocityDiff) << endl;
-
-	}*/
-	
-	//client->root->getPlayer()->getPhysics()->m_velocity = glm::vec3(0.0f, client->root->getPlayer()->getPhysics()->m_velocity.y, 0.0f);
-	
-	//if (oldPos != client->root->getPlayer()->getPosition()) {		
-	//	//client->root->getPlayer()->getPhysics()->m_lastMoved = client->root->getPlayer()->getPosition() - oldPos;
-	//	client->root->getPlayer()->setModelMatrix(glm::translate(client->root->getPlayer()->getPosition()/* + client->root->getPlayer()->getPhysics()->m_velocity*/));
-	//	client->root->getPlayer()->updateBoundingBox();
-	//	sendUpdate = true;
-	//}
-
-	//if (sendUpdate) {
-	//	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-	//}
 	if (lookChanged) {
 		Client::sendLookEvent(client->root->getCameraObjectForNetworking());
-		/*client->root->m_xAngleChange = 0.0f;
-		client->root->m_yAngleChange = 0.0f;*/
+		
 	}
-	/*if (client->root->getPlayer()->getCamera()->m_cameraCenter != oldPos) {
-		cout << "oldpos: " << glm::to_string(oldPos) << endl;
-		cout << "cam center: " << glm::to_string(client->root->getPlayer()->getCamera()->m_cameraCenter) << endl;
-	}*/
-
-	//cout << "m_position: " << glm::to_string(client->root->getPlayer()->getPhysics()->m_position) << endl;
-	//glm::vec3 moved = client->root->getPlayer()->getPosition() - /*oldPos */client->root->getPlayer()->getCamera()->m_cameraCenter;
-	
-	//client->root->getPlayer()->getCamera()->m_cameraCenter += moved;
-	//client->root->getPlayer()->getCamera()->m_cameraLookAt += moved;
-	
-	/*if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
-		client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_slidingHeight;
-		client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding;
-	}
-	else {*/
-	//uncomment lower two for nonmidgets
-		//client->root->getPlayer()->getCamera()->m_cameraCenter += client->root->getPlayer()->getCamera()->m_playerHeight;
-		//client->root->getPlayer()->getCamera()->m_cameraLookAt += client->root->getPlayer()->getCamera()->m_playerHeight;
-	//}
-
 
 	// updates player view
 	client->root->getPlayer()->getCamera()->updateCameraMatrix();
 	client->root->getPlayer()->updateModelViewMatrix();
 	client->root->draw();
-
-	/*if (client->root->getPlayer()->getPhysics()->m_currentState == PhysicsStates::Sliding) {
-		client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_slidingHeight;
-		client->root->getPlayer()->getCamera()->m_cameraLookAt -= (client->root->getPlayer()->getCamera()->m_slidingHeight + client->root->getPlayer()->getCamera()->m_camZSliding);
-	}
-	else {*/
-	// uncomment lower two for nonmidgets
-		//client->root->getPlayer()->getCamera()->m_cameraCenter -= client->root->getPlayer()->getCamera()->m_playerHeight;
-		//client->root->getPlayer()->getCamera()->m_cameraLookAt -= client->root->getPlayer()->getCamera()->m_playerHeight;
-	//}
-
-	//client->root->getPlayer()->getCamera()->updateCameraMatrix();
-	//client->root->getPlayer()->updateModelViewMatrix();
 
 	m_fpsCounter+=1;
 				
@@ -222,6 +187,59 @@ void Window::displayCallback(void)
 	}
 
 	glFlush();  
+	glutSwapBuffers();
+
+	//glUseProgram(0);
+	
+	// フレームバッファオブジェクトの結合を解除する
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+	//glDisable(GL_DEPTH_TEST);
+	// レンダーターゲットを元に戻す
+	//glDrawBuffer(GL_FRONT);
+
+	// pass2 シェーダを有効にする
+	glUseProgram(pass2);
+	//glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, cb);
+	
+	glUniform1i(glGetUniformLocation(pass2, "image"), 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// 透視変換行列を単位行列にする
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	// モデルビュー変換行列を単位行列にする
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	// ビューポートはウィンドウのサイズに合わせる
+	glViewport(0, 0, m_width, m_height);
+
+	// テクスチャマッピングを有効にする
+	//glBindTexture(GL_TEXTURE_2D, cb);
+	glEnable(GL_TEXTURE_2D);
+
+
+	// 正方形を描く
+	glColor3d(1.0, 1.0, 1.0);
+	glBegin(GL_TRIANGLE_FAN);
+	glTexCoord2d(0.0, 0.0);
+	glVertex2d(-1.0, -1.0);
+	glTexCoord2d(1.0, 0.0);
+	glVertex2d(1.0, -1.0);
+	glTexCoord2d(1.0, 1.0);
+	glVertex2d(1.0, 1.0);
+	glTexCoord2d(0.0, 1.0);
+	glVertex2d(-1.0, 1.0);
+	glEnd();
+
+	// テクスチャマッピングを無効にする
+	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
+	
+	glFlush();
 	glutSwapBuffers();
 }
 

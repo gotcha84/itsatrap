@@ -54,7 +54,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/dirent/include/;$(SolutionDir)/freeType2/include/;$(SolutionDir)/ftgl/include/;$(SolutionDir)/irrKlang/include/;$(SolutionDir)/glm/;$(SolutionDir)/glut/include/;$(SolutionDir)/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/glew/include/;$(SolutionDir)/dirent/include/;$(SolutionDir)/freeType2/include/;$(SolutionDir)/ftgl/include/;$(SolutionDir)/irrKlang/include/;$(SolutionDir)/glm/;$(SolutionDir)/glut/include/;$(SolutionDir)/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -62,8 +62,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)/ftgl/lib/;$(SolutionDir)/freeType2/lib/;$(SolutionDir)/irrKlang/lib/;$(SolutionDir)/glut/lib/;$(SolutionDir)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype253_D.lib;ftgl_D.lib;irrKlang.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;Common.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)/glew/lib;$(SolutionDir)/ftgl/lib/;$(SolutionDir)/freeType2/lib/;$(SolutionDir)/irrKlang/lib/;$(SolutionDir)/glut/lib/;$(SolutionDir)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32d.lib;freetype253_D.lib;ftgl_D.lib;irrKlang.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;Common.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <StackReserveSize>
       </StackReserveSize>
     </Link>
@@ -154,6 +154,10 @@
   <ItemGroup>
     <None Include="..\..\phong.frag" />
     <None Include="..\..\phong.vert" />
+    <None Include="..\Shaders\pass1.frag" />
+    <None Include="..\Shaders\pass1.vert" />
+    <None Include="..\Shaders\pass2blur.frag" />
+    <None Include="..\Shaders\pass2blur.vert" />
     <None Include="can.frag">
       <SubType>Designer</SubType>
     </None>

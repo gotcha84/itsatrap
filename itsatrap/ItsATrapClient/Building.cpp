@@ -1,5 +1,5 @@
 #define ENABLE_SHADER 0
-
+#include <GL/glew.h>
 #include "Building.h"
 
 namespace sg {
