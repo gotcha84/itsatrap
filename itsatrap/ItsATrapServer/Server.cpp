@@ -443,7 +443,7 @@ void Server::processBuffer()
 		dynamicWorld.applyTrapGravity();
 		dynamicWorld.applyCollisions();
 		dynamicWorld.applyPhysics();
-		//dynamicWorld.applyGravity();
+		dynamicWorld.applyGravity();
 		dynamicWorld.applyAdjustments();
 		dynamicWorld.checkPlayersCollideWithTrap();
 	}

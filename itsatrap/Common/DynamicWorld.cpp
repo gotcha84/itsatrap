@@ -1052,16 +1052,11 @@ void DynamicWorld::applyGravity()
 		return;
 		}*/
 		// safety net for test
-		if (p.currPhysState == PhysicsStates::HoldingEdge) {
-			int jjj = 0;
-		}
-		
 		if (p.position.y <= -500.0f) {
 			p.position = glm::vec3(200, 500, -300);
 			//p.feetPlanted = true;
 			p.velocity.y = 0.0f;
 			p.velocityDiff.y = 0.0f;
-
 			playerDamage(&p, &p, 100);
 
 			int respawnTime = 0;
