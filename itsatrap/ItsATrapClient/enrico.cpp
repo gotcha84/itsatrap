@@ -15,6 +15,7 @@ ISound *tramTrapSound;
 ISound *slowTrapSound;
 ISound *lightningTrapSound;
 ISound *portalTrapSound;
+ISound *flashTrapSound;
 
 
 void handleNewPlayer(struct playerObject p)
@@ -163,7 +164,7 @@ void handleRemoveTrap(struct trapObject t)
 		switch (t.type)
 		{
 		case TYPE_FREEZE_TRAP:
-			freezeTrapSound1 = engineTrap->play2D("../Sound/freeze.wav", true, true, true);
+			freezeTrapSound1 = engineTrap->play2D("../Sound/freeze.wav", false, false, true);
 			break;
 		case TYPE_TRAMPOLINE_TRAP:
 			tramTrapSound = engineTrap->play2D("../Sound/tram.wav", false, false, true);
@@ -174,11 +175,14 @@ void handleRemoveTrap(struct trapObject t)
 		case TYPE_PUSH_TRAP:
 			pushTrapSound = engineTrap->play2D("../Sound/push.wav", false, false, true);
 			break;
-		case 5:
+		case TYPE_LIGHTNING_TRAP:
 			lightningTrapSound = engineTrap->play2D("../Sound/lightning.wav", false, false, true);
 			break;
 		case TYPE_PORTAL_TRAP:
 			portalTrapSound = engineTrap->play2D("../Sound/portal.wav", false, false, true);
+			break;
+		case TYPE_FLASH_TRAP:
+			flashTrapSound = engineTrap->play2D("../Sound/flash.wav", false, false, true);
 			break;
 		default:
 			break;

@@ -23,6 +23,9 @@ namespace sg {
 		m_xAngleChangeFactor = 20.0f;
 		m_yAngleChangeFactor = 20.0f;
 
+		trapMenu = new TrapMenu();
+		gameOver = new GameOver();
+
 		initModels();
 	}
 
@@ -42,6 +45,9 @@ namespace sg {
 		m_color = glm::vec4(10,10,10,1);
 		m_xAngleChangeFactor = 20.0f;
 		m_yAngleChangeFactor = 20.0f;
+
+		trapMenu = new TrapMenu();
+		gameOver = new GameOver();
 
 		initModels();
 	}
@@ -65,6 +71,12 @@ namespace sg {
 
 		delete board;
 		board = nullptr;
+
+		delete trapMenu;
+		trapMenu = nullptr;
+
+		delete gameOver;
+		gameOver = nullptr;
 	}
 
 	void Player::initModels() {
@@ -160,57 +172,88 @@ namespace sg {
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
-
-		if (!m_player->m_deathState)
-		{
-			for (int i=0; i<m_nChild; i++) {
-				m_child[i]->draw(glm::mat4(), this->getPlayer()->getCameraMatrix());
-			}
-		}
-		else
-		{
-			cout << "DEAD! Time till respawn " << m_player->m_timeUntilRespawn <<endl;
-		}
-
-		// draw player avatar
-		glm::mat4 mv = glm::inverse(this->getCamera()->getCameraMatrix()) * this->getModelMatrix();
-		this->drawAsCurrentPlayer(mv);
-
-		// draw player hud
-		//TODO: last parameter is the respawn input time. from server to client
-		for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
-			sg::Player *player = it->second;
-			//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
-			//cout << client->tabPressed << endl;
-
-		}
-
-		if (client->tabPressed) {
+		
+		if (false) {
+			int teamOneScore = 0;
+			int teamTwoScore = 0;
 			for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
 				sg::Player *player = it->second;
-				Scoreboard::Entry entry;
-				entry.setName( player->getPlayerID() );
-				entry.setKill(player->getPlayer()->m_numKills);
-				entry.setDeath(player->getPlayer()->m_numDeaths);
-				board->addEntry(entry);
+				if (player->getPlayerID() % 2) {
+					teamOneScore = teamOneScore + player->getPlayer()->m_numKills - player->getPlayer()->m_numDeaths;
+				}else{
+					teamTwoScore = teamTwoScore + player->getPlayer()->m_numKills - player->getPlayer()->m_numDeaths;
+				}
+			}
+			gameOver->setTeamScore(teamOneScore, teamTwoScore);
+			gameOver->draw();
+		}else{
+
+			if (!m_player->m_deathState)
+			{
+				for (int i=0; i<m_nChild; i++) {
+					m_child[i]->draw(glm::mat4(), this->getPlayer()->getCameraMatrix());
+				}
+			}
+			else
+			{
+				cout << "DEAD! Time till respawn " << m_player->m_timeUntilRespawn <<endl;
+			}
+
+			// draw player avatar
+			glm::mat4 mv = glm::inverse(this->getCamera()->getCameraMatrix()) * this->getModelMatrix();
+			this->drawAsCurrentPlayer(mv);
+
+			// draw player hud
+			//TODO: last parameter is the respawn input time. from server to client
+			for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
+				sg::Player *player = it->second;
 				//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
 				//cout << client->tabPressed << endl;
+
 			}
-			board->draw();
+		
+			if (client->tabPressed) {
+				for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
+					sg::Player *player = it->second;
+					Scoreboard::Entry entry;
+					entry.setName( player->getPlayerID() );
+					entry.setKill(player->getPlayer()->m_numKills);
+					entry.setDeath(player->getPlayer()->m_numDeaths);
+					board->addEntry(entry);
+					//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
+					//cout << client->tabPressed << endl;
+				}
+				board->draw();
+			}
+			if ( client->root->getPlayer()->getHealth() > 0) trapMenu->draw();
+			if (client->scrollUp) {
+				if ((trapMenu->getInfoState() + 1) == 7) trapMenu->setInfoState(0);
+				else trapMenu->setInfoState( trapMenu->getInfoState()+1);
+				client->scrollUp = false;
+			}
+			if (client->scrollDown) {
+				if ((trapMenu->getInfoState() - 1) < 0) trapMenu->setInfoState(6);
+				else trapMenu->setInfoState(trapMenu->getInfoState() - 1);
+				client->scrollDown = false;
+			}
+
+			//if (client->scrollUp) cout << "playerNode: scrollUp" << endl;
+			//if (client->scrollDown) cout << "playerNode: scrollDown" << endl;
+
+			// Flashbang stuff
+			float flash = 0;
+			int flashFadeOut = 0;
+			ConfigSettings::getConfig()->getValue("FlashFadeOut", flashFadeOut);
+			if (getPlayer()->m_flashDuration > flashFadeOut)
+				flash = 1;
+			else
+				flash = (float)getPlayer()->m_flashDuration / flashFadeOut;
+			if (flash < 0)
+				flash = 0;
+
+			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, getPlayer()->m_hitCrosshairDuration, m_player->m_infoMsg.getMessage());
 		}
 
-		// Flashbang stuff
-		float flash = 0;
-		int flashFadeOut = 0;
-		ConfigSettings::getConfig()->getValue("FlashFadeOut", flashFadeOut);
-		if (getPlayer()->m_flashDuration > flashFadeOut)
-			flash = 1;
-		else
-			flash = (float)getPlayer()->m_flashDuration / flashFadeOut;
-		if (flash < 0)
-			flash = 0;
-
-		m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, getPlayer()->m_hitCrosshairDuration, m_player->m_infoMsg.getMessage());
 	}
 
 	void Player::drawAsCurrentPlayer(glm::mat4 mv) {

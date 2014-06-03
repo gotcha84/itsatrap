@@ -20,6 +20,8 @@ ClientInstance::ClientInstance(int id) {
 	objects[id] = root;
 
 	tabPressed = false;
+	scrollUp = false;
+	scrollDown = false;
 }
 
 ClientInstance::~ClientInstance() {
