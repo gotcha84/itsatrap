@@ -163,7 +163,6 @@ int main(int argc, char *argv[]) {
 	// hide mouse cursor
 	//glutSetCursor(GLUT_CURSOR_NONE);
 
-
 	//sg::City city = sg::City();
 	//city.loadData("../Models/city.obj");
 	//client->root->addChild(&city);
@@ -206,10 +205,33 @@ int main(int argc, char *argv[]) {
 	//	Client::sendStaticWallObject(client->level.walls[i]->getBoundingBox());
 	//}
 
+	sg::ObjNode node = sg::ObjNode();
+	node.m_model->loadModel("../Models/Avatar.obj", "../Models/");
+	node.m_model->loadTexture("../Textures/lightning.ppm");
+
+	sg::MatrixTransform nodeXForm = sg::MatrixTransform();
+	nodeXForm.addChild(&node);
+	client->root->addChild(&nodeXForm);
+
+	// skybox
+	sg::MatrixTransform sbXForm = sg::MatrixTransform();
+	glm::mat4 model = glm::mat4();
+	model = glm::rotate(model, 90.0f, glm::vec3(0, 1, 0));
+	model = glm::rotate(model, -45.0f, glm::vec3(1, 0, 0));
+	model = glm::rotate(model, 25.0f, glm::vec3(0, 0, 1));
+	sbXForm.setMatrix(model);
+	client->root->addChild(&sbXForm);
+
+	sg::Skybox skybox = sg::Skybox();
+	skybox.loadModel("../Models/Skybox/skybox.obj", "../Models/Skybox/");
+	skybox.loadTexture("../Textures/skybox.ppm");
+	skybox.getModel()->setColor(glm::vec4(1, 1, 1, 1));
+	sbXForm.addChild(&skybox);
+
 	//client->printPlayers();
 	//client->printSceneGraph();
 	// setup background music and other player's footstep
-	otherPlayerSound = new Sound("footstep.wav");
+	otherPlayerSound = new Sound("../Sound/footstep.wav");
 	sound = new Sound();
 	otherPlayerSound->playMusic(false, false, true);
 	//sound->playMusic();

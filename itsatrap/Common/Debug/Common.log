@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿  DynamicWorld.cpp
 c:\users\alvin\desktop\125\working3\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
 c:\users\alvin\desktop\125\working3\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
@@ -97,3 +98,10 @@ c:\users\alvin\desktop\125\working3\itsatrap\common\dynamicworld.cpp(1470): warn
 AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
      Creating library C:\Users\alvin\Desktop\125\working3\itsatrap\Debug\Common.lib and object C:\Users\alvin\Desktop\125\working3\itsatrap\Debug\Common.exp
   Common.vcxproj -> C:\Users\alvin\Desktop\125\working3\itsatrap\Debug\Common.dll
+=======
+﻿Build started 6/2/2014 8:04:51 PM.
+
+Build succeeded.
+
+Time Elapsed 00:00:00.00
+>>>>>>> a3824df81e8cc84dfb4b5ad0bf1c4346522c0155

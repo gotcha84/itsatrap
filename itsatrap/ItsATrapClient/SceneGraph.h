@@ -19,5 +19,6 @@
 #include "Trap.h"
 #include "ObjNode.h"
 #include "ResourceNode.h"
+#include "Skybox.h"
 
 #endif

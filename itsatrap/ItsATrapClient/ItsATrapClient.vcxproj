@@ -54,7 +54,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/dirent/include/;$(SolutionDir)/freeType2/include/;$(SolutionDir)/ftgl/include/;$(SolutionDir)/irrKlang/include/;$(SolutionDir)/glm/;$(SolutionDir)/glut/include/;$(SolutionDir)/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/glew/include/;$(SolutionDir)/dirent/include/;$(SolutionDir)/freeType2/include/;$(SolutionDir)/ftgl/include/;$(SolutionDir)/irrKlang/include/;$(SolutionDir)/glm/;$(SolutionDir)/glut/include/;$(SolutionDir)/Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -62,8 +62,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)/ftgl/lib/;$(SolutionDir)/freeType2/lib/;$(SolutionDir)/irrKlang/lib/;$(SolutionDir)/glut/lib/;$(SolutionDir)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype253_D.lib;ftgl_D.lib;irrKlang.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;Common.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)/glew/lib/;$(SolutionDir)/ftgl/lib/;$(SolutionDir)/freeType2/lib/;$(SolutionDir)/irrKlang/lib/;$(SolutionDir)/glut/lib/;$(SolutionDir)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32d.lib;freetype253_D.lib;ftgl_D.lib;irrKlang.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;Common.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <StackReserveSize>
       </StackReserveSize>
     </Link>
@@ -93,6 +93,7 @@
     <ClCompile Include="Cone.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="enrico.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Geode.cpp" />
     <ClCompile Include="Group.cpp" />
     <ClCompile Include="HUD.cpp" />
@@ -110,16 +111,19 @@
     <ClCompile Include="ResourceNode.cpp" />
     <ClCompile Include="Scoreboard.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="tiny_obj_loader.cc" />
     <ClCompile Include="Trap.cpp" />
+    <ClCompile Include="TrapMenu.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Building.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="InfoMessage.h" />
     <ClInclude Include="Level.h" />
@@ -130,6 +134,7 @@
     <ClInclude Include="ResourceNode.h" />
     <ClInclude Include="Scoreboard.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Skybox.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Trap.h" />
@@ -147,6 +152,7 @@
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="TrapMenu.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Building.h" />

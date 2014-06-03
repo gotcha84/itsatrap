@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib ResourceTower_2.mtl
+mtllib ResourceTower_02.mtl
 g default
 v -7.601477 -84.499996 -328.250000
 v 7.398523 -84.499996 -328.250000

@@ -21,6 +21,8 @@ class ClientInstance {
 		Level level;
 
 		bool tabPressed;
+		bool scrollUp;
+		bool scrollDown;
 
 		int m_xMouse, m_yMouse; // mouse position
 

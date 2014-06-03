@@ -133,7 +133,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InfoMessage.cpp">
+	</ClCompile>
+    <ClCompile Include="TrapMenu.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -225,7 +233,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InfoMessage.h">
+	</ClInclude>
+    <ClInclude Include="TrapMenu.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

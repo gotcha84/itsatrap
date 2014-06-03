@@ -23,12 +23,8 @@ int Window::modifierKey = 0;
 ISoundEngine *engine;
 ISoundEngine *jumpSound;
 ISoundEngine *knifeSound;
+ISoundEngine *createTrapSound;
 ISound *walk;
-ISound *freezeTrapSound;
-ISound *pushSound;
-ISound *tramSound;
-ISound *slowSound;
-ISound *lightningSound;
 bool jump;
 
 
@@ -41,12 +37,8 @@ Window::Window() {
 	engine = createIrrKlangDevice(); //declare loop, pause, and track
 	jumpSound = createIrrKlangDevice();
 	knifeSound = createIrrKlangDevice();
+	createTrapSound = createIrrKlangDevice();
 	walk = engine->play2D("../Sound/footstep.wav", true, true, true);
-	freezeTrapSound = engine->play2D("../Sound/trap.wav", true, true, true);
-	pushSound = engine->play2D("../Sound/push.wav", true, true, true);
-	tramSound = engine->play2D("../Sound/tram.wav", true, true, true);
-	slowSound = engine->play2D("../Sound/slow.wav", true, true, true);
-	lightningSound = engine->play2D("../Sound/lightning.wav", true, true, true);
 	jump = true;
 }
 
@@ -231,26 +223,9 @@ void Window::keyDown(unsigned char key, int x, int y)
 	if (key >= '1' && key <= '9') {
 		switch (key)
 		{
-		case '1':
-			//freezeTrapSound->setIsPaused(false);
-			break;
-		case '2':
-			//tramSound->setIsPaused(false);
-			break;
-		case '3':
-			//slowSound->setIsPaused(false);
-			break;
-		case '4':
-			//pushSound->setIsPaused(false);
-			break;
-		case '5':
-			//lightningSound->setIsPaused(false);
-			break;
-		case '6':
-			//freezeTrapSound->setIsPaused(false);
-			break;
 		default:
-			//freezeTrapSound->setIsPaused(false);
+			if (!createTrapSound->isCurrentlyPlaying("../Sound/hammer.wav"))
+				createTrapSound->play2D("../Sound/hammer.wav", false, false, true);
 			break;
 		}
 	}
@@ -261,7 +236,6 @@ void Window::keyUp(unsigned char key, int x, int y) {
 	keyEventTriggered[key] = false;
 	jump = true;
 	walk->setIsPaused(true);
-
 	if (key >= '1' && key <= '9') {
 		string filename = TRAMPOLINE_TRAP_OBJ;
 		int type = 0;
@@ -325,6 +299,54 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		for (int i = 0; i < client->level.resources.size(); ++i) {
 			Client::sendChannelAttemptEvent(client->level.resources[i]->getResourceId());
 		}
+	}
+	else if (key == 't')
+	{
+		cout << "PRESSED T" << endl;
+		cout << "getInfoState() " << client->root->trapMenu->getInfoState() << endl;
+		string filename = TRAMPOLINE_TRAP_OBJ;
+		int type = 0;
+		switch (client->root->trapMenu->getInfoState())
+		{
+			case 0:
+				type = TYPE_FREEZE_TRAP;
+				filename = FREEZE_TRAP_OBJ;
+				break;
+			case 1:
+				type = TYPE_TRAMPOLINE_TRAP;
+				filename = TRAMPOLINE_TRAP_OBJ;
+				break;
+			case 2:
+				type = TYPE_SLOW_TRAP;
+				filename = SLOW_TRAP_OBJ;
+				break;
+			case 3:
+				type = TYPE_PUSH_TRAP;
+				filename = PUSH_TRAP_OBJ;
+				break;
+			case 4:
+				type = TYPE_LIGHTNING_TRAP;
+				filename = DEATH_TRAP_OBJ;
+				break;
+			case 5:
+				type = TYPE_PORTAL_TRAP;
+				filename = PORTAL_TRAP_OBJ;
+				break;
+			case 6:
+				type = TYPE_FLASH_TRAP;
+				filename = FLASH_TRAP_OBJ;
+				break;
+			default:
+				type = TYPE_FREEZE_TRAP;
+				filename = TRAMPOLINE_TRAP_OBJ;
+				break;
+		}
+		sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated, TRAP_DIR + filename);
+		struct trapObject t = trap->getTrapObjectForNetworking();
+		t.type = type;
+		Client::sendSpawnTrapEvent(t);
+		delete trap;
+		trap = nullptr;
 	}
 }
 
@@ -469,6 +491,12 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 			break;
 		default:
 			break;
+	}
+	if (button == 3) {
+		client->scrollUp = true;
+	}
+	else if (button == 4) {
+		client->scrollDown = true;
 	}
 }
 

@@ -1,13 +1,14 @@
 #include "HUD.h"
 
 #include <iostream>
-
+bool healthCheck;
 // default constructor
 HUD::HUD() {
 	font = new FTGLPixmapFont("C:/Windows/Fonts/Arial.ttf");
 	board = new Scoreboard();
 	m_progressTime = -1;
-	engine = createIrrKlangDevice(); //declare loop, pause, and track
+	ouchSound = createIrrKlangDevice(); //declare loop, pause, and track
+	deathSound = createIrrKlangDevice(); //declare loop, pause, and track
 }
 
 // destructor
@@ -21,18 +22,25 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hi
 	glPushMatrix();
 		glLoadIdentity();
 		gluOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f);
-
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
+
+			
+
 			glLoadIdentity();
 			if (health <= 0) {
 				
 				drawDeathTimer(spawnTime);
-				deathSound = engine->play2D("../Sound/death.wav", false, false, true);
+				
+				if (!deathSound->isCurrentlyPlaying("../Sound/death.wav") && spawnTime <= 2500 && spawnTime >= 2000) {
+					deathSound->play2D("../Sound/death.wav", false, false, true);
+				}
 			}else {
-				if (hitCrosshairDuration > 0)
+				if (hitCrosshairDuration > 0) {
 					drawKillSymbol(true);
-				else
+					if (!ouchSound->isCurrentlyPlaying("../Sound/ouch.wav") )
+						ouchSound->play2D("../Sound/ouch.wav", false, false, true);
+				}else
 					drawKillSymbol(false);
 				drawCrossHair();
 				drawHealthBar(health);
@@ -127,9 +135,10 @@ void HUD::drawInfoMessage(string msg) {
 
 void HUD::drawDeathTimer(int respawnTime) {
 
+	glColor3f(1, 0, 0); // green
 	font->FaceSize(50);
 	font->CharMap(ft_encoding_symbol);
-	glRasterPos2f(-0.55f, 0.0f);
+	glRasterPos2f(-0.20f, 0.0f);
 	font->Render("You are Dead");
 
 	font->FaceSize(50);

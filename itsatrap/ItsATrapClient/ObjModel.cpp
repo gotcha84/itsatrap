@@ -1,14 +1,14 @@
 #include "ObjModel.h"
 
 ObjModel::ObjModel() {
-	this->initScales();
+	this->initCommon();
 
 	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
 ObjModel::ObjModel(int id) {
-	this->initScales();
+	this->initCommon();
 	m_id = id;
 
 	//m_physics = Physics();
@@ -16,7 +16,7 @@ ObjModel::ObjModel(int id) {
 }
 
 ObjModel::ObjModel(string objFilename) {
-	this->initScales();
+	this->initCommon();
 
 	this->loadModel(objFilename);
 
@@ -25,7 +25,7 @@ ObjModel::ObjModel(string objFilename) {
 }
 
 ObjModel::ObjModel(string objFilename, string mtlFilename) {
-	this->initScales();
+	this->initCommon();
 
 	this->loadModel(objFilename, mtlFilename);
 	
@@ -34,7 +34,7 @@ ObjModel::ObjModel(string objFilename, string mtlFilename) {
 }
 
 ObjModel::ObjModel(string objFilename, glm::vec3 currPos) {
-	this->initScales();
+	this->initCommon();
 
 	m_position = currPos;
 	this->loadModel(objFilename);
@@ -44,7 +44,7 @@ ObjModel::ObjModel(string objFilename, glm::vec3 currPos) {
 }
 
 ObjModel::ObjModel(string objFilename, string mtlFilename, glm::vec3 currPos) {
-	this->initScales();
+	this->initCommon();
 
 	m_position = currPos;
 	this->loadModel(objFilename, mtlFilename);
@@ -54,7 +54,7 @@ ObjModel::ObjModel(string objFilename, string mtlFilename, glm::vec3 currPos) {
 }
 
 ObjModel::ObjModel(int id, string objFilename) {
-	this->initScales();
+	this->initCommon();
 
 	m_id = id;
 	this->loadModel(objFilename);
@@ -64,7 +64,7 @@ ObjModel::ObjModel(int id, string objFilename) {
 }
 
 ObjModel::ObjModel(int id, string objFilename, string mtlFilename) {
-	this->initScales();
+	this->initCommon();
 
 	m_id = id;
 	this->loadModel(objFilename, mtlFilename);
@@ -74,14 +74,17 @@ ObjModel::ObjModel(int id, string objFilename, string mtlFilename) {
 }
 
 ObjModel::~ObjModel() {
-
+	delete m_texture;
+	m_texture = nullptr;
 }
 
-void ObjModel::initScales() {
+void ObjModel::initCommon() {
 	m_turtleScale = 0.01f;
 	m_cityScale = 0.1f;
 	m_canScale = 5.0f;
 	m_defaultScale = 1.0f;
+
+	m_texture = new Texture();
 }
 
 void ObjModel::setVertices(vector<float> arr) {
@@ -127,55 +130,55 @@ void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
 }
 
 void ObjModel::drawModel() {
-
-	glEnable(GL_TEXTURE_2D);
-
 	// change order of vertices for backface culling for can
 	if (this->m_objFilename == "../Models/Can.obj") {
 		glFrontFace(GL_CW);
 	}
 
-	//cout << "nverts is : " << m_nIndices[0] << endl;
 	int p = 0;
 	int k = 0;
 	int l = 0;
 	int t = 0;
-	//cout << m_nm_indices << endl;
-	int max_ele = 10000;
-			
-	// bind texture here
-	//glBindTexture(GL_TEXTURE_2D, texturePPM);
+	int max_ele = FLT_MAX;
 
-	// if city and want colorful ObjModels!
+	// bind texture
+	if (m_textureID != 0) {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, m_textureID);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+
 	glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-
-	//cout << "m_id: " << m_id << endl;
 
 	for (int k = 0; k < m_nIndices.size(); k++) {
 		int temp = m_materials.size();
 
-		glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, m_materials[k].m_ambient);
-		glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, m_materials[k].m_diffuse);
-		glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, m_materials[k].m_specular);
-		glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, m_materials[k].m_emission);
-		glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, m_materials[k].m_shininess);
-
-		for (int i = 0; i < m_nIndices[k]/3; i++) {
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_materials[k].m_ambient);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_materials[k].m_diffuse);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m_materials[k].m_specular);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, m_materials[k].m_emission);
+		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, m_materials[k].m_shininess);
+		
+		t = 0;
+		for (int i = 0; i < m_nIndices[k] / 3; i++) {
 			glBegin(GL_TRIANGLES);
 			for (int j = 0; j < 3; j++) {
-				//cout << i << ", " << j << ", " << k << endl;
-				//cout << "1 " << endl;
-				glNormal3f(m_normals[k][3*m_indices[k][3*i+j]], m_normals[k][3*m_indices[k][3*i+j]+1], m_normals[k][3*m_indices[k][3*i+j]+2]);
-				//cout << "2 " << endl;
-				//glTexCoord2f(m_texcoords[k][2*m_indices[k][t]], m_texcoords[k][2*m_indices[k][t]+1]);
-				//cout << "3 " << endl;
-				glVertex3f(m_vertices[k][3*m_indices[k][3*i+j]], m_vertices[k][3*m_indices[k][3*i+j]+1], m_vertices[k][3*m_indices[k][3*i+j]+2]);
+				//glNormal3f(m_normals[k][3 * m_indices[k][3 * i + j]], m_normals[k][3 * m_indices[k][3 * i + j] + 1], m_normals[k][3 * m_indices[k][3 * i + j] + 2]);
+				glTexCoord2f(m_texcoords[k][2 * m_indices[k][t]], m_texcoords[k][2 * m_indices[k][t] + 1]);
+				glVertex3f(m_vertices[k][3 * m_indices[k][3 * i + j]], m_vertices[k][3 * m_indices[k][3 * i + j] + 1], m_vertices[k][3 * m_indices[k][3 * i + j] + 2]);
 				t++;
 			}
 			glEnd();
 		}
 	}
-	//cout << max_ele << endl;	
+
+	// unbind texture
+	if (m_textureID != 0) {
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_TEXTURE_2D);
+	}
 
 	// reset backface culling
 	glFrontFace(GL_CCW);
@@ -279,9 +282,24 @@ void ObjModel::loadModel() {
 
 	calculateBoundingBox();
 	//m_boundingBox.print();
-	m_boundingBox.print();
 
 	// TODO: send new bounding box to server and see if can make trap at that location
+}
+
+void ObjModel::loadTexture(string filename) {
+	cout << "[ObjModel] loading texture : " << filename << endl;
+	//setMaterial(shapes[0].material.ambient, 
+	//	shapes[0].material.diffuse, 
+	//	shapes[0].material.specular, 
+	//	shapes[0].material.emission, 
+	//	shapes[0].material.shininess);
+	//m_boundingBox.print();
+
+	m_textureID = m_texture->loadTexture(filename.c_str());
+
+	if (m_textureID == 0) {
+		cout << "[ObjModel] \tFAILED loading texture : " << filename << endl;
+	}
 }
 
 void ObjModel::calculateBoundingBox() {
