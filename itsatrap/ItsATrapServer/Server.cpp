@@ -525,8 +525,8 @@ void Server::checkConnection()
 		{
 			players[i].timeUntilInactive -= MAX_SERVER_PROCESS_RATE;
 
-			/*if (players[i].timeUntilInactive <= 0)
-				disconnectPlayer(i);*/
+			if (players[i].timeUntilInactive <= 0)
+				disconnectPlayer(i);
 		}
 	}
 }
