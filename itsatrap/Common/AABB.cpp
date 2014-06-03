@@ -45,8 +45,9 @@ AABB::~AABB() {
 }
 
 void AABB::initCommon() {
-	m_nearTopFactor = 15.0f;
-	m_overTopFactor = 5.0f;
+	float yLength = maxY - minY;
+	m_nearTopFactor = 0.01f*yLength;
+	m_overTopFactor = 0.05f*yLength;
 	m_onRampXZFactor = 1.0f;
 	m_onRampYFactor = 10.0f;
 }
@@ -93,23 +94,31 @@ bool AABB::collidesWithPointer(AABB* other) {
 	return tmp;
 }
 
-bool AABB::collidesWithSide(AABB other) {
+bool AABB::collidesWithSide(glm::vec3 from, glm::vec3 goTo, AABB player, int buildingId) {
 
-	/*cout << "this: ";
-	this->print();
-	cout << "other: ";
-	other.print();*/
+	if (cameFromBottom(from, goTo, player, buildingId) || cameFromTop(from, goTo, player, buildingId)) {
+		return false;
+	}
 
-	return (other.maxX >= minX && other.minX <= maxX
-		&& other.maxY - m_nearTopFactor >= maxY
-		&& other.maxZ >= minZ && other.minZ <= maxZ);
+	return (maxX >= player.minX && minX <= player.maxX
+		&& maxY - m_nearTopFactor >= player.maxY
+		&& maxZ >= player.minZ && minZ <= player.maxZ);
+
+	/*return (player.minX >= minX && player.maxX <= maxX
+		&& player.maxY < maxY - m_nearTopFactor
+		&& player.minZ >= minZ && player.maxZ <= maxZ);*/
 }
 
-bool AABB::collidesWithSidePointer(AABB* other) {
-	return (other->maxX >= minX && other->minX <= maxX
-		&& other->maxY - m_nearTopFactor >= maxY
-		&& other->maxZ >= minZ && other->minZ <= maxZ);
-}
+//bool AABB::collidesWithSidePointer(glm::vec3 from, glm::vec3 goTo, AABB* player, int buildingId) {
+//
+//	if (cameFromBottom(from, goTo, player, buildingId) || cameFromTop(from, goTo, player, buildingId)) {
+//		return false;
+//	}
+//
+//	return (player->minX >= minX && player->maxX <= maxX
+//		&& player->maxY < maxY - m_nearTopFactor
+//		&& player->minZ >= minZ && player->maxZ <= maxZ);
+//}
 
 bool AABB::onTopOfPointer(AABB* other) {
 	return (other->maxX >= minX && other->minX <= maxX
@@ -455,6 +464,9 @@ void AABB::print() {
 
 bool AABB::cameFromTop(glm::vec3 from, glm::vec3 goTo, AABB player, int buildingId) {
 
+	from.y -= 13.0f;
+	goTo.y -= 13.0f;
+
 	int checkId1 = -1;
 	int checkId2 = -2;
 	int checkId3 = -3;
@@ -519,6 +531,9 @@ bool AABB::cameFromTop(glm::vec3 from, glm::vec3 goTo, AABB player, int building
 }
 
 bool AABB::cameFromBottom(glm::vec3 from, glm::vec3 goTo, AABB player, int buildingId) {
+
+	from.y += 13.0f;
+	goTo.y += 13.0f;
 
 	int checkId1 = -1;
 	int checkId2 = -2;

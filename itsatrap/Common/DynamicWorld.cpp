@@ -466,12 +466,12 @@ int DynamicWorld::checkCollisionsWithAllNonTraps(struct playerObject *e)
 	return -1;
 }
 
-int DynamicWorld::checkSideCollisionsWithAllBuildings(struct playerObject *e)
+int DynamicWorld::checkSideCollisionsWithAllBuildings(glm::vec3 from, glm::vec3 goTo, struct playerObject *e)
 {
 	for (int i = 0; i < staticObjects.size(); i++)
 	{
 		// Something wrong with building#40
-		if (e->aabb.collidesWithSide(staticObjects[i].aabb))
+		if (staticObjects[i].aabb.collidesWithSide(from, goTo, e->aabb, i))
 		{
 			//printf("Collision: player %d with static object %d\n", e->id, i);
 			return i;
@@ -480,10 +480,6 @@ int DynamicWorld::checkSideCollisionsWithAllBuildings(struct playerObject *e)
 
 	return -1;
 }
-
-
-
-
 
 void DynamicWorld::updateTimings(int timeDiff)
 {
@@ -639,9 +635,9 @@ void DynamicWorld::applyCollisions() {
 				p.position = proposedNewPos;
 				//p.position.y += YOFFSET;
 				computeAABB(&p);
-				p.position = oldPos;
+				//p.position = oldPos;
 				//p.position.y += YOFFSET;
-				int buildingId = checkSideCollisionsWithAllBuildings(&p);
+				int buildingId = checkSideCollisionsWithAllBuildings(oldPos, p.position, &p);
 				p.position = oldPos;
 				computeAABB(&p);
 				if (buildingId != -1) {
@@ -669,7 +665,7 @@ void DynamicWorld::applyCollisions() {
 							}
 							else {
 								p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-								p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
+								p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 							}
 						}
 					}
@@ -681,10 +677,10 @@ void DynamicWorld::applyCollisions() {
 
 				else {
 					p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-					p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
+					p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 				}
-				p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-				p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
+				/*p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+				p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);*/
 			}
 		}
 	}
@@ -798,7 +794,7 @@ void DynamicWorld::noneMoveEvent(int playerId)
 }
 
 void DynamicWorld::climbingMoveEvent(int playerId) {
-	cout << "handling climbing move event" << endl;
+	//cout << "handling climbing move event" << endl;
 	struct playerObject *p = &playerMap[playerId];
 
 	// TODO: enable movement?
@@ -814,7 +810,7 @@ void DynamicWorld::climbingMoveEvent(int playerId) {
 }
 
 void DynamicWorld::holdingEdgeMoveEvent(int playerId) {
-	cout << "handling holding edge move event" << endl;
+	//cout << "handling holding edge move event" << endl;
 	struct playerObject *p = &playerMap[playerId];
 
 	glm::vec3 proposedNewPos;
@@ -847,10 +843,15 @@ void DynamicWorld::holdingEdgeMoveEvent(int playerId) {
 	}
 	else if (p->triedBackward) {
 		cout << "decided to fall back down" << endl;
-		p->currInnerState = innerStates::Off;
+		p->currInnerState = innerStates::Ending;
 		//TODO: maybe more, set Holders
 		return;
 	}
+	
+	if (!p->triedLeft && !p->triedRight) {
+		return;
+	}
+
 	if (p->triedLeft) {
 		toAdd += -1.0f*xWalkFactor*p->cameraObject.camX;
 	}
@@ -1023,6 +1024,11 @@ void DynamicWorld::applyGravity()
 			return;
 		}*/
 		// safety net for test
+		if (p.currPhysState == PhysicsStates::HoldingEdge) {
+			int jjj = 0;
+		}
+
+
 		if (p.position.y <= -500.0f) {
 			p.position = glm::vec3(200, 500, -300);
 			//p.feetPlanted = true;
@@ -1046,52 +1052,52 @@ void DynamicWorld::applyGravity()
 			/*cout << "player aabb:";
 			p.aabb.print();*/
 
-			float gravityConstant = 0;
-			ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
-			if (p.currPhysState == PhysicsStates::None) {
-				p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
-			}
+		float gravityConstant = 0;
+		ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
+		if (p.currPhysState == PhysicsStates::None) {
+			p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
+		}
 
-			//cout << "falling at: " << glm::to_string(p.position) << endl;
-			//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
-			//cout << "p.velo+p.velodiff: " << glm::to_string(p.velocity + p.velocityDiff) << endl;
-			p.position += p.velocity + p.velocityDiff;
-			computeAABB(&p);
-			p.position = oldPos;
-			for (int i = 0; i < staticObjects.size(); i++) {
+		//cout << "falling at: " << glm::to_string(p.position) << endl;
+		//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
+		//cout << "p.velo+p.velodiff: " << glm::to_string(p.velocity + p.velocityDiff) << endl;
+		p.position += p.velocity + p.velocityDiff;
+		computeAABB(&p);
+		p.position = oldPos;
+		for (int i = 0; i < staticObjects.size(); i++) {
 
-				// hit a ceiling
-				if (staticObjects[i].aabb.cameFromBottom(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
-					p.position.y = staticObjects[i].aabb.minY - YOFFSET; // technically not needed
-					p.velocity.y = 0.0f;
-					p.velocityDiff.y = 0.0f;
-					cout << "Hit ceiling" << endl;
-					if (p.currPhysState != PhysicsStates::None) {
-						StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-						p.currInnerState = innerStates::Ending;
-					}
-					break;
-
+			// hit a ceiling
+			if (staticObjects[i].aabb.cameFromBottom(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
+				p.position.y = staticObjects[i].aabb.minY - YOFFSET; // technically not needed
+				p.velocity.y = 0.0f;
+				p.velocityDiff.y = 0.0f;
+				cout << "Hit ceiling" << endl;
+				if (p.currPhysState != PhysicsStates::None) {
+					StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+					p.currInnerState = innerStates::Ending;
 				}
-				//if (p.currPhysState == PhysicsStates::None) {
+				break;
 
-					// landed
-				if (staticObjects[i].aabb.cameFromTop(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
-					p.position.y = staticObjects[i].aabb.maxY + YOFFSET; // on ground
-					//cout << "landed: " << i << endl;
-					//cout << "pposition: " << glm::to_string(p.position) << endl;
-					p.feetPlanted = true;
-					p.velocity.y = 0.0f;
-					p.velocityDiff.y = 0.0f;
-					p.canClimb = true;
-					if (p.currPhysState != PhysicsStates::None) {
-						StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-						p.currInnerState = innerStates::Ending;
-					}
-					break;
-				}
-				//}
 			}
+			//if (p.currPhysState == PhysicsStates::None) {
+
+				// landed
+			if (staticObjects[i].aabb.cameFromTop(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
+				p.position.y = staticObjects[i].aabb.maxY + YOFFSET; // on ground
+				//cout << "landed: " << i << endl;
+				//cout << "pposition: " << glm::to_string(p.position) << endl;
+				p.feetPlanted = true;
+				p.velocity.y = 0.0f;
+				p.velocityDiff.y = 0.0f;
+				p.canClimb = true;
+				if (p.currPhysState != PhysicsStates::None) {
+					StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+					p.currInnerState = innerStates::Ending;
+				}
+				break;
+			}
+			//}
+		}
 		//}
 
 	}
@@ -1126,11 +1132,21 @@ void DynamicWorld::applyAdjustments() {
 		/*cout << "player pos: ";
 		p.aabb.print();*/
 
+		// hardcoding cuz idk why this aint working
+		//if (p.currPhysState == PhysicsStates::HoldingEdge) {
+		//	p.velocityDiff.y = 0.0f;
+		//	p.velocity.y = 0.0f;
+		//}
+
 		float playerHeight = 0;
 		ConfigSettings::getConfig()->getValue("PlayerHeight", playerHeight);
 		
 		float velocityDecayFactor = 0.95f;
 		//ConfigSettings::getConfig()->getValue("velocityDecayFactor ", velocityDecayFactor );
+
+		if (p.currPhysState == PhysicsStates::HoldingEdge) {
+			cout << "pos: " << glm::to_string(p.cameraObject.cameraLookAt) << endl;
+		}
 
 		p.velocity += p.velocityDiff;
 		p.position += p.velocity;
@@ -1143,6 +1159,7 @@ void DynamicWorld::applyAdjustments() {
 
 		/*cout << "player aabb:";
 		p.aabb.print();*/
+		
 		//ANDRE
 		//cout << "p.cameraObject.xrotated: " << p.cameraObject.xRotated << endl;
 		p.cameraObject.cameraCenter = glm::vec3(p.position.x, p.aabb.minY + playerHeight, p.position.z);
@@ -1167,13 +1184,14 @@ void DynamicWorld::applyPhysics()
 				break;
 			case PhysicsStates::HoldingEdge:
 				StateLogic::applyHoldingEdge(p);
+				/*cout << "velo: " << p->velocity;
+				cout << "velodiff: " << glm::to_string(p->velocityDiff) << endl;*/
 				break;
 			case PhysicsStates::PullingUp:
 				StateLogic::applyPullingUp(p);
 				break;
 			case PhysicsStates::WallRunning:
 				StateLogic::applyWallRunning(p);
-				cout << "set angle to: " << p->cameraObject.xRotated << endl;
 				break;
 		}
 		checkForStateChanges(p);
@@ -1209,6 +1227,16 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 		}
 		// not sure if needed. also in holdingedgemoveevent but commented
 		else if (p->currInnerState != innerStates::Ending && staticObjects[p->interactingWithBuildingId].aabb.fellOffSide(p->aabb)) {
+			glm::vec3 oldPos = p->position;
+			cout << glm::to_string(p->cameraObject.camZ) << endl;
+			p->position += 10.0f*glm::vec3(p->cameraObject.camZ.x, 0.0f, p->cameraObject.camZ.z);
+			computeAABB(p);
+			int buildingId = checkSideCollisionsWithAllBuildings(oldPos, p->position, p);
+			p->position = oldPos;
+			computeAABB(p);
+			if (buildingId != -1) {
+				cout << "SHOULD SWITCH BUILDINGS" << endl;
+			}
 			cout << "fell off side while holding edge" << endl;
 			p->currInnerState = innerStates::Ending;
 			return;
@@ -1223,6 +1251,16 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 		}
 	case PhysicsStates::WallRunning:
 		if (p->currInnerState != innerStates::Ending && staticObjects[p->interactingWithBuildingId].aabb.fellOffSide(p->aabb)) {
+			glm::vec3 oldPos = p->position;
+			glm::vec3 WRcamUp = StateLogic::statesInfo[p->id].Start.camUp;
+			p->position += -1.0f*(1.0f / WRcamUp.y)*WRcamUp;
+			computeAABB(p);
+			int buildingId = checkSideCollisionsWithAllBuildings(oldPos, p->position, p);
+			p->position = oldPos;
+			computeAABB(p);
+			if (buildingId != -1) {
+				cout << "SHOULD SWITCH BUILDINGS" << endl;
+			}
 			cout << "fell off edge while wallrunning" << endl;
 			StateLogic::statesInfo[p->id].End.camUpIncrement = (StateLogic::statesInfo[p->id].initialUp - p->cameraObject.cameraUp) / (StateLogic::statesInfo[p->id].End.fraction*StateLogic::statesInfo[p->id].numFrames);
 			p->currInnerState = innerStates::Ending;

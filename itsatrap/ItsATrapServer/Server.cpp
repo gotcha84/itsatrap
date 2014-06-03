@@ -18,6 +18,7 @@ int					Server::resourcePerInterval;
 int					Server::resourceHotSpotBonusPerInterval;
 int					Server::resourceInterval;
 int					Server::hotSpotChangeInterval;
+int					Server::maxServerProcessRate;
 
 vector<int>			Server::resourceNodeLocations;
 int					Server::currentActiveResourceNodeIndex;
@@ -53,6 +54,8 @@ int Server::startServer()
 
 // Inital setup for the server
 int Server::initialize() {
+
+	ConfigSettings::getConfig()->getValue("MaxServerProcessRate", maxServerProcessRate);
 
 	// Load WinSock
 	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) 
@@ -238,6 +241,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		ConfigSettings::getConfig()->reloadSettingsFile();
 		printf("[SERVER]: Config file reloaded.\n");
 
+		ConfigSettings::getConfig()->getValue("MaxServerProcessRate", maxServerProcessRate);
+
 		struct packet reloadPkt;
 		reloadPkt.eventId = RELOAD_CONFIG_FILE;
 
@@ -260,7 +265,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		if (packetBufferCount < PACKET_BUFFER_SIZE)
 		{
 			// Lock Mutex: Writing into packet buffer 
-			WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
+			WaitForSingleObject(packetBufMutex, maxServerProcessRate);
 
 			memcpy(packetBuffer[packetBufferCount].msg, msg, BUFSIZE);
 			packetBufferCount++;
@@ -282,7 +287,7 @@ DWORD WINAPI Server::bufferProcessorThread(LPVOID param)
 
 		processBuffer();
 
-		elapsed = MAX_SERVER_PROCESS_RATE - stopwatch.getElapsedMilliseconds();
+		elapsed = maxServerProcessRate - stopwatch.getElapsedMilliseconds();
 		if (elapsed >= 0) {
 			Sleep(elapsed);
 		}
@@ -301,13 +306,13 @@ void Server::broadcastDynamicWorld()
 void Server::processBuffer()
 {
 	checkConnection();
-	dynamicWorld.updateTimings(MAX_SERVER_PROCESS_RATE);
+	dynamicWorld.updateTimings(maxServerProcessRate);
 	updateResources();
 
 	dynamicWorld.resetWorldInfo();
 
 	// Lock Mutex: Process exisiting packet buf without adding more packets 
-	WaitForSingleObject(packetBufMutex, MAX_SERVER_PROCESS_RATE);
+	WaitForSingleObject(packetBufMutex, maxServerProcessRate);
 
 	for (int i = 0; i < packetBufferCount; i++)
 	{
@@ -523,7 +528,7 @@ void Server::checkConnection()
 	{
 		if (players[i].timeUntilInactive > 0)
 		{
-			players[i].timeUntilInactive -= MAX_SERVER_PROCESS_RATE;
+			players[i].timeUntilInactive -= maxServerProcessRate;
 
 			if (players[i].timeUntilInactive <= 0)
 				disconnectPlayer(i);
@@ -548,8 +553,8 @@ void Server::disconnectPlayer(int id)
 // Determines the active resource node and gives the player(owner) resources
 void Server::updateResources()
 {
-	timeUntilHotSpotChange -= MAX_SERVER_PROCESS_RATE;
-	timeUntilResourceBonus -= MAX_SERVER_PROCESS_RATE;
+	timeUntilHotSpotChange -= maxServerProcessRate;
+	timeUntilResourceBonus -= maxServerProcessRate;
 
 	// Distributes the resources TODO
 	if (timeUntilResourceBonus < 0)
