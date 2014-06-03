@@ -80,11 +80,11 @@ namespace sg {
 	}
 
 	void Player::initModels() {
-		// m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
-		//m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
+		 m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
+		m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
 		
-		m_otherPlayer = new ObjModel("../Models/New Folder/chest.obj", "../Models/New Folder/");
-		m_otherPlayer->loadTexture("../Textures/skybox.ppm");
+		//m_otherPlayer = new ObjModel("../Models/New Folder/chest.obj", "../Models/New Folder/");
+		//m_otherPlayer->loadTexture("../Textures/skybox.ppm");
 
 		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
 		m_thisPlayer->disableDrawBB();
