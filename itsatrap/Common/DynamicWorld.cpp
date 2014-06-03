@@ -1490,6 +1490,7 @@ void DynamicWorld::handleKnifeEvent(int knifer)
 				&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
 			{
 				playerDamage(player, target, KNIFE_HIT_DMG);
+
 			}
 		}
 	}

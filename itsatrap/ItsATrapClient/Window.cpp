@@ -204,7 +204,6 @@ void Window::displayCallback(void)
 
 	//client->root->getPlayer()->getCamera()->updateCameraMatrix();
 	//client->root->getPlayer()->updateModelViewMatrix();
-
 	m_fpsCounter+=1;
 				
 	if (clock()-m_timer > 1000) {
@@ -476,7 +475,7 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 				{
 					// Needs to send a query to the server and check all of the players to see if client has hit anyone
 					printf("[Client]: Knife Swung!\n");
-
+					
 					if (!knifeSound->isCurrentlyPlaying("../Sound/knife.wav")) {
 						knifeSound->play2D("../Sound/knife.wav", false, false, true);
 					}
@@ -493,10 +492,10 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 			break;
 	}
 	if (button == 3) {
-		client->scrollUp = true;
+		client->scrollDown = true;
 	}
 	else if (button == 4) {
-		client->scrollDown = true;
+		client->scrollUp = true;
 	}
 }
 

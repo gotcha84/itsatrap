@@ -26,6 +26,9 @@ namespace sg {
 		trapMenu = new TrapMenu();
 		gameOver = new GameOver();
 
+		timer = new Stopwatch();
+		checkMouse = false;
+
 		initModels();
 	}
 
@@ -48,6 +51,9 @@ namespace sg {
 
 		trapMenu = new TrapMenu();
 		gameOver = new GameOver();
+
+		timer = new Stopwatch();
+		checkMouse = false;
 
 		initModels();
 	}
@@ -77,6 +83,9 @@ namespace sg {
 
 		delete gameOver;
 		gameOver = nullptr;
+
+		delete timer;
+		timer = nullptr;
 	}
 
 	void Player::initModels() {
@@ -225,18 +234,30 @@ namespace sg {
 				}
 				board->draw();
 			}
-			if ( client->root->getPlayer()->getHealth() > 0) trapMenu->draw();
-			if (client->scrollUp) {
-				if ((trapMenu->getInfoState() + 1) == 7) trapMenu->setInfoState(0);
-				else trapMenu->setInfoState( trapMenu->getInfoState()+1);
-				client->scrollUp = false;
-			}
-			if (client->scrollDown) {
-				if ((trapMenu->getInfoState() - 1) < 0) trapMenu->setInfoState(6);
-				else trapMenu->setInfoState(trapMenu->getInfoState() - 1);
-				client->scrollDown = false;
+			
+			if (client->scrollDown || client->scrollUp) {
+				timer->start();
+				checkMouse = true;
+				if (client->scrollUp) {
+					if ((trapMenu->getInfoState() + 1) == 7) trapMenu->setInfoState(0);
+					else trapMenu->setInfoState(trapMenu->getInfoState() + 1);
+					client->scrollUp = false;
+				}
+				if (client->scrollDown) {
+					if ((trapMenu->getInfoState() - 1) < 0) trapMenu->setInfoState(6);
+					else trapMenu->setInfoState(trapMenu->getInfoState() - 1);
+					client->scrollDown = false;
+				}
 			}
 
+			if (timer->getElapsedMilliseconds() < 5000 && checkMouse == true) {
+				if (client->root->getPlayer()->getHealth() > 0) trapMenu->draw();
+			}else{
+				timer->reset();
+				checkMouse = false;
+			}
+
+			
 			//if (client->scrollUp) cout << "playerNode: scrollUp" << endl;
 			//if (client->scrollDown) cout << "playerNode: scrollDown" << endl;
 

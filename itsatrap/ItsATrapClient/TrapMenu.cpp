@@ -7,6 +7,7 @@ using namespace std;
 
 TrapMenu::TrapMenu() {
 	infoState = 0;
+
 }
 
 TrapMenu::~TrapMenu() {
@@ -26,9 +27,14 @@ void TrapMenu::draw() {
 	
 		//drawCube(0.8f, -0.3f, 0.0f);
 		//drawCube(0.8f, -0.575f, 0.0f);
-		trapInfo(infoState);
-		drawCube(0.8f, -0.85f, 0.0f);
+
+			if ((infoState - 1) < 0) trapInfo(6, -0.82f, 1.0f, 0.0f, 0.0f);
+			else trapInfo(infoState - 1, -0.82f, 1.0f, 0.0f, 0.0f);
+			trapInfo(infoState, -0.87f, 1.0f, 1.0f, 0.0f);
+			if ((infoState + 1) > 6) trapInfo(0, -0.92f, 1.0f, 0.0f, 0.0f);
+			else trapInfo(infoState + 1, -0.92f, 1.0f, 0.0f, 0.0f);
 		
+		drawCube(0.8f, -0.85f, 0.0f);
 		glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -45,36 +51,36 @@ void TrapMenu::drawCube(float x, float y, float z) {
 	glPopMatrix();
 }
 
-void TrapMenu::trapInfo(int state) {
+void TrapMenu::trapInfo(int state, float y, float r, float g, float b) {
 	std::string text = "";
-	glColor3f(1, 0, 0);
+	glColor3f(r, g, b);
 	switch (state) {
 		case 0:
-			glRasterPos2f(0.735f, -0.87f);
+			glRasterPos2f(0.735f, y);
 			text = "1. Freeze Trap";
 			break;
 		case 1:
-			glRasterPos2f(0.73f, -0.87f);
+			glRasterPos2f(0.725f, y);
 			text = "2. Trampoline Trap";
 			break;
 		case 2:
-			glRasterPos2f(0.745f, -0.87f);
+			glRasterPos2f(0.745f, y);
 			text = "3. Slow Trap";
 			break;
 		case 3:
-			glRasterPos2f(0.745f, -0.87f);
+			glRasterPos2f(0.745f, y);
 			text = "4. Push Trap";
 			break;
 		case 4:
-			glRasterPos2f(0.73f, -0.87f);
+			glRasterPos2f(0.73f, y);
 			text = "5. Lightning Trap";
 			break;
 		case 5:
-			glRasterPos2f(0.745f, -0.87f);
+			glRasterPos2f(0.745f, y);
 			text = "6. Portal Trap";
 			break;
 		case 6:
-			glRasterPos2f(0.745f, -0.87f);
+			glRasterPos2f(0.745f, y);
 			text = "7. Flash Trap";
 		default:
 			break;
