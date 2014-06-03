@@ -26,6 +26,9 @@ namespace sg {
 		trapMenu = new TrapMenu();
 		gameOver = new GameOver();
 
+		timer = new Stopwatch();
+		checkMouse = false;
+
 		initModels();
 	}
 
@@ -48,6 +51,9 @@ namespace sg {
 
 		trapMenu = new TrapMenu();
 		gameOver = new GameOver();
+
+		timer = new Stopwatch();
+		checkMouse = false;
 
 		initModels();
 	}
@@ -77,20 +83,20 @@ namespace sg {
 
 		delete gameOver;
 		gameOver = nullptr;
+
+		delete timer;
+		timer = nullptr;
 	}
 
 	void Player::initModels() {
-		//m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
-		//m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
+		// m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
+		m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
 		
-		m_otherPlayer = new ObjModel();
-		m_otherPlayer->loadModel("../Models/Avatar.obj", "../Models/");
-		//m_otherPlayer->loadTexture("../Models/Polynoid_Updated/Default Material_Flattened_Diffuse.ppm");
-		m_otherPlayer->loadTexture("../Models/Polynoid_Updated/animus.ppm");
-		m_otherPlayer->setName("not a penis");
+		//m_otherPlayer = new ObjModel("../Models/Test Chest/Test_Chest.obj", "../Models/Test Chest/");
+		//m_otherPlayer->loadTexture("../Textures/Chest_Diffuse.ppm");
 
-		m_thisPlayer = new ObjModel();
-		m_thisPlayer->loadModel("../Models/Headless_Avatar.obj", "../Models/");
+		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
+		m_thisPlayer->disableDrawBB();
 	}
 
 	void Player::setColor(glm::vec4 color) {
@@ -228,18 +234,30 @@ namespace sg {
 				}
 				board->draw();
 			}
-			if ( client->root->getPlayer()->getHealth() > 0) trapMenu->draw();
-			if (client->scrollUp) {
-				if ((trapMenu->getInfoState() + 1) == 7) trapMenu->setInfoState(0);
-				else trapMenu->setInfoState( trapMenu->getInfoState()+1);
-				client->scrollUp = false;
-			}
-			if (client->scrollDown) {
-				if ((trapMenu->getInfoState() - 1) < 0) trapMenu->setInfoState(6);
-				else trapMenu->setInfoState(trapMenu->getInfoState() - 1);
-				client->scrollDown = false;
+			
+			if (client->scrollDown || client->scrollUp) {
+				timer->start();
+				checkMouse = true;
+				if (client->scrollUp) {
+					if ((trapMenu->getInfoState() + 1) == 7) trapMenu->setInfoState(0);
+					else trapMenu->setInfoState(trapMenu->getInfoState() + 1);
+					client->scrollUp = false;
+				}
+				if (client->scrollDown) {
+					if ((trapMenu->getInfoState() - 1) < 0) trapMenu->setInfoState(6);
+					else trapMenu->setInfoState(trapMenu->getInfoState() - 1);
+					client->scrollDown = false;
+				}
 			}
 
+			if (timer->getElapsedMilliseconds() < 5000 && checkMouse == true) {
+				if (client->root->getPlayer()->getHealth() > 0) trapMenu->draw();
+			}else{
+				timer->reset();
+				checkMouse = false;
+			}
+
+			
 			//if (client->scrollUp) cout << "playerNode: scrollUp" << endl;
 			//if (client->scrollDown) cout << "playerNode: scrollDown" << endl;
 
@@ -272,6 +290,7 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
+			glutWireCube(PLAYER_RAD*2);
 			m_thisPlayer->drawModel();
 		glPopMatrix();
 	}
@@ -283,9 +302,9 @@ namespace sg {
 		
 		this->drawAsOtherPlayer(mv);
 
-		//if (m_drawBB) {
-			//m_otherPlayer->getBoundingBox().draw();
-		//}
+		if (m_drawBB) {
+			m_otherPlayer->getBoundingBox().draw();
+		}
 	}
 
 	void Player::drawAsOtherPlayer(glm::mat4 mv) {

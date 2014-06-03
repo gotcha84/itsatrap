@@ -185,7 +185,7 @@ void HUD::drawKillSymbol(bool hit) {
 		glColor3f(0.0f, 0.0f, 0.0f);
 		font->FaceSize(100);
 		font->CharMap(ft_encoding_symbol);
-		glRasterPos2f(-0.02f, -0.02f);
+		glRasterPos2f(-0.055f, -0.09f);
 		font->Render("X");
 	}
 }
