@@ -72,15 +72,15 @@ void Level::initLevel0() {
 
 						++resourceCounter;
 					} else if (part == "BRail" || part == "ERail" || part == "Rail" || part == "Caltrop") {
-						//levelNodes.push_back({ new sg::ObjNode(OBELISK2 + fileName, OBELISK2), true });
-						//levelNodes.back().first->setName("ObjNode: " + fileName);
+						levelNodes.push_back({ new sg::ObjNode(OBELISK2 + fileName, OBELISK2), true });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
 
-						//if (counter % 1000 == 0) {
-						//	++counter;
-						//}
+						if (counter % 1000 == 0) {
+							++counter;
+						}
 
-						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.1f*(float)(counter / 100), 0.1f*(float)((counter % 100) / 10), 0.5f + 0.05*(float)(counter % 10), alpha));
-						//xForm->addChild(levelNodes.back().first);
+						levelNodes.back().first->getModel()->setColor(glm::vec4(0.1f*(float)(counter / 100), 0.1f*(float)((counter % 100) / 10), 0.5f + 0.05*(float)(counter % 10), alpha));
+						xForm->addChild(levelNodes.back().first);
 					} else if (part != "Ramp" && part != "UD") {
 						//levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
 						//levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));

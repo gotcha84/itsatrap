@@ -166,17 +166,18 @@ int main(int argc, char *argv[]) {
 
 	// Sending AABBs to server
 	client->root->addChild(client->level.getRoot());
-	for (int i = 0; i < client->level.levelNodes.size(); ++i) {
-		Client::sendStaticObject(client->level.levelNodes[i].first->getBoundingBox());
-	}
 
-	for (int i = 0; i < client->level.decorationNodes.size(); ++i) {
+	if (client->root->getPlayerID() == 0) {
+		for (int i = 0; i < client->level.levelNodes.size(); ++i) {
+			if (i % 100 == 0) { Sleep(250); }
+			Client::sendStaticObject(client->level.levelNodes[i].first->getBoundingBox());
+		}
 
-	}
-
-	for (int i = 0; i < client->level.resources.size(); ++i) {
-		Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), 
-			client->level.resources[i]->getResourceId());
+		for (int i = 0; i < client->level.resources.size(); ++i) {
+			Client::sendStaticObject(client->level.resources[i]->getBoundingBox());
+			Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(),
+				client->level.resources[i]->getResourceId());
+		}
 	}
 
 	//sg::ObjNode node = sg::ObjNode();

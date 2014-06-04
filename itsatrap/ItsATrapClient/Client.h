@@ -60,8 +60,6 @@ public:
 	static int getPlayerId();
 
 	static void sendStaticObject(AABB objectBB);
-	static void sendStaticWallObject(AABB wallBB);
-	static void sendStaticRampObject(AABB rampBB, float slope);
 	static void sendStaticResourceObject(AABB resourceBB, int id);
 
 	static void sendPlayerUpdate(struct playerObject);
