@@ -72,21 +72,29 @@ void Level::initLevel0() {
 
 						++resourceCounter;
 					} else if (part == "BRail" || part == "ERail" || part == "Rail" || part == "Caltrop") {
+						//levelNodes.push_back({ new sg::ObjNode(OBELISK2 + fileName, OBELISK2), true });
+						//levelNodes.back().first->setName("ObjNode: " + fileName);
 
+						//if (counter % 1000 == 0) {
+						//	++counter;
+						//}
+
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.1f*(float)(counter / 100), 0.1f*(float)((counter % 100) / 10), 0.5f + 0.05*(float)(counter % 10), alpha));
+						//xForm->addChild(levelNodes.back().first);
 					} else if (part != "Ramp" && part != "UD") {
 						//levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
 						//levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
-						levelNodes.push_back(new sg::ObjNode(OBELISK2 + fileName, OBELISK2));
-						levelNodes.back()->setName("ObjNode: " + fileName);
+						levelNodes.push_back({ new sg::ObjNode(OBELISK2 + fileName, OBELISK2), false });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
 
 						if (counter % 1000 == 0) {
 							++counter;
 						}
 
 						//string color = Utilities::intToBaseThree(counter % 27);
-						levelNodes.back()->getModel()->setColor(glm::vec4(0.1f*(float)(counter/100), 0.1f*(float)((counter%100)/10), 0.5f+0.05*(float)(counter%10), alpha));
+						levelNodes.back().first->getModel()->setColor(glm::vec4(0.1f*(float)(counter/100), 0.1f*(float)((counter%100)/10), 0.5f+0.05*(float)(counter%10), alpha));
 						//levelNodes.back()->loadTexture("../Models/Polynoid_Updated/animus.ppm");
-						xForm->addChild(levelNodes.back());
+						xForm->addChild(levelNodes.back().first);
 					} 
 				}
 				++counter;
@@ -99,7 +107,7 @@ void Level::initLevel0() {
 	}
 	cout << "size: " << levelNodes.size() << endl;
 	for (int i = 0; i < levelNodes.size(); ++i) {
-		levelNodes[i]->calculateBoundingBox();
+		levelNodes[i].first->calculateBoundingBox();
 
 		// ANDRE
 		/*if (levelNodes[i]->m_boundingBox.minX < 200 && levelNodes[i]->m_boundingBox.maxX > 200 &&

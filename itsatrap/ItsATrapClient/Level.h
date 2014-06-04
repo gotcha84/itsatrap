@@ -65,7 +65,7 @@ class Level {
 
 		vector<sg::ResourceNode *> resources;
 
-		vector<sg::ObjNode *> levelNodes;
+		vector<pair<sg::ObjNode *, bool>> levelNodes;
 		vector<sg::ObjNode *> decorationNodes;
 
 		Level();

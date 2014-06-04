@@ -531,9 +531,10 @@ void Server::checkConnection()
 		{
 			players[i].timeUntilInactive -= maxServerProcessRate;
 
-			if (players[i].timeUntilInactive <= 0)
-				disconnectPlayer(i);
+			if (players[i].timeUntilInactive <= 0) {
+				//disconnectPlayer(i);
 				//int k = 0;
+			}
 		}
 	}
 }

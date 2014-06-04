@@ -167,7 +167,7 @@ int main(int argc, char *argv[]) {
 	// Sending AABBs to server
 	client->root->addChild(client->level.getRoot());
 	for (int i = 0; i < client->level.levelNodes.size(); ++i) {
-		Client::sendStaticObject(client->level.levelNodes[i]->getBoundingBox());
+		Client::sendStaticObject(client->level.levelNodes[i].first->getBoundingBox());
 	}
 
 	for (int i = 0; i < client->level.decorationNodes.size(); ++i) {

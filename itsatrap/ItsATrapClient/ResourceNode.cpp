@@ -92,8 +92,12 @@ namespace sg {
 
 		glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 		m_model->drawModel();
+
+		glDisable(GL_LIGHTING);
 		m_particles->draw();
 		m_particles2->draw();
+		glEnable(GL_LIGHTING);
+
 		glPopMatrix();
 	}
 

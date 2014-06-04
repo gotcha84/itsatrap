@@ -194,7 +194,9 @@ namespace sg {
 				}
 			}
 			gameOver->setTeamScore(teamOneScore, teamTwoScore);
+			glDisable(GL_LIGHTING);
 			gameOver->draw();
+			glEnable(GL_LIGHTING);
 		}else{
 
 			if (!m_player->m_deathState)
@@ -232,7 +234,9 @@ namespace sg {
 					//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
 					//cout << client->tabPressed << endl;
 				}
+				glDisable(GL_LIGHTING);
 				board->draw();
+				glEnable(GL_LIGHTING);
 			}
 			
 			if (client->scrollDown || client->scrollUp) {
@@ -251,7 +255,11 @@ namespace sg {
 			}
 
 			if (timer->getElapsedMilliseconds() < 5000 && checkMouse == true) {
-				if (client->root->getPlayer()->getHealth() > 0) trapMenu->draw();
+				if (client->root->getPlayer()->getHealth() > 0) {
+					glDisable(GL_LIGHTING);
+					trapMenu->draw();
+					glEnable(GL_LIGHTING);
+				}
 			}else{
 				timer->reset();
 				checkMouse = false;
@@ -272,7 +280,9 @@ namespace sg {
 			if (flash < 0)
 				flash = 0;
 
+			glDisable(GL_LIGHTING);
 			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, getPlayer()->m_hitCrosshairDuration, m_player->m_infoMsg.getMessage());
+			glEnable(GL_LIGHTING);
 		}
 
 	}
