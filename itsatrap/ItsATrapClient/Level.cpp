@@ -34,8 +34,8 @@ void Level::initLevel0() {
 	ground->addChild(xForm);
 
 	//if ((dir = opendir(LEVEL_DIR))!= NULL) {
-	if ((dir = opendir(OBELISK_DIR))!= NULL) {
-	//if ((dir = opendir(OBELISK2_DIR)) != NULL) {
+	//if ((dir = opendir(OBELISK_DIR))!= NULL) {
+	if ((dir = opendir(OBELISK2_DIR)) != NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			string fileName(ent->d_name);
 			if (fileName.size() > 3) {
@@ -48,8 +48,8 @@ void Level::initLevel0() {
 
 						rs = new sg::ResourceNode(resourceCounter, NUMPARTICLES);
 						//rs->loadModel(LEVEL + fileName, LEVEL);
-						rs->loadModel(OBELISK + fileName, OBELISK);
-						//rs->loadModel(OBELISK + fileName, OBELISK2);
+						//rs->loadModel(OBELISK + fileName, OBELISK);
+						rs->loadModel(OBELISK2 + fileName, OBELISK2);
 						rs->getParticleSystem()->setColor(glm::vec4(1, 0, 0, 1));
 						rs->m_particles2->setColor(glm::vec4(0, 1, 0, 1));
 						rs->m_particles2->reverse();
@@ -75,7 +75,8 @@ void Level::initLevel0() {
 
 					} else if (part != "Ramp" && part != "UD") {
 						//levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
-						levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
+						//levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
+						levelNodes.push_back(new sg::ObjNode(OBELISK2 + fileName, OBELISK2));
 						levelNodes.back()->setName("ObjNode: " + fileName);
 
 						if (counter % 1000 == 0) {

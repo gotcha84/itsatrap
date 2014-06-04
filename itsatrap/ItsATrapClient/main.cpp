@@ -90,8 +90,9 @@ int main(int argc, char *argv[]) {
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
 	//float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
-	GLfloat position[]  = {0.0, 1000.0, 0.0, 0.0};  // lightsource position
-	//GLfloat ambientColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat position[]  = {0.0f, 500.0f, -250.0f, 1.0f};  // lightsource position
+	GLfloat ambientLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
+	GLfloat diffuseLight[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
 	// Initialize networking for client
 	Client::initializeClient();
