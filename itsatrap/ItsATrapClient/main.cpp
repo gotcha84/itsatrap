@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
 	//float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
 	GLfloat position[]  = {0.0f, 500.0f, -250.0f, 1.0f};  // lightsource position
 	GLfloat ambientLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
-	GLfloat diffuseLight[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat diffuseLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
 
 	// Initialize networking for client
 	Client::initializeClient();
@@ -113,8 +113,12 @@ int main(int argc, char *argv[]) {
 	}
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
-	glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
-	glClearColor(0.0, 0.0, 0.0, 0.0);           // set clear color to black
+	glClearDepth(1.0f);							// Depth Buffer Setup
+	glDepthFunc(GL_LEQUAL);						// The Type Of Depth Testing To Do
+
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice Perspective 
+	//glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
+	glClearColor(0.0, 0.0, 0.0, 0.5f);           // set clear color to black
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // set polygon drawing mode to fill front and back of each polygon
 	glEnable(GL_CULL_FACE);					// disable backface culling to render both sides of polygons
 	//glCullFace(GL_FRONT);
@@ -135,6 +139,8 @@ int main(int argc, char *argv[]) {
 	// Generate light source:
 	//glDisable(GL_LIGHTING);
 	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -162,7 +168,7 @@ int main(int argc, char *argv[]) {
 	glutPassiveMotionFunc(window->processMouseMove);
 
 	// hide mouse cursor
-	glutSetCursor(GLUT_CURSOR_NONE);
+	//glutSetCursor(GLUT_CURSOR_NONE);
 
 	// Sending AABBs to server
 	client->root->addChild(client->level.getRoot());

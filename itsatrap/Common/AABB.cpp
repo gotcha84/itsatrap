@@ -76,20 +76,20 @@ void AABB::setAABB(glm::vec3 pos, float rad) {
 
 // this = obj ie building. other = player
 bool AABB::collidesWith(AABB other) {
-	bool tmp = (other.maxX >= minX && other.minX <= maxX
-		&& other.maxY >= minY && other.minY <= maxY
-		&& other.maxZ >= minZ && other.minZ <= maxZ);
+	bool tmp  (other.maxX > minX && other.minX < maxX
+		&& other.maxY > minY && other.minY < maxY
+		&& other.maxZ > minZ && other.minZ < maxZ);
 
 	return tmp;
 }
 
 bool AABB::collidesWithPointer(AABB* other) {
-	bool tmp = (other->maxX >= minX && other->minX <= maxX
-		&& other->maxY >= minY && other->minY <= maxY
-		&& other->maxZ >= minZ && other->minZ <= maxZ);
+	bool tmp  (other->maxX > minX && other->minX < maxX
+		&& other->maxY > minY && other->minY < maxY
+		&& other->maxZ > minZ && other->minZ < maxZ);
 
 	if (tmp) {
-		return (!(other->maxY >= maxY));
+		return (!(other->maxY > maxY));
 	}
 	return tmp;
 }
@@ -100,13 +100,13 @@ bool AABB::collidesWithSide(glm::vec3 from, glm::vec3 goTo, AABB player, int bui
 		return false;
 	}
 
-	return (maxX >= player.minX && minX <= player.maxX
-		&& maxY - m_nearTopFactor >= player.maxY
-		&& maxZ >= player.minZ && minZ <= player.maxZ);
+	return (maxX > player.minX && minX < player.maxX
+		&& maxY - m_nearTopFactor > player.maxY
+		&& maxZ > player.minZ && minZ < player.maxZ);
 
-	/*return (player.minX >= minX && player.maxX <= maxX
+	/*return (player.minX > minX && player.maxX < maxX
 		&& player.maxY < maxY - m_nearTopFactor
-		&& player.minZ >= minZ && player.maxZ <= maxZ);*/
+		&& player.minZ > minZ && player.maxZ < maxZ);*/
 }
 
 //bool AABB::collidesWithSidePointer(glm::vec3 from, glm::vec3 goTo, AABB* player, int buildingId) {
@@ -115,21 +115,21 @@ bool AABB::collidesWithSide(glm::vec3 from, glm::vec3 goTo, AABB player, int bui
 //		return false;
 //	}
 //
-//	return (player->minX >= minX && player->maxX <= maxX
+//	return (player->minX > minX && player->maxX < maxX
 //		&& player->maxY < maxY - m_nearTopFactor
-//		&& player->minZ >= minZ && player->maxZ <= maxZ);
+//		&& player->minZ > minZ && player->maxZ < maxZ);
 //}
 
 bool AABB::onTopOfPointer(AABB* other) {
-	return (other->maxX >= minX && other->minX <= maxX
-		&& other->maxY >= maxY /*&& other->minY >= minY */
-		&& other->maxZ >= minZ && other->minZ <= maxZ);
+	return (other->maxX > minX && other->minX < maxX
+		&& other->maxY > maxY /*&& other->minY > minY */
+		&& other->maxZ > minZ && other->minZ < maxZ);
 }
 
 bool AABB::inside(glm::vec3 goTo) {
-	return (goTo.x >= minX && goTo.x <= maxX 
-		&& goTo.y >= minY &&  goTo.y <= maxY
-		&& goTo.z >= minZ && goTo.z <= maxZ); 
+	return (goTo.x > minX && goTo.x < maxX 
+		&& goTo.y > minY &&  goTo.y < maxY
+		&& goTo.z > minZ && goTo.z < maxZ); 
 }
 
 bool AABB::inside(AABB other) {
@@ -217,9 +217,9 @@ bool AABB::collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance) {
 }
 
 bool AABB::onTopOfRamp(AABB other) {
-	return (maxX >= other.minX && minX <= other.maxX
-		//&& other.maxY >= maxY /*&& other->minY >= minY */
-		&& maxZ >= other.minZ && minZ <= other.maxZ);
+	return (maxX > other.minX && minX < other.maxX
+		//&& other.maxY > maxY /*&& other->minY > minY */
+		&& maxZ > other.minZ && minZ < other.maxZ);
 }
 
 // this = player, other = building
@@ -266,11 +266,11 @@ bool AABB::collidesWithRampInside(AABB other, int entrance, float slope) {
 
 
 bool AABB::nearTop(glm::vec3 goTo) {
-	return (goTo.y >= maxY-m_nearTopFactor);
+	return (goTo.y > maxY-m_nearTopFactor);
 }
 
 bool AABB::clearedTop(AABB other) {
-	return (other.minY >= maxY+m_overTopFactor);
+	return (other.minY > maxY+m_overTopFactor);
 }
 
 // this = obj ie building. other = player
@@ -412,6 +412,49 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 	}
 }
 
+glm::vec3 AABB::unstuckOffset(AABB player) {
+
+	/*bool tmp(other.maxX > minX && other.minX < maxX
+		&& other.maxY > minY && other.minY < maxY
+		&& other.maxZ > minZ && other.minZ < maxZ);*/
+
+	float threshold = 0.01f;
+	
+	glm::vec3 offset = glm::vec3(0.0f, 0.0f, 0.0f);
+	if (player.minX < minX && minX < player.maxX) {
+		if (player.maxX - minX > threshold) {
+			offset.x -= player.maxX - minX;
+		}
+	}
+	if (player.minX < maxX && maxX < player.maxX) {
+		if (maxX - player.minX > threshold) {
+			offset.x += maxX - player.minX;
+		}
+	}
+	//if (player.minY < minY && minY < player.maxY) {
+	//	if (player.maxY - minY > threshold) {
+	//		offset.y -= player.maxY - minY;
+	//	}
+	//}
+	//if (player.minY < maxY && maxY < player.maxY) {
+	//	if (maxY - player.minY > threshold) {
+	//		offset.y += maxY - player.minY;
+	//	}
+	//}
+	if (player.minZ < minZ && minZ < player.maxZ) {
+		if (player.maxZ - minZ > threshold) {
+			offset.z -= player.maxZ - minZ;
+		}
+	}
+	if (player.minZ < maxZ && maxZ < player.maxZ) {
+		if (maxZ - player.minZ > threshold) {
+			offset.z += maxZ - player.minZ;
+		}
+	}
+	return offset;
+}
+
+
 void AABB::draw() {
 	glm::vec3 p0(this->minX, this->minY, this->minZ);
 	glm::vec3 p1(this->minX, this->minY, this->maxZ);
@@ -488,6 +531,11 @@ bool AABB::cameFromTop(glm::vec3 from, glm::vec3 goTo, AABB player, int building
 		return true;
 	}
 
+	if (collidesWith(player) && from.y > maxY) {
+		cout << "collided with new way (from top)" << endl;
+		return true;
+	}
+
 	if (!collidesWith(player) && !(from.y > maxY && goTo.y < minY && (fromInter || goToInter))) {
 		if (buildingId == checkId1 || buildingId == checkId2 || buildingId == checkId3) {
 			cout << !collidesWith(player) << endl << endl;
@@ -532,6 +580,8 @@ bool AABB::cameFromTop(glm::vec3 from, glm::vec3 goTo, AABB player, int building
 
 bool AABB::cameFromBottom(glm::vec3 from, glm::vec3 goTo, AABB player, int buildingId) {
 
+
+
 	from.y += 13.0f;
 	goTo.y += 13.0f;
 
@@ -552,6 +602,11 @@ bool AABB::cameFromBottom(glm::vec3 from, glm::vec3 goTo, AABB player, int build
 	// didnt come from lower
 	if (!(from.y < minY)) {
 		return false;
+	}
+
+	if (collidesWith(player) && from.y < minY) {
+		cout << "collided with new way (from bottom)" << endl;
+		return true;
 	}
 	
 	if (!collidesWith(player) && !(from.y < minY && goTo.y > maxY)) {

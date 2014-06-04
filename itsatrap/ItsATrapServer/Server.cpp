@@ -445,6 +445,7 @@ void Server::processBuffer()
 		dynamicWorld.applyPhysics();
 		dynamicWorld.applyGravity();
 		dynamicWorld.applyAdjustments();
+		dynamicWorld.manuallyUncollide();
 		dynamicWorld.checkPlayersCollideWithTrap();
 	}
 	// Send info messages
