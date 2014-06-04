@@ -102,19 +102,19 @@ int main(int argc, char *argv[]) {
 	glm::vec3 shift;
 	switch (client->root->getPlayerID()) {
 	case 0: 
-		shift = glm::vec3(-200, 200, 150);
+		shift = glm::vec3(-200, 500, 150);
 		break;
 	case 1:
-		shift = glm::vec3(200, 200, 150);
+		shift = glm::vec3(200, 500, 150);
 		break;
 	case 2:
-		shift = glm::vec3(200, 200, -150);
+		shift = glm::vec3(200, 500, -150);
 		break;
 	case 3:
-		shift = glm::vec3(-200, 200, -150);
+		shift = glm::vec3(-200, 500, -150);
 		break;
 	default:
-		shift = glm::vec3(200, 200, -300);
+		shift = glm::vec3(200, 500, -300);
 		break;
 	}
 	starting = starting + shift;

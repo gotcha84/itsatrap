@@ -20,10 +20,10 @@ DynamicWorld::DynamicWorld()
 
 	team1CurrRP = 0;
 	team2CurrRP = 0;
-	team1RespawnPoints.push_back(glm::vec3(-200, 200, -150));
-	team1RespawnPoints.push_back(glm::vec3(200, 200, 150));
-	team2RespawnPoints.push_back(glm::vec3(-200, 200, -150));
-	team2RespawnPoints.push_back(glm::vec3(200, 200, 150));
+	team1RespawnPoints.push_back(glm::vec3(-200, 500, -150));
+	team1RespawnPoints.push_back(glm::vec3(200, 500, 150));
+	team2RespawnPoints.push_back(glm::vec3(-200, 500, -150));
+	team2RespawnPoints.push_back(glm::vec3(200, 500, 150));
 
 	portalMap.clear();
 	playerMap.clear();
