@@ -99,7 +99,25 @@ int main(int argc, char *argv[]) {
 	client = new ClientInstance(Client::getPlayerId());
 	window = new Window();
 	glm::vec3 starting = client->root->getPosition();
-	starting = starting + glm::vec3(200, 200, -300);
+	glm::vec3 shift;
+	switch (client->root->getPlayerID()) {
+	case 0: 
+		shift = glm::vec3(-200, 200, 150);
+		break;
+	case 1:
+		shift = glm::vec3(200, 200, 150);
+		break;
+	case 2:
+		shift = glm::vec3(200, 200, -150);
+		break;
+	case 3:
+		shift = glm::vec3(-200, 200, -150);
+		break;
+	default:
+		shift = glm::vec3(200, 200, -300);
+		break;
+	}
+	starting = starting + shift;
 	client->root->moveTo(starting);
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	sendAABBInfo();

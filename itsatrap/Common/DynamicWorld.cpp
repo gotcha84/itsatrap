@@ -18,8 +18,12 @@ DynamicWorld::DynamicWorld()
 		cleanStateInfo(i);
 	}
 
-	team1RespawnPoints.push_back(glm::vec3(200, 200, -300));
-	team2RespawnPoints.push_back(glm::vec3(200, 200, -300));
+	team1CurrRP = 0;
+	team2CurrRP = 0;
+	team1RespawnPoints.push_back(glm::vec3(-200, 200, -150));
+	team1RespawnPoints.push_back(glm::vec3(200, 200, 150));
+	team2RespawnPoints.push_back(glm::vec3(-200, 200, -150));
+	team2RespawnPoints.push_back(glm::vec3(200, 200, 150));
 
 	portalMap.clear();
 	playerMap.clear();
@@ -553,9 +557,11 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 	cout << "RESPAWNING PLAYER " << p->id << endl;
 
 	if (p->id % 2 == 0)
-		p->position = team1RespawnPoints[rand() % team1RespawnPoints.size()];
+		//p->position = team1RespawnPoints[rand() % team1RespawnPoints.size()];
+		p->position = team1RespawnPoints[++team1CurrRP % team1RespawnPoints.size()];
 	else
-		p->position = team2RespawnPoints[rand() % team2RespawnPoints.size()];
+		//p->position = team2RespawnPoints[rand() % team2RespawnPoints.size()];
+		p->position = team2RespawnPoints[++team2CurrRP % team2RespawnPoints.size()];
 
 	computeAABB(p);
 

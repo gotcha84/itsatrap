@@ -39,6 +39,7 @@ private:
 	vector<struct staticObject>			staticObjects;
 	vector<struct staticResourceObject>	staticResourceObjects;	// ANDRE: Resource Tower - Add BB
 	vector<glm::vec3>					team1RespawnPoints, team2RespawnPoints;
+	int									team1CurrRP, team2CurrRP;
 	map<int, struct trapObject *>		portalMap;
 	bool								playerLock[MAX_PLAYERS];
 	map<int, AABB>						aabbOffsets;
