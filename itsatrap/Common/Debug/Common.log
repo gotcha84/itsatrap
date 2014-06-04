@@ -1,4 +1,4 @@
-﻿Build started 6/4/2014 12:31:02 AM.
+﻿Build started 6/4/2014 1:35:06 AM.
      1>Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glut/include/ /IC:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AABB.cpp ConfigSettings.cpp DynamicWorld.cpp InputEvents.cpp Physics.cpp StateLogic.cpp Stopwatch.cpp World.cpp
@@ -80,56 +80,46 @@
                  [
                      _Ty=staticObject
                  ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(40): warning C4251: 'DynamicWorld::staticWallObjects' : class 'std::vector<staticObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-                 with
-                 [
-                     _Ty=staticObject
-                 ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(41): warning C4251: 'DynamicWorld::staticRampObjects' : class 'std::vector<staticRampObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
-                 with
-                 [
-                     _Ty=staticRampObject
-                 ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(42): warning C4251: 'DynamicWorld::staticResourceObjects' : class 'std::vector<staticResourceObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(40): warning C4251: 'DynamicWorld::staticResourceObjects' : class 'std::vector<staticResourceObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
                  with
                  [
                      _Ty=staticResourceObject
                  ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(43): warning C4251: 'DynamicWorld::team1RespawnPoints' : class 'std::vector<glm::vec3,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(41): warning C4251: 'DynamicWorld::team1RespawnPoints' : class 'std::vector<glm::vec3,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
                  with
                  [
                      _Ty=glm::vec3
                  ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(43): warning C4251: 'DynamicWorld::team2RespawnPoints' : class 'std::vector<glm::vec3,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(41): warning C4251: 'DynamicWorld::team2RespawnPoints' : class 'std::vector<glm::vec3,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
                  with
                  [
                      _Ty=glm::vec3
                  ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(44): warning C4251: 'DynamicWorld::portalMap' : class 'std::map<int,trapObject *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(42): warning C4251: 'DynamicWorld::portalMap' : class 'std::map<int,trapObject *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
                  with
                  [
                      _Kty=int
          ,            _Ty=trapObject *
                  ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(46): warning C4251: 'DynamicWorld::aabbOffsets' : class 'std::map<int,AABB,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(44): warning C4251: 'DynamicWorld::aabbOffsets' : class 'std::map<int,AABB,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
                  with
                  [
                      _Kty=int
          ,            _Ty=AABB
                  ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(64): warning C4251: 'DynamicWorld::trapMap' : class 'std::map<int,trapObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(62): warning C4251: 'DynamicWorld::trapMap' : class 'std::map<int,trapObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
                  with
                  [
                      _Kty=int
          ,            _Ty=trapObject
                  ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(65): warning C4251: 'DynamicWorld::playerMap' : class 'std::map<int,playerObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(63): warning C4251: 'DynamicWorld::playerMap' : class 'std::map<int,playerObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
                  with
                  [
                      _Kty=int
          ,            _Ty=playerObject
                  ]
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(66): warning C4251: 'DynamicWorld::infoMsgQueue' : class 'std::vector<infoMsg,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.h(64): warning C4251: 'DynamicWorld::infoMsgQueue' : class 'std::vector<infoMsg,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
                  with
                  [
                      _Ty=infoMsg
@@ -137,17 +127,16 @@
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(207): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(229): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(257): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(339): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(430): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(438): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(315): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(406): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(414): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(432): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(447): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(456): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(471): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(650): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(991): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1087): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1450): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1495): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(626): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(967): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1063): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1426): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1471): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
          GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
          ConfigSettings.cpp
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
@@ -180,4 +169,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:05.62
+Time Elapsed 00:00:06.21

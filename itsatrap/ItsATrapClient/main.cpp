@@ -170,11 +170,12 @@ int main(int argc, char *argv[]) {
 	if (client->root->getPlayerID() == 0) {
 		for (int i = 0; i < client->level.levelNodes.size(); ++i) {
 			if (i % 100 == 0) { Sleep(250); }
-			Client::sendStaticObject(client->level.levelNodes[i].first->getBoundingBox());
+			Client::sendStaticObject(client->level.levelNodes[i].first->getBoundingBox(),
+				client->level.levelNodes[i].second);
 		}
 
 		for (int i = 0; i < client->level.resources.size(); ++i) {
-			Client::sendStaticObject(client->level.resources[i]->getBoundingBox());
+			Client::sendStaticObject(client->level.resources[i]->getBoundingBox(), false);
 			Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(),
 				client->level.resources[i]->getResourceId());
 		}

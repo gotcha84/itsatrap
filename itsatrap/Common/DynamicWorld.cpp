@@ -291,16 +291,6 @@ void DynamicWorld::addStaticObject(struct staticObject obj)
 	staticObjects.push_back(obj);
 }
 
-void DynamicWorld::addStaticWallObject(struct staticObject obj)
-{
-	staticWallObjects.push_back(obj);
-}
-
-void DynamicWorld::addStaticRampObject(struct staticRampObject obj)
-{
-	staticRampObjects.push_back(obj);
-}
-
 void DynamicWorld::addStaticResourceObject(struct staticResourceObject obj)
 {
 	staticResourceObjects.push_back(obj);
@@ -311,16 +301,6 @@ int DynamicWorld::getNumStaticObjects()
 	return staticObjects.size();
 }
 
-int DynamicWorld::getNumStaticWallObjects()
-{
-	return staticWallObjects.size();
-}
-
-int DynamicWorld::getNumStaticRampObjects()
-{
-	return staticRampObjects.size();
-}
-
 int DynamicWorld::getNumStaticResourceObjects()
 {
 	return staticResourceObjects.size();
@@ -328,10 +308,6 @@ int DynamicWorld::getNumStaticResourceObjects()
 
 AABB DynamicWorld::getStaticObjectBB(int buildingId) {
 	return staticObjects[buildingId].aabb;
-}
-
-AABB DynamicWorld::getStaticRampObjectBB(int rampId) {
-	return staticRampObjects[rampId].aabb;
 }
 
 AABB DynamicWorld::getStaticResourceBB(int resourceId)
@@ -444,14 +420,14 @@ int DynamicWorld::checkCollisionsWithAllNonTraps(struct playerObject *e)
 		}
 	}
 
-	for (int i = 0; i < staticWallObjects.size(); i++)
-	{
-		if (e->aabb.collidesWith(staticWallObjects[i].aabb))
-		{
-			//printf("Collision: player %d with static wall object %d\n", e->id, i);
-			return i;
-		}
-	}
+	//for (int i = 0; i < staticWallObjects.size(); i++)
+	//{
+	//	if (e->aabb.collidesWith(staticWallObjects[i].aabb))
+	//	{
+	//		//printf("Collision: player %d with static wall object %d\n", e->id, i);
+	//		return i;
+	//	}
+	//}
 
 	for (int i = 0; i < staticResourceObjects.size(); i++)
 	{

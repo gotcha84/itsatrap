@@ -219,7 +219,7 @@ int Client::getPlayerId()
 	return playerId;
 }
 
-void Client::sendStaticObject(AABB objectBB)
+void Client::sendStaticObject(AABB objectBB, bool isDecoration)
 {
 	struct staticObjectPacket packet = {};
 	packet.eventId = STATIC_OBJECT_CREATION_EVENT;
@@ -230,6 +230,7 @@ void Client::sendStaticObject(AABB objectBB)
 	packet.object.aabb.maxX = objectBB.maxX;
 	packet.object.aabb.maxY = objectBB.maxY;
 	packet.object.aabb.maxZ = objectBB.maxZ;
+	packet.object.isDecoration = isDecoration;
 
 	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
 }

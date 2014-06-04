@@ -168,6 +168,7 @@ struct trapObject {
 
 struct staticObject {
 	AABB			aabb;
+	bool			isDecoration;
 };
 
 struct staticRampObject {
