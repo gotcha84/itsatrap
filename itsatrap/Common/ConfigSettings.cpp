@@ -7,8 +7,8 @@ string ConfigSettings::str_full_screen = "FullScreen";
 typedef pair <string, string> String_Pair;
 ConfigSettings * ConfigSettings::config = new ConfigSettings();
 
-ConfigSettings::ConfigSettings(string fname, string template_fname) {
 
+ConfigSettings::ConfigSettings(string fname, string template_fname) {
 	file_name = fname;
 	template_file_name = template_fname;
 
@@ -51,7 +51,8 @@ bool ConfigSettings::loadSettingsFile(){
 //clears data read and loads from the settings file
 bool ConfigSettings::reloadSettingsFile(){
 	settings.clear();
-	return loadSettingsFile();
+	bool tmp = loadSettingsFile();
+	return tmp;
 }
 
 //set the default settings from the config file
@@ -86,10 +87,6 @@ void ConfigSettings::copySettingsTemplate() {
 		template_file.close();
 		myfile.close();
 	}
-	else
-	{
-		printf("[COMMON]: ERROR! Missing %s\n", str_template_settings_file.c_str());
-	}
 }
 
 void ConfigSettings::copyMissingSettings() {
@@ -123,10 +120,6 @@ void ConfigSettings::copyMissingSettings() {
 		}
 		template_file.close();
 		myfile.close();
-	}
-	else
-	{
-		printf("[COMMON]: ERROR! Missing %s\n", str_template_settings_file.c_str());
 	}
 
 }
@@ -186,6 +179,7 @@ bool ConfigSettings::getValue(string key, int & ret){
 }
 
 bool ConfigSettings::getValue(string key, float & ret){
+	cout << "Getting " << key << endl;
 	hash_map <string,string>::iterator i = settings.find(key);
 	
 	if(i != settings.end()){
@@ -245,7 +239,7 @@ bool ConfigSettings::checkIfLoaded() {
 	return settings_loaded;
 }
 
-ConfigSettings * ConfigSettings::getConfig()
+ConfigSettings* ConfigSettings::getConfig()
 {
 	return config;
 }

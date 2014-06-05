@@ -16,6 +16,7 @@
 #define KNIFE_HIT_EVENT 7
 #define HOT_SPOT_UPDATE 8
 #define RELOAD_CONFIG_FILE 9
+#define STATIC_RAMP_OBJECT_CREATION_EVENT 13
 #define PLAYER_ACTION_EVENT 14
 #define STATIC_RESOURCE_OBJECT_CREATION_EVENT 15
 #define REFRESH_EVENT 16
@@ -23,11 +24,11 @@
 #define RESOURCE_HIT_EVENT 18
 #define CHANNELING_PERMISSION 19
 #define CHANNELING_COMPLETE 20
+#define STATIC_WALL_OBJECT_CREATION_EVENT 21
 #define NEW_OWNER_RESOURCE_UPDATE_EVENT 22
 #define CLEAR_CHANNEL_BAR 23
 #define AABB_INFO 24
 #define INFO_MESSAGE_EVENT 25
-#define GAME_OVER_EVENT 26
 
 
 // Superclass of all packets
@@ -116,7 +117,6 @@ struct playerActionPacket
 	bool moveEvents[NUM_DIRECTIONS];
 	bool jump, cameraChanged;
 	struct cameraObject cam;
-	bool recall;
 };
 
 struct refreshPacket
@@ -139,7 +139,7 @@ struct aabbInfoPacket
 	AABB aabb;
 };
 
-#define MAX_MSG_LENGTH 64
+#define MAX_MSG_LENGTH 32
 struct infoMsgPacket
 {
 	int eventId;

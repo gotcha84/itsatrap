@@ -7,16 +7,20 @@
 
 #include <unordered_map>
 #include <queue>
+#include <vector>
 
 #include "SceneGraph.h"
 #include "Level.h"
+#include "Texture.h"
 
 class ClientInstance {
 	public:
 		unordered_map<int,sg::Player*> players;
 		unordered_map<int,sg::Trap*> traps;
 		unordered_map<int, sg::Node*> objects;
+		
 		sg::Player *root;
+		
 		//sg::MatrixTransform *hotSpot;
 		Level level;
 

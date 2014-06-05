@@ -14,10 +14,12 @@ bool				Client::jumpEvent, Client::cameraChanged;
 cameraObject		Client::playerCam = {};
 int					Client::channelingResourceId;
 bool				Client::okChannel;
-bool				Client::recall;
 int					Client::clientSendRate;
 
 int Client::initializeClient() {
+
+	clientSendRate = 0;
+	ConfigSettings::getConfig()->getValue("ClientSendRate", clientSendRate);
 
 	// Load WinSock
 	if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) 
@@ -89,8 +91,6 @@ int Client::initializeClient() {
 
 	okChannel = false;
 
-	ConfigSettings::getConfig()->getValue("ClientSendRate", clientSendRate);
-
 	Client::startRefresherThread();
 	Client::startReceiverThread();
 	Client::startSenderThread();
@@ -141,7 +141,7 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			else if (p->eventId == RELOAD_CONFIG_FILE)
 			{
 				printf("[CLIENT]: Server told me to reload config file.\n");
-				ConfigSettings::getConfig()->reloadSettingsFile();
+				reloadConfigFile();
 			}
 			else if (p->eventId == DISCONNECT_PLAYER_EVENT)
 			{
@@ -173,10 +173,6 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			{
 				struct infoMsgPacket *info = (struct infoMsgPacket *)p;
 				client->root->getPlayer()->m_infoMsg.setMessage(info->msg);
-			}
-			else if (p->eventId == GAME_OVER_EVENT)
-			{
-				client->root->m_gameOver = true;
 			}
 		}
 	}
@@ -227,7 +223,7 @@ int Client::getPlayerId()
 	return playerId;
 }
 
-void Client::sendStaticObject(AABB objectBB, bool isDecoration, glm::vec4 color)
+void Client::sendStaticObject(AABB objectBB)
 {
 	struct staticObjectPacket packet = {};
 	packet.eventId = STATIC_OBJECT_CREATION_EVENT;
@@ -238,10 +234,39 @@ void Client::sendStaticObject(AABB objectBB, bool isDecoration, glm::vec4 color)
 	packet.object.aabb.maxX = objectBB.maxX;
 	packet.object.aabb.maxY = objectBB.maxY;
 	packet.object.aabb.maxZ = objectBB.maxZ;
-	packet.object.isDecoration = isDecoration;
-	packet.object.color = color;
 
 	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
+}
+
+void Client::sendStaticWallObject(AABB wallBB)
+{
+	struct staticObjectPacket packet = {};
+	packet.eventId = STATIC_WALL_OBJECT_CREATION_EVENT;
+	packet.playerId = playerId;
+	packet.object.aabb.minX = wallBB.minX;
+	packet.object.aabb.minY = wallBB.minY;
+	packet.object.aabb.minZ = wallBB.minZ;
+	packet.object.aabb.maxX = wallBB.maxX;
+	packet.object.aabb.maxY = wallBB.maxY;
+	packet.object.aabb.maxZ = wallBB.maxZ;
+
+	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
+}
+
+void Client::sendStaticRampObject(AABB rampBB, float slope)
+{
+	struct staticRampObjectPacket packet = {};
+	packet.eventId = STATIC_RAMP_OBJECT_CREATION_EVENT;
+	packet.playerId = playerId;
+	packet.object.aabb.minX = rampBB.minX;
+	packet.object.aabb.minY = rampBB.minY;
+	packet.object.aabb.minZ = rampBB.minZ;
+	packet.object.aabb.maxX = rampBB.maxX;
+	packet.object.aabb.maxY = rampBB.maxY;
+	packet.object.aabb.maxZ = rampBB.maxZ;
+	packet.object.slope = slope;
+
+	sendMsg((char *)&packet, sizeof(struct staticRampObjectPacket));
 }
 
 void Client::sendStaticResourceObject(AABB resourceBB, int id)
@@ -322,11 +347,6 @@ void Client::sendReloadConfigFile()
 	printf("[CLIENT]: Sent reload config file\n");
 }
 
-void Client::sendRecallEvent()
-{
-	recall = true;
-}
-
 void Client::sendMoveEvent(Direction dir)
 {
 	moveEvents[dir] = true;
@@ -357,7 +377,9 @@ DWORD WINAPI Client::senderThread(LPVOID)
 			if (moveEvents[i])
 				sendUpdate = true;
 		}
-		if (jumpEvent || cameraChanged || recall)
+		if (jumpEvent)
+			sendUpdate = true;
+		if (cameraChanged)
 			sendUpdate = true;
 
 		if (sendUpdate)
@@ -370,7 +392,6 @@ DWORD WINAPI Client::senderThread(LPVOID)
 			p.jump = jumpEvent;
 			p.cameraChanged = cameraChanged;
 			p.cam = playerCam;
-			p.recall = recall;
 			sendMsg((char *)&p, sizeof(p));
 		}
 
@@ -378,7 +399,6 @@ DWORD WINAPI Client::senderThread(LPVOID)
 		memset(moveEvents, 0, sizeof(moveEvents));
 		jumpEvent = false;
 		cameraChanged = false;
-		recall = false;
 	}
 }
 
@@ -452,4 +472,10 @@ void Client::sendAABBInfo(int type, AABB aabb)
 	p.aabb = aabb;
 
 	sendMsg((char *)&p, sizeof(p));
+}
+
+void Client::reloadConfigFile()
+{
+	ConfigSettings::getConfig()->reloadSettingsFile();
+	ConfigSettings::getConfig()->getValue("ClientSendRate", clientSendRate);
 }

@@ -13,21 +13,14 @@
 
 namespace sg {
 	class Player : public Group {
-		private:
-			float getFadeForFlashOrBlood(int x, int fadeOut);
-
 		public:
 			int m_playerID;
 			MyPlayer *m_player;
 			HUD *m_hud;
 			Scoreboard *board;
 			bool m_drawBB;
-			bool checkMouse;
 			TrapMenu *trapMenu;
 			GameOver *gameOver;
-			Stopwatch *timer;
-			int m_elapsedGameTime;
-			bool m_gameOver;
 
 			glm::vec4 m_color;
 			glm::vec3 m_translate;

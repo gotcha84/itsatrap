@@ -66,8 +66,7 @@ void Window::reshapeCallback(int w, int h)
 	glViewport(0, 0, w, h);  // set new viewport size
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	// glFrustum(-10.0, 10.0, -10.0, 10.0, 10, 1000.0); // set perspective projection viewing frustum
-	gluPerspective(45.0f, 3.0f / 3.0f, 1, 1000);
+	glFrustum(-10.0, 10.0, -10.0, 10.0, 10, 1000.0); // set perspective projection viewing frustum
 	//glTranslatef(0, 0, -20);
 	glMatrixMode(GL_MODELVIEW);
 }
@@ -209,7 +208,7 @@ void Window::displayCallback(void)
 	m_fpsCounter+=1;
 				
 	if (clock()-m_timer > 1000) {
-		//cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
+		cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
 		m_timer = clock();
 		m_fpsCounter = 0;
 	}
@@ -291,12 +290,8 @@ void Window::keyUp(unsigned char key, int x, int y) {
 	}
 	else if (key == 'r') 
 	{
-		//ConfigSettings::getConfig()->reloadSettingsFile();
-		//Client::sendReloadConfigFile();
-	}
-	else if (key == 'b')
-	{
-		Client::sendRecallEvent();
+		ConfigSettings::getConfig()->reloadSettingsFile();
+		Client::sendReloadConfigFile();
 	}
 	else if (key == 'e')
 	{
@@ -498,10 +493,10 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 			break;
 	}
 	if (button == 3) {
-		client->scrollDown = true;
+		client->scrollUp = true;
 	}
 	else if (button == 4) {
-		client->scrollUp = true;
+		client->scrollDown = true;
 	}
 }
 

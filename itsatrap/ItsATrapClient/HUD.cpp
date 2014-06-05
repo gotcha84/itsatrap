@@ -16,7 +16,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime) {
+void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration, string msg) {
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -25,44 +25,30 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, float 
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 
+			
+
 			glLoadIdentity();
 			if (health <= 0) {
+				
 				drawDeathTimer(spawnTime);
 				
 				if (!deathSound->isCurrentlyPlaying("../Sound/death.wav") && spawnTime <= 2500 && spawnTime >= 2000) {
 					deathSound->play2D("../Sound/death.wav", false, false, true);
 				}
-			} else {
+			}else {
 				if (hitCrosshairDuration > 0) {
 					drawKillSymbol(true);
 					if (!ouchSound->isCurrentlyPlaying("../Sound/ouch.wav") )
 						ouchSound->play2D("../Sound/ouch.wav", false, false, true);
-				} else {
+				}else
 					drawKillSymbol(false);
-				}
 				drawCrossHair();
 				drawHealthBar(health);
 				drawResource(resources);
-				drawClock(gameTime);
 				drawInfoMessage(msg);
-				if (m_progressTime > -1) {
-					drawProgressBar(m_progressTime);
-				}
-				if (recallElapsed > 0)
-				{
-					int recallChannelTime = 1;
-					ConfigSettings::getConfig()->getValue("RecallChannelTime", recallChannelTime);
-					int time = ((float) recallElapsed / recallChannelTime) * 100;
-					if (time > 100)
-						time = 100;
-					else if (time < 0)
-						time = 0;
-					drawProgressBar(time);
-					if (time > 50)
-						drawFlashbag((time-50.0f)/50.0f);
-				}
+				if( m_progressTime > -1 ) drawProgressBar(m_progressTime);
 				drawFlashbag(flashFade);
-				drawBlood(bloodFade);
+				
 			}
 			
 		glPopMatrix();
@@ -170,22 +156,19 @@ void HUD::drawDeathTimer(int respawnTime) {
 
 void HUD::drawProgressBar(int time) {
 	if (time >= 10) {
-	
+		for (int i = 0; i < time / 10; i++) {
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glLoadIdentity();
+			glTranslatef(-0.315 + 0.07*i, 0.0f, 0.0f);
+			glScalef(1.5f, 1.5f, 1.0f);
+			glutSolidCube(0.05f);
+		}
+
 		glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
 		glLoadIdentity();
 		glTranslatef(0.0f, 0.0f, 0.0f);
 		glScaled(1.5f, 0.2f, 0.2f);
 		glutSolidCube(0.5f);
-		
-		for (int i = 0; i < time / 10; i++) {
-			glColor4f(10.0f, 10.0f, 10.0f, 1.0f);
-			glLoadIdentity();
-			glTranslatef(-0.315 + 0.07*i, 0.0f, 0.5f);
-			glScalef(1.5f, 1.5f, 1.0f);
-			glutSolidCube(0.05f);
-		}
-
-
 	}
 }
 
@@ -197,41 +180,12 @@ void HUD::drawFlashbag(float fade) {
 	glutSolidCube(0.2f);
 }
 
-void HUD::drawBlood(float fade) {
-	glColor4f(1.0f, 0, 0, fade);
-	glLoadIdentity();
-	glTranslatef(0.0f, 0.0f, 0.0f);
-	glScaled(10.0f, 10.0f, 10.0f);
-	glutSolidCube(0.2f);
-}
-
 void HUD::drawKillSymbol(bool hit) {
 	if (hit) {
 		glColor3f(0.0f, 0.0f, 0.0f);
 		font->FaceSize(100);
 		font->CharMap(ft_encoding_symbol);
-		glRasterPos2f(-0.055f, -0.09f);
+		glRasterPos2f(-0.02f, -0.02f);
 		font->Render("X");
 	}
-}
-
-void HUD::drawClock(int time) {
-	int duration = 0;
-	time = time / 1000;
-	ConfigSettings::getConfig()->getValue("GameDuration", duration);
-	duration = duration / 1000;
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-	if (duration - time <= 5) {
-		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-		font->FaceSize(75);
-		font->CharMap(ft_encoding_symbol);
-		glRasterPos2f(0.0f, 0.8f);
-		font->Render(to_string(duration-time).c_str());
-	}
-		
-	glPopMatrix();
 }

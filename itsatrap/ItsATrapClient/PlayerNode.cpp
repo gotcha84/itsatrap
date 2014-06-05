@@ -1,6 +1,10 @@
 #define PLAYER_RAD 5.0f
 
 #include "PlayerNode.h"
+
+#include "Texture.h"
+extern Texture *textures;
+
 #include "ClientInstance.h"
 extern ClientInstance* client;
 
@@ -26,12 +30,6 @@ namespace sg {
 		trapMenu = new TrapMenu();
 		gameOver = new GameOver();
 
-		timer = new Stopwatch();
-		checkMouse = false;
-
-		m_elapsedGameTime = 0;
-		m_gameOver = false;
-
 		initModels();
 	}
 
@@ -54,9 +52,6 @@ namespace sg {
 
 		trapMenu = new TrapMenu();
 		gameOver = new GameOver();
-
-		timer = new Stopwatch();
-		checkMouse = false;
 
 		initModels();
 	}
@@ -86,19 +81,18 @@ namespace sg {
 
 		delete gameOver;
 		gameOver = nullptr;
-
-		delete timer;
-		timer = nullptr;
 	}
 
 	void Player::initModels() {
-		// m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
-		m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
+		//m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
+		//m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
 		
-		//m_otherPlayer = new ObjModel("../Models/Test Chest/Test_Chest.obj", "../Models/Test Chest/");
-		//m_otherPlayer->loadTexture("../Textures/Chest_Diffuse.ppm");
+		m_otherPlayer = new ObjModel();
+		m_otherPlayer->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");
+		m_otherPlayer->setTexture(textures->m_texID[Textures::Polynoid]);
 
-		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
+		m_thisPlayer = new ObjModel();
+		m_thisPlayer->loadModel("../Models/Headless_Avatar.obj", "../Models/");
 		m_thisPlayer->disableDrawBB();
 	}
 
@@ -177,20 +171,6 @@ namespace sg {
 		m_playerID = id;
 	}
 
-	float Player::getFadeForFlashOrBlood(int x, int fadeOut)
-	{
-		float fade = 0;
-		
-		if (x > fadeOut)
-			fade = 1;
-		else
-			fade = (float)x / fadeOut;
-		if (fade < 0)
-			fade = 0;
-
-		return fade;
-	}
-
 	// moves camera to player's view
 	void Player::draw() {
 		//cout << "velocity: " << glm::to_string(this->getPlayer()->getPhysics()->m_velocity) << endl;
@@ -198,9 +178,8 @@ namespace sg {
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
-	
-		if (m_gameOver) {
-			cout << "GAME OVER" << endl;
+		
+		if (false) {
 			int teamOneScore = 0;
 			int teamTwoScore = 0;
 			for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
@@ -212,9 +191,7 @@ namespace sg {
 				}
 			}
 			gameOver->setTeamScore(teamOneScore, teamTwoScore);
-			glDisable(GL_LIGHTING);
 			gameOver->draw();
-			glEnable(GL_LIGHTING);
 		}else{
 
 			if (!m_player->m_deathState)
@@ -223,10 +200,10 @@ namespace sg {
 					m_child[i]->draw(glm::mat4(), this->getPlayer()->getCameraMatrix());
 				}
 			}
-			/*else
+			else
 			{
 				cout << "DEAD! Time till respawn " << m_player->m_timeUntilRespawn <<endl;
-			}*/
+			}
 
 			// draw player avatar
 			glm::mat4 mv = glm::inverse(this->getCamera()->getCameraMatrix()) * this->getModelMatrix();
@@ -252,52 +229,35 @@ namespace sg {
 					//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
 					//cout << client->tabPressed << endl;
 				}
-				glDisable(GL_LIGHTING);
 				board->draw();
-				glEnable(GL_LIGHTING);
 			}
-			
-			if (client->scrollDown || client->scrollUp) {
-				timer->start();
-				checkMouse = true;
-				if (client->scrollUp) {
-					if ((trapMenu->getInfoState() + 1) == 7) trapMenu->setInfoState(0);
-					else trapMenu->setInfoState(trapMenu->getInfoState() + 1);
-					client->scrollUp = false;
-				}
-				if (client->scrollDown) {
-					if ((trapMenu->getInfoState() - 1) < 0) trapMenu->setInfoState(6);
-					else trapMenu->setInfoState(trapMenu->getInfoState() - 1);
-					client->scrollDown = false;
-				}
+			if ( client->root->getPlayer()->getHealth() > 0) trapMenu->draw();
+			if (client->scrollUp) {
+				if ((trapMenu->getInfoState() + 1) == 7) trapMenu->setInfoState(0);
+				else trapMenu->setInfoState( trapMenu->getInfoState()+1);
+				client->scrollUp = false;
+			}
+			if (client->scrollDown) {
+				if ((trapMenu->getInfoState() - 1) < 0) trapMenu->setInfoState(6);
+				else trapMenu->setInfoState(trapMenu->getInfoState() - 1);
+				client->scrollDown = false;
 			}
 
-			if (timer->getElapsedMilliseconds() < 5000 && checkMouse == true) {
-				if (client->root->getPlayer()->getHealth() > 0) {
-					glDisable(GL_LIGHTING);
-					trapMenu->draw();
-					glEnable(GL_LIGHTING);
-				}
-			}else{
-				timer->reset();
-				checkMouse = false;
-			}
-
-			
 			//if (client->scrollUp) cout << "playerNode: scrollUp" << endl;
 			//if (client->scrollDown) cout << "playerNode: scrollDown" << endl;
 
-			int flashFadeOut = 0, bloodFadeOut = 0;
+			// Flashbang stuff
+			float flash = 0;
+			int flashFadeOut = 0;
 			ConfigSettings::getConfig()->getValue("FlashFadeOut", flashFadeOut);
-			ConfigSettings::getConfig()->getValue("BloodFadeOut", bloodFadeOut);
-			float flash = getFadeForFlashOrBlood(getPlayer()->m_flashDuration, flashFadeOut);
-			float blood = getFadeForFlashOrBlood(getPlayer()->m_bloodDuration, bloodFadeOut);
+			if (getPlayer()->m_flashDuration > flashFadeOut)
+				flash = 1;
+			else
+				flash = (float)getPlayer()->m_flashDuration / flashFadeOut;
+			if (flash < 0)
+				flash = 0;
 
-			glDisable(GL_LIGHTING);
-
-			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, blood, getPlayer()->m_hitCrosshairDuration, getPlayer()->m_recallElapsed, m_player->m_infoMsg.getMessage(), m_elapsedGameTime);
-
-			glEnable(GL_LIGHTING);
+			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, getPlayer()->m_hitCrosshairDuration, m_player->m_infoMsg.getMessage());
 		}
 
 	}
@@ -315,8 +275,7 @@ namespace sg {
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			//m_thisPlayer->drawModel();
-
+			m_thisPlayer->drawModel();
 		glPopMatrix();
 	}
 
@@ -327,9 +286,9 @@ namespace sg {
 		
 		this->drawAsOtherPlayer(mv);
 
-		if (m_drawBB) {
-			m_otherPlayer->getBoundingBox().draw();
-		}
+		//if (m_drawBB) {
+			//m_otherPlayer->getBoundingBox().draw();
+		//}
 	}
 
 	void Player::drawAsOtherPlayer(glm::mat4 mv) {
@@ -338,6 +297,7 @@ namespace sg {
 			m_otherPlayer->setColor(glm::vec4(0.75, 0, 0, 1));
 		else
 			m_otherPlayer->setColor(glm::vec4(0, 0, 0.75, 1));
+		//m_otherPlayer->setColor(glm::vec4(1,1,1,1));
 
 		glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);

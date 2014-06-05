@@ -10,8 +10,6 @@
 #include "MyPlayer.h"
 #include "Texture.h"
 #include <FTGL/ftgl.h>
-#include <FTGL/FTGLPolygonFont.h>
-#include <FTGL/FTGLExtrdFont.h>
 
 class Scoreboard {
 public:
@@ -25,7 +23,6 @@ public:
 	};
 
 	FTGLPixmapFont *font;
-	//FTGLExtrdFont *fonts;
 	typedef std::vector<Entry> Entries;
 	typedef std::pair<Entries::iterator, int> EntryLocation;
 

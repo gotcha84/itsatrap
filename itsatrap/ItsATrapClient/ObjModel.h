@@ -29,8 +29,7 @@ class ObjModel : public sg::Geode {
 		string m_objFilename;
 		string m_mtlFilename;
 
-		Texture *m_texture;
-		GLuint m_textureID;
+		GLuint m_texID;
 
 		vector<vector<float>> m_vertices;
 		vector<vector<float>> m_normals;
@@ -67,7 +66,8 @@ class ObjModel : public sg::Geode {
 		void loadModel(string objFilename, string mtlFilename);
 		void loadModel();
 		
-		void loadTexture(string filename);
+		//void loadTexture(string filename);
+		void setTexture(GLuint tex);
 
 		void print();
 		

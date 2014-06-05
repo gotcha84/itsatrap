@@ -76,18 +76,11 @@ namespace sg {
 		this->m_particles2->setColor(glm::vec4(r + 0.2f, g + 0.2f, b + 0.2f, a));
 	}
 
-	void ResourceNode::setInactiveColor()
+	void ResourceNode::resetOwnerColor()
 	{
-		this->m_model->setColor(glm::vec4(0.2f, 0.2f, 0.2f, 1));
-		this->m_particles->setColor(glm::vec4(0.7f, 0.7f, 0.7f, 1));
-		this->m_particles2->setColor(glm::vec4(0.9f, 0.9f, 0.9f, 1));
-	}
-
-	void ResourceNode::setActiveColor()
-	{
-		this->m_model->setColor(glm::vec4(1.0f, 1.0f, 1.0f, 1));
-		this->m_particles->setColor(glm::vec4(0.7f, 0.7f, 0.7f, 1));
-		this->m_particles2->setColor(glm::vec4(0.9f, 0.9f, 0.9f, 1));
+		this->m_model->setColor(glm::vec4(0.9, 0.9, 0.9, 1));
+		this->m_particles->setColor(glm::vec4(0.5, 0.5, 0.5, 1));
+		this->m_particles2->setColor(glm::vec4(0.7, 0.7, 0.7, 1));
 	}
 
 	void ResourceNode::draw(glm::mat4 parent, glm::mat4 cam) {
@@ -99,12 +92,8 @@ namespace sg {
 
 		glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 		m_model->drawModel();
-
-		glDisable(GL_LIGHTING);
 		m_particles->draw();
 		m_particles2->draw();
-		glEnable(GL_LIGHTING);
-
 		glPopMatrix();
 	}
 

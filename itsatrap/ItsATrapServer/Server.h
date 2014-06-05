@@ -60,9 +60,7 @@ private:
 	static bool					isChanneling;
 	static bool					physicsReady;
 
-	static int					elapsedGameTimeMS;
-
-	// Function
+	// Functions
 	static int initialize();
 	static void processIncomingMsg(char *, struct sockaddr_in *);
 	static int receiveMsg(char *, struct sockaddr_in *);
@@ -84,8 +82,6 @@ private:
 	static void resetChanneling();
 	static void sendInfoMessages();
 	static void sendInfoMessage(int destination, string msg);
-
-	static void sendGameOverUpdate();
 
 public:
 

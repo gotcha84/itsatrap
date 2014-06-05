@@ -9,8 +9,8 @@
 #include <stdlib.h>
 #include <hash_map>
 #include <iterator>
-
 #include "Exports.h"
+#include <Windows.h>
 
 using namespace std;
 
@@ -46,12 +46,12 @@ public:
 	void updateValue(string key, float value);
 	void updateValue(string key, double value);
 	void updateValue(string key, string value);
-
-	static ConfigSettings * getConfig();
+	static ConfigSettings* getConfig();
 
 private:
 	//default parameters for a default constructor option
 	ConfigSettings(string file_name=str_settings_file, string template_file_name=str_template_settings_file);
+
 
 	hash_map<string,string> settings;
 	bool settings_loaded;

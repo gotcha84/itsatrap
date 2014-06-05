@@ -84,14 +84,8 @@
     <ClCompile Include="PlayerNode.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
-    <ClCompile Include="City.cpp">
-      <Filter>Source Files\SceneGraph</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Building.cpp">
-      <Filter>Source Files\SceneGraph\Shapes</Filter>
     </ClCompile>
     <ClCompile Include="Trap.cpp">
       <Filter>Source Files\SceneGraph\Shapes</Filter>
@@ -133,7 +127,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InfoMessage.cpp">
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="TrapMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -184,12 +178,6 @@
     <ClInclude Include="PlayerNode.h">
       <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
-    <ClInclude Include="Building.h">
-      <Filter>Header Files\SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="City.h">
-      <Filter>Header Files\SceneGraph</Filter>
-    </ClInclude>
     <ClInclude Include="Trap.h">
       <Filter>Header Files\SceneGraph</Filter>
     </ClInclude>
@@ -233,7 +221,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InfoMessage.h">
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="TrapMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>

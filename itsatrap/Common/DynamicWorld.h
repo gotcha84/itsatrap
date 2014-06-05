@@ -37,9 +37,10 @@ private:
 	// Variables
 	int									currentId;
 	vector<struct staticObject>			staticObjects;
+	vector<struct staticObject>			staticWallObjects;		// ANDRE: Bounding Walls - Add BB
+	vector<struct staticRampObject>		staticRampObjects;
 	vector<struct staticResourceObject>	staticResourceObjects;	// ANDRE: Resource Tower - Add BB
 	vector<glm::vec3>					team1RespawnPoints, team2RespawnPoints;
-	int									team1CurrRP, team2CurrRP;
 	map<int, struct trapObject *>		portalMap;
 	bool								playerLock[MAX_PLAYERS];
 	map<int, AABB>						aabbOffsets;
@@ -47,7 +48,6 @@ private:
 	bool checkCollision(struct aabb a, struct aabb b);
 	int checkCollisionsWithAllNonTraps(struct playerObject *e);
 	int checkSideCollisionsWithAllBuildings(glm::vec3 from, glm::vec3 goTo, struct playerObject *e);
-	int checkTopCollisionsWithAllBuildings(glm::vec3 from, glm::vec3 goTo, struct playerObject *e);
 	int checkCollisionsWithAllRampsEntrance(struct playerObject *e);
 	//int checkOnTopOfWithAllRamps(struct playerObject *e);
 	int checkCollisionsWithAllRampsInside(struct playerObject *e);
@@ -56,7 +56,6 @@ private:
 	void computeAABB(struct playerObject *p);
 	void computeAABB(struct trapObject *t);
 	void addInfoMessage(int destination, string msg);
-	void recallPlayer(struct playerObject *p);
 
 	//float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, struct aabb other, int buildingId);
 
@@ -85,10 +84,15 @@ public:
 	void addTrap(struct trapObject t);
 
 	void addStaticObject(struct staticObject);
+	void addStaticWallObject(struct staticObject);
+	void addStaticRampObject(struct staticRampObject);
 	void addStaticResourceObject(struct staticResourceObject);
 	int getNumStaticObjects();
+	int getNumStaticWallObjects();
+	int getNumStaticRampObjects();
 	int getNumStaticResourceObjects();
 	AABB getStaticObjectBB(int buildingId);
+	AABB getStaticRampObjectBB(int rampId);
 	AABB getStaticResourceBB(int resourceId);
 
 	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
@@ -98,7 +102,7 @@ public:
 	void applyGravity();
 	void applyPhysics();
 	void applyAdjustments();
-	void manuallyUncollide();
+
 	void applyTrapGravity();
 
 	void applyMoveEvents();

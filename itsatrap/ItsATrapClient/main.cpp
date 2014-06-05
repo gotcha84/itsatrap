@@ -24,6 +24,7 @@
 //sound
 #include "Sound.h"
 
+Texture *textures;
 ClientInstance *client;
 Window *window;
 Sound *sound;
@@ -82,43 +83,16 @@ void sendAABBInfo()
 
 int main(int argc, char *argv[]) {
 
+	Sleep(1000);
+
 	ConfigSettings::getConfig()->loadSettingsFile();
 
 	// opengl lighting
 	float specular[]  = {1.0, 1.0, 1.0, 1.0};
 	float shininess[] = {100.0};
 	//float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
-	GLfloat position[]  = {0.0f, 500.0f, -250.0f, 1.0f};  // lightsource position
-	GLfloat ambientLight[] = {0.7f, 0.7f, 0.7f, 1.0f};
-	GLfloat diffuseLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
-
-	// Initialize networking for client
-	Client::initializeClient();
-	client = new ClientInstance(Client::getPlayerId());
-	window = new Window();
-	glm::vec3 starting = client->root->getPosition();
-	glm::vec3 shift;
-	switch (client->root->getPlayerID()) {
-	case 0: 
-		shift = glm::vec3(-200, 500, 150);
-		break;
-	case 1:
-		shift = glm::vec3(200, 500, 150);
-		break;
-	case 2:
-		shift = glm::vec3(200, 500, -150);
-		break;
-	case 3:
-		shift = glm::vec3(-200, 500, -150);
-		break;
-	default:
-		shift = glm::vec3(200, 500, -300);
-		break;
-	}
-	starting = starting + shift;
-	client->root->moveTo(starting);
-	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
-	sendAABBInfo();
+	GLfloat position[]  = {0.0, 1000.0, 0.0, 0.0};  // lightsource position
+	//GLfloat ambientColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
 	glutInit(&argc, argv);                      // initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
@@ -128,13 +102,22 @@ int main(int argc, char *argv[]) {
 		glutFullScreen();
 	}
 
-	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
-	glClearDepth(1.0f);							// Depth Buffer Setup
-	glDepthFunc(GL_LEQUAL);						// The Type Of Depth Testing To Do
+	// Initialize networking for client
+	Client::initializeClient();
 
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice Perspective 
-	//glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
-	glClearColor(0.0, 0.0, 0.0, 0.5f);           // set clear color to black
+	textures = new Texture();
+	//textures->initTextures();
+	client = new ClientInstance(Client::getPlayerId());
+	window = new Window();
+	glm::vec3 starting = client->root->getPosition();
+	starting = starting + glm::vec3(200, 200, -300);
+	client->root->moveTo(starting);
+	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
+	sendAABBInfo();
+
+	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
+	glClear(GL_DEPTH_BUFFER_BIT);               // clear depth buffer
+	glClearColor(0.0, 0.0, 0.0, 0.0);           // set clear color to black
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // set polygon drawing mode to fill front and back of each polygon
 	glEnable(GL_CULL_FACE);					// disable backface culling to render both sides of polygons
 	//glCullFace(GL_FRONT);
@@ -142,9 +125,10 @@ int main(int argc, char *argv[]) {
 	glShadeModel(GL_SMOOTH);                    // set shading to smooth
 
 	// backface culling to render front sides of polygons
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
+	glDisable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+	//glFrontFace(GL_CCW);
 	
 	// Generate material properties:
 	//glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -153,13 +137,11 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_COLOR_MATERIAL);
 	
 	// Generate light source:
-	//glDisable(GL_LIGHTING);
+	glDisable(GL_LIGHTING);
 	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+	//glLightfv(GL_LIGHT0, GL_POSITION, position);
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT0);
 	
 	// Install callback functions:
 	glutDisplayFunc(window->displayCallback);
@@ -186,44 +168,59 @@ int main(int argc, char *argv[]) {
 	// hide mouse cursor
 	//glutSetCursor(GLUT_CURSOR_NONE);
 
-	// Sending AABBs to server
+	//sg::City city = sg::City();
+	//city.loadData("../Models/city.obj");
+	//client->root->addChild(&city);
+
 	client->root->addChild(client->level.getRoot());
-
-	if (client->root->getPlayerID() == 0) {
-		for (int i = 0; i < client->level.levelNodes.size(); ++i) {
-			//if (i % 100 == 0) { Sleep(250); }
-			Client::sendStaticObject(client->level.levelNodes[i].first->getBoundingBox(), 
-				client->level.levelNodes[i].second,
-				client->level.levelNodes[i].first->getModel()->getColor());
-			if (i == 271) {
-				cout << "I: " << i << ", " << client->level.levelNodes[i].first->getName();
-				
-				//client->level.levelNodes[i].first->getBoundingBox().print();
-			}
-			Sleep(10);
-		}
-
-		for (int i = 0; i < client->level.resources.size(); ++i) {
-			Client::sendStaticObject(client->level.resources[i]->getBoundingBox(), 
-				true,
-				client->level.resources[i]->getModel()->getColor());
-			Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(),
-				client->level.resources[i]->getResourceId());
-		}
-
-		client->root->m_elapsedGameTime = 0;
-		client->root->m_gameOver = false;
+	for (int i = 0; i < client->level.levelNodes.size(); ++i) {
+		Client::sendStaticObject(client->level.levelNodes[i]->getBoundingBox());
 	}
 
-	//sg::ObjNode node = sg::ObjNode();
-	//node.m_model->loadModel("../Models/Avatar.obj", "../Models/");
-	////node.m_model->loadTexture("../Textures/Avatar_Diffuse.ppm");
-	//node.m_model->loadTexture("../Models/Polynoid_Updated/animus.ppm");
-	//node.m_model->setColor(glm::vec4(1, 1, 1, 1));
-	//node.m_model->setName("penis");
-	//sg::MatrixTransform nodeXForm = sg::MatrixTransform();
-	//nodeXForm.addChild(&node);
-	//client->root->addChild(&nodeXForm);
+	for (int i = 0; i < client->level.resources.size(); ++i) {
+		Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), 
+			client->level.resources[i]->getResourceId());
+	}
+//=======
+//
+//	Client::sendStaticObject(client->level.groundCube->getBoundingBox().minX,
+//		client->level.groundCube->getBoundingBox().minY,
+//		client->level.groundCube->getBoundingBox().minZ,
+//		client->level.groundCube->getBoundingBox().maxX,
+//		client->level.groundCube->getBoundingBox().maxY,
+//		client->level.groundCube->getBoundingBox().maxZ);
+//
+//	for (int i = 0; i < client->level.buildings.size(); ++i) {
+//		Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,
+//			client->level.buildings[i]->getBoundingBox().minZ, client->level.buildings[i]->getBoundingBox().maxX,
+//			client->level.buildings[i]->getBoundingBox().maxY, client->level.buildings[i]->getBoundingBox().maxZ);
+//> origin/enrico-temp
+
+	//for (int i = 0; i < client->level.buildings.size(); ++i) {
+	//	Client::sendStaticObject(client->level.buildings[i]->getBoundingBox().minX, client->level.buildings[i]->getBoundingBox().minY,
+	//		client->level.buildings[i]->getBoundingBox().minZ, client->level.buildings[i]->getBoundingBox().maxX,
+	//		client->level.buildings[i]->getBoundingBox().maxY, client->level.buildings[i]->getBoundingBox().maxZ);
+	//}
+
+	//for (int i = 0; i < client->level.ramps.size(); ++i) {
+	//	//Client::sendStaticRampObject(client->level.ramps[i]->getBoundingBox(), client->level.rampSlopes[i]);
+	//}
+
+	//for (int i = 0; i < client->level.resources.size(); ++i) {
+	//	Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), client->level.resources[i]->getResourceId());
+	//}
+
+	//for (int i = 0; i < client->level.walls.size(); ++i) {
+	//	Client::sendStaticWallObject(client->level.walls[i]->getBoundingBox());
+	//}
+
+	sg::ObjNode node = sg::ObjNode();
+	node.m_model->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");
+	node.m_model->setTexture(textures->m_texID[Textures::Polynoid]);
+	node.m_model->setColor(glm::vec4(1, 1, 1, 1));
+	sg::MatrixTransform nodeXForm = sg::MatrixTransform();
+	nodeXForm.addChild(&node);
+	client->root->addChild(&nodeXForm);
 
 	// skybox
 	sg::MatrixTransform sbXForm = sg::MatrixTransform();
@@ -236,7 +233,8 @@ int main(int argc, char *argv[]) {
 
 	sg::Skybox skybox = sg::Skybox();
 	skybox.loadModel("../Models/Skybox/skybox.obj", "../Models/Skybox/");
-	skybox.loadTexture("../Textures/skybox.ppm");
+	//skybox.loadTexture("../Textures/skybox.ppm");
+	skybox.getModel()->setTexture(textures->m_texID[Textures::Skybox]);
 	skybox.getModel()->setColor(glm::vec4(1, 1, 1, 1));
 	sbXForm.addChild(&skybox);
 
@@ -252,6 +250,9 @@ int main(int argc, char *argv[]) {
 	otherPlayerSound->changePosition(-1.0f);
 
 	glutMainLoop();
+
+	delete textures;
+	textures = nullptr;
 
 	delete client;
 	client = nullptr;

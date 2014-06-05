@@ -60,8 +60,6 @@ class COMMON_API AABB {
 		int reflectionIntersection(glm::vec3 from, glm::vec3 goTo);
 		float angleIntersection(glm::vec3 from, glm::vec3 goTo);
 
-		glm::vec3 unstuckOffset(AABB player);
-
 		bool cameFromTop(glm::vec3 from, glm::vec3 goTo, AABB player, int buildingId);
 		bool cameFromBottom(glm::vec3 from, glm::vec3 goTo, AABB player, int buildingId);
 		void draw();

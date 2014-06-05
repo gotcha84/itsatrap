@@ -62,9 +62,6 @@ void MyPlayer::initCommon() {
 	m_deathState = false;
 	m_timeUntilRespawn = 0;
 	m_resources = 0;
-	m_flashDuration = 0;
-	m_bloodDuration = 0;
-	m_recallElapsed = 0;
 
 	m_wallJumpingBuildingId = -1;
 	m_onTopOfBuildingId = -1;
@@ -181,8 +178,7 @@ void MyPlayer::setProjectionMatrix() {
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	// glFrustum(-10.0, 10.0, -10.0, 10.0, 10, 1000.0); // set perspective projection viewing frustum
-	gluPerspective(45.0f, 3.0f / 3.0f, 1, 1000);
+	glFrustum(-10.0, 10.0, -10.0, 10.0, 10, 1000.0); // set perspective projection viewing frustum
 	//glTranslatef(0, 0, -20);
 	glMatrixMode(GL_MODELVIEW);
 }

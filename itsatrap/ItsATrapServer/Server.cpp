@@ -19,7 +19,6 @@ int					Server::resourceHotSpotBonusPerInterval;
 int					Server::resourceInterval;
 int					Server::hotSpotChangeInterval;
 int					Server::maxServerProcessRate;
-int					Server::elapsedGameTimeMS;
 
 vector<int>			Server::resourceNodeLocations;
 int					Server::currentActiveResourceNodeIndex;
@@ -125,7 +124,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			player.clientAddress = *source;
 			player.playerId = playerCount;
 			player.active = true;
-			player.timeUntilInactive = 20000;
+			player.timeUntilInactive = 10000;
+			//ConfigSettings::getConfig()->getValue("TimeUntilDisconnect", player.timeUntilInactive);
 			players[playerCount] = player;
 				
 			// Creating response message
@@ -157,16 +157,67 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			//int id = dynamicWorld.getNumStaticObjects() - 1;
 			//World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
 
-			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
-			tmp.aabb.print();
-		}
+			//if (dynamicWorld.getNumStaticObjects() >= 31) {
+			//	vector<AABB> buildings;
+			//	vector<AABB> ramps;
+			//	
+			//	for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
+			//		buildings.push_back(dynamicWorld.getStaticObjectBB(i));
+			//	}
 
-		elapsedGameTimeMS = 0;
+			//	for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
+			//		ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
+			//	}
+
+			//	World::superHeightMapInit(buildings, ramps);
+			//}
+			//printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			//tmp.aabb.print();
+		}
 		int MaxBuildings = 0;
 		ConfigSettings::getConfig()->getValue("MaxBuildings", MaxBuildings);
 		if (dynamicWorld.getNumStaticObjects() >= MaxBuildings) {
-			cout << "physics ready yo" << endl;
 			physicsReady = true;
+		}
+	}
+	else if (p->eventId == STATIC_WALL_OBJECT_CREATION_EVENT)
+	{
+		struct staticObjectPacket *staticObjPkt = (struct staticObjectPacket *)p;
+		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
+		{
+			struct staticObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
+			dynamicWorld.addStaticWallObject(tmp);
+			/*printf("[SERVER]: Added a static wall object. Now have %d static wall objects\n", dynamicWorld.getNumStaticWallObjects());
+			tmp.aabb.print();*/
+		}
+	}
+	else if (p->eventId == STATIC_RAMP_OBJECT_CREATION_EVENT)
+	{
+		struct staticRampObjectPacket *staticObjPkt = (struct staticRampObjectPacket *)p;
+		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
+		{
+			struct staticRampObject tmp;
+			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticRampObject));
+			dynamicWorld.addStaticRampObject(tmp);
+			/*printf("[SERVER]: Added a static ramp object. Now have %d static ramp objects\n", dynamicWorld.getNumStaticRampObjects());
+			tmp.aabb.print();
+			printf("Slope: %f\n", tmp.slope);*/
+
+			//if (dynamicWorld.getNumStaticRampObjects() >= 7) {
+			//	vector<AABB> buildings;
+			//	vector<AABB> ramps;
+			//	
+			//	for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
+			//		buildings.push_back(dynamicWorld.getStaticObjectBB(i));
+			//	}
+
+			//	for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
+			//		ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
+			//	}
+
+			//	World::superHeightMapInit(buildings, ramps);
+			//}
 		}
 	}
 	else if (p->eventId == STATIC_RESOURCE_OBJECT_CREATION_EVENT)
@@ -177,9 +228,9 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticResourceObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
 			dynamicWorld.addStaticResourceObject(tmp);
-			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
+			/*printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
 			tmp.aabb.print();
-			printf("ResourceId: %d\n", tmp.id);
+			printf("ResourceId: %d\n", tmp.id);*/
 
 			resourceNodeLocations.push_back(tmp.id);
 			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
@@ -256,7 +307,6 @@ void Server::processBuffer()
 {
 	checkConnection();
 	dynamicWorld.updateTimings(maxServerProcessRate);
-	elapsedGameTimeMS += maxServerProcessRate;
 	updateResources();
 
 	dynamicWorld.resetWorldInfo();
@@ -290,7 +340,6 @@ void Server::processBuffer()
 						if (isChanneling && actPkt->playerId == channelingPlayer) resetChanneling();
 
 						dynamicWorld.processMoveEvent(actPkt->playerId, (Direction)i);
-						dynamicWorld.playerMap[actPkt->playerId].isRecalling = false;
 					}
 				}
 
@@ -299,15 +348,11 @@ void Server::processBuffer()
 					if (isChanneling && actPkt->playerId == channelingPlayer) resetChanneling();
 
 					dynamicWorld.processJumpEvent(actPkt->playerId);
-					dynamicWorld.playerMap[actPkt->playerId].isRecalling = false;
 				}
 
 				// Camera
 				if (actPkt->cameraChanged)
 					dynamicWorld.processLookEvent(actPkt->playerId, &actPkt->cam);
-
-				if (actPkt->recall)
-					dynamicWorld.playerMap[actPkt->playerId].isRecalling = true;
 
 				break;
 			}
@@ -400,7 +445,6 @@ void Server::processBuffer()
 		dynamicWorld.applyGravity();
 		dynamicWorld.applyAdjustments();
 		dynamicWorld.checkPlayersCollideWithTrap();
-		dynamicWorld.manuallyUncollide();
 	}
 	// Send info messages
 	sendInfoMessages();
@@ -486,10 +530,8 @@ void Server::checkConnection()
 		{
 			players[i].timeUntilInactive -= maxServerProcessRate;
 
-			if (players[i].timeUntilInactive <= 0) {
+			if (players[i].timeUntilInactive <= 0)
 				disconnectPlayer(i);
-				//int k = 0;
-			}
 		}
 	}
 }
@@ -539,15 +581,6 @@ void Server::updateResources()
 		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 		currentResourceOwner = -1;
 		resetChanneling();
-	}
-
-	// Check if the game is over or not
-	int gameOverTime;
-	ConfigSettings::getConfig()->getValue("GameDuration", gameOverTime);
-	if (elapsedGameTimeMS >= gameOverTime)
-	{
-		// Broadcast Game Over message
-		sendGameOverUpdate();
 	}
 }
 
@@ -616,12 +649,4 @@ void Server::sendInfoMessages()
 		sendInfoMessage(dynamicWorld.infoMsgQueue[i].destination, dynamicWorld.infoMsgQueue[i].msg);
 
 	dynamicWorld.infoMsgQueue.clear();
-}
-
-void Server::sendGameOverUpdate()
-{
-	struct packet p = {};
-	p.eventId = GAME_OVER_EVENT;
-
-	Server::broadcastMsg((char *)&p, sizeof(p));
 }

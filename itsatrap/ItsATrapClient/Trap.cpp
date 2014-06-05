@@ -5,11 +5,11 @@
 namespace sg {
 
 	Trap::Trap(glm::vec3 currPos) {
-		//m_position = currPos;
-		//m_model = glm::translate(currPos);
-		//this->m_model1->setColor(glm::vec4(0.8f, 0.8f, 0.8f, 0.8f));
-		//// this->updateBoundingBox();
-		//this->m_model1->calculateBoundingBox();
+		m_position = currPos;
+		m_model = glm::translate(currPos);
+		this->setColor(glm::vec4(1,0,0,1));
+		// this->updateBoundingBox();
+		this->m_model1->calculateBoundingBox();
 	}
 
 	Trap::Trap(int ownerId, glm::vec3 currPos, float rotationAngle, string filename) {
@@ -17,10 +17,9 @@ namespace sg {
 		m_position = currPos;
 		m_model = glm::translate(currPos);
 		this->rotationAngle = rotationAngle;
-		
+		this->setColor(glm::vec4(1,0,0,1));
 		// this->updateBoundingBox();
 		this->m_model1 = new ObjModel(filename);
-		this->m_model1->setColor(glm::vec4(0.8f, 0.8f, 0.8f, 0.5f));
 		this->m_model1->calculateBoundingBox();
 	}
 	

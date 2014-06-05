@@ -14,8 +14,7 @@
 #include "Cube.cpp"
 #include "Sphere.cpp"
 #include "Cone.cpp"
-#include "City.h"
-#include "Building.h"
+
 #include "Trap.h"
 #include "ObjNode.h"
 #include "ResourceNode.h"

@@ -35,9 +35,8 @@ private:
 	static bool		jumpEvent, cameraChanged;
 	static cameraObject playerCam;
 	static bool		okChannel;
-	static bool		recall;
-	static int		channelingResourceId;
-	static int		clientSendRate;
+	static int	channelingResourceId;
+	static int  clientSendRate;
 
 	// Functions
 	static int receiveMsg();
@@ -55,23 +54,22 @@ private:
 	static void startChanneling(int resourceId);
 	static void cancelChanneling();
 	static DWORD WINAPI channelingThread(LPVOID);
-	
+	static void reloadConfigFile();
 
 public:
 	// Functions
 	static int initializeClient();
 	static int getPlayerId();
-
-	static void sendStaticObject(AABB objectBB, bool isDecoration, glm::vec4 color);
+	static void sendStaticObject(AABB objectBB);
+	static void sendStaticWallObject(AABB wallBB);
+	static void sendStaticRampObject(AABB rampBB, float slope);
 	static void sendStaticResourceObject(AABB resourceBB, int id);
-
 	static void sendPlayerUpdate(struct playerObject);
 	static void sendSpawnTrapEvent(struct trapObject);
 	static void sendKnifeHitEvent();
 	static void sendChannelAttemptEvent(int resourceId);
 	static void sendChannelCompletedEvent(int resourceId);
 	static void sendReloadConfigFile();
-	static void sendRecallEvent();
 	static void sendMoveEvent(Direction dir);
 	static void sendJumpEvent();
 	static void sendLookEvent(struct cameraObject cam);
