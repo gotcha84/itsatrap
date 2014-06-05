@@ -111,6 +111,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.timeUntilRegen = 0;
 	p.flashDuration = 0;
 	p.hitCrosshair = 0;
+	p.bloodDuration = 0;
 	//p.position.x = 0.0f;
 	//p.position.y = 500.0f;
 
@@ -533,6 +534,9 @@ void DynamicWorld::updateTimings(int timeDiff)
 		if (p.flashDuration > 0)
 			p.flashDuration -= timeDiff;
 
+		if (p.bloodDuration > 0)
+			p.bloodDuration -= timeDiff;
+
 		if (p.hitCrosshair > 0)
 			p.hitCrosshair -= timeDiff;
 	}
@@ -556,6 +560,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		return;
 
 	target->health -= damage;
+	ConfigSettings::getConfig()->getValue("BloodDuration", target->bloodDuration);
 	ConfigSettings::getConfig()->getValue("HealthRegenWaitAfterDamage", target->timeUntilRegen);
 	ConfigSettings::getConfig()->getValue("HitCrosshairDuration", attacker->hitCrosshair);
 

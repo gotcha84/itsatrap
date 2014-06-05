@@ -13,6 +13,9 @@
 
 namespace sg {
 	class Player : public Group {
+		private:
+			float getFadeForFlashOrBlood(int x, int fadeOut);
+
 		public:
 			int m_playerID;
 			MyPlayer *m_player;

@@ -16,7 +16,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration, string msg) {
+void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, string msg) {
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -48,6 +48,7 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hi
 					drawProgressBar(m_progressTime);
 				}
 				drawFlashbag(flashFade);
+				drawBlood(bloodFade);
 			}
 			
 		glPopMatrix();
@@ -173,6 +174,14 @@ void HUD::drawProgressBar(int time) {
 
 void HUD::drawFlashbag(float fade) {
 	glColor4f(1.0f, 1.0f, 1.0f, fade);
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, 0.0f);
+	glScaled(10.0f, 10.0f, 10.0f);
+	glutSolidCube(0.2f);
+}
+
+void HUD::drawBlood(float fade) {
+	glColor4f(1.0f, 0, 0, fade);
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, 0.0f);
 	glScaled(10.0f, 10.0f, 10.0f);
