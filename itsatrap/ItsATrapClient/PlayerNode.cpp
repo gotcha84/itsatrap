@@ -294,7 +294,9 @@ namespace sg {
 			float blood = getFadeForFlashOrBlood(getPlayer()->m_bloodDuration, bloodFadeOut);
 
 			glDisable(GL_LIGHTING);
-			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, blood, getPlayer()->m_hitCrosshairDuration, getPlayer()->m_recallElapsed, m_player->m_infoMsg.getMessage(), 0);
+
+			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, blood, getPlayer()->m_hitCrosshairDuration, getPlayer()->m_recallElapsed, m_player->m_infoMsg.getMessage(), m_elapsedGameTime);
+
 			glEnable(GL_LIGHTING);
 		}
 
