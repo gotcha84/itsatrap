@@ -172,7 +172,6 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			}
 			else if (p->eventId == GAME_OVER_EVENT)
 			{
-				//int temp = client->root->m_elapsedGameTime;
 				client->root->m_gameOver = true;
 			}
 		}

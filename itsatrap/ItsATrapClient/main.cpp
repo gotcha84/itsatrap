@@ -210,6 +210,9 @@ int main(int argc, char *argv[]) {
 			Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(),
 				client->level.resources[i]->getResourceId());
 		}
+
+		client->root->m_elapsedGameTime = 0;
+		client->root->m_gameOver = false;
 	}
 
 	//sg::ObjNode node = sg::ObjNode();

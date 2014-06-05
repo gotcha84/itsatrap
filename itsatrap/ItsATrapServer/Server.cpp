@@ -161,6 +161,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
 			tmp.aabb.print();
 		}
+
+		elapsedGameTimeMS = 0;
 		int MaxBuildings = 0;
 		ConfigSettings::getConfig()->getValue("MaxBuildings", MaxBuildings);
 		if (dynamicWorld.getNumStaticObjects() >= MaxBuildings) {
