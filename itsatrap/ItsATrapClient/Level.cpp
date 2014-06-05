@@ -27,7 +27,7 @@ void Level::initLevel0() {
 	struct dirent *ent;
 
 	int counter = 0;
-	float alpha = 0.9f;
+	float alpha = 1.0f;
 	int resourceCounter = 0;
 
 	sg::MatrixTransform *xForm = new sg::MatrixTransform();

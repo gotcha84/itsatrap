@@ -175,10 +175,12 @@ void handleRemoveTrap(struct trapObject t)
 	printf("[CLIENT]: Removing trap %d\n", t.id);
 	if (client->objects[t.id] != nullptr)
 	{
+		glm::vec3 offset = t.pos - client->root->getPlayer()->getPosition();
+
 		switch (t.type)
 		{
 		case TYPE_FREEZE_TRAP:
-			freezeTrapSound1 = engineTrap->play2D("../Sound/freeze.wav", false, false, true);
+			freezeTrapSound1 = engineTrap->play3D("../Sound/freeze.wav", irrklang::vec3df(-5, 0, 0),  false, false, true);
 			break;
 		case TYPE_TRAMPOLINE_TRAP:
 			tramTrapSound = engineTrap->play2D("../Sound/tram.wav", false, false, true);
@@ -190,7 +192,7 @@ void handleRemoveTrap(struct trapObject t)
 			pushTrapSound = engineTrap->play2D("../Sound/push.wav", false, false, true);
 			break;
 		case TYPE_LIGHTNING_TRAP:
-			lightningTrapSound = engineTrap->play2D("../Sound/lightning.wav", false, false, true);
+			lightningTrapSound = engineTrap->play3D("../Sound/lightning.wav", irrklang::vec3df(offset.x, offset.y, offset.z), false, false, true);
 			break;
 		case TYPE_PORTAL_TRAP:
 			portalTrapSound = engineTrap->play2D("../Sound/portal.wav", false, false, true);

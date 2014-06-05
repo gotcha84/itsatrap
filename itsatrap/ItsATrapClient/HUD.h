@@ -25,7 +25,7 @@ class HUD {
 		ISoundEngine *ouchSound;
 		ISoundEngine *deathSound;
 
-		void draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration, string msg);
+		void draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration, string msg, int gameTime);
 		
 		void drawCrossHair(); 
 		void drawHealthBar(int health);
@@ -35,6 +35,7 @@ class HUD {
 		void drawProgressBar(int time);
 		void drawFlashbag(float fade); // between 0 and 1
 		void drawKillSymbol(bool hit);
+		void drawClock(int time);
 		// GLuint loadAndBufferImage( const char *filename);
 };
 

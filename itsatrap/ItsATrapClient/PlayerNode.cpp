@@ -281,7 +281,7 @@ namespace sg {
 				flash = 0;
 
 			glDisable(GL_LIGHTING);
-			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, getPlayer()->m_hitCrosshairDuration, m_player->m_infoMsg.getMessage());
+			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, getPlayer()->m_hitCrosshairDuration, m_player->m_infoMsg.getMessage(), 100);
 			glEnable(GL_LIGHTING);
 		}
 
