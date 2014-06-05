@@ -14,7 +14,6 @@ GameOver::~GameOver() {
 }
 
 void GameOver::draw() {
-
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
@@ -96,7 +95,7 @@ void GameOver::displayCredits() {
 	glRasterPos2f(-0.5f, -0.4f);
 	font->Render("Kevin Ngo");
 	glRasterPos2f(-0.5f, -0.6f);
-	font->Render("Mike Boulricea");
+	font->Render("Mike Boulrice");
 	glRasterPos2f(0.3f, 0.0f);
 	font->Render("Andre So");
 	glRasterPos2f(0.3f, -0.2f);

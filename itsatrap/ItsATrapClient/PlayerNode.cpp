@@ -62,11 +62,17 @@ namespace sg {
 		timer = new Stopwatch();
 		checkMouse = false;
 
+		m_elapsedGameTime = 0;
+		m_gameOver = false;
+
 		initModels();
 	}
 
 	Player::Player(MyPlayer *p) {
 		m_player = p;
+
+		m_elapsedGameTime = 0;
+		m_gameOver = false;
 	}
 
 	Player::~Player() {
@@ -216,7 +222,7 @@ namespace sg {
 			}
 			gameOver->setTeamScore(teamOneScore, teamTwoScore);
 			glDisable(GL_LIGHTING);
-			gameOver->draw();
+			gameOver->draw();		// TODO: Get Screen to actually show?
 			glEnable(GL_LIGHTING);
 		}else{
 
