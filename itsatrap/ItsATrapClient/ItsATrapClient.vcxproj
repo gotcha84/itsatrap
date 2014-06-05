@@ -87,7 +87,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="City.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientInstance.cpp" />
     <ClCompile Include="Cone.cpp" />
@@ -120,7 +119,6 @@
     <ClCompile Include="TrapMenu.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
-    <ClCompile Include="Building.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameOver.h" />
@@ -139,7 +137,6 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="City.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientInstance.h" />
     <ClInclude Include="enrico.h" />
@@ -155,7 +152,6 @@
     <ClInclude Include="TrapMenu.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />
-    <ClInclude Include="Building.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\phong.frag" />

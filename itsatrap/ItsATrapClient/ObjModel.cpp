@@ -3,7 +3,6 @@
 ObjModel::ObjModel() {
 	this->initCommon();
 
-	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
@@ -11,7 +10,6 @@ ObjModel::ObjModel(int id) {
 	this->initCommon();
 	m_id = id;
 
-	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
@@ -20,7 +18,6 @@ ObjModel::ObjModel(string objFilename) {
 
 	this->loadModel(objFilename);
 
-	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
@@ -29,7 +26,6 @@ ObjModel::ObjModel(string objFilename, string mtlFilename) {
 
 	this->loadModel(objFilename, mtlFilename);
 	
-	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
@@ -39,7 +35,6 @@ ObjModel::ObjModel(string objFilename, glm::vec3 currPos) {
 	m_position = currPos;
 	this->loadModel(objFilename);
 
-	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
@@ -49,7 +44,6 @@ ObjModel::ObjModel(string objFilename, string mtlFilename, glm::vec3 currPos) {
 	m_position = currPos;
 	this->loadModel(objFilename, mtlFilename);
 
-	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
@@ -59,7 +53,6 @@ ObjModel::ObjModel(int id, string objFilename) {
 	m_id = id;
 	this->loadModel(objFilename);
 
-	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
@@ -69,13 +62,11 @@ ObjModel::ObjModel(int id, string objFilename, string mtlFilename) {
 	m_id = id;
 	this->loadModel(objFilename, mtlFilename);
 
-	//m_physics = Physics();
 	this->setColor(glm::vec4(1,0,0,1));
 }
 
 ObjModel::~ObjModel() {
-	delete m_texture;
-	m_texture = nullptr;
+
 }
 
 void ObjModel::initCommon() {
@@ -83,8 +74,6 @@ void ObjModel::initCommon() {
 	m_cityScale = 0.1f;
 	m_canScale = 5.0f;
 	m_defaultScale = 1.0f;
-
-	m_texture = new Texture();
 }
 
 void ObjModel::setVertices(vector<float> arr) {
@@ -111,7 +100,6 @@ void ObjModel::setNVertices(int ele) {
 	
 void ObjModel::setNIndices(int ele) {
 	m_nIndices.push_back(ele);
-	//cout << glm::to_string(this->getMatrix()) << endl;
 }
 
 void ObjModel::draw(glm::mat4 parent, glm::mat4 cam) {
@@ -135,13 +123,6 @@ void ObjModel::drawModel() {
 		glFrontFace(GL_CW);
 	}
 
-	if (getName() == "penis") {
-		int kkk = 0;
-	}
-	else if (getName() == "not a penis") {
-		int lll = 0;
-	}
-
 	int p = 0;
 	int k = 0;
 	int l = 0;
@@ -149,17 +130,17 @@ void ObjModel::drawModel() {
 	int max_ele = FLT_MAX;
 
 	// bind texture
-	if (m_textureID != 0) {
+	if (m_texID != 0) {
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, m_textureID);
+		glBindTexture(GL_TEXTURE_2D, m_texID);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 
 	glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-
 	for (int k = 0; k < m_nIndices.size(); k++) {
+		t = 0;
 		int temp = m_materials.size();
 
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_materials[k].m_ambient);
@@ -167,12 +148,11 @@ void ObjModel::drawModel() {
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m_materials[k].m_specular);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, m_materials[k].m_emission);
 		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, m_materials[k].m_shininess);
-		
-		t = 0;
+
 		for (int i = 0; i < m_nIndices[k] / 3; i++) {
 			glBegin(GL_TRIANGLES);
 			for (int j = 0; j < 3; j++) {
-				glNormal3f(m_normals[k][3 * m_indices[k][3 * i + j]], m_normals[k][3 * m_indices[k][3 * i + j] + 1], m_normals[k][3 * m_indices[k][3 * i + j] + 2]);
+				//glNormal3f(m_normals[k][3 * m_indices[k][3 * i + j]], m_normals[k][3 * m_indices[k][3 * i + j] + 1], m_normals[k][3 * m_indices[k][3 * i + j] + 2]);
 				glTexCoord2f(m_texcoords[k][2 * m_indices[k][t]], m_texcoords[k][2 * m_indices[k][t] + 1]);
 				glVertex3f(m_vertices[k][3 * m_indices[k][3 * i + j]], m_vertices[k][3 * m_indices[k][3 * i + j] + 1], m_vertices[k][3 * m_indices[k][3 * i + j] + 2]);
 				t++;
@@ -181,8 +161,12 @@ void ObjModel::drawModel() {
 		}
 	}
 
+	if (this->getName() == "penis") {
+		int kkk = 0;
+	}
+
 	// unbind texture
-	if (m_textureID != 0) {
+	if (m_texID != 0) {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_TEXTURE_2D);
 	}
@@ -270,7 +254,6 @@ void ObjModel::loadModel() {
 		setTexcoords(shapes[j].mesh.texcoords);
 		setIndices(tmpArr2);
 
-		//cout << "sizes: " << shapes[j].mesh.indices.size() << endl;
 		added++;
 
 		// Add materials for given model part in same order
@@ -282,31 +265,13 @@ void ObjModel::loadModel() {
 
 		addMaterial(temp->m_ambient, temp->m_diffuse, temp->m_specular, temp->m_emission, temp->m_shininess);
 	}
-	//cout << "please: "<< m_vertices[1][379] << ", " << m_vertices[1][381] << endl;
-	//Utilities::writeIntArrayToFile(m_nVertices, added, "nverts.txt");
 
 	//updateHeightMap();
-
 	calculateBoundingBox();
-	//m_boundingBox.print();
-
-	// TODO: send new bounding box to server and see if can make trap at that location
 }
 
-void ObjModel::loadTexture(string filename) {
-	cout << "[ObjModel] loading texture : " << filename << endl;
-	//setMaterial(shapes[0].material.ambient, 
-	//	shapes[0].material.diffuse, 
-	//	shapes[0].material.specular, 
-	//	shapes[0].material.emission, 
-	//	shapes[0].material.shininess);
-	//m_boundingBox.print();
-
-	m_textureID = m_texture->loadTexture(filename.c_str());
-
-	if (m_textureID == 0) {
-		cout << "[ObjModel] \tFAILED loading texture : " << filename << endl;
-	}
+void ObjModel::setTexture(GLuint tex) {
+	m_texID = tex;
 }
 
 void ObjModel::calculateBoundingBox() {

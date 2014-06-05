@@ -11,8 +11,6 @@
 #include "../Common/AABB.h"
 #include "Material.h"
 #include "MatrixTransform.h"
-#include "Texture.h"
-#include "Shader.h"
 
 namespace sg {
 
@@ -20,22 +18,12 @@ namespace sg {
 		public:
 			AABB m_boundingBox;
 			vector<Material> m_materials;
-			//Material m_material;
 
 			glm::vec3 m_position;
 			glm::mat4 m_model;
 			glm::vec4 m_color;
 
 			bool m_drawBB;
-			//// textures
-			//Texture *texture;
-			//GLuint texturePPM;
-			//char* m_textureFilename;
-
-			//// shaders
-			//Shader *shader;
-			//GLuint light;
-
 
 			void setPosition(glm::vec3);
 			glm::vec3 getPosition();
@@ -65,7 +53,6 @@ namespace sg {
 			virtual void calculateBoundingBox(glm::mat4 model);
 			
 			virtual bool isInside(glm::vec3 point);
-			// virtual bool collidesWith(Geode b);
 			virtual void setMaterial();
 
 			bool shouldDraw();

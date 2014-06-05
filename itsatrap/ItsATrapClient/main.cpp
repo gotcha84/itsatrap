@@ -12,6 +12,7 @@
 #include "ConfigSettings.h"
 
 // graphics
+#include "Texture.h"
 #include "ClientInstance.h"
 #include "Window.h"
 #include "SceneGraph.h"
@@ -24,6 +25,7 @@
 //sound
 #include "Sound.h"
 
+Texture *textures;
 ClientInstance *client;
 Window *window;
 Sound *sound;
@@ -92,8 +94,18 @@ int main(int argc, char *argv[]) {
 	GLfloat ambientLight[] = {0.7f, 0.7f, 0.7f, 1.0f};
 	GLfloat diffuseLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
 
+	// init glut
+	glutInit(&argc, argv);                      // initialize GLUT
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
+	glutInitWindowSize(window->m_width, window->m_height);      // set initial window size
+	glutCreateWindow("It's a Trap!");           // open window and set window title
+	if (FULLSCREEN)	 {
+		glutFullScreen();
+	}
+
 	// Initialize networking for client
 	Client::initializeClient();
+	textures = new Texture();
 	client = new ClientInstance(Client::getPlayerId());
 	window = new Window();
 	glm::vec3 starting = client->root->getPosition();
@@ -119,14 +131,6 @@ int main(int argc, char *argv[]) {
 	client->root->moveTo(starting);
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	sendAABBInfo();
-
-	glutInit(&argc, argv);                      // initialize GLUT
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
-	glutInitWindowSize(window->m_width, window->m_height);      // set initial window size
-	glutCreateWindow("It's a Trap!");           // open window and set window title
-	if (FULLSCREEN)	 {
-		glutFullScreen();
-	}
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
 	glClearDepth(1.0f);							// Depth Buffer Setup
@@ -215,15 +219,13 @@ int main(int argc, char *argv[]) {
 		client->root->m_gameOver = false;
 	}
 
-	//sg::ObjNode node = sg::ObjNode();
-	//node.m_model->loadModel("../Models/Avatar.obj", "../Models/");
-	////node.m_model->loadTexture("../Textures/Avatar_Diffuse.ppm");
-	//node.m_model->loadTexture("../Models/Polynoid_Updated/animus.ppm");
-	//node.m_model->setColor(glm::vec4(1, 1, 1, 1));
-	//node.m_model->setName("penis");
-	//sg::MatrixTransform nodeXForm = sg::MatrixTransform();
-	//nodeXForm.addChild(&node);
-	//client->root->addChild(&nodeXForm);
+	sg::ObjNode node = sg::ObjNode();
+	node.m_model->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");
+	node.m_model->setTexture(textures->m_texID[Textures::Polynoid]);
+	node.m_model->setColor(glm::vec4(1, 1, 1, 1));
+	sg::MatrixTransform nodeXForm = sg::MatrixTransform();
+	nodeXForm.addChild(&node);
+	client->root->addChild(&nodeXForm);
 
 	// skybox
 	sg::MatrixTransform sbXForm = sg::MatrixTransform();
@@ -236,8 +238,9 @@ int main(int argc, char *argv[]) {
 
 	sg::Skybox skybox = sg::Skybox();
 	skybox.loadModel("../Models/Skybox/skybox.obj", "../Models/Skybox/");
-	skybox.loadTexture("../Textures/skybox.ppm");
+	skybox.getModel()->setTexture(textures->m_texID[Textures::Skybox]);
 	skybox.getModel()->setColor(glm::vec4(1, 1, 1, 1));
+	skybox.getModel()->disableDrawBB();
 	sbXForm.addChild(&skybox);
 
 	//client->printPlayers();
