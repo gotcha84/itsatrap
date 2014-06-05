@@ -82,7 +82,7 @@ void Scoreboard::Entry::setDeath(int num) {
 }
 
 
-void Scoreboard::draw() {
+void Scoreboard::draw(int targetPlayer) {
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -132,7 +132,7 @@ void Scoreboard::draw() {
 					string numDeath = deaths.str();
 					
 
-					string name = "Player" + playerID + "          " + "          " + "Kill: " + numKill + "          " + "Death: " + numDeath;
+					string name = "Player" + playerID + "                       " + "Kill: " + numKill + "                       " + "Death: " + numDeath;
 					int temp = e.name;
 					
 					/*
@@ -143,18 +143,34 @@ void Scoreboard::draw() {
 					if (e.name == 0) { 
 						glRasterPos2f(-0.6f, 0.5f);
 						font->Render(name.c_str());
+						if (e.name == targetPlayer) {
+							glRasterPos2f(-0.8f, 0.5f);
+							font->Render(">");
+						}
 					}
 					if (e.name == 1) {
 						glRasterPos2f(-0.6f, -0.4f);
 						font->Render(name.c_str());
+						if (e.name == targetPlayer) {
+							glRasterPos2f(-0.8f, 0.5f);
+							font->Render(">");
+						}
 					}
 					if (e.name == 2) {
 						glRasterPos2f(-0.6f, 0.2f);
 						font->Render(name.c_str());
+						if (e.name == targetPlayer) {
+							glRasterPos2f(-0.8f, 0.5f);
+							font->Render(">");
+						}
 					}
 					if (e.name == 3) {
 						glRasterPos2f(-0.6f, -0.7f);
 						font->Render(name.c_str());
+						if (e.name == targetPlayer) {
+							glRasterPos2f(-0.8f, 0.5f);
+							font->Render(">");
+						}
 					}
 
 				}

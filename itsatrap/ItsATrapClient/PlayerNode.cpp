@@ -238,8 +238,10 @@ namespace sg {
 					//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
 					//cout << client->tabPressed << endl;
 				}
+				//TODO:
+				//client->root->getPlayerID;
 				glDisable(GL_LIGHTING);
-				board->draw();
+				board->draw(client->root->getPlayerID());
 				glEnable(GL_LIGHTING);
 			}
 			

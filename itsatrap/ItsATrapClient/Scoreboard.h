@@ -38,7 +38,7 @@ public:
 	Entries getEntries();
 	void prune(int max_amt);
 	int  size() const;
-	void draw();
+	void draw(int id);
 	void drawCube(float x, float y, float z);
 
 private:
