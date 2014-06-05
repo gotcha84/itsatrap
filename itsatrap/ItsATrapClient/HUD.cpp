@@ -219,7 +219,9 @@ void HUD::drawClock(int time) {
 	int minutes = 0;
 	int seconds = 0;
 	int duration = 0;
+	int redTime = 0;
 	ConfigSettings::getConfig()->getValue("GameDuration", duration);
+	ConfigSettings::getConfig()->getValue("TimeBeforeRed", redTime);
 	
 	remainTime = duration - time;
 	
@@ -246,7 +248,7 @@ void HUD::drawClock(int time) {
 	glPushMatrix();
 		glLoadIdentity();
 
-		if (remainTime > 5000) {
+		if (remainTime > redTime) {
 			glColor4f(0.0f, 20.0f, 0.0f, 1.0f);
 		} else {
 			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
