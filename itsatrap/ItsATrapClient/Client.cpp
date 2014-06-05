@@ -170,6 +170,11 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				struct infoMsgPacket *info = (struct infoMsgPacket *)p;
 				client->root->getPlayer()->m_infoMsg.setMessage(info->msg);
 			}
+			else if (p->eventId == GAME_OVER_EVENT)
+			{
+				//int temp = client->root->m_elapsedGameTime;
+				client->root->m_gameOver = true;
+			}
 		}
 	}
 }

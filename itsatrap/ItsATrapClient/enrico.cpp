@@ -41,7 +41,6 @@ void handlePlayerUpdate(struct playerObject p)
 		handleNewPlayer(p);
 	}
 	else {
-
 		// HEALTH
 		if (client->players[p.id]->m_player->m_health != p.health) {
 			cout << "[CLIENT]: HIT! Player " << p.id << "'s health is now " << p.health << endl;
@@ -50,6 +49,7 @@ void handlePlayerUpdate(struct playerObject p)
 		client->players[p.id]->m_player->m_deathState = p.deathState;
 		client->players[p.id]->m_player->m_numDeaths = p.numDeaths;
 		client->players[p.id]->m_player->m_numKills = p.numKills;
+		client->players[p.id]->m_elapsedGameTime = p.timeGameElapsed;
 
 		// BUFFS
 		client->players[p.id]->m_player->m_stunDuration = p.stunDuration;

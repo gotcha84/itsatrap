@@ -193,10 +193,10 @@ int main(int argc, char *argv[]) {
 		for (int i = 0; i < client->level.levelNodes.size(); ++i) {
 			//if (i % 100 == 0) { Sleep(250); }
 			Client::sendStaticObject(client->level.levelNodes[i].first->getBoundingBox(), client->level.levelNodes[i].second);
-			if (i >= 200) {
-				cout << "I: " << i << ", ";
-				client->level.levelNodes[i].first->getBoundingBox().print();
-			}
+			//if (i >= 200) {
+			//	cout << "I: " << i << ", ";
+			//	client->level.levelNodes[i].first->getBoundingBox().print();
+			//}
 			Sleep(25);
 		}
 

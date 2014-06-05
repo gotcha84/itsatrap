@@ -127,7 +127,7 @@ struct cameraObject {
 struct playerObject {
     int				id, health, numKills, numDeaths;
 	int				stunDuration, slowDuration, flashDuration, hitCrosshair;
-	int				timeUntilRespawn, timeUntilRegen;
+	int				timeUntilRespawn, timeUntilRegen, timeGameElapsed;
 	int				knifeDelay;
 	int				resources;
 	int				onTopOfBuildingId;

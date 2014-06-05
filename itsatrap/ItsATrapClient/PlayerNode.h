@@ -23,6 +23,8 @@ namespace sg {
 			TrapMenu *trapMenu;
 			GameOver *gameOver;
 			Stopwatch *timer;
+			int m_elapsedGameTime;
+			bool m_gameOver;
 
 			glm::vec4 m_color;
 			glm::vec3 m_translate;

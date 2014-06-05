@@ -501,6 +501,9 @@ void DynamicWorld::updateTimings(int timeDiff)
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		struct playerObject &p = it->second;
+
+		p.timeGameElapsed += timeDiff;
+
 		if (p.stunDuration > 0)
 			p.stunDuration -= timeDiff;
 
@@ -759,11 +762,7 @@ void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 	default:
 		break;
 	}
-
-
 }
-
-
 
 void DynamicWorld::applyMoveEvents() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
@@ -993,7 +992,6 @@ void DynamicWorld::resetWorldInfo() {
 			//p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 			break;
 		}
-
 	}
 }
 
@@ -1039,7 +1037,6 @@ void DynamicWorld::applyTrapGravity() {
 		}
 	}
 }
-
 
 // TODO: check for feet?
 void DynamicWorld::applyGravity()
@@ -1173,8 +1170,8 @@ void DynamicWorld::applyAdjustments() {
 		return;
 		}*/
 
-		/*cout << "player pos: ";
-		p.aabb.print();*/
+		cout << "player pos: ";
+		p.aabb.print();
 
 		// hardcoding cuz idk why this aint working
 		//if (p.currPhysState == PhysicsStates::HoldingEdge) {
@@ -1208,8 +1205,6 @@ void DynamicWorld::applyAdjustments() {
 		if (p.currPhysState != PhysicsStates::WallRunning) {
 			p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		}
-
-
 	}
 }
 
