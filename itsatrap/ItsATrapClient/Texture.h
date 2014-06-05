@@ -15,6 +15,7 @@
 
 using namespace std;
 
+// Add texture names here
 enum Textures {
 	Skybox,
 	Polynoid,

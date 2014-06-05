@@ -20,6 +20,7 @@ Texture::~Texture() {
 	m_texID = nullptr;
 }
 
+// After adding enum, add texture file here
 void Texture::initTextures() {
 	loadTexture(m_texID[Textures::Skybox], "../Textures/skybox.ppm");
 	loadTexture(m_texID[Textures::Polynoid], "../Textures/Red_Polynoid.ppm");

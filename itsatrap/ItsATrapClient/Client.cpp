@@ -330,13 +330,11 @@ void Client::sendRecallEvent()
 void Client::sendMoveEvent(Direction dir)
 {
 	moveEvents[dir] = true;
-	// TODO: Would cancel channeling if currently channeling
 }
 
 void Client::sendJumpEvent()
 {
 	jumpEvent = true;
-	// TODO: Would cancel channeling if currently channeling
 }
 
 void Client::sendLookEvent(struct cameraObject cam)
