@@ -255,8 +255,9 @@ void Server::broadcastDynamicWorld()
 void Server::processBuffer()
 {
 	checkConnection();
-	dynamicWorld.updateTimings(maxServerProcessRate);
 	elapsedGameTimeMS += maxServerProcessRate;
+	dynamicWorld.updateTimings(maxServerProcessRate, elapsedGameTimeMS);		
+	checkGameOver();
 	updateResources();
 
 	dynamicWorld.resetWorldInfo();
@@ -540,15 +541,6 @@ void Server::updateResources()
 		currentResourceOwner = -1;
 		resetChanneling();
 	}
-
-	// Check if the game is over or not
-	int gameOverTime;
-	ConfigSettings::getConfig()->getValue("GameDuration", gameOverTime);
-	if (elapsedGameTimeMS >= gameOverTime)
-	{
-		// Broadcast Game Over message
-		sendGameOverUpdate();
-	}
 }
 
 // Sends messages to clients about new location of resource node
@@ -624,4 +616,16 @@ void Server::sendGameOverUpdate()
 	p.eventId = GAME_OVER_EVENT;
 
 	Server::broadcastMsg((char *)&p, sizeof(p));
+}
+
+void Server::checkGameOver()
+{
+	// Check if the game is over or not
+	int gameOverTime;
+	ConfigSettings::getConfig()->getValue("GameDuration", gameOverTime);
+	if (elapsedGameTimeMS >= gameOverTime)
+	{
+		// Broadcast Game Over message
+		sendGameOverUpdate();
+	}
 }

@@ -124,7 +124,6 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 
 void DynamicWorld::updatePlayer(struct playerObject p)
 {
-
 	if (playerLock[p.id] == true)
 		return;
 
@@ -373,13 +372,13 @@ void DynamicWorld::addTrap(struct trapObject t)
 
 	case TYPE_PORTAL_TRAP:
 	{
-							 ConfigSettings::getConfig()->getValue("CostPortalTrap", cost);
-							 break;
+		 ConfigSettings::getConfig()->getValue("CostPortalTrap", cost);
+		 break;
 	}
 	case TYPE_FLASH_TRAP:
 	{
-							ConfigSettings::getConfig()->getValue("CostFlashTrap", cost);
-							break;
+		ConfigSettings::getConfig()->getValue("CostFlashTrap", cost);
+		break;
 	}
 	default:
 		cost = 10;
@@ -501,13 +500,13 @@ int DynamicWorld::checkTopCollisionsWithAllBuildings(glm::vec3 from, glm::vec3 g
 	return -1;
 }
 
-void DynamicWorld::updateTimings(int timeDiff)
+void DynamicWorld::updateTimings(int timeDiff, int timeElapsed)
 {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		struct playerObject &p = it->second;
 
-		p.timeGameElapsed += timeDiff;
+		p.timeGameElapsed = timeElapsed;
 
 		if (p.stunDuration > 0)
 			p.stunDuration -= timeDiff;
@@ -870,7 +869,6 @@ void DynamicWorld::noneMoveEvent(int playerId)
 	}
 
 	p->velocityDiff = toAdd;
-
 }
 
 void DynamicWorld::climbingMoveEvent(int playerId) {
@@ -979,7 +977,6 @@ void DynamicWorld::wallRunningMoveEvent(int playerId) {
 	//cout << "why handling wallrunningmoveevent" << endl;
 	return;
 }
-
 
 void DynamicWorld::resetWorldInfo() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
@@ -1406,13 +1403,6 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 	}
 
 }
-/*
-void DynamicWorld::manuallyUncollide()
-{
-
-}
-*/
-
 
 void DynamicWorld::manuallyUncollide() {
 	float playerHeight = 0;
@@ -1463,7 +1453,6 @@ void DynamicWorld::manuallyUncollide() {
 		}
 	}
 }
-
 
 void DynamicWorld::processJumpEvent(int playerId)
 {

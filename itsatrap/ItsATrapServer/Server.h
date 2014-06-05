@@ -86,6 +86,7 @@ private:
 	static void sendInfoMessage(int destination, string msg);
 
 	static void sendGameOverUpdate();
+	static void checkGameOver();
 
 public:
 

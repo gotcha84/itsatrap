@@ -184,8 +184,6 @@ void HUD::drawProgressBar(int time) {
 			glScalef(1.5f, 1.5f, 1.0f);
 			glutSolidCube(0.05f);
 		}
-
-
 	}
 }
 
@@ -216,22 +214,47 @@ void HUD::drawKillSymbol(bool hit) {
 }
 
 void HUD::drawClock(int time) {
+	string result;
+	int remainTime = 0;
+	int minutes = 0;
+	int seconds = 0;
 	int duration = 0;
-	time = time / 1000;
 	ConfigSettings::getConfig()->getValue("GameDuration", duration);
-	duration = duration / 1000;
+	
+	remainTime = duration - time;
+	
+	minutes = (remainTime / 1000) / 60;
+	seconds = (remainTime / 1000) % 60;
+
+	if (minutes != 0) {
+		result = to_string(minutes)  + ":";
+	} else {
+		result = "0:";
+	}
+
+	if (seconds < 10) {
+		if (seconds == 0) {
+			result += "00";
+		} else {
+			result += "0" + to_string(seconds);
+		}
+	} else {
+		result += to_string(seconds);
+	}
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-	glLoadIdentity();
+		glLoadIdentity();
 
-	if (duration - time <= 5) {
-		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-		font->FaceSize(75);
-		font->CharMap(ft_encoding_symbol);
-		glRasterPos2f(0.0f, 0.8f);
-		font->Render(to_string(duration-time).c_str());
-	}
-		
+		if (remainTime > 5000) {
+			glColor4f(0.0f, 20.0f, 0.0f, 1.0f);
+		} else {
+			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+		}
+			font->FaceSize(75);
+			font->CharMap(ft_encoding_symbol);
+			glRasterPos2f(-0.1f, 0.8f);
+			font->Render(result.c_str());
+			
 	glPopMatrix();
 }
