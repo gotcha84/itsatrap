@@ -71,7 +71,7 @@ void Level::initLevel0() {
 						resources.back()->setParticleSystemOrigin(glm::vec3(x, y, z + 25.0f));
 
 						++resourceCounter;
-					} else if (part == "BRail" || part == "ERail" || part == "Rail" || part == "Caltrop") {
+					} else if (part == "BRail" || part == "ERail" || part == "Rail" || part == "Caltrop" || part == "Float") {
 						levelNodes.push_back({ new sg::ObjNode(OBELISK2 + fileName, OBELISK2), true });
 						levelNodes.back().first->setName("ObjNode: " + fileName);
 
