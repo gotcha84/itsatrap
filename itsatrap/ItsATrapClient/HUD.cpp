@@ -194,15 +194,22 @@ void HUD::drawKillSymbol(bool hit) {
 }
 
 void HUD::drawClock(int time) {
+	int duration = 0;
+	time = time / 1000;
+	ConfigSettings::getConfig()->getValue("GameDuration", duration);
+	duration = duration / 1000;
+
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
 
-	glColor4f(0, 20, 0, 1); // green
-	font->FaceSize(75);
-	font->CharMap(ft_encoding_symbol);
-	glRasterPos2f(0.65f, 0.8f);
-	font->Render(to_string(time).c_str());
-
+	if (duration - time <= 5) {
+		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+		font->FaceSize(75);
+		font->CharMap(ft_encoding_symbol);
+		glRasterPos2f(0.0f, 0.8f);
+		font->Render(to_string(duration-time).c_str());
+	}
+		
 	glPopMatrix();
 }
