@@ -169,6 +169,7 @@ struct trapObject {
 struct staticObject {
 	AABB			aabb;
 	bool			isDecoration;
+	glm::vec4		color;
 };
 
 struct staticRampObject {

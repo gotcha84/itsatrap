@@ -59,7 +59,7 @@ public:
 	static int initializeClient();
 	static int getPlayerId();
 
-	static void sendStaticObject(AABB objectBB, bool isDecoration);
+	static void sendStaticObject(AABB objectBB, bool isDecoration, glm::vec4 color);
 	static void sendStaticResourceObject(AABB resourceBB, int id);
 
 	static void sendPlayerUpdate(struct playerObject);

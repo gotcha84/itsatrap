@@ -79,7 +79,7 @@ void Level::initLevel0() {
 							++counter;
 						}
 
-						levelNodes.back().first->getModel()->setColor(glm::vec4(0.1f*(float)(counter / 100), 0.1f*(float)((counter % 100) / 10), 0.5f + 0.05*(float)(counter % 10), alpha));
+						levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
 						xForm->addChild(levelNodes.back().first);
 					} else if (part != "Ramp" && part != "UD") {
 						//levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
@@ -92,7 +92,7 @@ void Level::initLevel0() {
 						}
 
 						//string color = Utilities::intToBaseThree(counter % 27);
-						levelNodes.back().first->getModel()->setColor(glm::vec4(0.1f*(float)(counter/100), 0.1f*(float)((counter%100)/10), 0.5f+0.05*(float)(counter%10), alpha));
+						levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
 						//levelNodes.back()->loadTexture("../Models/Polynoid_Updated/animus.ppm");
 						xForm->addChild(levelNodes.back().first);
 					} 
@@ -108,7 +108,7 @@ void Level::initLevel0() {
 	cout << "size: " << levelNodes.size() << endl;
 	for (int i = 0; i < levelNodes.size(); ++i) {
 		levelNodes[i].first->calculateBoundingBox();
-
+		//World::updateStructuresMap(levelNodes[i].first->getBoundingBox(), i);
 		// ANDRE
 		/*if (levelNodes[i]->m_boundingBox.minX < 200 && levelNodes[i]->m_boundingBox.maxX > 200 &&
 			levelNodes[i]->m_boundingBox.minZ < -300 && levelNodes[i]->m_boundingBox.maxZ > -300) {
