@@ -157,20 +157,6 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			//int id = dynamicWorld.getNumStaticObjects() - 1;
 			//World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
 
-			//if (dynamicWorld.getNumStaticObjects() >= 31) {
-			//	vector<AABB> buildings;
-			//	vector<AABB> ramps;
-			//	
-			//	for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
-			//		buildings.push_back(dynamicWorld.getStaticObjectBB(i));
-			//	}
-
-			//	for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
-			//		ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
-			//	}
-
-			//	World::superHeightMapInit(buildings, ramps);
-			//}
 			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
 			tmp.aabb.print();
 		}
@@ -181,46 +167,6 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			physicsReady = true;
 		}
 	}
-	else if (p->eventId == STATIC_WALL_OBJECT_CREATION_EVENT)
-	{
-		struct staticObjectPacket *staticObjPkt = (struct staticObjectPacket *)p;
-		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
-		{
-			struct staticObject tmp;
-			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticObject));
-			dynamicWorld.addStaticWallObject(tmp);
-			/*printf("[SERVER]: Added a static wall object. Now have %d static wall objects\n", dynamicWorld.getNumStaticWallObjects());
-			tmp.aabb.print();*/
-		}
-	}
-	else if (p->eventId == STATIC_RAMP_OBJECT_CREATION_EVENT)
-	{
-		struct staticRampObjectPacket *staticObjPkt = (struct staticRampObjectPacket *)p;
-		if (staticObjPkt->playerId == 0) // only first player is authorized to create static objects
-		{
-			struct staticRampObject tmp;
-			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticRampObject));
-			dynamicWorld.addStaticRampObject(tmp);
-			/*printf("[SERVER]: Added a static ramp object. Now have %d static ramp objects\n", dynamicWorld.getNumStaticRampObjects());
-			tmp.aabb.print();
-			printf("Slope: %f\n", tmp.slope);*/
-
-			//if (dynamicWorld.getNumStaticRampObjects() >= 7) {
-			//	vector<AABB> buildings;
-			//	vector<AABB> ramps;
-			//	
-			//	for (int i = 0; i < dynamicWorld.getNumStaticObjects(); ++i) {
-			//		buildings.push_back(dynamicWorld.getStaticObjectBB(i));
-			//	}
-
-			//	for (int i = 0; i < dynamicWorld.getNumStaticRampObjects(); ++i) {
-			//		ramps.push_back(dynamicWorld.getStaticRampObjectBB(i));
-			//	}
-
-			//	World::superHeightMapInit(buildings, ramps);
-			//}
-		}
-	}
 	else if (p->eventId == STATIC_RESOURCE_OBJECT_CREATION_EVENT)
 	{
 		struct staticResourceObjectPacket *staticObjPkt = (struct staticResourceObjectPacket *)p;
@@ -229,9 +175,9 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticResourceObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
 			dynamicWorld.addStaticResourceObject(tmp);
-			/*printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
+			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
 			tmp.aabb.print();
-			printf("ResourceId: %d\n", tmp.id);*/
+			printf("ResourceId: %d\n", tmp.id);
 
 			resourceNodeLocations.push_back(tmp.id);
 			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
@@ -532,9 +478,10 @@ void Server::checkConnection()
 		{
 			players[i].timeUntilInactive -= maxServerProcessRate;
 
-			if (players[i].timeUntilInactive <= 0)
+			if (players[i].timeUntilInactive <= 0) {
 				disconnectPlayer(i);
 				//int k = 0;
+			}
 		}
 	}
 }

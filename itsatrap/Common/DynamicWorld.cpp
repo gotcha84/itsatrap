@@ -18,8 +18,12 @@ DynamicWorld::DynamicWorld()
 		cleanStateInfo(i);
 	}
 
-	team1RespawnPoints.push_back(glm::vec3(200, 200, -300));
-	team2RespawnPoints.push_back(glm::vec3(200, 200, -300));
+	team1CurrRP = 0;
+	team2CurrRP = 0;
+	team1RespawnPoints.push_back(glm::vec3(-200, 500, -150));
+	team1RespawnPoints.push_back(glm::vec3(200, 500, 150));
+	team2RespawnPoints.push_back(glm::vec3(-200, 500, -150));
+	team2RespawnPoints.push_back(glm::vec3(200, 500, 150));
 
 	portalMap.clear();
 	playerMap.clear();
@@ -296,6 +300,10 @@ void DynamicWorld::addStaticObject(struct staticObject obj)
 	obj.aabb.maxX = (float)floor(obj.aabb.maxX + rounder);
 	obj.aabb.maxY = (float)floor(obj.aabb.maxY + rounder);
 	obj.aabb.maxZ = (float)floor(obj.aabb.maxZ + rounder);
+	
+	if ( staticObjects.size() == 271) {
+		obj.aabb.maxY -= 4.0f;
+	}
 
 	//if (abs(obj.aabb.minY) < threshold) {
 	//	obj.aabb.minY = 0.0f;
@@ -304,16 +312,6 @@ void DynamicWorld::addStaticObject(struct staticObject obj)
 	//	obj.aabb.maxY = 0.0f;
 	//}
 	staticObjects.push_back(obj);
-}
-
-void DynamicWorld::addStaticWallObject(struct staticObject obj)
-{
-	staticWallObjects.push_back(obj);
-}
-
-void DynamicWorld::addStaticRampObject(struct staticRampObject obj)
-{
-	staticRampObjects.push_back(obj);
 }
 
 void DynamicWorld::addStaticResourceObject(struct staticResourceObject obj)
@@ -326,16 +324,6 @@ int DynamicWorld::getNumStaticObjects()
 	return staticObjects.size();
 }
 
-int DynamicWorld::getNumStaticWallObjects()
-{
-	return staticWallObjects.size();
-}
-
-int DynamicWorld::getNumStaticRampObjects()
-{
-	return staticRampObjects.size();
-}
-
 int DynamicWorld::getNumStaticResourceObjects()
 {
 	return staticResourceObjects.size();
@@ -343,10 +331,6 @@ int DynamicWorld::getNumStaticResourceObjects()
 
 AABB DynamicWorld::getStaticObjectBB(int buildingId) {
 	return staticObjects[buildingId].aabb;
-}
-
-AABB DynamicWorld::getStaticRampObjectBB(int rampId) {
-	return staticRampObjects[rampId].aabb;
 }
 
 AABB DynamicWorld::getStaticResourceBB(int resourceId)
@@ -459,14 +443,14 @@ int DynamicWorld::checkCollisionsWithAllNonTraps(struct playerObject *e)
 		}
 	}
 
-	for (int i = 0; i < staticWallObjects.size(); i++)
-	{
-		if (e->aabb.collidesWith(staticWallObjects[i].aabb))
-		{
-			//printf("Collision: player %d with static wall object %d\n", e->id, i);
-			return i;
-		}
-	}
+	//for (int i = 0; i < staticWallObjects.size(); i++)
+	//{
+	//	if (e->aabb.collidesWith(staticWallObjects[i].aabb))
+	//	{
+	//		//printf("Collision: player %d with static wall object %d\n", e->id, i);
+	//		return i;
+	//	}
+	//}
 
 	for (int i = 0; i < staticResourceObjects.size(); i++)
 	{
@@ -608,9 +592,11 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 	cout << "RESPAWNING PLAYER " << p->id << endl;
 
 	if (p->id % 2 == 0)
-		p->position = team1RespawnPoints[rand() % team1RespawnPoints.size()];
+		//p->position = team1RespawnPoints[rand() % team1RespawnPoints.size()];
+		p->position = team1RespawnPoints[++team1CurrRP % team1RespawnPoints.size()];
 	else
-		p->position = team2RespawnPoints[rand() % team2RespawnPoints.size()];
+		//p->position = team2RespawnPoints[rand() % team2RespawnPoints.size()];
+		p->position = team2RespawnPoints[++team2CurrRP % team2RespawnPoints.size()];
 
 	computeAABB(p);
 
@@ -700,13 +686,13 @@ void DynamicWorld::applyCollisions() {
 					//cout << "heightmap at that location: " << World::m_heightMap[(int)proposedNewPos.x + World::m_heightMapXShift][(int)proposedNewPos.z + World::m_heightMapXShift];
 					// TODO: check guy is facing wall too, at rest
 					if (!p.feetPlanted /*&& !(m_physics->atRest()) */ && p.triedForward && p.currPhysState != PhysicsStates::WallRunning) {
-						if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId])) {
+						if (Physics::handleNearTop(proposedNewPos, staticObjects[buildingId]) && !staticObjects[buildingId].isDecoration) {
 							StateLogic::startHoldingEdge(&p, buildingId);
 							return;
 						}
 						float angle = Physics::handleAngleIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
 						cout << "angle: " << abs(90.0f - angle) << endl;
-						if (abs(90.0f - angle) < 45.0f && p.currPhysState != PhysicsStates::WallRunning/*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
+						if (abs(90.0f - angle) < 45.0f && p.currPhysState != PhysicsStates::WallRunning && !staticObjects[buildingId].isDecoration/*&& m_physics->m_velocity.y >= m_miniJumpYVelocityThreshold*/) {
 							if (p.triedForward) {
 								StateLogic::startClimbing(&p, buildingId);
 								return;
@@ -721,7 +707,7 @@ void DynamicWorld::applyCollisions() {
 						else /*if (abs(90.0f - angle) >= 45.0f) */ {
 							// 0,1 = x, -1 = y, 4,5 = z
 							int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
-							if (newDirection != -1 && p.currPhysState != PhysicsStates::WallRunning && p.triedForward) {
+							if (newDirection != -1 && p.currPhysState != PhysicsStates::WallRunning && p.triedForward && !staticObjects[buildingId].isDecoration) {
 								StateLogic::startWallRunning(&p, newDirection, p.velocityDiff, angle, buildingId);
 								return;
 							}
@@ -1142,7 +1128,7 @@ void DynamicWorld::applyGravity()
 			// landed
 			if (staticObjects[i].aabb.cameFromTop(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
 				p.position.y = staticObjects[i].aabb.maxY + YOFFSET; // on ground
-				//cout << "landed: " << i << endl;
+				cout << "landed: " << i << endl;
 				//cout << "pposition: " << glm::to_string(p.position) << endl;
 				p.feetPlanted = true;
 				p.velocity.y = 0.0f;
@@ -1308,9 +1294,10 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 			buildingId = checkSideCollisionsWithAllBuildings(oldPos, p->position, p);
 			p->position = oldPos;
 			computeAABB(p);
-			if (buildingId != -1) {
+			if (buildingId != -1 && !staticObjects[buildingId].isDecoration) {
 
 				cout << "SHOULD SWITCH BUILDINGS WHILE CLIMBING" << endl;
+
 				p->interactingWithBuildingId = buildingId;
 				break;
 			}
@@ -1357,7 +1344,7 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 			buildingId = checkSideCollisionsWithAllBuildings(oldPos, p->position, p);
 			p->position = oldPos;
 			computeAABB(p);
-			if (buildingId != -1) {
+			if (buildingId != -1 && !staticObjects[buildingId].isDecoration) {
 				cout << "SHOULD SWITCH BUILDINGS WHILE WALLRUNNING" << endl;
 				p->interactingWithBuildingId = buildingId;
 				break;

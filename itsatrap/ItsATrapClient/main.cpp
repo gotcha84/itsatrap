@@ -82,8 +82,6 @@ void sendAABBInfo()
 
 int main(int argc, char *argv[]) {
 
-	Sleep(1000);
-
 	ConfigSettings::getConfig()->loadSettingsFile();
 
 	// opengl lighting
@@ -99,7 +97,25 @@ int main(int argc, char *argv[]) {
 	client = new ClientInstance(Client::getPlayerId());
 	window = new Window();
 	glm::vec3 starting = client->root->getPosition();
-	starting = starting + glm::vec3(200, 200, -300);
+	glm::vec3 shift;
+	switch (client->root->getPlayerID()) {
+	case 0: 
+		shift = glm::vec3(-200, 500, 150);
+		break;
+	case 1:
+		shift = glm::vec3(200, 500, 150);
+		break;
+	case 2:
+		shift = glm::vec3(200, 500, -150);
+		break;
+	case 3:
+		shift = glm::vec3(-200, 500, -150);
+		break;
+	default:
+		shift = glm::vec3(200, 500, -300);
+		break;
+	}
+	starting = starting + shift;
 	client->root->moveTo(starting);
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	sendAABBInfo();
@@ -172,17 +188,23 @@ int main(int argc, char *argv[]) {
 
 	// Sending AABBs to server
 	client->root->addChild(client->level.getRoot());
-	for (int i = 0; i < client->level.levelNodes.size(); ++i) {
-		Client::sendStaticObject(client->level.levelNodes[i]->getBoundingBox());
-	}
 
-	for (int i = 0; i < client->level.decorationNodes.size(); ++i) {
+	if (client->root->getPlayerID() == 0) {
+		for (int i = 0; i < client->level.levelNodes.size(); ++i) {
+			//if (i % 100 == 0) { Sleep(250); }
+			Client::sendStaticObject(client->level.levelNodes[i].first->getBoundingBox(), client->level.levelNodes[i].second);
+			if (i >= 200) {
+				cout << "I: " << i << ", ";
+				client->level.levelNodes[i].first->getBoundingBox().print();
+			}
+			Sleep(25);
+		}
 
-	}
-
-	for (int i = 0; i < client->level.resources.size(); ++i) {
-		Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(), 
-			client->level.resources[i]->getResourceId());
+		for (int i = 0; i < client->level.resources.size(); ++i) {
+			Client::sendStaticObject(client->level.resources[i]->getBoundingBox(), false);
+			Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(),
+				client->level.resources[i]->getResourceId());
+		}
 	}
 
 	//sg::ObjNode node = sg::ObjNode();

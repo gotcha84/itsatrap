@@ -60,7 +60,7 @@ private:
 	static bool					isChanneling;
 	static bool					physicsReady;
 
-	// Functions
+	// Function
 	static int initialize();
 	static void processIncomingMsg(char *, struct sockaddr_in *);
 	static int receiveMsg(char *, struct sockaddr_in *);

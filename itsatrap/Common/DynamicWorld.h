@@ -37,10 +37,9 @@ private:
 	// Variables
 	int									currentId;
 	vector<struct staticObject>			staticObjects;
-	vector<struct staticObject>			staticWallObjects;		// ANDRE: Bounding Walls - Add BB
-	vector<struct staticRampObject>		staticRampObjects;
 	vector<struct staticResourceObject>	staticResourceObjects;	// ANDRE: Resource Tower - Add BB
 	vector<glm::vec3>					team1RespawnPoints, team2RespawnPoints;
+	int									team1CurrRP, team2CurrRP;
 	map<int, struct trapObject *>		portalMap;
 	bool								playerLock[MAX_PLAYERS];
 	map<int, AABB>						aabbOffsets;
@@ -85,15 +84,10 @@ public:
 	void addTrap(struct trapObject t);
 
 	void addStaticObject(struct staticObject);
-	void addStaticWallObject(struct staticObject);
-	void addStaticRampObject(struct staticRampObject);
 	void addStaticResourceObject(struct staticResourceObject);
 	int getNumStaticObjects();
-	int getNumStaticWallObjects();
-	int getNumStaticRampObjects();
 	int getNumStaticResourceObjects();
 	AABB getStaticObjectBB(int buildingId);
-	AABB getStaticRampObjectBB(int rampId);
 	AABB getStaticResourceBB(int resourceId);
 
 	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);

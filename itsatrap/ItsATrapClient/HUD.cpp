@@ -25,30 +25,29 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hi
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 
-			
-
 			glLoadIdentity();
 			if (health <= 0) {
-				
 				drawDeathTimer(spawnTime);
 				
 				if (!deathSound->isCurrentlyPlaying("../Sound/death.wav") && spawnTime <= 2500 && spawnTime >= 2000) {
 					deathSound->play2D("../Sound/death.wav", false, false, true);
 				}
-			}else {
+			} else {
 				if (hitCrosshairDuration > 0) {
 					drawKillSymbol(true);
 					if (!ouchSound->isCurrentlyPlaying("../Sound/ouch.wav") )
 						ouchSound->play2D("../Sound/ouch.wav", false, false, true);
-				}else
+				} else {
 					drawKillSymbol(false);
+				}
 				drawCrossHair();
 				drawHealthBar(health);
 				drawResource(resources);
 				drawInfoMessage(msg);
-				if( m_progressTime > -1 ) drawProgressBar(m_progressTime);
+				if (m_progressTime > -1) {
+					drawProgressBar(m_progressTime);
+				}
 				drawFlashbag(flashFade);
-				
 			}
 			
 		glPopMatrix();

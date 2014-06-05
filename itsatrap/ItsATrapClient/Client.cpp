@@ -219,7 +219,7 @@ int Client::getPlayerId()
 	return playerId;
 }
 
-void Client::sendStaticObject(AABB objectBB)
+void Client::sendStaticObject(AABB objectBB, bool isDecoration)
 {
 	struct staticObjectPacket packet = {};
 	packet.eventId = STATIC_OBJECT_CREATION_EVENT;
@@ -230,39 +230,9 @@ void Client::sendStaticObject(AABB objectBB)
 	packet.object.aabb.maxX = objectBB.maxX;
 	packet.object.aabb.maxY = objectBB.maxY;
 	packet.object.aabb.maxZ = objectBB.maxZ;
+	packet.object.isDecoration = isDecoration;
 
 	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
-}
-
-void Client::sendStaticWallObject(AABB wallBB)
-{
-	struct staticObjectPacket packet = {};
-	packet.eventId = STATIC_WALL_OBJECT_CREATION_EVENT;
-	packet.playerId = playerId;
-	packet.object.aabb.minX = wallBB.minX;
-	packet.object.aabb.minY = wallBB.minY;
-	packet.object.aabb.minZ = wallBB.minZ;
-	packet.object.aabb.maxX = wallBB.maxX;
-	packet.object.aabb.maxY = wallBB.maxY;
-	packet.object.aabb.maxZ = wallBB.maxZ;
-
-	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
-}
-
-void Client::sendStaticRampObject(AABB rampBB, float slope)
-{
-	struct staticRampObjectPacket packet = {};
-	packet.eventId = STATIC_RAMP_OBJECT_CREATION_EVENT;
-	packet.playerId = playerId;
-	packet.object.aabb.minX = rampBB.minX;
-	packet.object.aabb.minY = rampBB.minY;
-	packet.object.aabb.minZ = rampBB.minZ;
-	packet.object.aabb.maxX = rampBB.maxX;
-	packet.object.aabb.maxY = rampBB.maxY;
-	packet.object.aabb.maxZ = rampBB.maxZ;
-	packet.object.slope = slope;
-
-	sendMsg((char *)&packet, sizeof(struct staticRampObjectPacket));
 }
 
 void Client::sendStaticResourceObject(AABB resourceBB, int id)

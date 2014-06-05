@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib BRail_2.mtl
+mtllib BRail_02.mtl
 g BRail_02_default1
 v 144.091187 -0.153884 -1228.116577
 v 158.766693 -0.153884 -1233.750000

@@ -56,20 +56,37 @@ void GameOver::setTeamScore(int one, int two) {
 }
 
 void GameOver::displayWin() {
-		if (team1 < team2) {
-		glColor3f(1.0f, 0.0f, 0.0f);		font->FaceSize(75);		font->CharMap(ft_encoding_symbol);		glRasterPos2f(-0.2f, 0.5f);		font->Render("Team2 Won");
+	
+	if (team1 < team2) {
+		glColor3f(1.0f, 0.0f, 0.0f);
+		font->FaceSize(75);
+		font->CharMap(ft_encoding_symbol);
+		glRasterPos2f(-0.2f, 0.5f);
+
+		font->Render("Team2 Won");
 	}
 	else if (team1 > team2) {
-		glColor3f(1.0f, 0.0f, 0.0f);		font->FaceSize(75);		font->CharMap(ft_encoding_symbol);		glRasterPos2f(-0.2f, 0.5f);		font->Render("Team1 Won");
+		glColor3f(1.0f, 0.0f, 0.0f);
+		font->FaceSize(75);
+		font->CharMap(ft_encoding_symbol);
+		glRasterPos2f(-0.2f, 0.5f);
+
+		font->Render("Team1 Won");
 	}
 	else if (team1 == team2) {
-		glColor3f(1.0f, 0.0f, 0.0f);		font->FaceSize(75);		font->CharMap(ft_encoding_symbol);		glRasterPos2f(-0.05f, 0.5);		font->Render("Tie");
+		glColor3f(1.0f, 0.0f, 0.0f);
+		font->FaceSize(75);
+		font->CharMap(ft_encoding_symbol);
+		glRasterPos2f(-0.05f, 0.5);
+
+		font->Render("Tie");
 	}
 }
 
 void GameOver::displayCredits() {
 	glColor4f(1.0f, 1.0f, 1.0f, 0.4f);
-	font->FaceSize(50);	font->CharMap(ft_encoding_symbol);
+	font->FaceSize(50);
+	font->CharMap(ft_encoding_symbol);
 	glRasterPos2f(-0.1f, 0.2f);
 	font->Render("Group 5");
 	glRasterPos2f(-0.5f, 0.0f);
