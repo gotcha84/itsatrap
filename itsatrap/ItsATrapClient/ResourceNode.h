@@ -27,10 +27,8 @@ namespace sg {
 		
 			int getResourceId();
 			void setOwnerColor(int playerId);
-			void resetOwnerColor();
-			//void getOwner();
-			//void setOwner();
-			//void addResourcesToOwner();
+			void setInactiveColor();
+			void setActiveColor();
 
 			void draw(glm::mat4 parent, glm::mat4 cam);
 			void print();
