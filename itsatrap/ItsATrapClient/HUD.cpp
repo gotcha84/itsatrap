@@ -17,7 +17,6 @@ HUD::~HUD() {
 }
 
 void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime) {
-
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -76,7 +75,7 @@ void HUD::drawCrossHair() {
 		glLoadIdentity();
 
 		std::string text = ".";
-		glColor4f(0,0,0,1);
+		glColor4f(20.0f, 20.0f, 20.0f, 20.0f);
 		glRasterPos2f(-0.02f, -0.02f);
 		for (int i=0; i<text.length(); i++) {
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
@@ -124,7 +123,7 @@ void HUD::drawResource(int resource) {
 	glPushMatrix();
 		glLoadIdentity();
 		
-		glColor4f(0,20,0,1); // green
+		glColor4f(0.22f, 20.0f, 20.0f, 20.0f); // teal
 		font->FaceSize(75);
 		font->CharMap(ft_encoding_symbol);
 		glRasterPos2f(0.65f, 0.8f);
@@ -205,10 +204,10 @@ void HUD::drawBlood(float fade) {
 
 void HUD::drawKillSymbol(bool hit) {
 	if (hit) {
-		glColor3f(0.0f, 0.0f, 0.0f);
+		glColor3f(1.0f, 1.0f, 1.0f);
 		font->FaceSize(100);
 		font->CharMap(ft_encoding_symbol);
-		glRasterPos2f(-0.055f, -0.09f);
+		glRasterPos2f(-0.065f, -0.0975f);
 		font->Render("X");
 	}
 }

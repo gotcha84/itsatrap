@@ -82,7 +82,8 @@ void Level::initLevel0() {
 						if (counter % 1000 == 0) {
 							++counter;
 						}
-						
+					
+						// Applying Texture
 						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::BRail]);
 						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
 						xForm->addChild(levelNodes.back().first);
