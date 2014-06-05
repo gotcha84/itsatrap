@@ -33,10 +33,6 @@ namespace sg {
 		return m_model;
 	}
 
-	void ObjNode::loadTexture(std::string filename) {
-		m_model->loadTexture(filename);
-	}
-
 	AABB ObjNode::getBoundingBox() {
 		return m_model->getBoundingBox();
 	}

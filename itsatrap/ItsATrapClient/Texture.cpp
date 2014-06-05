@@ -1,16 +1,34 @@
+#define NUM_TEX 100
 #include "Texture.h"
 
 Texture::Texture(){
-	//texture_building = "../Models/building1.ppm";
+	m_numTex = NUM_TEX;
+	m_texID = new GLuint[m_numTex];
+
+	for (int i = 0; i < m_numTex; i++) {
+		m_texID[i] = 0;
+	}
+
+	glGenTextures(m_numTex, m_texID);
+	if (glGetError()) cout << "[Texture.cpp] ERROR : could not glGenTextures in ctor!";
+	
+	initTextures();
 }
 
-Texture::~Texture(){}
+Texture::~Texture() {
+	delete[] m_texID;
+	m_texID = nullptr;
+}
 
-GLuint Texture::loadTexture(const char* the_texture) {
+void Texture::initTextures() {
+	loadTexture(m_texID[Textures::Skybox], "../Textures/skybox.ppm");
+	loadTexture(m_texID[Textures::Polynoid], "../Textures/Red_Polynoid.ppm");
+	loadTexture(m_texID[Textures::Lightning], "../Textures/lightning.ppm");
+	loadTexture(m_texID[Textures::Animus], "../Textures/animus.ppm");
+	loadTexture(m_texID[Textures::BRail], "../Textures/BRail.ppm");
+}
 
-	static int counter = 0;
-
-	GLuint texture;			 // storage for one texture
+void Texture::loadTexture(GLuint id, const char* the_texture) {
 	int twidth, theight;   // texture width/height [pixels]
 	unsigned char* tdata;  // texture pixel data
 
@@ -18,29 +36,19 @@ GLuint Texture::loadTexture(const char* the_texture) {
 
 	// Load image file
 	tdata = loadPPM(the_texture, twidth, theight);
-	GLuint i = -1;
-	if (tdata == NULL) return i;
-	//int num;
-
-	glGenTextures(1, &texture);
+	if (tdata == NULL) cout << "[Texture.cpp] Error loading PPM : " << the_texture << endl;
 
 	// Set this texture to be the one we are working with
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, id);
 
 	// Generate the texture
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, twidth, theight, 0, GL_RGB, GL_UNSIGNED_BYTE, tdata);
 
 	// Set bi-linear filtering for both minification and magnification
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//glBindTexture(GL_TEXTURE_2D, 0);
-
-	return texture;
-
-	counter++;
 }
 
 

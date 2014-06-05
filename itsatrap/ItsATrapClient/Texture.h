@@ -5,27 +5,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <vector>
 
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-//Since the tutorial I did used glext.h library, include it
-#include "glext.h"
-
+#include "glext.h" //Since the tutorial I did used glext.h library, include it
 
 using namespace std;
 
+enum Textures {
+	Skybox,
+	Polynoid,
+	Lightning,
+	Animus,
+	BRail,
+	Size
+};
+
 class Texture {
-public:
-	GLuint m_textureID;
+	public:
+		int m_numTex;
+		GLuint *m_texID;
 
-	Texture();
-	~Texture();
+		Texture();
+		~Texture();
 
-	GLuint loadTexture(const char *the_texture);
-	unsigned char* loadPPM(const char *filename, int& width, int& height);
+		void initTextures();
 
+		void loadTexture(GLuint id, const char *the_texture);
+		unsigned char* loadPPM(const char *filename, int& width, int& height);
 };
 
 #endif

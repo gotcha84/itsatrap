@@ -3,6 +3,9 @@
 
 #include "Level.h"
 
+#include "Texture.h"
+extern Texture *textures;
+
 Level::Level() {
 	root = new sg::MatrixTransform();
 	root->setName("LEVEL ROOT");
@@ -71,7 +74,20 @@ void Level::initLevel0() {
 						resources.back()->setParticleSystemOrigin(glm::vec3(x, y, z + 25.0f));
 
 						++resourceCounter;
-					} else if (part == "BRail" || part == "ERail" || part == "Rail" || part == "Caltrop" || part == "Float") {
+					}
+					else if (part == "BRail" || part == "Brail") {
+						levelNodes.push_back({ new sg::ObjNode(OBELISK2 + fileName, OBELISK2), true });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
+
+						if (counter % 1000 == 0) {
+							++counter;
+						}
+						
+						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::BRail]);
+						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						xForm->addChild(levelNodes.back().first);
+					}
+					else if (part == "ERail" || part == "Rail" || part == "Caltrop" || part == "Float") {
 						levelNodes.push_back({ new sg::ObjNode(OBELISK2 + fileName, OBELISK2), true });
 						levelNodes.back().first->setName("ObjNode: " + fileName);
 
@@ -81,7 +97,8 @@ void Level::initLevel0() {
 
 						levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
 						xForm->addChild(levelNodes.back().first);
-					} else if (part != "Ramp" && part != "UD") {
+					}
+					else if (part != "Ramp" && part != "UD") {
 						//levelNodes.push_back(new sg::ObjNode(LEVEL + fileName, LEVEL));
 						//levelNodes.push_back(new sg::ObjNode(OBELISK + fileName, OBELISK));
 						levelNodes.push_back({ new sg::ObjNode(OBELISK2 + fileName, OBELISK2), false });

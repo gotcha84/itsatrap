@@ -1,6 +1,10 @@
 #define PLAYER_RAD 5.0f
 
 #include "PlayerNode.h"
+
+#include "Texture.h"
+extern Texture *textures;
+
 #include "ClientInstance.h"
 extern ClientInstance* client;
 
@@ -98,13 +102,12 @@ namespace sg {
 	}
 
 	void Player::initModels() {
-		// m_otherPlayer = new ObjModel("../Models/Polynoid/Polynoid.obj", "../Models/Polynoid/");
-		m_otherPlayer = new ObjModel("../Models/Avatar.obj", "../Models/");
-		
-		//m_otherPlayer = new ObjModel("../Models/Test Chest/Test_Chest.obj", "../Models/Test Chest/");
-		//m_otherPlayer->loadTexture("../Textures/Chest_Diffuse.ppm");
+		m_otherPlayer = new ObjModel();
+		m_otherPlayer->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");
+		m_otherPlayer->setTexture(textures->m_texID[Textures::Polynoid]);
 
-		m_thisPlayer = new ObjModel("../Models/Headless_Avatar.obj", "../Models/");
+		m_thisPlayer = new ObjModel();
+		m_thisPlayer->loadModel("../Models/Headless_Avatar.obj", "../Models/");
 		m_thisPlayer->disableDrawBB();
 	}
 

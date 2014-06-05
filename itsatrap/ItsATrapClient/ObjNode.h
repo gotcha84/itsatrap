@@ -21,7 +21,6 @@ namespace sg {
 			void loadModel(std::string objFilename);
 			void loadModel(std::string objFilename, std::string mtlFilename);
 			ObjModel *getModel();
-			void loadTexture(std::string filename);
 
 			AABB getBoundingBox();
 			void setBoundingBox(AABB boundingBox);
