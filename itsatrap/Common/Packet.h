@@ -27,6 +27,7 @@
 #define CLEAR_CHANNEL_BAR 23
 #define AABB_INFO 24
 #define INFO_MESSAGE_EVENT 25
+#define GAME_OVER_EVENT 26
 
 
 // Superclass of all packets

@@ -29,6 +29,9 @@ namespace sg {
 		timer = new Stopwatch();
 		checkMouse = false;
 
+		m_elapsedGameTime = 0;
+		m_gameOver = false;
+
 		initModels();
 	}
 
@@ -195,8 +198,9 @@ namespace sg {
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
-		
-		if (false) {
+	
+		if (m_gameOver) {
+			cout << "GAME OVER" << endl;
 			int teamOneScore = 0;
 			int teamTwoScore = 0;
 			for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
@@ -290,7 +294,7 @@ namespace sg {
 			float blood = getFadeForFlashOrBlood(getPlayer()->m_bloodDuration, bloodFadeOut);
 
 			glDisable(GL_LIGHTING);
-			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, blood, getPlayer()->m_hitCrosshairDuration, getPlayer()->m_recallElapsed, m_player->m_infoMsg.getMessage());
+			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, blood, getPlayer()->m_hitCrosshairDuration, getPlayer()->m_recallElapsed, m_player->m_infoMsg.getMessage(), 0);
 			glEnable(GL_LIGHTING);
 		}
 

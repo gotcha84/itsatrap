@@ -127,7 +127,7 @@ struct cameraObject {
 struct playerObject {
     int				id, health, numKills, numDeaths;
 	int				stunDuration, slowDuration, flashDuration, hitCrosshair, bloodDuration, recallElapsed;
-	int				timeUntilRespawn, timeUntilRegen;
+	int				timeUntilRespawn, timeUntilRegen, timeGameElapsed;
 	int				knifeDelay;
 	int				resources;
 	int				onTopOfBuildingId;
@@ -169,6 +169,7 @@ struct trapObject {
 struct staticObject {
 	AABB			aabb;
 	bool			isDecoration;
+	glm::vec4		color;
 };
 
 struct staticRampObject {

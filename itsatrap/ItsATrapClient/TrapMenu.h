@@ -16,6 +16,7 @@ class TrapMenu {
 public:
 
 	int infoState;
+	FTGLPixmapFont *font;
 
 	TrapMenu();
 	~TrapMenu();

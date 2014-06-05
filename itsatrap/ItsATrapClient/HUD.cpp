@@ -16,7 +16,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg) {
+void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime) {
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -43,6 +43,7 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, float 
 				drawCrossHair();
 				drawHealthBar(health);
 				drawResource(resources);
+				drawClock(gameTime);
 				drawInfoMessage(msg);
 				if (m_progressTime > -1) {
 					drawProgressBar(m_progressTime);
@@ -169,19 +170,22 @@ void HUD::drawDeathTimer(int respawnTime) {
 
 void HUD::drawProgressBar(int time) {
 	if (time >= 10) {
-		for (int i = 0; i < time / 10; i++) {
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glLoadIdentity();
-			glTranslatef(-0.315 + 0.07*i, 0.0f, 0.0f);
-			glScalef(1.5f, 1.5f, 1.0f);
-			glutSolidCube(0.05f);
-		}
-
+	
 		glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
 		glLoadIdentity();
 		glTranslatef(0.0f, 0.0f, 0.0f);
 		glScaled(1.5f, 0.2f, 0.2f);
 		glutSolidCube(0.5f);
+		
+		for (int i = 0; i < time / 10; i++) {
+			glColor4f(10.0f, 10.0f, 10.0f, 1.0f);
+			glLoadIdentity();
+			glTranslatef(-0.315 + 0.07*i, 0.0f, 0.5f);
+			glScalef(1.5f, 1.5f, 1.0f);
+			glutSolidCube(0.05f);
+		}
+
+
 	}
 }
 
@@ -209,4 +213,18 @@ void HUD::drawKillSymbol(bool hit) {
 		glRasterPos2f(-0.055f, -0.09f);
 		font->Render("X");
 	}
+}
+
+void HUD::drawClock(int time) {
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	glColor4f(0, 20, 0, 1); // green
+	font->FaceSize(75);
+	font->CharMap(ft_encoding_symbol);
+	glRasterPos2f(0.65f, 0.8f);
+	font->Render(to_string(time).c_str());
+
+	glPopMatrix();
 }

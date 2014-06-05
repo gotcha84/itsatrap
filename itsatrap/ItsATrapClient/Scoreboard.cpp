@@ -7,10 +7,13 @@ using namespace std;
 
 Scoreboard::Scoreboard() {
 	font = new FTGLPixmapFont("C:/Windows/Fonts/Arial.ttf");
+	//fonts = new FTGLExtrdFont("C:/Windows/Fonts/Arial.ttf");
+
 }
 
 Scoreboard::~Scoreboard() {
-
+	delete font;
+	font = nullptr;
 }
 
 int Scoreboard::addEntry(Entry const& entry) {
@@ -129,7 +132,7 @@ void Scoreboard::draw() {
 					string numDeath = deaths.str();
 					
 
-					string name = "Player" + playerID + "          " + "Team" + teamID + "          " + "Kill: " + numKill + "          " + "Death: " + numDeath;
+					string name = "Player" + playerID + "          " + "          " + "Kill: " + numKill + "          " + "Death: " + numDeath;
 					int temp = e.name;
 					
 					/*
