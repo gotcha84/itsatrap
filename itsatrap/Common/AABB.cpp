@@ -454,6 +454,18 @@ glm::vec3 AABB::unstuckOffset(AABB player) {
 			offset.y += thresholdfactor*threshold;
 		}
 	}
+
+	if (player.minY < minY && minY < player.maxY) {
+		if (player.maxY - minY > threshold) {
+			offset.y -= player.maxY - minY;
+		}
+	}
+	if (player.minY < maxY && maxY < player.maxY) {
+		if (maxY - player.minY > threshold) {
+			offset.y += maxY - player.minY;
+		}
+	}
+
 	if (player.minZ < minZ && minZ < player.maxZ) {
 		if (player.maxZ - minZ > threshold) {
 			offset.z -= player.maxZ - minZ;
