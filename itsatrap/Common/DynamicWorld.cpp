@@ -397,6 +397,8 @@ void DynamicWorld::addTrap(struct trapObject t)
 	int timeTillActive = 0;
 	ConfigSettings::getConfig()->getValue("TrapInactivePeriod", timeTillActive);
 	t.timeTillActive = timeTillActive;
+	t.pos.y = playerMap[t.ownerId].aabb.minY;
+
 	trapMap[currentId] = t;
 
 	playerLock[t.ownerId] = true;
@@ -1667,8 +1669,9 @@ void DynamicWorld::addAABBInfo(int type, AABB aabb)
 		aabbOffsets[type] = tmp;
 	}
 	else {
-		if (aabb.maxY < 5)
-			aabb.maxY = 5;
+		if (aabb.maxY < 10)
+			aabb.maxY = 10;
+		aabb.minY = 0;
 		aabbOffsets[type] = aabb;
 	}
 }
