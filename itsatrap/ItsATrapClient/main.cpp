@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 	float shininess[] = {100.0};
 	//float position[]  = {0.0, 10.0, 1.0, 0.0};  // lightsource position
 	GLfloat position[]  = {0.0f, 500.0f, -250.0f, 1.0f};  // lightsource position
-	GLfloat ambientLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
+	GLfloat ambientLight[] = {0.7f, 0.7f, 0.7f, 1.0f};
 	GLfloat diffuseLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
 
 	// Initialize networking for client
@@ -192,16 +192,21 @@ int main(int argc, char *argv[]) {
 	if (client->root->getPlayerID() == 0) {
 		for (int i = 0; i < client->level.levelNodes.size(); ++i) {
 			//if (i % 100 == 0) { Sleep(250); }
-			Client::sendStaticObject(client->level.levelNodes[i].first->getBoundingBox(), client->level.levelNodes[i].second);
-			if (i >= 200) {
-				cout << "I: " << i << ", ";
-				client->level.levelNodes[i].first->getBoundingBox().print();
+			Client::sendStaticObject(client->level.levelNodes[i].first->getBoundingBox(), 
+				client->level.levelNodes[i].second,
+				client->level.levelNodes[i].first->getModel()->getColor());
+			if (i == 271) {
+				cout << "I: " << i << ", " << client->level.levelNodes[i].first->getName();
+				
+				//client->level.levelNodes[i].first->getBoundingBox().print();
 			}
-			Sleep(25);
+			Sleep(10);
 		}
 
 		for (int i = 0; i < client->level.resources.size(); ++i) {
-			Client::sendStaticObject(client->level.resources[i]->getBoundingBox(), false);
+			Client::sendStaticObject(client->level.resources[i]->getBoundingBox(), 
+				true,
+				client->level.resources[i]->getModel()->getColor());
 			Client::sendStaticResourceObject(client->level.resources[i]->getBoundingBox(),
 				client->level.resources[i]->getResourceId());
 		}

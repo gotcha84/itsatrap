@@ -142,7 +142,41 @@ void handleAddTrap(struct trapObject t)
 
 	sg::Trap *newTrap;
 	newTrap = new sg::Trap(t.ownerId, t.pos, t.rotationAngle, TRAP_DIR + filename);
-
+	int posX = client->root->getPosition().x;
+	int posY = client->root->getPosition().y;
+	int posZ = client->root->getPosition().z;
+	vector<int> heightMap;
+	AABB aabb;
+	for (int i = 0; i < client->level.levelNodes.size(); i++) {
+		aabb = client->level.levelNodes[i].first->getBoundingBox();
+		if (aabb.minX < posX && aabb.maxX > posX
+			&& aabb.minY < posY && aabb.maxY < posY
+			&& aabb.minZ < posZ && aabb.maxZ > posZ) {
+			heightMap.push_back(i);
+		}
+	}
+	int minDistIndex = -1;
+	float minDist = FLT_MAX;
+	float dist;
+	glm::vec4 trapColor = glm::vec4(1.0f, 1.0f, 1.0f, 0.8f);
+	for (int i = 0; i < heightMap.size(); i++) {
+		dist = posY - client->level.levelNodes[heightMap[i]].first->getBoundingBox().maxY;
+		if (dist < minDist && dist > 0) {
+			minDist = dist;
+			minDistIndex = heightMap[i];
+		}
+	}
+	if (minDistIndex == -1) {
+		cout << "heightmap sucks noob kevin" << endl;
+	}
+	else {
+		trapColor = client->level.levelNodes[minDistIndex].first->getModel()->getColor();
+		trapColor.a = 1.0f;
+		cout << "set color to: " << glm::to_string(trapColor);
+		
+	}
+	newTrap->m_model1->m_color = trapColor;
+	//newTrap->m_model1->m_color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	switch (t.type) {
 	case TYPE_TRAMPOLINE_TRAP:
 		//newTrap->loadModel("../Models/Can.obj", "../Models/");

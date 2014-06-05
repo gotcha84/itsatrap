@@ -1128,7 +1128,7 @@ void DynamicWorld::applyGravity()
 			// landed
 			if (staticObjects[i].aabb.cameFromTop(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
 				p.position.y = staticObjects[i].aabb.maxY + YOFFSET; // on ground
-				cout << "landed: " << i << endl;
+				//cout << "landed: " << i << endl;
 				//cout << "pposition: " << glm::to_string(p.position) << endl;
 				p.feetPlanted = true;
 				p.velocity.y = 0.0f;

@@ -419,36 +419,55 @@ glm::vec3 AABB::unstuckOffset(AABB player) {
 		&& other.maxZ > minZ && other.minZ < maxZ);*/
 
 	float threshold = 0.01f;
+	float thresholdfactor = 0.1f;
 	
 	glm::vec3 offset = glm::vec3(0.0f, 0.0f, 0.0f);
 	if (player.minX < minX && minX < player.maxX) {
 		if (player.maxX - minX > threshold) {
 			offset.x -= player.maxX - minX;
 		}
+		else {
+			offset.x -= thresholdfactor*threshold;
+		}
 	}
 	if (player.minX < maxX && maxX < player.maxX) {
 		if (maxX - player.minX > threshold) {
 			offset.x += maxX - player.minX;
 		}
+		else {
+			offset.x += thresholdfactor*threshold;
+		}
 	}
-	//if (player.minY < minY && minY < player.maxY) {
-	//	if (player.maxY - minY > threshold) {
-	//		offset.y -= player.maxY - minY;
-	//	}
-	//}
-	//if (player.minY < maxY && maxY < player.maxY) {
-	//	if (maxY - player.minY > threshold) {
-	//		offset.y += maxY - player.minY;
-	//	}
-	//}
+	if (player.minY < minY && minY < player.maxY) {
+		if (player.maxY - minY > threshold) {
+			offset.y -= player.maxY - minY;
+		}
+		else {
+			offset.x -= thresholdfactor*threshold;
+		}
+	}
+	if (player.minY < maxY && maxY < player.maxY) {
+		if (maxY - player.minY > threshold) {
+			offset.y += maxY - player.minY;
+		}
+		else {
+			offset.y += thresholdfactor*threshold;
+		}
+	}
 	if (player.minZ < minZ && minZ < player.maxZ) {
 		if (player.maxZ - minZ > threshold) {
 			offset.z -= player.maxZ - minZ;
+		}
+		else {
+			offset.z -= thresholdfactor*threshold;
 		}
 	}
 	if (player.minZ < maxZ && maxZ < player.maxZ) {
 		if (maxZ - player.minZ > threshold) {
 			offset.z += maxZ - player.minZ;
+		}
+		else {
+			offset.z += thresholdfactor*threshold;
 		}
 	}
 	return offset;

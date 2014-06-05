@@ -3,7 +3,7 @@
 int World::m_heightMapXShift = UNIT_SIZE * MAP_X_LENGTH / 2;
 int World::m_heightMapZShift = UNIT_SIZE * MAP_Z_LENGTH / 2;
 int World::m_structuresMapXShift = MAP_X_LENGTH_MIKE / 2;
-int World::m_structuresMapZShift = -1700;
+int World::m_structuresMapZShift = 1700;
 float World::m_heightMap[UNIT_SIZE * MAP_X_LENGTH + 1][UNIT_SIZE * MAP_Z_LENGTH + 1];
 vector<int> World::m_structuresMap[MAP_X_LENGTH_MIKE][MAP_Z_LENGTH_MIKE];
 vector<AABB> World::m_boundingBoxes;
