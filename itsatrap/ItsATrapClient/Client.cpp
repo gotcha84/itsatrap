@@ -14,6 +14,8 @@ bool				Client::jumpEvent, Client::cameraChanged;
 cameraObject		Client::playerCam = {};
 int					Client::channelingResourceId;
 bool				Client::okChannel;
+bool				Client::recall;
+int					Client::clientSendRate;
 
 int Client::initializeClient() {
 
@@ -86,6 +88,8 @@ int Client::initializeClient() {
 	
 
 	okChannel = false;
+
+	ConfigSettings::getConfig()->getValue("ClientSendRate", clientSendRate);
 
 	Client::startRefresherThread();
 	Client::startReceiverThread();
@@ -313,6 +317,11 @@ void Client::sendReloadConfigFile()
 	printf("[CLIENT]: Sent reload config file\n");
 }
 
+void Client::sendRecallEvent()
+{
+	recall = true;
+}
+
 void Client::sendMoveEvent(Direction dir)
 {
 	moveEvents[dir] = true;
@@ -335,9 +344,7 @@ DWORD WINAPI Client::senderThread(LPVOID)
 {
 	while (1)
 	{
-		int sleep = 33;
-		ConfigSettings::getConfig()->getValue("ClientSendRate", sleep);
-		Sleep(sleep);
+		Sleep(clientSendRate);
 
 		bool sendUpdate = false;
 		for (int i = 0; i < NUM_DIRECTIONS; i++)
@@ -345,9 +352,7 @@ DWORD WINAPI Client::senderThread(LPVOID)
 			if (moveEvents[i])
 				sendUpdate = true;
 		}
-		if (jumpEvent)
-			sendUpdate = true;
-		if (cameraChanged)
+		if (jumpEvent || cameraChanged || recall)
 			sendUpdate = true;
 
 		if (sendUpdate)
@@ -360,6 +365,7 @@ DWORD WINAPI Client::senderThread(LPVOID)
 			p.jump = jumpEvent;
 			p.cameraChanged = cameraChanged;
 			p.cam = playerCam;
+			p.recall = recall;
 			sendMsg((char *)&p, sizeof(p));
 		}
 
@@ -367,6 +373,7 @@ DWORD WINAPI Client::senderThread(LPVOID)
 		memset(moveEvents, 0, sizeof(moveEvents));
 		jumpEvent = false;
 		cameraChanged = false;
+		recall = false;
 	}
 }
 

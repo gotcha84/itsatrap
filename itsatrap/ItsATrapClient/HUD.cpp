@@ -16,7 +16,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, string msg) {
+void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg) {
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -46,6 +46,19 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, float 
 				drawInfoMessage(msg);
 				if (m_progressTime > -1) {
 					drawProgressBar(m_progressTime);
+				}
+				if (recallElapsed > 0)
+				{
+					int recallChannelTime = 1;
+					ConfigSettings::getConfig()->getValue("RecallChannelTime", recallChannelTime);
+					int time = ((float) recallElapsed / recallChannelTime) * 100;
+					if (time > 100)
+						time = 100;
+					else if (time < 0)
+						time = 0;
+					drawProgressBar(time);
+					if (time > 50)
+						drawFlashbag((time-50.0f)/50.0f);
 				}
 				drawFlashbag(flashFade);
 				drawBlood(bloodFade);

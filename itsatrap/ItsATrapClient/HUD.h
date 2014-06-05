@@ -25,7 +25,7 @@ class HUD {
 		ISoundEngine *ouchSound;
 		ISoundEngine *deathSound;
 
-		void draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, string msg);
+		void draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg);
 		
 		void drawCrossHair(); 
 		void drawHealthBar(int health);

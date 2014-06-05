@@ -21,8 +21,8 @@ DynamicWorld::DynamicWorld()
 	team1CurrRP = 0;
 	team2CurrRP = 0;
 	team1RespawnPoints.push_back(glm::vec3(-200, 500, -150));
-	team1RespawnPoints.push_back(glm::vec3(200, 500, 150));
-	team2RespawnPoints.push_back(glm::vec3(-200, 500, -150));
+	team1RespawnPoints.push_back(glm::vec3(200, 500, -150));
+	team2RespawnPoints.push_back(glm::vec3(-200, 500, 150));
 	team2RespawnPoints.push_back(glm::vec3(200, 500, 150));
 
 	portalMap.clear();
@@ -112,6 +112,7 @@ void DynamicWorld::addNewPlayer(struct playerObject p)
 	p.flashDuration = 0;
 	p.hitCrosshair = 0;
 	p.bloodDuration = 0;
+	p.recallElapsed = 0;
 	//p.position.x = 0.0f;
 	//p.position.y = 500.0f;
 
@@ -399,6 +400,7 @@ void DynamicWorld::addTrap(struct trapObject t)
 	ConfigSettings::getConfig()->getValue("TrapInactivePeriod", timeTillActive);
 	t.timeTillActive = timeTillActive;
 	t.pos.y = playerMap[t.ownerId].aabb.minY;
+	t.rotationAngle = t.rotationAngle + 180;
 
 	trapMap[currentId] = t;
 
@@ -539,6 +541,24 @@ void DynamicWorld::updateTimings(int timeDiff)
 
 		if (p.hitCrosshair > 0)
 			p.hitCrosshair -= timeDiff;
+
+		if (p.isRecalling)
+		{
+			if (p.stunDuration > 0)
+				p.isRecalling = false;
+
+			p.recallElapsed += timeDiff;
+			int recallChannelTime = 0;
+			ConfigSettings::getConfig()->getValue("RecallChannelTime", recallChannelTime);
+			if (p.recallElapsed > recallChannelTime)
+			{
+				p.isRecalling = false;
+				p.recallElapsed = 0;
+				recallPlayer(&p);
+			}
+		}
+		else
+			p.recallElapsed = 0;
 	}
 
 	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); ++it)
@@ -560,6 +580,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		return;
 
 	target->health -= damage;
+	target->isRecalling = false;
 	ConfigSettings::getConfig()->getValue("BloodDuration", target->bloodDuration);
 	ConfigSettings::getConfig()->getValue("HealthRegenWaitAfterDamage", target->timeUntilRegen);
 	ConfigSettings::getConfig()->getValue("HitCrosshairDuration", attacker->hitCrosshair);
@@ -579,6 +600,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		target->aabb.minY = 0;
 		target->aabb.minZ = 0;
 		target->deathState = true;
+		
 
 		addInfoMessage(attacker->id, "You have killed player " + to_string(target->id));
 		addInfoMessage(target->id, "You have been killed by player " + to_string(attacker->id));
@@ -1557,6 +1579,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 				printf("Collision: player %d with trap id %d\n", p->id, it->second.id);
 				playerLock[p->id] = true;
 				bool okToRemove = true;
+				int trapDamage = 10;
 
 				switch (it->second.type)
 				{
@@ -1565,6 +1588,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 										 int stunDuration = 0;
 										 ConfigSettings::getConfig()->getValue("StunTrapDuration", stunDuration);
 										 p->stunDuration = stunDuration;
+										 playerDamage(&playerMap[it->second.ownerId], p, trapDamage);
 										 break;
 				}
 				case TYPE_TRAMPOLINE_TRAP:
@@ -1572,6 +1596,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 											 int trampolinePower = 0;
 											 ConfigSettings::getConfig()->getValue("TrampolinePower", trampolinePower);
 											 p->velocity = glm::vec3(0, trampolinePower, 0);
+											 playerDamage(&playerMap[it->second.ownerId], p, trapDamage);
 
 											 break;
 				}
@@ -1580,6 +1605,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 									   int slowDuration = 0;
 									   ConfigSettings::getConfig()->getValue("SlowTrapDuration", slowDuration);
 									   p->slowDuration = slowDuration;
+									   playerDamage(&playerMap[it->second.ownerId], p, trapDamage);
 									   break;
 				}
 				case TYPE_PUSH_TRAP:
@@ -1591,7 +1617,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 									   force *= pushPower;
 
 									   p->velocity = glm::vec3(force.x, 0, force.z);
-
+									   playerDamage(&playerMap[it->second.ownerId], p, trapDamage);
 									   break;
 				}
 				case TYPE_LIGHTNING_TRAP:
@@ -1645,7 +1671,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 										ConfigSettings::getConfig()->getValue("FlashTrapDuration", flashDuration);
 
 										p->flashDuration = flashDuration;
-
+										playerDamage(&playerMap[it->second.ownerId], p, trapDamage);
 										break;
 				}
 				default:
@@ -1690,8 +1716,8 @@ void DynamicWorld::handleKnifeEvent(int knifer)
 	{
 		struct playerObject *target = &pit->second;
 
-		// Make sure they're on different teams & knife is ready
-		if (/*player->knifeDelay <= 0 &&*/ player->id % 2 != target->id % 2)
+		// Make sure they're on different teams & knife is ready and not stunned
+		if (player->knifeDelay <= 0 && player->id % 2 != target->id % 2 && player->stunDuration <= 0)
 		{
 			ConfigSettings::getConfig()->getValue("KnifeDelay", player->knifeDelay);
 
@@ -1719,5 +1745,15 @@ void DynamicWorld::addInfoMessage(int destination, string msg)
 	info.destination = destination;
 	info.msg = msg;
 	infoMsgQueue.push_back(info);
+
+}
+
+void DynamicWorld::recallPlayer(struct playerObject *p)
+{
+	if (p->id % 2 == 0)
+		p->position = team1RespawnPoints[++team1CurrRP % team1RespawnPoints.size()];
+	else
+		p->position = team2RespawnPoints[++team2CurrRP % team2RespawnPoints.size()];
+
 
 }

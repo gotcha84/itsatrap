@@ -58,6 +58,7 @@ void handlePlayerUpdate(struct playerObject p)
 		client->players[p.id]->m_player->m_flashDuration = p.flashDuration;
 		client->players[p.id]->m_player->m_hitCrosshairDuration = p.hitCrosshair;
 		client->players[p.id]->m_player->m_bloodDuration = p.bloodDuration;
+		client->players[p.id]->m_player->m_recallElapsed = p.recallElapsed;
 
 		// RESOURCES
 		client->players[p.id]->m_player->m_resources = p.resources;

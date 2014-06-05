@@ -56,6 +56,7 @@ private:
 	void computeAABB(struct playerObject *p);
 	void computeAABB(struct trapObject *t);
 	void addInfoMessage(int destination, string msg);
+	void recallPlayer(struct playerObject *p);
 
 	//float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, struct aabb other, int buildingId);
 

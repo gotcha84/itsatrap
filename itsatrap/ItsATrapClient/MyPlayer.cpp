@@ -64,6 +64,7 @@ void MyPlayer::initCommon() {
 	m_resources = 0;
 	m_flashDuration = 0;
 	m_bloodDuration = 0;
+	m_recallElapsed = 0;
 
 	m_wallJumpingBuildingId = -1;
 	m_onTopOfBuildingId = -1;

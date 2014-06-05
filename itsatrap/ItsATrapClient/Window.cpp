@@ -293,6 +293,10 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		//ConfigSettings::getConfig()->reloadSettingsFile();
 		//Client::sendReloadConfigFile();
 	}
+	else if (key == 'b')
+	{
+		Client::sendRecallEvent();
+	}
 	else if (key == 'e')
 	{
 		// Resource Tower Hits

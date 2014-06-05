@@ -35,6 +35,9 @@ private:
 	static bool		jumpEvent, cameraChanged;
 	static cameraObject playerCam;
 	static bool		okChannel;
+	static bool		recall;
+	static int		channelingResourceId;
+	static int		clientSendRate;
 
 	// Functions
 	static int receiveMsg();
@@ -52,7 +55,7 @@ private:
 	static void startChanneling(int resourceId);
 	static void cancelChanneling();
 	static DWORD WINAPI channelingThread(LPVOID);
-	static int	channelingResourceId;
+	
 
 public:
 	// Functions
@@ -68,6 +71,7 @@ public:
 	static void sendChannelAttemptEvent(int resourceId);
 	static void sendChannelCompletedEvent(int resourceId);
 	static void sendReloadConfigFile();
+	static void sendRecallEvent();
 	static void sendMoveEvent(Direction dir);
 	static void sendJumpEvent();
 	static void sendLookEvent(struct cameraObject cam);
