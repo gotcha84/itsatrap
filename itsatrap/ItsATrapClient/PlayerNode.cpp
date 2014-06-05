@@ -29,6 +29,9 @@ namespace sg {
 		timer = new Stopwatch();
 		checkMouse = false;
 
+		m_elapsedGameTime = 0;
+		m_gameOver = false;
+
 		initModels();
 	}
 
@@ -181,8 +184,9 @@ namespace sg {
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
-		
-		if (false) {
+	
+		if (m_gameOver) {
+			cout << "GAME OVER" << endl;
 			int teamOneScore = 0;
 			int teamTwoScore = 0;
 			for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {

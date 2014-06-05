@@ -19,6 +19,7 @@ int					Server::resourceHotSpotBonusPerInterval;
 int					Server::resourceInterval;
 int					Server::hotSpotChangeInterval;
 int					Server::maxServerProcessRate;
+int					Server::elapsedGameTimeMS;
 
 vector<int>			Server::resourceNodeLocations;
 int					Server::currentActiveResourceNodeIndex;
@@ -160,6 +161,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
 			tmp.aabb.print();
 		}
+
+		elapsedGameTimeMS = 0;
 		int MaxBuildings = 0;
 		ConfigSettings::getConfig()->getValue("MaxBuildings", MaxBuildings);
 		if (dynamicWorld.getNumStaticObjects() >= MaxBuildings) {
@@ -254,6 +257,7 @@ void Server::processBuffer()
 {
 	checkConnection();
 	dynamicWorld.updateTimings(maxServerProcessRate);
+	elapsedGameTimeMS += maxServerProcessRate;
 	updateResources();
 
 	dynamicWorld.resetWorldInfo();
@@ -391,8 +395,8 @@ void Server::processBuffer()
 		dynamicWorld.applyPhysics();
 		dynamicWorld.applyGravity();
 		dynamicWorld.applyAdjustments();
-		dynamicWorld.manuallyUncollide();
 		dynamicWorld.checkPlayersCollideWithTrap();
+		dynamicWorld.manuallyUncollide();
 	}
 	// Send info messages
 	sendInfoMessages();
@@ -532,6 +536,15 @@ void Server::updateResources()
 		currentResourceOwner = -1;
 		resetChanneling();
 	}
+
+	// Check if the game is over or not
+	int gameOverTime;
+	ConfigSettings::getConfig()->getValue("GameDuration", gameOverTime);
+	if (elapsedGameTimeMS >= gameOverTime)
+	{
+		// Broadcast Game Over message
+		sendGameOverUpdate();
+	}
 }
 
 // Sends messages to clients about new location of resource node
@@ -599,4 +612,12 @@ void Server::sendInfoMessages()
 		sendInfoMessage(dynamicWorld.infoMsgQueue[i].destination, dynamicWorld.infoMsgQueue[i].msg);
 
 	dynamicWorld.infoMsgQueue.clear();
+}
+
+void Server::sendGameOverUpdate()
+{
+	struct packet p = {};
+	p.eventId = GAME_OVER_EVENT;
+
+	Server::broadcastMsg((char *)&p, sizeof(p));
 }

@@ -501,6 +501,9 @@ void DynamicWorld::updateTimings(int timeDiff)
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
 		struct playerObject &p = it->second;
+
+		p.timeGameElapsed += timeDiff;
+
 		if (p.stunDuration > 0)
 			p.stunDuration -= timeDiff;
 
@@ -759,11 +762,7 @@ void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 	default:
 		break;
 	}
-
-
 }
-
-
 
 void DynamicWorld::applyMoveEvents() {
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
@@ -993,7 +992,6 @@ void DynamicWorld::resetWorldInfo() {
 			//p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 			break;
 		}
-
 	}
 }
 
@@ -1040,10 +1038,10 @@ void DynamicWorld::applyTrapGravity() {
 	}
 }
 
-
 // TODO: check for feet?
 void DynamicWorld::applyGravity()
 {
+	vector<struct playerObject> players = getAllPlayers();
 	//cout << "checking for gravity\n";
 	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
 	{
@@ -1108,6 +1106,29 @@ void DynamicWorld::applyGravity()
 		p.position += p.velocity + p.velocityDiff;
 		computeAABB(&p);
 		p.position = oldPos;
+
+
+		
+		for (int i = 0; i < players.size(); i++)
+		{
+			if (players[i].id != p.id && p.aabb.cameFromTop(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i))
+			{
+				cout << "trying to hump som1 but was sucessfully prevented" << endl;
+				p.feetPlanted = true;
+				p.velocity.y = 0.0f;
+				p.velocityDiff.y = 0.0f;
+				p.canClimb = true;
+				if (p.currPhysState != PhysicsStates::None) {
+					StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+					p.currInnerState = innerStates::Ending;
+				}
+				return;
+				//printf("Collision: player %d with player %d\n", e->id, players[i].id);
+				
+			}
+		}
+
+
 		for (int i = 0; i < staticObjects.size(); i++) {
 
 			// hit a ceiling
@@ -1128,7 +1149,7 @@ void DynamicWorld::applyGravity()
 			// landed
 			if (staticObjects[i].aabb.cameFromTop(p.position, p.position + p.velocity + p.velocityDiff, p.aabb, i)) {
 				p.position.y = staticObjects[i].aabb.maxY + YOFFSET; // on ground
-				cout << "landed: " << i << endl;
+				//cout << "landed: " << i << endl;
 				//cout << "pposition: " << glm::to_string(p.position) << endl;
 				p.feetPlanted = true;
 				p.velocity.y = 0.0f;
@@ -1173,8 +1194,8 @@ void DynamicWorld::applyAdjustments() {
 		return;
 		}*/
 
-		/*cout << "player pos: ";
-		p.aabb.print();*/
+		//cout << "player pos: ";
+		//p.aabb.print();
 
 		// hardcoding cuz idk why this aint working
 		//if (p.currPhysState == PhysicsStates::HoldingEdge) {
@@ -1208,8 +1229,6 @@ void DynamicWorld::applyAdjustments() {
 		if (p.currPhysState != PhysicsStates::WallRunning) {
 			p.cameraObject.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		}
-
-
 	}
 }
 
@@ -1358,6 +1377,12 @@ void DynamicWorld::checkForStateChanges(struct playerObject *p) {
 	}
 
 }
+/*
+void DynamicWorld::manuallyUncollide()
+{
+
+}
+*/
 
 
 void DynamicWorld::manuallyUncollide() {
@@ -1378,23 +1403,29 @@ void DynamicWorld::manuallyUncollide() {
 				if (buildingId < 1000) {
 					offset = staticObjects[buildingId].aabb.unstuckOffset(p.aabb);
 					cout << "is player " << buildingId << "w/ offset: " << glm::to_string(offset) << endl;
+					if (offset != glm::vec3(0.0f, 0.0f, 0.0f)) {
+						p.position += offset; 
+						computeAABB(&p);
+						p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+
+					}
+					else {
+						anyUnstuck = false;
+					}
 				}
 				// is player
+				
 				else {
 					struct playerObject &q = playerMap[buildingId - 1000];
-					if (q.id != buildingId - 1000) {
-						cout << "andre youre drunk";
-					}
-					cout << "is player w/ offset: " << glm::to_string(offset) << endl;
 					
+					while (checkCollisionsWithAllNonTraps(&p) != -1)
+					{
+						p.position.x += 10;
+						computeAABB(&p);
+						printf("Pushing p.x: %.1f\n", p.position.x);
+					}
 				}
-				if (offset != glm::vec3(0.0f, 0.0f, 0.0f)) {
-					p.position += offset;
-					computeAABB(&p);
-				}
-				else {
-					anyUnstuck = false;
-				}
+				
 				p.cameraObject.cameraCenter = glm::vec3(p.position.x, p.aabb.minY + playerHeight, p.position.z);
 				p.cameraObject.cameraLookAt = p.cameraObject.cameraCenter + p.cameraObject.camZ;
 				
@@ -1403,6 +1434,7 @@ void DynamicWorld::manuallyUncollide() {
 		}
 	}
 }
+
 
 void DynamicWorld::processJumpEvent(int playerId)
 {

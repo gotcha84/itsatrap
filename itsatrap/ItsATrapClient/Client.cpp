@@ -170,6 +170,10 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 				struct infoMsgPacket *info = (struct infoMsgPacket *)p;
 				client->root->getPlayer()->m_infoMsg.setMessage(info->msg);
 			}
+			else if (p->eventId == GAME_OVER_EVENT)
+			{
+				client->root->m_gameOver = true;
+			}
 		}
 	}
 }
@@ -219,7 +223,7 @@ int Client::getPlayerId()
 	return playerId;
 }
 
-void Client::sendStaticObject(AABB objectBB, bool isDecoration)
+void Client::sendStaticObject(AABB objectBB, bool isDecoration, glm::vec4 color)
 {
 	struct staticObjectPacket packet = {};
 	packet.eventId = STATIC_OBJECT_CREATION_EVENT;
@@ -231,6 +235,7 @@ void Client::sendStaticObject(AABB objectBB, bool isDecoration)
 	packet.object.aabb.maxY = objectBB.maxY;
 	packet.object.aabb.maxZ = objectBB.maxZ;
 	packet.object.isDecoration = isDecoration;
+	packet.object.color = color;
 
 	sendMsg((char *)&packet, sizeof(struct staticObjectPacket));
 }

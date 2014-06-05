@@ -1,5 +1,174 @@
-﻿Build started 6/5/2014 12:45:46 AM.
+﻿Build started 6/5/2014 12:48:41 AM.
+     1>Project "C:\itsatrap\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\itsatrap\itsatrap\itsatrap\/glut/include/ /IC:\itsatrap\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AABB.cpp ConfigSettings.cpp DynamicWorld.cpp InputEvents.cpp Physics.cpp StateLogic.cpp Stopwatch.cpp World.cpp
+         World.cpp
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.h(37): warning C4251: 'World::m_structuresMap' : class 'std::vector<int,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.h(38): warning C4251: 'World::m_boundingBoxes' : class 'std::vector<AABB,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
+                 with
+                 [
+                     _Ty=AABB
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(20): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(24): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(56): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(57): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(64): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(65): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(96): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(99): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(113): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(116): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(132): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(135): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(149): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(152): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(190): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(192): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(193): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(195): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(205): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(207): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.cpp(216): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+         Stopwatch.cpp
+         StateLogic.cpp
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<std::string,std::string,stdext::hash_compare<_Kty,std::less<_Kty>>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+                 with
+                 [
+                     _Kty=std::string
+         ,            _Ty=std::string
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\statelogic.h(47): warning C4091: 'static ' : ignored on left of 'StateLogic' when no variable is declared
+         GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         Physics.cpp
+         InputEvents.cpp
+         DynamicWorld.cpp
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<std::string,std::string,stdext::hash_compare<_Kty,std::less<_Kty>>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+                 with
+                 [
+                     _Kty=std::string
+         ,            _Ty=std::string
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\statelogic.h(47): warning C4091: 'static ' : ignored on left of 'StateLogic' when no variable is declared
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.h(37): warning C4251: 'World::m_structuresMap' : class 'std::vector<int,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\world.h(38): warning C4251: 'World::m_boundingBoxes' : class 'std::vector<AABB,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'World'
+                 with
+                 [
+                     _Ty=AABB
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(39): warning C4251: 'DynamicWorld::staticObjects' : class 'std::vector<staticObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+                 with
+                 [
+                     _Ty=staticObject
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(40): warning C4251: 'DynamicWorld::staticResourceObjects' : class 'std::vector<staticResourceObject,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+                 with
+                 [
+                     _Ty=staticResourceObject
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(41): warning C4251: 'DynamicWorld::team1RespawnPoints' : class 'std::vector<glm::vec3,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+                 with
+                 [
+                     _Ty=glm::vec3
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(41): warning C4251: 'DynamicWorld::team2RespawnPoints' : class 'std::vector<glm::vec3,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+                 with
+                 [
+                     _Ty=glm::vec3
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(43): warning C4251: 'DynamicWorld::portalMap' : class 'std::map<int,trapObject *,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+                 with
+                 [
+                     _Kty=int
+         ,            _Ty=trapObject *
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(45): warning C4251: 'DynamicWorld::aabbOffsets' : class 'std::map<int,AABB,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+                 with
+                 [
+                     _Kty=int
+         ,            _Ty=AABB
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(64): warning C4251: 'DynamicWorld::trapMap' : class 'std::map<int,trapObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+                 with
+                 [
+                     _Kty=int
+         ,            _Ty=trapObject
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(65): warning C4251: 'DynamicWorld::playerMap' : class 'std::map<int,playerObject,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+                 with
+                 [
+                     _Kty=int
+         ,            _Ty=playerObject
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.h(66): warning C4251: 'DynamicWorld::infoMsgQueue' : class 'std::vector<infoMsg,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'DynamicWorld'
+                 with
+                 [
+                     _Ty=infoMsg
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(210): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(232): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(260): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(338): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(429): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(437): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(455): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(470): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(486): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(670): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1013): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1112): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1132): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1590): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1635): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+         GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         ConfigSettings.cpp
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(25): warning C4251: 'ConfigSettings::str_full_screen' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(56): warning C4251: 'ConfigSettings::settings' : class 'stdext::hash_map<std::string,std::string,stdext::hash_compare<_Kty,std::less<_Kty>>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+                 with
+                 [
+                     _Kty=std::string
+         ,            _Ty=std::string
+                 ]
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(59): warning C4251: 'ConfigSettings::file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+     1>c:\itsatrap\itsatrap\itsatrap\common\configsettings.h(60): warning C4251: 'ConfigSettings::template_file_name' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
+         AABB.cpp
+         Generating Code...
+     1>c:\itsatrap\itsatrap\itsatrap\common\aabb.cpp(265): warning C4715: 'AABB::collidesWithRampInside' : not all control paths return a value
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\itsatrap\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\itsatrap\itsatrap\itsatrap\/glut/lib/ /LIBPATH:C:\itsatrap\itsatrap\itsatrap\Debug\ freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\itsatrap\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\itsatrap\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\AABB.obj
+         Debug\ConfigSettings.obj
+         Debug\DynamicWorld.obj
+         Debug\InputEvents.obj
+         Debug\Physics.obj
+         Debug\StateLogic.obj
+         Debug\Stopwatch.obj
+         Debug\World.obj
+     1>AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
+            Creating library C:\itsatrap\itsatrap\itsatrap\Debug\Common.lib and object C:\itsatrap\itsatrap\itsatrap\Debug\Common.exp
+         Common.vcxproj -> C:\itsatrap\itsatrap\itsatrap\Debug\Common.dll
+     1>Done Building Project "C:\itsatrap\itsatrap\itsatrap\Common\Common.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.01
+Time Elapsed 00:00:06.04
