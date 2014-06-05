@@ -291,8 +291,12 @@ void Window::keyUp(unsigned char key, int x, int y) {
 	}
 	else if (key == 'r') 
 	{
-		ConfigSettings::getConfig()->reloadSettingsFile();
-		Client::sendReloadConfigFile();
+		//ConfigSettings::getConfig()->reloadSettingsFile();
+		//Client::sendReloadConfigFile();
+	}
+	else if (key == 'b')
+	{
+		Client::sendRecallEvent();
 	}
 	else if (key == 'e')
 	{

@@ -26,7 +26,8 @@ using namespace std;
 
 class MyPlayer {
 	public:
-		int m_numKills, m_numDeaths, m_health, m_stunDuration, m_slowDuration, m_resources, m_timeUntilRespawn, m_flashDuration, m_hitCrosshairDuration;
+		int m_numKills, m_numDeaths, m_health, m_stunDuration, m_slowDuration, m_resources, m_timeUntilRespawn, m_flashDuration, m_bloodDuration, m_hitCrosshairDuration;
+		int m_recallElapsed;
 		InfoMessage m_infoMsg;
 		bool m_deathState;
 

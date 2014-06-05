@@ -116,6 +116,7 @@ struct playerActionPacket
 	bool moveEvents[NUM_DIRECTIONS];
 	bool jump, cameraChanged;
 	struct cameraObject cam;
+	bool recall;
 };
 
 struct refreshPacket
@@ -138,7 +139,7 @@ struct aabbInfoPacket
 	AABB aabb;
 };
 
-#define MAX_MSG_LENGTH 32
+#define MAX_MSG_LENGTH 64
 struct infoMsgPacket
 {
 	int eventId;

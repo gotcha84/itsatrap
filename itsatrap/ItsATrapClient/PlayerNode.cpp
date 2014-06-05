@@ -177,6 +177,20 @@ namespace sg {
 		m_playerID = id;
 	}
 
+	float Player::getFadeForFlashOrBlood(int x, int fadeOut)
+	{
+		float fade = 0;
+		
+		if (x > fadeOut)
+			fade = 1;
+		else
+			fade = (float)x / fadeOut;
+		if (fade < 0)
+			fade = 0;
+
+		return fade;
+	}
+
 	// moves camera to player's view
 	void Player::draw() {
 		//cout << "velocity: " << glm::to_string(this->getPlayer()->getPhysics()->m_velocity) << endl;
@@ -275,19 +289,16 @@ namespace sg {
 			//if (client->scrollUp) cout << "playerNode: scrollUp" << endl;
 			//if (client->scrollDown) cout << "playerNode: scrollDown" << endl;
 
-			// Flashbang stuff
-			float flash = 0;
-			int flashFadeOut = 0;
+			int flashFadeOut = 0, bloodFadeOut = 0;
 			ConfigSettings::getConfig()->getValue("FlashFadeOut", flashFadeOut);
-			if (getPlayer()->m_flashDuration > flashFadeOut)
-				flash = 1;
-			else
-				flash = (float)getPlayer()->m_flashDuration / flashFadeOut;
-			if (flash < 0)
-				flash = 0;
+			ConfigSettings::getConfig()->getValue("BloodFadeOut", bloodFadeOut);
+			float flash = getFadeForFlashOrBlood(getPlayer()->m_flashDuration, flashFadeOut);
+			float blood = getFadeForFlashOrBlood(getPlayer()->m_bloodDuration, bloodFadeOut);
 
 			glDisable(GL_LIGHTING);
-			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, getPlayer()->m_hitCrosshairDuration, m_player->m_infoMsg.getMessage(), m_elapsedGameTime);
+
+			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, blood, getPlayer()->m_hitCrosshairDuration, getPlayer()->m_recallElapsed, m_player->m_infoMsg.getMessage(), m_elapsedGameTime);
+
 			glEnable(GL_LIGHTING);
 		}
 

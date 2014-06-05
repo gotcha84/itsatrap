@@ -16,7 +16,7 @@ HUD::~HUD() {
 
 }
 
-void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hitCrosshairDuration, string msg, int gameTime) {
+void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime) {
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -48,7 +48,21 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, int hi
 				if (m_progressTime > -1) {
 					drawProgressBar(m_progressTime);
 				}
+				if (recallElapsed > 0)
+				{
+					int recallChannelTime = 1;
+					ConfigSettings::getConfig()->getValue("RecallChannelTime", recallChannelTime);
+					int time = ((float) recallElapsed / recallChannelTime) * 100;
+					if (time > 100)
+						time = 100;
+					else if (time < 0)
+						time = 0;
+					drawProgressBar(time);
+					if (time > 50)
+						drawFlashbag((time-50.0f)/50.0f);
+				}
 				drawFlashbag(flashFade);
+				drawBlood(bloodFade);
 			}
 			
 		glPopMatrix();
@@ -177,6 +191,14 @@ void HUD::drawProgressBar(int time) {
 
 void HUD::drawFlashbag(float fade) {
 	glColor4f(1.0f, 1.0f, 1.0f, fade);
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, 0.0f);
+	glScaled(10.0f, 10.0f, 10.0f);
+	glutSolidCube(0.2f);
+}
+
+void HUD::drawBlood(float fade) {
+	glColor4f(1.0f, 0, 0, fade);
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, 0.0f);
 	glScaled(10.0f, 10.0f, 10.0f);

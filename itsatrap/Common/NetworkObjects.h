@@ -126,12 +126,12 @@ struct cameraObject {
 
 struct playerObject {
     int				id, health, numKills, numDeaths;
-	int				stunDuration, slowDuration, flashDuration, hitCrosshair;
+	int				stunDuration, slowDuration, flashDuration, hitCrosshair, bloodDuration, recallElapsed;
 	int				timeUntilRespawn, timeUntilRegen, timeGameElapsed;
 	int				knifeDelay;
 	int				resources;
 	int				onTopOfBuildingId;
-	bool			deathState;
+	bool			deathState, isRecalling;
 	AABB			aabb;
 	Stopwatch		stopwatch;
 

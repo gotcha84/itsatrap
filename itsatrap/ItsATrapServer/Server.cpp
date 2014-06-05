@@ -125,8 +125,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			player.clientAddress = *source;
 			player.playerId = playerCount;
 			player.active = true;
-			player.timeUntilInactive = 10000;
-			//ConfigSettings::getConfig()->getValue("TimeUntilDisconnect", player.timeUntilInactive);
+			player.timeUntilInactive = 20000;
 			players[playerCount] = player;
 				
 			// Creating response message
@@ -291,6 +290,7 @@ void Server::processBuffer()
 						if (isChanneling && actPkt->playerId == channelingPlayer) resetChanneling();
 
 						dynamicWorld.processMoveEvent(actPkt->playerId, (Direction)i);
+						dynamicWorld.playerMap[actPkt->playerId].isRecalling = false;
 					}
 				}
 
@@ -299,11 +299,15 @@ void Server::processBuffer()
 					if (isChanneling && actPkt->playerId == channelingPlayer) resetChanneling();
 
 					dynamicWorld.processJumpEvent(actPkt->playerId);
+					dynamicWorld.playerMap[actPkt->playerId].isRecalling = false;
 				}
 
 				// Camera
 				if (actPkt->cameraChanged)
 					dynamicWorld.processLookEvent(actPkt->playerId, &actPkt->cam);
+
+				if (actPkt->recall)
+					dynamicWorld.playerMap[actPkt->playerId].isRecalling = true;
 
 				break;
 			}
