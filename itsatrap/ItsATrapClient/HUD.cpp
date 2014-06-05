@@ -4,7 +4,8 @@
 bool healthCheck;
 // default constructor
 HUD::HUD() {
-	font = new FTGLPixmapFont("C:/Windows/Fonts/Arial.ttf");
+	//font = new FTGLPixmapFont("C:/Windows/Fonts/Arial.ttf");
+	font = new FTGLPixmapFont("C:/Windows/Fonts/Corbel.ttf");
 	board = new Scoreboard();
 	m_progressTime = -1;
 	ouchSound = createIrrKlangDevice(); //declare loop, pause, and track
@@ -124,7 +125,7 @@ void HUD::drawResource(int resource) {
 	glPushMatrix();
 		glLoadIdentity();
 		
-		glColor4f(0,20,0,1); // green
+		glColor4f(1,1,0,1); // green
 		font->FaceSize(75);
 		font->CharMap(ft_encoding_symbol);
 		glRasterPos2f(0.65f, 0.8f);
@@ -219,9 +220,13 @@ void HUD::drawClock(int time) {
 	int minutes = 0;
 	int seconds = 0;
 	int duration = 0;
-	int redTime = 0;
+	int yellowTime = 60;
+	int redTime = 10;
+
+
 	ConfigSettings::getConfig()->getValue("GameDuration", duration);
 	ConfigSettings::getConfig()->getValue("TimeBeforeRed", redTime);
+	ConfigSettings::getConfig()->getValue("TimeBeforeYellow", yellowTime);
 	
 	remainTime = duration - time;
 	
@@ -248,15 +253,24 @@ void HUD::drawClock(int time) {
 	glPushMatrix();
 		glLoadIdentity();
 
-		if (remainTime > redTime) {
-			glColor4f(0.0f, 20.0f, 0.0f, 1.0f);
-		} else {
+		if (remainTime <= redTime) {
 			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+			font->FaceSize(150);
+			glRasterPos2f(-0.15f, 0.7f);
 		}
+		else if (remainTime <= yellowTime) {
+			glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 			font->FaceSize(75);
-			font->CharMap(ft_encoding_symbol);
-			glRasterPos2f(-0.1f, 0.8f);
-			font->Render(result.c_str());
+			glRasterPos2f(-0.05f, 0.8f);
+		}
+		else {
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			font->FaceSize(50);
+			glRasterPos2f(-0.05f, 0.8f);
+		}
+		//font->FaceSize(50);
+		font->CharMap(ft_encoding_symbol);
+		font->Render(result.c_str());
 			
 	glPopMatrix();
 }
