@@ -82,6 +82,7 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="ConfigSettings.h" />
     <ClInclude Include="Exports.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="InputEvents.h" />
     <ClInclude Include="NetworkConfig.h" />
     <ClInclude Include="Packet.h" />
@@ -97,6 +98,7 @@
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="ConfigSettings.cpp" />
     <ClCompile Include="DynamicWorld.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InputEvents.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="StateLogic.cpp" />

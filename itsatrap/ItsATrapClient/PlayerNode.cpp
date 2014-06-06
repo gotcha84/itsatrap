@@ -132,10 +132,12 @@ namespace sg {
 		else
 			color = glm::vec4(0, 0, 0.75, 1);
 
+		color = glm::vec4(1, 1, 1, 1);
+
 
 		m_otherPlayer = new ObjModel();
 		m_otherPlayer->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");
-		m_otherPlayer->setTexture(textures->m_texID[Textures::Polynoid]);
+		m_otherPlayer->setTexture(textures->m_texID[Textures::PolynoidRed]);
 		m_otherPlayer->setColor(color);
 
 
@@ -339,7 +341,6 @@ namespace sg {
 				timer->reset();
 				checkMouse = false;
 			}
-
 			
 			//if (client->scrollUp) cout << "playerNode: scrollUp" << endl;
 			//if (client->scrollDown) cout << "playerNode: scrollDown" << endl;
@@ -413,12 +414,14 @@ namespace sg {
 
 			if (getPlayer()->m_knifeDelay > 800)
 			{
-				m_otherPlayerAttack->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				//m_otherPlayerAttack->setTexture(this->getPlayerID() % 2 ? textures->m_texID[Textures::PolynoidRed] : textures->m_texID[Textures::PolynoidBlue]);
+				m_otherPlayerAttack->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0.2, 0.8, 1, 1));
 				m_otherPlayerAttack->drawModel();
 			}
 			else
 			{
-				m_otherPlayer->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				//m_otherPlayer->setTexture(this->getPlayerID() % 2 ? textures->m_texID[Textures::PolynoidRed] : textures->m_texID[Textures::PolynoidBlue]);
+				m_otherPlayer->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0.2, 0.8, 1, 1));
 				m_otherPlayer->drawModel();
 			}
 

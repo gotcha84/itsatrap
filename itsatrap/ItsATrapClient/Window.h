@@ -15,7 +15,7 @@
 
 #include "MyPlayer.h"
 #include "SceneGraph.h"
-
+#include "Texture.h"
 #include "Sound.h"
 
 class Window {
@@ -25,11 +25,11 @@ class Window {
 		static int m_fpsCounter;
 		static clock_t m_timer;
 
-		static bool *keyState;
-		static bool *keyEventTriggered;
-		static bool *specialKeyState;
-		static bool *specialKeyEventTriggered;
-		static int modifierKey;
+		static bool		*keyState;
+		static bool		*keyEventTriggered;
+		static bool		*specialKeyState;
+		static bool		*specialKeyEventTriggered;
+		static int		modifierKey;
 
 		Window();
 		~Window();

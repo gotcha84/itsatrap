@@ -170,6 +170,8 @@ int main(int argc, char *argv[]) {
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	sendAABBInfo();
 
+	Client::gameState.setWelcome();
+
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
 	glClearDepth(1.0f);							// Depth Buffer Setup
 	glDepthFunc(GL_LEQUAL);						// The Type Of Depth Testing To Do

@@ -1,6 +1,7 @@
 #include "Client.h"
 
 extern ClientInstance *client;
+extern Texture *textures;
 
 // Variables
 struct sockaddr_in	Client::myAddress, Client::serverAddress;
@@ -17,6 +18,7 @@ bool				Client::okChannel;
 bool				Client::recall;
 int					Client::clientSendRate;
 bool				Client::hasActiveNode;
+GameState			Client::gameState;
 
 int Client::initializeClient() {
 
@@ -86,6 +88,7 @@ int Client::initializeClient() {
 
 		Sleep(1000);
 	}
+	
 
 	okChannel = false;
 	hasActiveNode = false;
@@ -96,7 +99,9 @@ int Client::initializeClient() {
 	Client::startReceiverThread();
 	Client::startSenderThread();
 	
+
 	return 0;
+	
 }
 
 void Client::startReceiverThread()
@@ -150,11 +155,9 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			else if (p->eventId == HOT_SPOT_UPDATE)
 			{
 				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
+				updateActiveResourceNode(packet->id);
 
-				if (client != nullptr) {
-					updateActiveResourceNode(packet->id);
-					hasActiveNode = true;
-				}
+				hasActiveNode = true;
 			}
 			else if (p->eventId == CHANNELING_PERMISSION)
 			{
@@ -179,7 +182,17 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			}
 			else if (p->eventId == GAME_OVER_EVENT)
 			{
+				Client::gameState.setGameover();
 				client->root->m_gameOver = true;
+			}
+			else if (p->eventId == SERVER_READY_EVENT)
+			{
+				Client::gameState.setGameReady();
+				client->screen->setTexture(textures->m_texID[Textures::BackgroundComplete]);
+			}
+			else if (p->eventId == GAME_BEGIN_EVENT)
+			{
+				Client::gameState.setGameplay();
 			}
 		}
 	}
@@ -372,7 +385,6 @@ DWORD WINAPI Client::senderThread(LPVOID)
 			p.cameraChanged = cameraChanged;
 			p.cam = playerCam;
 			p.recall = recall;
-
 			sendMsg((char *)&p, sizeof(p));
 		}
 
@@ -460,6 +472,14 @@ void Client::sendAABBInfo(int type, AABB aabb)
 	p.playerId = getPlayerId();
 	p.type = type;
 	p.aabb = aabb;
+
+	sendMsg((char *)&p, sizeof(p));
+}
+
+void Client::sendGameReadyState() {
+	struct refreshPacket p;
+	p.eventId = PLAYER_READY_EVENT;
+	p.playerId = getPlayerId();
 
 	sendMsg((char *)&p, sizeof(p));
 }

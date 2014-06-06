@@ -23,17 +23,20 @@ enum Textures {
 	BlueNode,
 	RedNode,
 	Skybox,
-	Polynoid,
+	PolynoidRed,
+	PolynoidBlue,
 	Headless,
 	Lightning,
 	Animus,
 	Base,
 	Caltrop,
 	BRail,
-	Size,
 	Stunned,
 	Slowed,
-	Flashed
+	Flashed,
+	Background,
+	BackgroundComplete,
+	Size
 };
 
 class Texture {

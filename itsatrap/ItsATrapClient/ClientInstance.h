@@ -19,6 +19,7 @@ class ClientInstance {
 		sg::Player *root;
 		//sg::MatrixTransform *hotSpot;
 		Level level;
+		sg::Cube	*screen;
 
 		bool tabPressed;
 		bool scrollUp;

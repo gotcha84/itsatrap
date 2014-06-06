@@ -15,6 +15,7 @@
 #include "Player.h"
 #include "DynamicWorld.h"
 #include "NetworkObjects.h"
+#include "GameState.h"
 
 using namespace std;
 
@@ -32,7 +33,6 @@ struct bufferEntry {
 class Server {
 
 private:
-
 	// Variables
 	static struct sockaddr_in	myAddress;
 	static int 					i_sockfd;
@@ -62,6 +62,11 @@ private:
 
 	static int					elapsedGameTimeMS;
 
+	static GameState			gameState;
+	static int					maxPlayers;
+	static int					numReadyPlayers;
+	static bool					*playerReady;
+
 	// Function
 	static int initialize();
 	static void processIncomingMsg(char *, struct sockaddr_in *);
@@ -89,7 +94,10 @@ private:
 
 	static void sendGameOverUpdate();
 	static void checkGameOver();
-
+	
+	static void checkAllPlayersReady();
+	static void sendGameBeginState();
+	static void sendGameReadyState();
 public:
 
 	// Functions
