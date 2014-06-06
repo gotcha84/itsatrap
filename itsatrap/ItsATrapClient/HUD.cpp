@@ -102,11 +102,11 @@ void HUD::drawHealthBar(int health) {
 	}
 
 	// black outline for health bar
-	for (int i = 0; i<10; i++) {
+	for (int i = 0; i<100; i++) {
 		glColor4f(0, 0, 0, 0.5f);
 		glLoadIdentity();
-		glTranslatef(-0.9 + 0.05*i, 0.85, 0);
-		glScalef(1, 2.5f, 1);
+		glTranslatef(-0.9 + 0.005*i, 0.85, 0);
+		glScalef(0.1f, 2.5f, 1);
 		glutSolidCube(0.05);
 	}
 

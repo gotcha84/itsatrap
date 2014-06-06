@@ -585,7 +585,9 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		return;
 
 	target->health -= damage;
-	cancelRecall(target);
+
+	if (damage > 5)
+		cancelRecall(target);
 
 	// displaying hit crosshair & blood
 	if (displayHit)
@@ -616,10 +618,7 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		target->aabb.minZ = 0;
 		target->deathState = true;
 		
-
-		addInfoMessage(attacker->id, "You have killed player " + to_string(target->id) + " (+100)");
-		addInfoMessage(target->id, "You have been killed by player " + to_string(attacker->id));
-
+		// ON DIFFERENT TEAM!
 		if (attacker->id % 2 != target->id % 2)
 		{
 			attacker->numKills++;
@@ -627,6 +626,9 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 			int killBonusResource = 0;
 			ConfigSettings::getConfig()->getValue("KillBonusResource", killBonusResource);
 			attacker->resources += killBonusResource;
+			
+			addInfoMessage(attacker->id, "You have killed player " + to_string(target->id) + " (+" + to_string(killBonusResource) + ")");
+			addInfoMessage(target->id, "You have been killed by player " + to_string(attacker->id));
 		}
 	}
 }
