@@ -730,7 +730,6 @@ void Level::disableAllResourceNodes() {
 	for (int i = 0; i < resources.size(); ++i) {
 		resources[i]->setInactiveColor();
 		resources[i]->disableParticles();
-		//resources[i]->getModel()->setTexture(textures->m_texID[Textures::InactiveNode]);
 	}
 	activeResourceNode = -1;
 }
@@ -740,7 +739,6 @@ void Level::disableCurrentResourceNode() {
 		if (resources[i]->getResourceId() == activeResourceNode) {
 			resources[i]->setInactiveColor();
 			resources[i]->disableParticles();
-			//resources[i]->getModel()->setTexture(textures->m_texID[Textures::InactiveNode]);
 			activeResourceNode = -1;
 		}
 	}
@@ -752,7 +750,6 @@ void Level::activateResourceNode(int id) {
 			activeResourceNode = id;
 			resources[i]->setActiveColor();
 			resources[i]->enableParticles();
-			//resources[i]->getModel()->setTexture(textures->m_texID[Textures::ActiveNode]);
 		}
 	}
 }

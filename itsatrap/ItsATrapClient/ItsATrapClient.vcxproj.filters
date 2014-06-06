@@ -134,9 +134,6 @@
     <ClCompile Include="Sphere.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
-    <ClCompile Include="Welcome.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -230,9 +227,6 @@
     </ClInclude>
     <ClInclude Include="Skybox.h">
       <Filter>Header Files\SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="Welcome.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

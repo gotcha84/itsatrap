@@ -85,11 +85,9 @@ private:
 	static void resetChanneling();
 	static void sendInfoMessages();
 	static void sendInfoMessage(int destination, string msg);
-	static void broadcastInfoMessages(string msg);
 
 	static void sendGameOverUpdate();
 	static void checkGameOver();
-	
 
 public:
 

@@ -57,7 +57,6 @@ private:
 	void computeAABB(struct trapObject *t);
 	void addInfoMessage(int destination, string msg);
 	void recallPlayer(struct playerObject *p);
-	void cancelRecall(struct playerObject *p);
 
 	//float handleAngleIntersection(glm::vec3 from, glm::vec3 goTo, struct aabb other, int buildingId);
 
@@ -92,7 +91,7 @@ public:
 	AABB getStaticObjectBB(int buildingId);
 	AABB getStaticResourceBB(int resourceId);
 
-	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage, bool displayHit);
+	bool playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
 	void resetWorldInfo();
 	void applyCollisions();
@@ -101,6 +100,7 @@ public:
 	void applyAdjustments();
 	void manuallyUncollide();
 	void applyTrapGravity();
+	void fallTrapToGround(struct trapObject *trap);
 
 	void applyMoveEvents();
 	void noneMoveEvent(int playerId);
@@ -120,7 +120,7 @@ public:
 	void checkForStateChanges(struct playerObject *e);
 
 	void addAABBInfo(int type, AABB aabb);
-	void handleKnifeEvent(int knifer);
+	bool handleKnifeEvent(int knifer);
 };
 
 #endif

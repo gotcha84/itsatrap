@@ -118,7 +118,6 @@
     <ClCompile Include="Trap.cpp" />
     <ClCompile Include="TrapMenu.cpp" />
     <ClCompile Include="Utilities.cpp" />
-    <ClCompile Include="Welcome.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,7 +151,6 @@
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="TrapMenu.h" />
     <ClInclude Include="Utilities.h" />
-    <ClInclude Include="Welcome.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

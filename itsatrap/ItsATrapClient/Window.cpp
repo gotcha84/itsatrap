@@ -67,7 +67,7 @@ void Window::reshapeCallback(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	// glFrustum(-10.0, 10.0, -10.0, 10.0, 10, 1000.0); // set perspective projection viewing frustum
-	gluPerspective(45.0f, ((float)w)/((float)h), 1.0f, 1000.0f);
+	gluPerspective(45.0f, 3.0f / 3.0f, 1, 1000);
 	//glTranslatef(0, 0, -20);
 	glMatrixMode(GL_MODELVIEW);
 }
@@ -289,10 +289,9 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		delete trap;
 		trap = nullptr;
 	}
-	else if (key == 13)
+	else if (key == (char)32)
 	{
 		cout << "ENTER IS PRESSED" << endl;
-		client->enterPressed = true;
 	}
 	else if (key == 'r') 
 	{
@@ -414,42 +413,50 @@ void Window::processKeys() {
 		client->root->getPlayer()->handleTeleport();
 	}*/
 
-	// forward + backward
-	if (keyState['w']) {
-		Client::sendMoveEvent(FORWARD);
-		if (!keyEventTriggered['w']) {
-			
-			keyEventTriggered['w'] = true;
+	if (keyState['q']) {
+		Client::sendMoveEvent(DASH);
+		if (!keyEventTriggered['q']) {
+			keyEventTriggered['q'] = true;
 		}
 	}
-	else if (keyState['s']) {
-		Client::sendMoveEvent(BACKWARD);
-		if (!keyEventTriggered['s']) {
-			
-			keyEventTriggered['s'] = true;
-		}
-	}
+	else {
+		if (keyState['w']) {
+			Client::sendMoveEvent(FORWARD);
+			if (!keyEventTriggered['w']) {
 
-	// left + right
-	if (keyState['a']) {
-		Client::sendMoveEvent(LEFT);
-		if (!keyEventTriggered['a']) {
-			
-			keyEventTriggered['a'] = true;
+				keyEventTriggered['w'] = true;
+			}
 		}
-	}
-	else if (keyState['d']) {
-		Client::sendMoveEvent(RIGHT);
-		if (!keyEventTriggered['d']) {
-			
-			keyEventTriggered['d'] = true;
+		else if (keyState['s']) {
+			Client::sendMoveEvent(BACKWARD);
+			if (!keyEventTriggered['s']) {
+
+				keyEventTriggered['s'] = true;
+			}
+		}
+
+		// left + right
+		if (keyState['a']) {
+			Client::sendMoveEvent(LEFT);
+			if (!keyEventTriggered['a']) {
+
+				keyEventTriggered['a'] = true;
+			}
+		}
+		else if (keyState['d']) {
+			Client::sendMoveEvent(RIGHT);
+			if (!keyEventTriggered['d']) {
+
+				keyEventTriggered['d'] = true;
+			}
 		}
 	}
 
 	if (keyState['w'] ||
 		keyState['s'] ||
 		keyState['a'] ||
-		keyState['d']) {
+		keyState['d'] ||
+		keyState['q']) {
 		walk->setIsPaused(false);
 	}
 

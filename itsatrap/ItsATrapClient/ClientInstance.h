@@ -21,7 +21,6 @@ class ClientInstance {
 		Level level;
 
 		bool tabPressed;
-		bool enterPressed;
 		bool scrollUp;
 		bool scrollDown;
 

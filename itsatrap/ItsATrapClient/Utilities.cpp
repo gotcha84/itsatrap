@@ -5,9 +5,9 @@ GLfloat* Utilities::matrixToGLMatrix(glm::mat4 matrix) {
 
 	GLfloat retval[16];
 
-	for (int i=0; i<4; i++) {
-		for (int j=0; j<4; j++) {
-			retval[(i*4)+j] = matrix[j][i];
+	for (int i = 0; i<4; i++) {
+		for (int j = 0; j<4; j++) {
+			retval[(i * 4) + j] = matrix[j][i];
 		}
 	}
 
@@ -15,12 +15,12 @@ GLfloat* Utilities::matrixToGLMatrix(glm::mat4 matrix) {
 }
 
 int Utilities::roundToInt(float num) {
-	return int(floor(num+0.5));
+	return int(floor(num + 0.5));
 }
 
 void Utilities::writeIntVectorToFile(vector<int> vec, string filename) {
 	ofstream outputFile = ofstream(filename);
-	for (int i=0; i<vec.size(); i++) {
+	for (int i = 0; i<vec.size(); i++) {
 		outputFile << vec[i] << endl;
 	}
 
@@ -28,7 +28,7 @@ void Utilities::writeIntVectorToFile(vector<int> vec, string filename) {
 
 void Utilities::writeFloatVectorToFile(vector<float> vec, string filename) {
 	ofstream outputFile = ofstream(filename);
-	for (int i=0; i<vec.size(); i++) {
+	for (int i = 0; i<vec.size(); i++) {
 		outputFile << vec[i] << endl;
 	}
 
@@ -37,7 +37,7 @@ void Utilities::writeFloatVectorToFile(vector<float> vec, string filename) {
 
 void Utilities::writeIntArrayToFile(int* arr, int size, string filename) {
 	ofstream outputFile = ofstream(filename);
-	for (int i=0; i<size; i++) {
+	for (int i = 0; i<size; i++) {
 		outputFile << arr[i] << endl;
 	}
 
@@ -45,7 +45,7 @@ void Utilities::writeIntArrayToFile(int* arr, int size, string filename) {
 
 void Utilities::writeFloatArrayToFile(float* arr, int size, string filename) {
 	ofstream outputFile = ofstream(filename);
-	for (int i=0; i<size; i++) {
+	for (int i = 0; i<size; i++) {
 		outputFile << arr[i] << endl;
 	}
 
@@ -56,13 +56,13 @@ vector<float> Utilities::modifyVec(vector<float> oldVec, float scale, float xTra
 	vector<float> vec;
 	for (int i = 0; i < oldVec.size(); i++) {
 		if (i % 3 == 0) {
-			vec.push_back((oldVec[i]*scale)+xTranslate);
+			vec.push_back((oldVec[i] * scale) + xTranslate);
 		}
 		else if (i % 3 == 1) {
-			vec.push_back((oldVec[i]*scale)+yTranslate);
+			vec.push_back((oldVec[i] * scale) + yTranslate);
 		}
 		else if (i % 3 == 2) {
-			vec.push_back((oldVec[i]*scale)+zTranslate);
+			vec.push_back((oldVec[i] * scale) + zTranslate);
 		}
 	}
 	return vec;
@@ -72,24 +72,24 @@ vector<float> Utilities::modifyVec(vector<float> oldVec, glm::vec3 scale, float 
 	vector<float> vec;
 	for (int i = 0; i < oldVec.size(); i++) {
 		if (i % 3 == 0) {
-			vec.push_back((oldVec[i]*scale.x)+xTranslate);
+			vec.push_back((oldVec[i] * scale.x) + xTranslate);
 		}
 		else if (i % 3 == 1) {
-			vec.push_back((oldVec[i]*scale.y)+yTranslate);
+			vec.push_back((oldVec[i] * scale.y) + yTranslate);
 		}
 		else if (i % 3 == 2) {
-			vec.push_back((oldVec[i]*scale.z)+zTranslate);
+			vec.push_back((oldVec[i] * scale.z) + zTranslate);
 		}
 	}
 	return vec;
 }
 
 vector<float> Utilities::findMinsMaxs(string inputfile) {
-	
+
 	vector<tinyobj::shape_t> shapes;
-  
+
 	string err = tinyobj::LoadObj(shapes, inputfile.c_str());
-	
+
 	vector<float> tmp;
 	float minx = FLT_MAX;
 	float minz = FLT_MAX;
@@ -162,16 +162,16 @@ glm::vec3 Utilities::findAverage(string inputfile) {
 	int xCount = 0;
 	int zCount = 0;
 
-	float yMin = FLT_MAX; 
+	float yMin = FLT_MAX;
 
 	float xTotal = 0.0f;
 	float zTotal = 0.0f;
 
-	
+
 	for (int i = 0; i < shapes.size(); i++) {
 		for (int j = 0; j < shapes[i].mesh.positions.size(); j++) {
 			if (j % 3 == 0) {
-				xTotal+=shapes[i].mesh.positions[j];
+				xTotal += shapes[i].mesh.positions[j];
 				xCount++;
 			}
 			else if (j % 3 == 1) {
@@ -180,15 +180,15 @@ glm::vec3 Utilities::findAverage(string inputfile) {
 				}
 			}
 			else if (j % 3 == 2) {
-				zTotal+=shapes[i].mesh.positions[j];
+				zTotal += shapes[i].mesh.positions[j];
 				zCount++;
 			}
 		}
 	}
 	cout << "min found: " << yMin << endl;
-	float xAvg = xTotal/(float)xCount;
-	float zAvg = zTotal/(float)zCount;
-	
+	float xAvg = xTotal / (float)xCount;
+	float zAvg = zTotal / (float)zCount;
+
 	glm::vec3 returnMe = glm::vec3(xAvg, yMin, zAvg);
 
 	return returnMe;
@@ -196,17 +196,39 @@ glm::vec3 Utilities::findAverage(string inputfile) {
 
 glm::mat4 Utilities::rotateY(float theta) { // theta = angle in degrees
 	theta = glm::radians(theta);
-		
+
 	return glm::transpose(glm::mat4(
 		glm::cos(theta), 0, glm::sin(theta), 0,
 		0, 1, 0, 0,
-		-glm::sin(theta), 0, glm::cos(theta), 0, 
+		-glm::sin(theta), 0, glm::cos(theta), 0,
+		0, 0, 0, 1
+		));
+}
+
+glm::mat4 Utilities::rotateZ(float theta) { // theta = angle in degrees
+	theta = glm::radians(theta);
+
+	return glm::transpose(glm::mat4(
+		glm::cos(theta), -glm::sin(theta), 0, 0,
+		glm::sin(theta), glm::cos(theta), 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1
+		));
+}
+
+glm::mat4 Utilities::rotateX(float theta) { // theta = angle in degrees
+	theta = glm::radians(theta);
+
+	return glm::transpose(glm::mat4(
+		1, 0, 0, 0,
+		0, glm::cos(theta), -glm::sin(theta), 0,
+		0, glm::sin(theta), glm::cos(theta), 0,
 		0, 0, 0, 1
 		));
 }
 
 float Utilities::degreesToRad(float deg) {
-	return (atan(1.0f)*4.0f)*deg/180.0f;
+	return (atan(1.0f)*4.0f)*deg / 180.0f;
 }
 
 string Utilities::intToBaseThree(int num) {
@@ -228,31 +250,31 @@ string Utilities::intToBaseThree(int num) {
 
 /*
 int Utilities::getMaxDepth(sg::Node *node) {
-	sg::Group *group = dynamic_cast<sg::Group*>(node);
+sg::Group *group = dynamic_cast<sg::Group*>(node);
 
-	if (group == nullptr) {
-		// if current node is a geode, reached bottom of this subtree
-		return 0;
-	}
-	else
-	{
-		// compute the depth of each subtree
-		vector<int> subtreeDepth(group->getNumChildren(), 0);
-		for (int i=0; i<group->getNumChildren(); i++) {
-			subtreeDepth[i] = getMaxDepth(group->getChild(i));
-		}
+if (group == nullptr) {
+// if current node is a geode, reached bottom of this subtree
+return 0;
+}
+else
+{
+// compute the depth of each subtree
+vector<int> subtreeDepth(group->getNumChildren(), 0);
+for (int i=0; i<group->getNumChildren(); i++) {
+subtreeDepth[i] = getMaxDepth(group->getChild(i));
+}
 
-		int maxIndex = 0;
-		int maxValue = 0;
+int maxIndex = 0;
+int maxValue = 0;
 
-		for (int i=0; i<subtreeDepth.size(); i++) {
-			if (subtreeDepth[i] > maxValue) {
-				maxIndex = i;
-				maxValue = subtreeDepth[i];
-			}
-		}
+for (int i=0; i<subtreeDepth.size(); i++) {
+if (subtreeDepth[i] > maxValue) {
+maxIndex = i;
+maxValue = subtreeDepth[i];
+}
+}
 
-		return maxValue + 1;
-	}
+return maxValue + 1;
+}
 }
 */

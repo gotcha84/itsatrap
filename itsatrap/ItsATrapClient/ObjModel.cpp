@@ -161,6 +161,10 @@ void ObjModel::drawModel() {
 		}
 	}
 
+	if (this->getName() == "penis") {
+		int kkk = 0;
+	}
+
 	// unbind texture
 	if (m_texID != 0) {
 		glBindTexture(GL_TEXTURE_2D, 0);
