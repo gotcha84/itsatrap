@@ -412,6 +412,7 @@ void Window::processKeys() {
 		if (keyState[27]) {
 			exit(0);
 		}
+	}
 
 	// dash
 	if (modifierKey == GLUT_ACTIVE_SHIFT) {

@@ -1,8 +1,10 @@
-<<<<<<< HEAD
-﻿Build started 6/6/2014 7:47:47 AM.
+﻿Build started 6/6/2014 8:09:48 AM.
      1>Project "C:\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\itsatrap\itsatrap\/glew/include/ /IC:\itsatrap\itsatrap\/glut/include/ /IC:\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp InputEvents.cpp Physics.cpp StateLogic.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\itsatrap\itsatrap\/glew/include/ /IC:\itsatrap\itsatrap\/glut/include/ /IC:\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp GameState.cpp
+         GameState.cpp
+         Generating Code...
+         Compiling...
          DynamicWorld.cpp
      1>c:\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
      1>c:\itsatrap\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
@@ -92,14 +94,11 @@
      1>c:\itsatrap\itsatrap\common\dynamicworld.cpp(1957): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
          GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
          Generating Code...
-         Skipping... (no relevant changes detected)
-         StateLogic.cpp
-         Physics.cpp
-         InputEvents.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\itsatrap\itsatrap\/glew/lib /LIBPATH:C:\itsatrap\itsatrap\/glut/lib/ /LIBPATH:C:\itsatrap\itsatrap\Debug\ glew32d.lib freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\AABB.obj
          Debug\ConfigSettings.obj
          Debug\DynamicWorld.obj
+         Debug\GameState.obj
          Debug\InputEvents.obj
          Debug\Physics.obj
          Debug\StateLogic.obj
@@ -107,18 +106,9 @@
          Debug\World.obj
      1>AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
             Creating library C:\itsatrap\itsatrap\Debug\Common.lib and object C:\itsatrap\itsatrap\Debug\Common.exp
-=======
-﻿Build started 6/6/2014 7:43:14 AM.
-     1>Project "C:\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
-     1>Link:
->>>>>>> d73738e31017fe60542528bed07a40d73f63f11f
          Common.vcxproj -> C:\itsatrap\itsatrap\Debug\Common.dll
      1>Done Building Project "C:\itsatrap\itsatrap\Common\Common.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-<<<<<<< HEAD
-Time Elapsed 00:00:01.91
-=======
-Time Elapsed 00:00:00.05
->>>>>>> d73738e31017fe60542528bed07a40d73f63f11f
+Time Elapsed 00:00:02.59
