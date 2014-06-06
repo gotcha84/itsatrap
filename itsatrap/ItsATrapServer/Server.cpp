@@ -369,7 +369,6 @@ void Server::processBuffer()
 			case CHANNELING_COMPLETE:
 			{
 				struct resourceHitPacket *hitPkt = (struct resourceHitPacket *)p;
-
 				if (hitPkt->playerId == channelingPlayer
 					&& hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]
 					&& isChanneling) {
@@ -383,11 +382,10 @@ void Server::processBuffer()
 			}
 			case REQUEST_ACTIVE_NODE_EVENT:
 			{
-				struct knifeHitPkt *requestPkt = (struct knifeHitPkt *)p;
-				//struct knifeHitPkt temp = *requestPkt;
+				struct knifeHitPacket *requestPkt = (struct knifeHitPacket *)p;
 
 				if (resourceNodeLocations.size() > 0) {
-					sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+					sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex], requestPkt->playerId);
 				}
 
 				break;

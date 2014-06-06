@@ -602,7 +602,6 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 		target->aabb.minY = 0;
 		target->aabb.minZ = 0;
 		target->deathState = true;
-		
 
 		addInfoMessage(attacker->id, "You have killed player " + to_string(target->id));
 		addInfoMessage(target->id, "You have been killed by player " + to_string(attacker->id));
@@ -1220,8 +1219,8 @@ void DynamicWorld::applyAdjustments() {
 		return;
 		}*/
 
-		cout << "player pos: ";
-		p.aabb.print();
+		//cout << "player pos: ";
+		//p.aabb.print();
 
 		// hardcoding cuz idk why this aint working
 		//if (p.currPhysState == PhysicsStates::HoldingEdge) {
@@ -1694,7 +1693,6 @@ void DynamicWorld::addAABBInfo(int type, AABB aabb)
 void DynamicWorld::handleKnifeEvent(int knifer)
 {
 	playerObject *player = &playerMap[knifer];
-
 
 	for (map<int, struct playerObject>::iterator pit = playerMap.begin(); pit != playerMap.end(); pit++)
 	{

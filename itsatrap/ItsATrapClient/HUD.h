@@ -11,7 +11,6 @@
 #include <string>
 #include "Sound.h"
 
-#include "glfw3.h"
 //#include "Texture.h"
 
 class HUD {
