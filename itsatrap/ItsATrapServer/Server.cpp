@@ -541,6 +541,10 @@ void Server::updateResources()
 				//it->second.resources += resourcePerInterval;
 				it->second.resources += resourceHotSpotBonusPerInterval;
 			}
+
+			// Damage
+			if (currentResourceOwner != -1 && currentResourceOwner % 2 != it->second.id % 2)
+				dynamicWorld.playerDamage(&dynamicWorld.playerMap[currentResourceOwner], &it->second, 1, false);
 		}
 	}
 
