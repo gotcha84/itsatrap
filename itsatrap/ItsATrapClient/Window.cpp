@@ -408,15 +408,8 @@ void Window::processKeys() {
 	}
 
 	// teleport
-	/*if (modifierKey == GLUT_ACTIVE_ALT) {
-		client->root->getPlayer()->handleTeleport();
-	}*/
-
-	if (keyState['q']) {
+	if (modifierKey == GLUT_ACTIVE_SHIFT) {
 		Client::sendMoveEvent(DASH);
-		if (!keyEventTriggered['q']) {
-			keyEventTriggered['q'] = true;
-		}
 	}
 	else {
 		if (keyState['w']) {
