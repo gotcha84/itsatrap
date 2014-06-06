@@ -28,7 +28,10 @@ enum Textures {
 	Animus,
 	Base,
 	BRail,
-	Size
+	Size,
+	Stunned,
+	Slowed,
+	Flashed
 };
 
 class Texture {

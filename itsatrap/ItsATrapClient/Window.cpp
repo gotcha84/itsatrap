@@ -63,13 +63,12 @@ void Window::reshapeCallback(int w, int h)
 {
 	m_width = w;
 	m_height = h;
-	glViewport(0, 0, w, h);  // set new viewport size
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	// glFrustum(-10.0, 10.0, -10.0, 10.0, 10, 1000.0); // set perspective projection viewing frustum
-	gluPerspective(45.0f, ((float)w)/((float)h), 1.0f, 1000.0f);
-	//glTranslatef(0, 0, -20);
+	glViewport(0, 0, w, h);  // set new viewport size
+	gluPerspective(90.0f, ((float)w)/((float)h), 1.0f, 1000.0f);
 	glMatrixMode(GL_MODELVIEW);
+	glutPostRedisplay();
 }
 
 //----------------------------------------------------------------------------
@@ -295,8 +294,8 @@ void Window::keyUp(unsigned char key, int x, int y) {
 	}
 	else if (key == 'r') 
 	{
-		//ConfigSettings::getConfig()->reloadSettingsFile();
-		//Client::sendReloadConfigFile();
+		ConfigSettings::getConfig()->reloadSettingsFile();
+		Client::sendReloadConfigFile();
 	}
 	else if (key == 'b')
 	{

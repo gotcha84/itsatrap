@@ -104,9 +104,13 @@ int main(int argc, char *argv[]) {
 
 	// Initialize networking for client
 	Client::initializeClient();
+	cout << "DONE CLIENT" << endl;
 	textures = new Texture();
+	cout << "DONE TEXTURE" << endl;
 	client = new ClientInstance(Client::getPlayerId());
+	cout << "DONE CLIENT INSTANCE" << endl;
 	window = new Window();
+	cout << "DONE WINDOW" << endl;
 	glm::vec3 starting = client->root->getPosition();
 	glm::vec3 shift;
 	switch (client->root->getPlayerID()) {
@@ -177,7 +181,7 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	gluPerspective(90.0f, 4.0f / 3.0f, 1.0f, 1000.0f);
+	//gluPerspective(90.0f, ((float)Window::m_width)/((float)Window::m_height), 1.0f, 1000.0f);
 
 	// keyboard input
 	glutKeyboardFunc(window->keyDown);

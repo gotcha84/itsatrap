@@ -176,23 +176,37 @@ bool ConfigSettings::getValue(string key, bool & ret){
 }
 
 bool ConfigSettings::getValue(string key, int & ret){
-	hash_map <string,string>::iterator i = settings.find(key);
-	
-	if(i != settings.end()){
-		ret = atoi(i->second.c_str()); //error results in 0
-		return true;
+	try {
+		hash_map <string, string>::iterator i = settings.find(key);
+
+		if (i != settings.end()){
+			ret = atoi(i->second.c_str()); //error results in 0
+			return true;
+		}
+		return false;
 	}
-	return false;
+	catch (exception e)
+	{
+		return false;
+	}
+	
+	
 }
 
 bool ConfigSettings::getValue(string key, float & ret){
-	hash_map <string,string>::iterator i = settings.find(key);
-	
-	if(i != settings.end()){
-		ret = (float) atof(i->second.c_str()); //error results in 0
-		return true;
+	try {
+		hash_map <string, string>::iterator i = settings.find(key);
+
+		if (i != settings.end()){
+			ret = (float)atof(i->second.c_str()); //error results in 0
+			return true;
+		}
+		return false;
 	}
-	return false;
+	catch (exception e)
+	{
+		return false;
+	}
 }
 
 bool ConfigSettings::getValue(string key, double & ret){

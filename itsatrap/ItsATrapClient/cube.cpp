@@ -46,45 +46,45 @@ namespace sg {
 				glBegin(GL_QUADS);
 					// Draw front face:
 					glNormal3f(0.0, 0.0, 1.0);
-					glTexCoord2f(0.0f, 0.5f); glVertex3f(-0.5, 0.5, 0.5);
-					glTexCoord2f(0.5f, 0.5f); glVertex3f(0.5, 0.5, 0.5);
-					glTexCoord2f(0.5f, 0.0f); glVertex3f(0.5, -0.5, 0.5);
+					glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.5, 0.5, 0.5);
+					glTexCoord2f(1.0f, 1.0f); glVertex3f(0.5, 0.5, 0.5);
+					glTexCoord2f(1.0f, 0.0f); glVertex3f(0.5, -0.5, 0.5);
 					glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.5, -0.5, 0.5);
 
 					// Draw left side:
 					glNormal3f(-1.0, 0.0, 0.0);
-					glTexCoord2f(0.5f, 0.5f); glVertex3f(-0.5, 0.5, 0.5);
-					glTexCoord2f(0.5f, 0.0f); glVertex3f(-0.5, 0.5, -0.5);
+					glTexCoord2f(1.0f, 1.0f); glVertex3f(-0.5, 0.5, 0.5);
+					glTexCoord2f(1.0f, 0.0f); glVertex3f(-0.5, 0.5, -0.5);
 					glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.5, -0.5, -0.5);
-					glTexCoord2f(0.0f, 0.5f); glVertex3f(-0.5, -0.5, 0.5);
+					glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.5, -0.5, 0.5);
 
 					// Draw right side:
 					glNormal3f(1.0, 0.0, 0.0);
-					glTexCoord2f(0.5f, 0.5f); glVertex3f(0.5, 0.5, 0.5);
-					glTexCoord2f(0.5f, 0.0f); glVertex3f(0.5, 0.5, -0.5);
+					glTexCoord2f(1.0f, 1.0f); glVertex3f(0.5, 0.5, 0.5);
+					glTexCoord2f(1.0f, 0.0f); glVertex3f(0.5, 0.5, -0.5);
 					glTexCoord2f(0.0f, 0.0f); glVertex3f(0.5, -0.5, -0.5);
-					glTexCoord2f(0.0f, 0.5f); glVertex3f(0.5, -0.5, 0.5);
+					glTexCoord2f(0.0f, 1.0f); glVertex3f(0.5, -0.5, 0.5);
 
 					// Draw back face:
 					glNormal3f(0.0, 0.0, -1.0);
-					glTexCoord2f(0.0f, 0.5f); glVertex3f(-0.5, 0.5, -0.5);
-					glTexCoord2f(0.5f, 0.5f); glVertex3f(0.5, 0.5, -0.5);
-					glTexCoord2f(0.5f, 0.0f); glVertex3f(0.5, -0.5, -0.5);
+					glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.5, 0.5, -0.5);
+					glTexCoord2f(1.0f, 1.0f); glVertex3f(0.5, 0.5, -0.5);
+					glTexCoord2f(1.0f, 0.0f); glVertex3f(0.5, -0.5, -0.5);
 					glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.5, -0.5, -0.5);
 
 					// Draw top side:
 					glNormal3f(0.0, 1.0, 0.0);
-					glTexCoord2f(0.0f, 0.5f); glVertex3f(-0.5, 0.5, 0.5);
-					glTexCoord2f(0.5f, 0.5f); glVertex3f(0.5, 0.5, 0.5);
-					glTexCoord2f(0.5f, 0.0f); glVertex3f(0.5, 0.5, -0.5);
+					glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.5, 0.5, 0.5);
+					glTexCoord2f(1.0f, 1.0f); glVertex3f(0.5, 0.5, 0.5);
+					glTexCoord2f(1.0f, 0.0f); glVertex3f(0.5, 0.5, -0.5);
 					glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.5, 0.5, -0.5);
 
 					// Draw bottom side:
 					glNormal3f(0.0, -1.0, 0.0);
 					glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.5, -0.5, -0.5);
-					glTexCoord2f(0.5f, 0.0f); glVertex3f(0.5, -0.5, -0.5);
-					glTexCoord2f(0.5f, 0.5f); glVertex3f(0.5, -0.5, 0.5);
-					glTexCoord2f(0.0f, 0.5f); glVertex3f(-0.5, -0.5, 0.5);
+					glTexCoord2f(1.0f, 0.0f); glVertex3f(0.5, -0.5, -0.5);
+					glTexCoord2f(1.0f, 1.0f); glVertex3f(0.5, -0.5, 0.5);
+					glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.5, -0.5, 0.5);
 				glEnd();
 
 				// unbind texture

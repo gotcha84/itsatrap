@@ -5,14 +5,16 @@ ClientInstance::ClientInstance() {
 }
 
 ClientInstance::ClientInstance(int id) {
+	cout << "IN CLIENTINSTANCE" << endl;
 	m_xMouse = 0;
 	m_yMouse = 0;
 
 	players = unordered_map<int,sg::Player*>();
 	objects = unordered_map<int,sg::Node*>();
-
+	cout << "BEFORE PLAYER" << endl;
 	//root = new sg::Player(glm::vec3(75.0f,0.0f,0.0f));
 	root = new sg::Player(glm::vec3(0.0f,0.0f,0.0f));
+	cout << "DONE PLAYER" << endl;
 	root->setPlayerID(id);
 	root->setObjectID(id);
 

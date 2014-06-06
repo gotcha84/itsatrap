@@ -14,18 +14,25 @@ HUD::HUD() {
 	ouchSound = createIrrKlangDevice(); //declare loop, pause, and track
 	deathSound = createIrrKlangDevice(); //declare loop, pause, and track
 
-	test = new sg::Cube();
-	test->setColor(glm::vec4(1, 1, 1, 1));
-	test->setTexture(textures->m_texID[Textures::Polynoid]);
+	flashStatus = new sg::Cube();
+	flashStatus->setTexture(textures->m_texID[Textures::Flashed]);
+	slowStatus = new sg::Cube();
+	slowStatus->setTexture(textures->m_texID[Textures::Slowed]);
+	stunStatus = new sg::Cube();
+	stunStatus->setTexture(textures->m_texID[Textures::Stunned]);
 }
 
 // destructor
 HUD::~HUD() {
-	delete test;
-	test = nullptr;
+	delete flashStatus;
+	flashStatus = nullptr;
+	delete slowStatus;
+	slowStatus = nullptr;
+	delete stunStatus;
+	stunStatus = nullptr;
 }
 
-void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime) {
+void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime, int slowDuration, int stunDuration) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 		glLoadIdentity();
@@ -40,12 +47,14 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, float 
 				if (!deathSound->isCurrentlyPlaying("../Sound/death.wav") && spawnTime <= 2500 && spawnTime >= 2000) {
 					deathSound->play2D("../Sound/death.wav", false, false, true);
 				}
-			} else {
+			}
+			else {
 				if (hitCrosshairDuration > 0) {
 					drawKillSymbol(true);
-					if (!ouchSound->isCurrentlyPlaying("../Sound/ouch.wav") )
+					if (!ouchSound->isCurrentlyPlaying("../Sound/ouch.wav"))
 						ouchSound->play2D("../Sound/ouch.wav", false, false, true);
-				} else {
+				}
+				else {
 					drawKillSymbol(false);
 				}
 				drawCrossHair();
@@ -60,22 +69,45 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, float 
 				{
 					int recallChannelTime = 1;
 					ConfigSettings::getConfig()->getValue("RecallChannelTime", recallChannelTime);
-					int time = ((float) recallElapsed / recallChannelTime) * 100;
+					int time = ((float)recallElapsed / recallChannelTime) * 100;
 					if (time > 100)
 						time = 100;
 					else if (time < 0)
 						time = 0;
 					drawProgressBar(time);
 					if (time > 50)
-						drawFlashbag((time-50.0f)/50.0f);
+						drawFlashbag((time - 50.0f) / 50.0f);
 				}
 				drawFlashbag(flashFade);
 				drawBlood(bloodFade);
 
-				glColor4f(1.0f, 0, 0, 1.0f);
-				glLoadIdentity();
-				glScalef(2,2,2);
-				test->drawCube();
+				// Flash status
+				/*if (flashFade > 0)
+				{
+					glLoadIdentity();
+					glTranslatef(0.85f, 0.5f, 0);
+					glScalef(0.2, 0.2, 2);
+					flashStatus->drawCube();
+				}*/
+
+				// Slow status
+				if (slowDuration > 0)
+				{
+					glLoadIdentity();
+					glTranslatef(0.85f, 0.25f, 0);
+					glScalef(0.2, 0.2, 2);
+					slowStatus->drawCube();
+				}
+
+				// Stun status
+				if (stunDuration > 0)
+				{
+					glLoadIdentity();
+					glTranslatef(0.85f, 0, 0);
+					glScalef(0.2, 0.2, 2);
+
+					stunStatus->drawCube();
+				}
 			}
 			
 		glPopMatrix();
