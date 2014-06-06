@@ -1,15 +1,22 @@
+#include <GL/glew.h>
 #include "Window.h"
 #include "ClientInstance.h"
 #include "Client.h"
 #include "ConfigSettings.h"
+#include "Shader.h"
 
 extern ClientInstance *client;
 extern Texture *textures;
 extern sg::Cube *test;
 extern FTGLPixmapFont *font;
 
+
+//int Window::m_width = 1600; // set window width in pixels here
+//int Window::m_height = 1200; // set window height in pixels here
+
 int Window::m_width = 512; // set window width in pixels here
 int Window::m_height = 512; // set window height in pixels here
+
 
 int Window::m_heightMapXShift = 278;
 int Window::m_heightMapZShift = 463;
@@ -29,6 +36,29 @@ ISoundEngine *knifeSound;
 ISoundEngine *createTrapSound;
 ISound *walk;
 bool jump;
+
+//#define fbOWIDTHT  1600       // width of fbo
+//#define fbOHEIGHT  1200       // hight of fbo
+#define fbOWIDTHT  512       // width of fbo
+#define fbOHEIGHT  512       // hight of fbo
+
+GLuint Window::fb = 0;           // fbo
+GLuint Window::cb = 0;           // texture for color buffer
+GLuint Window::rb = 0;           // render buffer for depth buffer
+GLuint Window::ab = 0;
+GLuint Window::sb = 0;
+GLuint Window::pass1 = 0;
+GLuint Window::pass2 = 0;
+GLuint Window::diffuse = 0;
+GLuint Window::specular = 0;
+GLuint Window::ambient = 0;
+GLuint tex2;
+
+static const GLenum bufs[] = {
+	GL_COLOR_ATTACHMENT0_EXT, 
+	GL_COLOR_ATTACHMENT1_EXT,
+	/*GL_COLOR_ATTACHMENT2_EXT,*/ 
+};
 
 Window::Window() {
 	for (int i = 0; i < 256; i++) {
@@ -80,7 +110,10 @@ void Window::reshapeCallback(int w, int h)
 // Callback method called when window readraw is necessary or
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
-{
+{	
+	
+	
+	
 	GameStates currState = Client::gameState.getState();
 
 	if (currState == WELCOME) {
@@ -102,32 +135,11 @@ void Window::displayCallback(void)
 		client->screen->drawCube();
 		glPopMatrix();
 
-		//glPushMatrix();
-		//glLoadIdentity();
-
-		//	std::string text = "LOADING...";
-		//	glColor4f(20.0f, 20.0f, 20.0f, 20.0f);
-		//	glRasterPos2f(-0.02f, -0.02f);
-		//	for (int i = 0; i<text.length(); i++) {
-		//		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
-		//	}
-		//glPopMatrix();
-
-		//glPushMatrix();
-		//	glLoadIdentity();
-		//	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-		//	font->FaceSize(75);
-		//	cout << "font FACE SIZE : " << font->Error() << endl;
-		//	cout << "FONT CHAR MAP BOOLEAN : " << font->CharMap(ft_encoding_unicode) << endl;
-		//	cout << "font CHAR MAP: " << font->Error() << endl;
-		//	glRasterPos2f(0.0f, 0.0f);
-		//	cout << "font RASTER : " << font->Error() << endl;
-		//	font->Render("Loading...");
-		//	cout << "font RENDER : " << font->Error() << endl;
-		//glPopMatrix();
+		
 
 		glPopMatrix();
 		glPopMatrix();
+
 	}
 
 	if (Client::gameState.getState() == GAMEREADY) {
@@ -151,6 +163,7 @@ void Window::displayCallback(void)
 		glPopMatrix();
 	}
 
+	
 	if (Client::gameState.getState() == GAMEPLAY) {
 		float oldBuildingId = client->root->getPlayer()->m_onTopOfBuildingId;
 		float oldXRotated = client->root->getCamera()->getXRotated();
@@ -161,6 +174,12 @@ void Window::displayCallback(void)
 		glm::vec3 oldPos = client->root->getPlayer()->getPosition();
 
 		processKeys();
+
+		glViewport(0, 0, fbOWIDTHT, fbOHEIGHT);
+
+		glEnable(GL_DEPTH_TEST);
+
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 
@@ -195,11 +214,47 @@ void Window::displayCallback(void)
 		m_fpsCounter += 1;
 
 		if (clock() - m_timer > 1000) {
-			//cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
 			m_timer = clock();
 			m_fpsCounter = 0;
 		}
+		glFlush();
+
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+		glDisable(GL_DEPTH_TEST);
+
+		
+		glUseProgram(pass1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, cb);
+		
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		glViewport(0, 0, m_width, m_height);
+
+		glEnable(GL_TEXTURE_2D);
+
+		glColor3d(1.0, 1.0, 1.0);
+		glBegin(GL_TRIANGLE_FAN);
+		glTexCoord2d(0.0, 0.0);
+		glVertex2d(-1.0, -1.0);
+		glTexCoord2d(1.0, 0.0);
+		glVertex2d(1.0, -1.0);
+		glTexCoord2d(1.0, 1.0);
+		glVertex2d(1.0, 1.0);
+		glTexCoord2d(0.0, 1.0);
+		glVertex2d(-1.0, 1.0);
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glUseProgram(0);
 	}
+	
 
 	glFlush();
 	glutSwapBuffers();

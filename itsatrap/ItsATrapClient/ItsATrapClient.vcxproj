@@ -162,6 +162,14 @@
   <ItemGroup>
     <None Include="..\..\phong.frag" />
     <None Include="..\..\phong.vert" />
+    <None Include="..\Shaders\light.frag" />
+    <None Include="..\Shaders\light.vert" />
+    <None Include="..\Shaders\pass1.frag" />
+    <None Include="..\Shaders\pass1.vert" />
+    <None Include="..\Shaders\pass2blur.frag" />
+    <None Include="..\Shaders\pass2blur.vert" />
+    <None Include="..\Shaders\test3.frag" />
+    <None Include="..\Shaders\test3.vert" />
     <None Include="can.frag">
       <SubType>Designer</SubType>
     </None>

@@ -1,3 +1,4 @@
+#include <gl/glew.h>
 #include "ObjModel.h"
 
 ObjModel::ObjModel() {
@@ -66,7 +67,8 @@ ObjModel::ObjModel(int id, string objFilename, string mtlFilename) {
 }
 
 ObjModel::~ObjModel() {
-
+	delete shader2;
+	shader2 = nullptr;
 }
 
 void ObjModel::initCommon() {
@@ -74,6 +76,8 @@ void ObjModel::initCommon() {
 	m_cityScale = 0.1f;
 	m_canScale = 5.0f;
 	m_defaultScale = 1.0f;
+	/*shader2->loadShader("../Shaders/light.vert", "../Shaders/light.frag");
+	light = shader2->getShader();*/
 }
 
 void ObjModel::setVertices(vector<float> arr) {
@@ -131,8 +135,20 @@ void ObjModel::drawModel() {
 
 	// bind texture
 	if (m_texID != 0) {
+		//glUseProgram(light);
 		glEnable(GL_TEXTURE_2D);
+		//for light vert and frag
+		/*glUniform3f(glGetUniformLocation(light, "lightPos"), 0.0, 0.0, 0.0);
+		glUniform3f(glGetUniformLocation(light, "mambient"), 0.8, 0.8, 0.8);
+		glUniform3f(glGetUniformLocation(light, "mdiffuse"), 0.6, 0.6, 0.6);
+		glUniform3f(glGetUniformLocation(light, "mspecular"), 1.0, 1.0, 1.0);
+		glUniform3f(glGetUniformLocation(light, "lambient"), 0.8, 0.8, 0.8);
+		glUniform3f(glGetUniformLocation(light, "ldiffuse"), 0.6, 0.6, 0.6);
+		glUniform3f(glGetUniformLocation(light, "lspecular"), 1.0, 1.0, 1.0);//changes color of light
+		glUniform1f(glGetUniformLocation(light, "shininess"), 16.0);
+		glUniform1i(glGetUniformLocation(light, "img"), 0);*/
 		glBindTexture(GL_TEXTURE_2D, m_texID);
+		
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -162,7 +178,7 @@ void ObjModel::drawModel() {
 			glEnd();
 		}
 	}
-
+	
 	if (this->getName() == "penis") {
 		int kkk = 0;
 	}
@@ -171,6 +187,7 @@ void ObjModel::drawModel() {
 	if (m_texID != 0) {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_TEXTURE_2D);
+		//glUseProgram(0);
 	}
 
 	// reset backface culling

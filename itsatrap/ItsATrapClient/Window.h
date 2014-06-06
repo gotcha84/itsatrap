@@ -15,6 +15,7 @@
 
 #include "MyPlayer.h"
 #include "SceneGraph.h"
+#include "Shader.h"
 #include "Texture.h"
 #include "Sound.h"
 
@@ -30,6 +31,9 @@ class Window {
 		static bool		*specialKeyState;
 		static bool		*specialKeyEventTriggered;
 		static int		modifierKey;
+
+		static GLuint cb, rb, fb, ab, sb, pass1, pass2, pass3, diffuse, specular, ambient;
+		Shader shasderPass1, shaderPass2;
 
 		Window();
 		~Window();
@@ -49,6 +53,7 @@ class Window {
 
 		static void processMouseKeys(int, int, int, int);
 		static void processMouseMove(int, int);
+		//static void renderScene();
 };
 
 #endif
