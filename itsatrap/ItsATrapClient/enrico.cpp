@@ -42,10 +42,11 @@ void handlePlayerUpdate(struct playerObject p)
 	}
 	else {
 		// HEALTH
-		if (client->players[p.id]->m_player->m_health != p.health) {
+		if (client->players[p.id]->m_player->m_health > p.health + 5) {
 			cout << "[CLIENT]: HIT! Player " << p.id << "'s health is now " << p.health << endl;
-			client->players[p.id]->setHealth(p.health);
+			client->players[p.id]->getPlayer()->m_startBlood = true;
 		}
+		client->players[p.id]->setHealth(p.health);
 		client->players[p.id]->m_player->m_deathState = p.deathState;
 		client->players[p.id]->m_player->m_numDeaths = p.numDeaths;
 		client->players[p.id]->m_player->m_numKills = p.numKills;
@@ -59,6 +60,7 @@ void handlePlayerUpdate(struct playerObject p)
 		client->players[p.id]->m_player->m_hitCrosshairDuration = p.hitCrosshair;
 		client->players[p.id]->m_player->m_bloodDuration = p.bloodDuration;
 		client->players[p.id]->m_player->m_recallElapsed = p.recallElapsed;
+		client->players[p.id]->m_player->m_knifeDelay = p.knifeDelay;
 
 		// RESOURCES
 		client->players[p.id]->m_player->m_resources = p.resources;
