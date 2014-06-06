@@ -38,7 +38,6 @@ namespace sg {
 
 		int numBloodParticles = 0;
 		ConfigSettings::getConfig()->getValue("NumBloodParticles", numBloodParticles);
-		bloodEffect = new ParticleSystem3(numBloodParticles, getPlayer()->getPosition());
 
 		initModels();
 	}
@@ -71,7 +70,6 @@ namespace sg {
 
 		int numBloodParticles = 0;
 		ConfigSettings::getConfig()->getValue("NumBloodParticles", numBloodParticles);
-		bloodEffect = new ParticleSystem3(numBloodParticles, getPlayer()->getPosition());
 
 
 		initModels();
@@ -85,7 +83,6 @@ namespace sg {
 
 		int numBloodParticles = 0;
 		ConfigSettings::getConfig()->getValue("NumBloodParticles", numBloodParticles);
-		bloodEffect = new ParticleSystem3(numBloodParticles, getPlayer()->getPosition());
 	}
 
 	Player::~Player() {
@@ -112,9 +109,6 @@ namespace sg {
 
 		delete timer;
 		timer = nullptr;
-
-		delete bloodEffect;
-		bloodEffect = nullptr;
 
 		delete m_thisPlayerAttack;
 		m_thisPlayerAttack = nullptr;
@@ -433,11 +427,7 @@ namespace sg {
 		if (getPlayer()->m_startBlood)
 		{
 			getPlayer()->m_startBlood = false;
-			bloodEffect->particlesReset();
 		}
-
-		bloodEffect->m_origin = getPlayer()->getPosition();
-		bloodEffect->draw(parent, cam);
 
 		if (m_drawBB) {
 			m_otherPlayer->getBoundingBox().draw();

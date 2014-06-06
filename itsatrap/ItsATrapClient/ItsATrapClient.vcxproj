@@ -106,8 +106,6 @@
     <ClCompile Include="ObjModel.cpp" />
     <ClCompile Include="ObjNode.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
-    <ClCompile Include="ParticleSystem2.cpp" />
-    <ClCompile Include="ParticleSystem3.cpp" />
     <ClCompile Include="ParticleSystemNode.cpp" />
     <ClCompile Include="PlayerNode.cpp" />
     <ClCompile Include="ResourceNode.cpp" />
@@ -132,8 +130,6 @@
     <ClInclude Include="ObjModel.h" />
     <ClInclude Include="ObjNode.h" />
     <ClInclude Include="ParticleSystem.h" />
-    <ClInclude Include="ParticleSystem2.h" />
-    <ClInclude Include="ParticleSystem3.h" />
     <ClInclude Include="ParticleSystemNode.h" />
     <ClInclude Include="ResourceNode.h" />
     <ClInclude Include="Scoreboard.h" />
