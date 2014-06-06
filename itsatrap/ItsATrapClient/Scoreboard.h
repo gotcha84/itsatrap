@@ -25,7 +25,8 @@ public:
 	};
 
 	FTGLPixmapFont *font;
-	//FTGLExtrdFont *fonts;
+	int currentPlayer;
+	FTGLExtrdFont *fonts;
 	typedef std::vector<Entry> Entries;
 	typedef std::pair<Entries::iterator, int> EntryLocation;
 
@@ -38,8 +39,9 @@ public:
 	Entries getEntries();
 	void prune(int max_amt);
 	int  size() const;
-	void draw(int id);
+	void draw();
 	void drawCube(float x, float y, float z);
+	void setCurrentPlayer(int id);
 
 private:
 	Entries entries;

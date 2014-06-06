@@ -105,6 +105,8 @@ namespace sg {
 		m_otherPlayer = new ObjModel();
 		m_otherPlayer->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");
 		m_otherPlayer->setTexture(textures->m_texID[Textures::Polynoid]);
+		//m_otherPlayer->loadModel("../Models/Polynoid_Headless.obj", "../Models/");
+		//m_otherPlayer->setTexture(textures->m_texID[Textures::Headless]);
 
 		m_thisPlayer = new ObjModel();
 		m_thisPlayer->loadModel("../Models/Headless_Avatar.obj", "../Models/");
@@ -207,7 +209,6 @@ namespace sg {
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
-	
 		if (m_gameOver) {
 			cout << "GAME OVER" << endl;
 			int teamOneScore = 0;
@@ -261,10 +262,9 @@ namespace sg {
 					//cout << "player " << player->getPlayerID() << " : " << player->getPlayer()->m_numKills << " / " << player->getPlayer()->m_numDeaths << endl;
 					//cout << client->tabPressed << endl;
 				}
-				//TODO:
-				//client->root->getPlayerID;
 				glDisable(GL_LIGHTING);
-				board->draw(client->root->getPlayerID());
+				board->setCurrentPlayer(client->root->getPlayerID());
+				board->draw();
 				glEnable(GL_LIGHTING);
 			}
 			

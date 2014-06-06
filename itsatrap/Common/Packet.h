@@ -28,6 +28,7 @@
 #define AABB_INFO 24
 #define INFO_MESSAGE_EVENT 25
 #define GAME_OVER_EVENT 26
+#define REQUEST_ACTIVE_NODE_EVENT 27
 
 
 // Superclass of all packets

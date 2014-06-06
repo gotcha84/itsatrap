@@ -7,7 +7,7 @@ using namespace std;
 
 Scoreboard::Scoreboard() {
 	font = new FTGLPixmapFont("C:/Windows/Fonts/Arial.ttf");
-	//fonts = new FTGLExtrdFont("C:/Windows/Fonts/Arial.ttf");
+	fonts = new FTGLExtrdFont("C:/Windows/Fonts/Arial.ttf");
 
 }
 
@@ -82,7 +82,7 @@ void Scoreboard::Entry::setDeath(int num) {
 }
 
 
-void Scoreboard::draw(int targetPlayer) {
+void Scoreboard::draw() {
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -103,8 +103,8 @@ void Scoreboard::draw(int targetPlayer) {
 				glRasterPos2f(-0.10f, 0.7f);
 				font->Render("Team 1");
 				glRasterPos2f(-0.10f, -0.2f);
-				font->Render("Team 2");
-
+				//font->Render("Team 2");
+				fonts->Render("TEAM 2", -1, FTPoint(), FTPoint(), 0x0002);
 				for (int i = 0; i<entries.size(); ++i) {
 
 					// setup color
@@ -132,7 +132,7 @@ void Scoreboard::draw(int targetPlayer) {
 					string numDeath = deaths.str();
 					
 
-					string name = "Player" + playerID + "                       " + "Kill: " + numKill + "                       " + "Death: " + numDeath;
+					//string name = "Player" + playerID + "                       " + "Kill: " + numKill + "                       " + "Death: " + numDeath;
 					int temp = e.name;
 					
 					/*
@@ -142,33 +142,49 @@ void Scoreboard::draw(int targetPlayer) {
 
 					if (e.name == 0) { 
 						glRasterPos2f(-0.6f, 0.5f);
-						font->Render(name.c_str());
-						if (e.name == targetPlayer) {
+						font->Render(("Player" + playerID).c_str());
+						glRasterPos2f(-0.1f, 0.5f);
+						font->Render(("Kill: " + numKill).c_str());
+						glRasterPos2f(0.6f, 0.5f);
+						font->Render(("Death: " + numDeath).c_str());
+						if (e.name == currentPlayer) {
 							glRasterPos2f(-0.8f, 0.5f);
 							font->Render(">");
 						}
 					}
 					if (e.name == 1) {
 						glRasterPos2f(-0.6f, -0.4f);
-						font->Render(name.c_str());
-						if (e.name == targetPlayer) {
-							glRasterPos2f(-0.8f, 0.5f);
+						font->Render(("Player" + playerID).c_str());
+						glRasterPos2f(-0.1f, -0.4f);
+						font->Render(("Kill: " + numKill).c_str());
+						glRasterPos2f(0.6f, -0.4f);
+						font->Render(("Death: " + numDeath).c_str());
+						if (e.name == currentPlayer) {
+							glRasterPos2f(-0.8f, -0.4f);
 							font->Render(">");
 						}
 					}
 					if (e.name == 2) {
 						glRasterPos2f(-0.6f, 0.2f);
-						font->Render(name.c_str());
-						if (e.name == targetPlayer) {
-							glRasterPos2f(-0.8f, 0.5f);
+						font->Render(("Player" + playerID).c_str());
+						glRasterPos2f(-0.1f, 0.2f);
+						font->Render(("Kill: " + numKill).c_str());
+						glRasterPos2f(0.6f, 0.2f);
+						font->Render(("Death: " + numDeath).c_str());
+						if (e.name == currentPlayer) {
+							glRasterPos2f(-0.8f, 0.2f);
 							font->Render(">");
 						}
 					}
 					if (e.name == 3) {
 						glRasterPos2f(-0.6f, -0.7f);
-						font->Render(name.c_str());
-						if (e.name == targetPlayer) {
-							glRasterPos2f(-0.8f, 0.5f);
+						font->Render(("Player" + playerID).c_str());
+						glRasterPos2f(-0.1f, -0.7f);
+						font->Render(("Kill: " + numKill).c_str());
+						glRasterPos2f(0.6f, -0.7f);
+						font->Render(("Death: " + numDeath).c_str());
+						if (e.name == currentPlayer) {
+							glRasterPos2f(-0.8f, -0.7f);
 							font->Render(">");
 						}
 					}
@@ -191,4 +207,8 @@ void Scoreboard::drawCube(float x, float y, float z) {
 		glLoadMatrixf(glm::value_ptr(matrix));
 		glutSolidCube(1);
 	glPopMatrix();
+}
+
+void Scoreboard::setCurrentPlayer(int id) {
+	currentPlayer = id;
 }

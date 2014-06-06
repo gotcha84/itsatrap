@@ -11,7 +11,6 @@
 #include <string>
 #include "Sound.h"
 
-
 //#include "Texture.h"
 
 class HUD {
@@ -24,6 +23,7 @@ class HUD {
 		int m_progressTime;
 		ISoundEngine *ouchSound;
 		ISoundEngine *deathSound;
+
 
 		void draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime);
 		

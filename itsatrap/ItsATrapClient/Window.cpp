@@ -289,6 +289,10 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		delete trap;
 		trap = nullptr;
 	}
+	else if (key == (char)32)
+	{
+		cout << "ENTER IS PRESSED" << endl;
+	}
 	else if (key == 'r') 
 	{
 		//ConfigSettings::getConfig()->reloadSettingsFile();
@@ -489,6 +493,53 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 					// Player Hits
 					Client::sendKnifeHitEvent();
 					break;
+				}
+				case GLUT_RIGHT_BUTTON:
+				{
+					cout << "RIGHT PRESSED" << endl;
+					string filename = TRAMPOLINE_TRAP_OBJ;
+					int type = 0;
+					switch (client->root->trapMenu->getInfoState())
+					{
+					case 0:
+						type = TYPE_FREEZE_TRAP;
+						filename = FREEZE_TRAP_OBJ;
+						break;
+					case 1:
+						type = TYPE_TRAMPOLINE_TRAP;
+						filename = TRAMPOLINE_TRAP_OBJ;
+						break;
+					case 2:
+						type = TYPE_SLOW_TRAP;
+						filename = SLOW_TRAP_OBJ;
+						break;
+					case 3:
+						type = TYPE_PUSH_TRAP;
+						filename = PUSH_TRAP_OBJ;
+						break;
+					case 4:
+						type = TYPE_LIGHTNING_TRAP;
+						filename = DEATH_TRAP_OBJ;
+						break;
+					case 5:
+						type = TYPE_PORTAL_TRAP;
+						filename = PORTAL_TRAP_OBJ;
+						break;
+					case 6:
+						type = TYPE_FLASH_TRAP;
+						filename = FLASH_TRAP_OBJ;
+						break;
+					default:
+						type = TYPE_FREEZE_TRAP;
+						filename = TRAMPOLINE_TRAP_OBJ;
+						break;
+					}
+					sg::Trap *trap = new sg::Trap(Client::getPlayerId(), client->root->getPosition(), client->root->getCamera()->m_xRotated, TRAP_DIR + filename);
+					struct trapObject t = trap->getTrapObjectForNetworking();
+					t.type = type;
+					Client::sendSpawnTrapEvent(t);
+					delete trap;
+					trap = nullptr;
 				}
 				default:
 					break;

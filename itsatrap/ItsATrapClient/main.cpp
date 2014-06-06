@@ -221,13 +221,13 @@ int main(int argc, char *argv[]) {
 	client->root->m_elapsedGameTime = 0;
 	client->root->m_gameOver = false;
 
-	sg::ObjNode node = sg::ObjNode();
+	/*sg::ObjNode node = sg::ObjNode();
 	node.m_model->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");
 	node.m_model->setTexture(textures->m_texID[Textures::Polynoid]);
 	node.m_model->setColor(glm::vec4(1, 1, 1, 1));
 	sg::MatrixTransform nodeXForm = sg::MatrixTransform();
 	nodeXForm.addChild(&node);
-	client->root->addChild(&nodeXForm);
+	client->root->addChild(&nodeXForm);*/
 
 	// skybox
 	sg::MatrixTransform sbXForm = sg::MatrixTransform();
