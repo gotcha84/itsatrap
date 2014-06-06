@@ -91,7 +91,7 @@ public:
 	AABB getStaticObjectBB(int buildingId);
 	AABB getStaticResourceBB(int resourceId);
 
-	void playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
+	bool playerDamage(struct playerObject *attacker, struct playerObject *target, int damage);
 
 	void resetWorldInfo();
 	void applyCollisions();
@@ -119,7 +119,7 @@ public:
 	void checkForStateChanges(struct playerObject *e);
 
 	void addAABBInfo(int type, AABB aabb);
-	void handleKnifeEvent(int knifer);
+	bool handleKnifeEvent(int knifer);
 };
 
 #endif

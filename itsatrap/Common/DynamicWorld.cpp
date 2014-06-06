@@ -572,14 +572,16 @@ void DynamicWorld::updateTimings(int timeDiff, int timeElapsed)
 	}
 }
 
-void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObject *target, int damage)
+bool DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObject *target, int damage)
 {
 	playerLock[target->id] = true;
 	playerLock[attacker->id] = true;
 
 	// already dead
 	if (target->deathState)
-		return;
+	{
+		return true;
+	}
 
 	target->health -= damage;
 	target->isRecalling = false;
@@ -613,8 +615,12 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 			int killBonusResource = 0;
 			ConfigSettings::getConfig()->getValue("KillBonusResource", killBonusResource);
 			attacker->resources += killBonusResource;
+
+			return true;
 		}
 	}
+
+	return false;
 }
 
 void DynamicWorld::respawnPlayer(struct playerObject *p) {
@@ -1690,7 +1696,7 @@ void DynamicWorld::addAABBInfo(int type, AABB aabb)
 	}
 }
 
-void DynamicWorld::handleKnifeEvent(int knifer)
+bool DynamicWorld::handleKnifeEvent(int knifer)
 {
 	playerObject *player = &playerMap[knifer];
 
@@ -1715,10 +1721,12 @@ void DynamicWorld::handleKnifeEvent(int knifer)
 				&& hitPt.y >= target->aabb.minY && hitPt.y <= target->aabb.maxY
 				&& hitPt.z >= target->aabb.minZ && hitPt.z <= target->aabb.maxZ)
 			{
-				playerDamage(player, target, KNIFE_HIT_DMG);
+				return playerDamage(player, target, KNIFE_HIT_DMG);
 			}
 		}
 	}
+
+	return false;
 }
 
 void DynamicWorld::addInfoMessage(int destination, string msg)
