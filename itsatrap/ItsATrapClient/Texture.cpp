@@ -11,7 +11,7 @@ Texture::Texture(){
 
 	glGenTextures(m_numTex, m_texID);
 	if (glGetError()) cout << "[Texture.cpp] ERROR : could not glGenTextures in ctor!";
-	
+
 	initTextures();
 }
 
@@ -33,6 +33,9 @@ void Texture::initTextures() {
 	loadTexture(m_texID[Textures::Animus], "../Textures/animus.ppm");
 	loadTexture(m_texID[Textures::BRail], "../Textures/BRail.ppm");
 	loadTexture(m_texID[Textures::Base], "../Textures/Base_01.ppm");
+	loadTexture(m_texID[Textures::Stunned], "../Textures/Stunned.ppm");
+	loadTexture(m_texID[Textures::Slowed], "../Textures/Slowed.ppm");
+	loadTexture(m_texID[Textures::Flashed], "../Textures/Flashed.ppm");
 }
 
 void Texture::loadTexture(GLuint id, const char* the_texture) {

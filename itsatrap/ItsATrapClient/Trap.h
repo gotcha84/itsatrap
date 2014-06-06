@@ -22,41 +22,43 @@
 
 namespace sg {
 	class Trap : public Geode {
-		public:
-			int m_ownerId;
-			float rotationAngle;
-			glm::vec3 m_position;
-			glm::mat4 m_model;
-			//TrapType m_type;
+	public:
+		int m_ownerId;
+		float rotationAngle;
+		float rotationAngleX;
+		float rotationAngleZ;
+		glm::vec3 m_position;
+		glm::mat4 m_model;
+		//TrapType m_type;
 
-			ObjModel *m_model1;
+		ObjModel *m_model1;
 
-			Trap();
-			Trap(int, glm::vec3 pos, float rotationAngle, string filename);
-			Trap(glm::vec3);
-			Trap(glm::vec3 currPos, int type);
+		Trap();
+		Trap(int, glm::vec3 pos, float rotationAngle, string filename);
+		Trap(glm::vec3);
+		Trap(glm::vec3 currPos, int type);
 
-			~Trap();
+		~Trap();
 
-			void loadModel(std::string filename);
-			void loadModel(std::string objFilename, std::string mtlFilename);
-			//void loadData();
-			//void setBoundingBox(AABB box);
-			//AABB getBoundingBox();
-			void updateBoundingBox();
-			//void calculateBoundingBox();
-			
-			void setPosition(glm::vec3 pos);
-			glm::vec3 getPosition();
+		void loadModel(std::string filename);
+		void loadModel(std::string objFilename, std::string mtlFilename);
+		//void loadData();
+		//void setBoundingBox(AABB box);
+		//AABB getBoundingBox();
+		void updateBoundingBox();
+		//void calculateBoundingBox();
 
-			void setMatrix(glm::mat4 model);
-			glm::mat4 getMatrix();
+		void setPosition(glm::vec3 pos);
+		glm::vec3 getPosition();
 
-			void draw(glm::mat4 parent, glm::mat4 cam);
+		void setMatrix(glm::mat4 model);
+		glm::mat4 getMatrix();
 
-			void print();
+		void draw(glm::mat4 parent, glm::mat4 cam);
 
-			struct trapObject getTrapObjectForNetworking();
+		void print();
+
+		struct trapObject getTrapObjectForNetworking();
 	};
 }
 

@@ -104,10 +104,10 @@ struct resourceNodePacket
 };
 
 
-#define NUM_DIRECTIONS 4
+#define NUM_DIRECTIONS 5
 enum Direction {
 	// MUST BE 0,1,2,...
-	FORWARD = 0, BACKWARD = 1, LEFT= 2, RIGHT = 3
+	FORWARD = 0, BACKWARD = 1, LEFT= 2, RIGHT = 3, DASH = 4
 };
 
 struct playerActionPacket

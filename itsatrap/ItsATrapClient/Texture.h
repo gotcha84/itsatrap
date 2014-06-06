@@ -28,8 +28,12 @@ enum Textures {
 	Lightning,
 	Animus,
 	Base,
+	Caltrop,
 	BRail,
-	Size
+	Size,
+	Stunned,
+	Slowed,
+	Flashed
 };
 
 class Texture {

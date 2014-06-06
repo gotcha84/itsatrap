@@ -88,7 +88,6 @@ int Server::initialize() {
 	CreateThread(NULL, 0, bufferProcessorThread, NULL, 0, &tmp);
 	packetBufMutex = CreateMutex(NULL, true, NULL);
 
-
 	// GAME MECHANICS
 	ConfigSettings::getConfig()->getValue("ResourcePerInterval", resourcePerInterval);
 	ConfigSettings::getConfig()->getValue("ResourceHotSpotBonusPerInterval", resourceHotSpotBonusPerInterval);
@@ -322,7 +321,10 @@ void Server::processBuffer()
 			case KNIFE_HIT_EVENT:
 			{
 				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
-				dynamicWorld.handleKnifeEvent(knifePkt->playerId);
+				if (dynamicWorld.handleKnifeEvent(knifePkt->playerId)) {
+					resetChanneling();
+				}
+
 				break;
 			}
 			case RESOURCE_HIT_EVENT:
@@ -341,17 +343,21 @@ void Server::processBuffer()
 							isChanneling = true;
 
 							float knifeRange = 0.0f;
+							float resourceRange = 0.0f;
 							ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
+							ConfigSettings::getConfig()->getValue("ResourceRange", resourceRange);
 
 							glm::vec3 lookAt = player->cameraObject.cameraLookAt;
 							glm::vec3 center = player->cameraObject.cameraCenter;
 							glm::vec3 difVec = lookAt - center;
-							glm::vec3 hitPt = center + (knifeRange * difVec);
+							//glm::vec3 hitPt = center + (knifeRange * difVec);
+							glm::vec3 hitPt = lookAt;
 
 							AABB target = dynamicWorld.getStaticResourceBB(hitPkt->resourceId);
-							if (hitPt.x >= target.minX && hitPt.x <= target.maxX
-								&& hitPt.y >= target.minY && hitPt.y <= target.maxY
-								&& hitPt.z >= target.minZ && hitPt.z <= target.maxZ)
+
+							if (hitPt.x >= (target.minX-resourceRange) && hitPt.x <= (target.maxX+resourceRange)
+								&& hitPt.y >= (target.minY-resourceRange) && hitPt.y <= (target.maxY+(resourceRange * 2))
+								&& hitPt.z >= (target.minZ-resourceRange) && hitPt.z <= (target.maxZ+resourceRange))
 							{
 								// send resourceNodePacket to client, telling them it is ok to channel
 								sendPermissionToChannel(channelingPlayer, resourceNodeLocations[currentActiveResourceNodeIndex]);
@@ -369,7 +375,6 @@ void Server::processBuffer()
 			case CHANNELING_COMPLETE:
 			{
 				struct resourceHitPacket *hitPkt = (struct resourceHitPacket *)p;
-
 				if (hitPkt->playerId == channelingPlayer
 					&& hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]
 					&& isChanneling) {
@@ -383,11 +388,10 @@ void Server::processBuffer()
 			}
 			case REQUEST_ACTIVE_NODE_EVENT:
 			{
-				struct knifeHitPkt *requestPkt = (struct knifeHitPkt *)p;
-				//struct knifeHitPkt temp = *requestPkt;
+				struct knifeHitPacket *requestPkt = (struct knifeHitPacket *)p;
 
 				if (resourceNodeLocations.size() > 0) {
-					sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+					sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex], requestPkt->playerId);
 				}
 
 				break;

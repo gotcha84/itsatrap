@@ -86,7 +86,6 @@ int Client::initializeClient() {
 
 		Sleep(1000);
 	}
-	
 
 	okChannel = false;
 	hasActiveNode = false;
@@ -97,9 +96,7 @@ int Client::initializeClient() {
 	Client::startReceiverThread();
 	Client::startSenderThread();
 	
-
 	return 0;
-	
 }
 
 void Client::startReceiverThread()
@@ -153,9 +150,11 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			else if (p->eventId == HOT_SPOT_UPDATE)
 			{
 				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
-				updateActiveResourceNode(packet->id);
 
-				hasActiveNode = true;
+				if (client != nullptr) {
+					updateActiveResourceNode(packet->id);
+					hasActiveNode = true;
+				}
 			}
 			else if (p->eventId == CHANNELING_PERMISSION)
 			{
@@ -373,6 +372,7 @@ DWORD WINAPI Client::senderThread(LPVOID)
 			p.cameraChanged = cameraChanged;
 			p.cam = playerCam;
 			p.recall = recall;
+
 			sendMsg((char *)&p, sizeof(p));
 		}
 

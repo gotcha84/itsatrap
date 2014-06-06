@@ -106,9 +106,13 @@ int main(int argc, char *argv[]) {
 
 	// Initialize networking for client
 	Client::initializeClient();
+	cout << "DONE CLIENT" << endl;
 	textures = new Texture();
+	cout << "DONE TEXTURE" << endl;
 	client = new ClientInstance(Client::getPlayerId());
+	cout << "DONE CLIENT INSTANCE" << endl;
 	window = new Window();
+	cout << "DONE WINDOW" << endl;
 	glm::vec3 starting = client->root->getPosition();
 	glm::vec3 shift;
 	switch (client->root->getPlayerID()) {
@@ -147,9 +151,10 @@ int main(int argc, char *argv[]) {
 	glShadeModel(GL_SMOOTH);                    // set shading to smooth
 
 	// backface culling to render front sides of polygons
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
+	glDisable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+	//glFrontFace(GL_CCW);
 	
 	// Generate material properties:
 	//glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -177,6 +182,8 @@ int main(int argc, char *argv[]) {
 	// enable alpha channel
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//gluPerspective(90.0f, ((float)Window::m_width)/((float)Window::m_height), 1.0f, 1000.0f);
 
 	// keyboard input
 	glutKeyboardFunc(window->keyDown);
@@ -231,9 +238,10 @@ int main(int argc, char *argv[]) {
 	// skybox
 	sg::MatrixTransform sbXForm = sg::MatrixTransform();
 	glm::mat4 model = glm::mat4();
-	model = glm::rotate(model, 90.0f, glm::vec3(0, 1, 0));
-	model = glm::rotate(model, -45.0f, glm::vec3(1, 0, 0));
-	model = glm::rotate(model, 25.0f, glm::vec3(0, 0, 1));
+	model = glm::rotate(model, 90.0f, glm::vec3(0, 0, 1));
+	model = glm::rotate(model, 45.0f, glm::vec3(0, 1, 0));
+	//model = glm::rotate(model, -45.0f, glm::vec3(1, 0, 0));
+	//model = glm::rotate(model, 25.0f, glm::vec3(0, 0, 1));
 	sbXForm.setMatrix(model);
 	client->root->addChild(&sbXForm);
 

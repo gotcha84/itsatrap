@@ -47,7 +47,7 @@ AABB::~AABB() {
 void AABB::initCommon() {
 	float yLength = maxY - minY;
 	m_nearTopFactor = 0.01f*yLength;
-	m_overTopFactor = 0.05f*yLength;
+	m_overTopFactor = 0.01f*yLength;
 	m_onRampXZFactor = 1.0f;
 	m_onRampYFactor = 10.0f;
 }
@@ -76,7 +76,7 @@ void AABB::setAABB(glm::vec3 pos, float rad) {
 
 // this = obj ie building. other = player
 bool AABB::collidesWith(AABB other) {
-	bool tmp  (other.maxX > minX && other.minX < maxX
+	bool tmp(other.maxX > minX && other.minX < maxX
 		&& other.maxY > minY && other.minY < maxY
 		&& other.maxZ > minZ && other.minZ < maxZ);
 
@@ -84,7 +84,7 @@ bool AABB::collidesWith(AABB other) {
 }
 
 bool AABB::collidesWithPointer(AABB* other) {
-	bool tmp  (other->maxX > minX && other->minX < maxX
+	bool tmp(other->maxX > minX && other->minX < maxX
 		&& other->maxY > minY && other->minY < maxY
 		&& other->maxZ > minZ && other->minZ < maxZ);
 
@@ -96,17 +96,22 @@ bool AABB::collidesWithPointer(AABB* other) {
 
 bool AABB::collidesWithSide(glm::vec3 from, glm::vec3 goTo, AABB player, int buildingId) {
 
-	if (cameFromBottom(from, goTo, player, buildingId) || cameFromTop(from, goTo, player, buildingId)) {
-		return false;
+	if (buildingId == 4) {
+		bool btm = cameFromBottom(from, goTo, player, buildingId);
+		bool top = cameFromTop(from, goTo, player, buildingId);
 	}
 
-	return (maxX > player.minX && minX < player.maxX
-		&& maxY - m_nearTopFactor > player.maxY
-		&& maxZ > player.minZ && minZ < player.maxZ);
+	/*if (cameFromBottom(from, goTo, player, buildingId) || cameFromTop(from, goTo, player, buildingId)) {
+	return false;
+	}*/
+	return (collidesWith(player) && from.y > minY && from.y < maxY);
+	//return (maxX > player.minX && minX < player.maxX
+	//	&& maxY - m_nearTopFactor > player.maxY
+	//	&& maxZ > player.minZ && minZ < player.maxZ);
 
 	/*return (player.minX > minX && player.maxX < maxX
-		&& player.maxY < maxY - m_nearTopFactor
-		&& player.minZ > minZ && player.maxZ < maxZ);*/
+	&& player.maxY < maxY - m_nearTopFactor
+	&& player.minZ > minZ && player.maxZ < maxZ);*/
 }
 
 //bool AABB::collidesWithSidePointer(glm::vec3 from, glm::vec3 goTo, AABB* player, int buildingId) {
@@ -127,21 +132,21 @@ bool AABB::onTopOfPointer(AABB* other) {
 }
 
 bool AABB::inside(glm::vec3 goTo) {
-	return (goTo.x > minX && goTo.x < maxX 
+	return (goTo.x > minX && goTo.x < maxX
 		&& goTo.y > minY &&  goTo.y < maxY
-		&& goTo.z > minZ && goTo.z < maxZ); 
+		&& goTo.z > minZ && goTo.z < maxZ);
 }
 
 bool AABB::inside(AABB other) {
-	return (minX > other.minX && maxX < other.maxX 
-		&& minY > other.minY && maxY < other.maxY 
+	return (minX > other.minX && maxX < other.maxX
+		&& minY > other.minY && maxY < other.maxY
 		&& minZ > other.minZ && maxZ < other.maxZ);
-	
+
 }
 // TODO: imp coming from other entrance of ramp if needed
 // this = obj ie building. other = player
 bool AABB::collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance) {
-		
+
 	if (other.minY > minY + m_onRampYFactor) {
 		//cout << "too tall" << endl;
 		return false;
@@ -158,59 +163,59 @@ bool AABB::collidesWithRampEntrance(glm::vec3 from, AABB other, int entrance) {
 	cout << "pos:" << glm::to_string(pos) << endl;*/
 	//cout << "entrance: " << entrance << endl;
 
-	
+
 
 	switch (entrance) {
-		case 0:
-			if (minZ < from.z && maxZ > from.z) {
-				//cout << "from entrance" << endl;
-				return (other.minX - minX < maxX - other.maxX && minX - m_onRampXZFactor < pos.x && maxX > other.maxX && minZ < other.minZ && maxZ > other.maxZ);
-			}
-			return false;
-			//else {
-			//	//cout << "from side" << endl;
-			//	return (minX < other.minX + 5.0f && minX + m_onRampXZFactor > other.minX + 5.0f && minZ > other.minZ && maxZ < other.maxZ);
-			//}
-			break;
-		case 1:
-			if (minZ < from.z && maxZ > from.z) {
-				return (other.minX - minX > maxX - other.maxX && minX < other.minX && maxX + m_onRampXZFactor > pos.x && minZ < other.minZ && maxZ > other.maxZ);
-			}
-			//else {
-			//	return (maxX > other.maxX - 5.0f && maxX - m_onRampXZFactor < other.maxX - 5.0f && minZ > other.minZ && maxZ < other.maxZ);
-			//}
-			return false;
-			break;
-		case 2:
-			cout << "why come from underground??" << endl;
-			break;
-		case 3:
-			cout << "why come from sky??" << endl;
-			break;
-		case 4:
-			if (minX < from.x && maxX > from.x) {
-				//cout << "from entrance" << endl;
-				//cout << "first: " << (other.minZ - minZ < maxZ - other.maxZ) << endl;
-				//cout << "second: " << (minZ /*- m_onRampXZFactor*/ < pos.z) << endl;
-				//cout << "third: " << (maxZ > other.maxZ) << endl;
-				//cout << "fourth: " << (minX < other.minX) << endl;
-				//cout << "fifth: " << (maxX > other.maxX) << endl << endl;
-				return (other.minZ - minZ < maxZ - other.maxZ && minZ /*- m_onRampXZFactor*/ < pos.z && maxZ > other.maxZ && minX < other.minX && maxX > other.maxX);
-			}
-			/*else {
-				return (minZ < other.minZ + 5.0f && minZ + m_onRampXZFactor > other.minZ + 5.0f && minX > other.minX && maxX < other.maxX);
-			}*/
-			return false;
-			break;
-		case 5:
-			if (minX < from.x && maxX > from.x) {
-				return (other.minZ - minZ > maxZ - other.maxZ && minZ < other.minZ && maxZ + m_onRampXZFactor > pos.z && minX < other.minX && maxX > other.maxX);
-			}
-			/*else {
-				return (maxZ > other.maxZ - 5.0f && maxZ - m_onRampXZFactor < other.maxZ - 5.0f && minX > other.minX && maxX < other.maxX);
-			}*/
-			return false;
-			break;
+	case 0:
+		if (minZ < from.z && maxZ > from.z) {
+			//cout << "from entrance" << endl;
+			return (other.minX - minX < maxX - other.maxX && minX - m_onRampXZFactor < pos.x && maxX > other.maxX && minZ < other.minZ && maxZ > other.maxZ);
+		}
+		return false;
+		//else {
+		//	//cout << "from side" << endl;
+		//	return (minX < other.minX + 5.0f && minX + m_onRampXZFactor > other.minX + 5.0f && minZ > other.minZ && maxZ < other.maxZ);
+		//}
+		break;
+	case 1:
+		if (minZ < from.z && maxZ > from.z) {
+			return (other.minX - minX > maxX - other.maxX && minX < other.minX && maxX + m_onRampXZFactor > pos.x && minZ < other.minZ && maxZ > other.maxZ);
+		}
+		//else {
+		//	return (maxX > other.maxX - 5.0f && maxX - m_onRampXZFactor < other.maxX - 5.0f && minZ > other.minZ && maxZ < other.maxZ);
+		//}
+		return false;
+		break;
+	case 2:
+		cout << "why come from underground??" << endl;
+		break;
+	case 3:
+		cout << "why come from sky??" << endl;
+		break;
+	case 4:
+		if (minX < from.x && maxX > from.x) {
+			//cout << "from entrance" << endl;
+			//cout << "first: " << (other.minZ - minZ < maxZ - other.maxZ) << endl;
+			//cout << "second: " << (minZ /*- m_onRampXZFactor*/ < pos.z) << endl;
+			//cout << "third: " << (maxZ > other.maxZ) << endl;
+			//cout << "fourth: " << (minX < other.minX) << endl;
+			//cout << "fifth: " << (maxX > other.maxX) << endl << endl;
+			return (other.minZ - minZ < maxZ - other.maxZ && minZ /*- m_onRampXZFactor*/ < pos.z && maxZ > other.maxZ && minX < other.minX && maxX > other.maxX);
+		}
+		/*else {
+		return (minZ < other.minZ + 5.0f && minZ + m_onRampXZFactor > other.minZ + 5.0f && minX > other.minX && maxX < other.maxX);
+		}*/
+		return false;
+		break;
+	case 5:
+		if (minX < from.x && maxX > from.x) {
+			return (other.minZ - minZ > maxZ - other.maxZ && minZ < other.minZ && maxZ + m_onRampXZFactor > pos.z && minX < other.minX && maxX > other.maxX);
+		}
+		/*else {
+		return (maxZ > other.maxZ - 5.0f && maxZ - m_onRampXZFactor < other.maxZ - 5.0f && minX > other.minX && maxX < other.maxX);
+		}*/
+		return false;
+		break;
 	}
 
 	return false;
@@ -241,42 +246,42 @@ bool AABB::collidesWithRampInside(AABB other, int entrance, float slope) {
 
 	glm::vec3 pos = glm::vec3(other.minX + 5.0f, other.minY /*+ 5.0f*/, other.minZ + 5.0f);
 	switch (entrance) {
-		case 0:
-			return (pos.y < other.minY + (pos.x - other.minX)*slope);
-			break;
-		case 1:
-			return (pos.y < other.minY + (other.maxX - pos.x)*slope);
-			break;
-		case 2:
-			cout << "y come from ground" << endl;
-			break;
-		case 3:
-			cout << "y come from sky" << endl;
-			break;
-		case 4:
-			return (pos.y < other.minY + (pos.z - other.minZ)*slope);
-			break;
-		case 5:
-			return (pos.y < other.minY + (other.maxZ - pos.z)*slope);
-			break;
-		default:
-			break;
+	case 0:
+		return (pos.y < other.minY + (pos.x - other.minX)*slope);
+		break;
+	case 1:
+		return (pos.y < other.minY + (other.maxX - pos.x)*slope);
+		break;
+	case 2:
+		cout << "y come from ground" << endl;
+		break;
+	case 3:
+		cout << "y come from sky" << endl;
+		break;
+	case 4:
+		return (pos.y < other.minY + (pos.z - other.minZ)*slope);
+		break;
+	case 5:
+		return (pos.y < other.minY + (other.maxZ - pos.z)*slope);
+		break;
+	default:
+		break;
 	}
 }
 
 
 bool AABB::nearTop(glm::vec3 goTo) {
-	return (goTo.y > maxY-m_nearTopFactor);
+	return (goTo.y > maxY - m_nearTopFactor);
 }
 
 bool AABB::clearedTop(AABB other) {
-	return (other.minY > maxY+m_overTopFactor);
+	return (other.minY > maxY + m_overTopFactor);
 }
 
 // this = obj ie building. other = player
 bool AABB::fellOffSide(AABB other) {
 	/*bool tmp = !((minX < other.minX && maxX > other.maxX)
-		|| (minZ < other.minZ && maxZ > other.maxZ));*/
+	|| (minZ < other.minZ && maxZ > other.maxZ));*/
 	/*cout << "building: ";
 	this->print();
 	cout << "player: ";
@@ -289,7 +294,7 @@ bool AABB::fellOffSide(AABB other) {
 }
 
 glm::vec3 AABB::intersects(glm::vec3 from, glm::vec3 goTo) {
-	glm::vec3 direction = goTo-from;
+	glm::vec3 direction = goTo - from;
 
 	float xMinCoeff = FLT_MAX;
 	float xMaxCoeff = FLT_MAX;
@@ -299,26 +304,26 @@ glm::vec3 AABB::intersects(glm::vec3 from, glm::vec3 goTo) {
 	float zMaxCoeff = FLT_MAX;
 
 	if (direction.x != 0) {
-		xMinCoeff = ((minX - from.x)/direction.x > 0) ? ((minX - from.x)/direction.x > 0) : FLT_MAX;
-		xMaxCoeff = ((maxX - from.x)/direction.x > 0) ? ((maxX - from.x)/direction.x > 0) : FLT_MAX;
+		xMinCoeff = ((minX - from.x) / direction.x > 0) ? ((minX - from.x) / direction.x > 0) : FLT_MAX;
+		xMaxCoeff = ((maxX - from.x) / direction.x > 0) ? ((maxX - from.x) / direction.x > 0) : FLT_MAX;
 	}
 	if (direction.y != 0) {
-		yMinCoeff = ((minY - from.y)/direction.y > 0) ? ((minY - from.y)/direction.y > 0) : FLT_MAX;
-		yMaxCoeff = ((maxY - from.y)/direction.y > 0) ? ((maxY - from.y)/direction.y > 0) : FLT_MAX;
+		yMinCoeff = ((minY - from.y) / direction.y > 0) ? ((minY - from.y) / direction.y > 0) : FLT_MAX;
+		yMaxCoeff = ((maxY - from.y) / direction.y > 0) ? ((maxY - from.y) / direction.y > 0) : FLT_MAX;
 	}
 	if (direction.z != 0) {
-		zMinCoeff = ((minZ - from.z)/direction.z > 0) ? ((minZ - from.z)/direction.z > 0) : FLT_MAX;
-		zMaxCoeff = ((maxZ - from.z)/direction.z > 0) ? ((maxZ - from.z)/direction.z > 0) : FLT_MAX;
+		zMinCoeff = ((minZ - from.z) / direction.z > 0) ? ((minZ - from.z) / direction.z > 0) : FLT_MAX;
+		zMaxCoeff = ((maxZ - from.z) / direction.z > 0) ? ((maxZ - from.z) / direction.z > 0) : FLT_MAX;
 	}
 
 	float coeff = min(min(min(xMinCoeff, xMaxCoeff), min(yMinCoeff, yMaxCoeff)), min(zMinCoeff, zMaxCoeff));
 
-	return from+(coeff*direction);
+	return from + (coeff*direction);
 
 }
 
 int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
-	glm::vec3 direction = goTo-from;
+	glm::vec3 direction = goTo - from;
 
 	float xMinCoeff = FLT_MAX;
 	float xMaxCoeff = FLT_MAX;
@@ -328,16 +333,16 @@ int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
 	float zMaxCoeff = FLT_MAX;
 
 	if (direction.x != 0) {
-		xMinCoeff = ((minX - from.x)/direction.x > 0) ? ((minX - from.x)/direction.x) : FLT_MAX;
-		xMaxCoeff = ((maxX - from.x)/direction.x > 0) ? ((maxX - from.x)/direction.x) : FLT_MAX;
+		xMinCoeff = ((minX - from.x) / direction.x > 0) ? ((minX - from.x) / direction.x) : FLT_MAX;
+		xMaxCoeff = ((maxX - from.x) / direction.x > 0) ? ((maxX - from.x) / direction.x) : FLT_MAX;
 	}
 	if (direction.y != 0) {
-		yMinCoeff = ((minY - from.y)/direction.y > 0) ? ((minY - from.y)/direction.y) : FLT_MAX;
-		yMaxCoeff = ((maxY - from.y)/direction.y > 0) ? ((maxY - from.y)/direction.y) : FLT_MAX;
+		yMinCoeff = ((minY - from.y) / direction.y > 0) ? ((minY - from.y) / direction.y) : FLT_MAX;
+		yMaxCoeff = ((maxY - from.y) / direction.y > 0) ? ((maxY - from.y) / direction.y) : FLT_MAX;
 	}
 	if (direction.z != 0) {
-		zMinCoeff = ((minZ - from.z)/direction.z > 0) ? ((minZ - from.z)/direction.z) : FLT_MAX;
-		zMaxCoeff = ((maxZ - from.z)/direction.z > 0) ? ((maxZ - from.z)/direction.z) : FLT_MAX;
+		zMinCoeff = ((minZ - from.z) / direction.z > 0) ? ((minZ - from.z) / direction.z) : FLT_MAX;
+		zMaxCoeff = ((maxZ - from.z) / direction.z > 0) ? ((maxZ - from.z) / direction.z) : FLT_MAX;
 	}
 	float coeff = min(min(min(xMinCoeff, xMaxCoeff), min(yMinCoeff, yMaxCoeff)), min(zMinCoeff, zMaxCoeff));
 
@@ -347,7 +352,7 @@ int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
 	if (coeff == xMaxCoeff) {
 		return 1;
 	}
-		
+
 	if (coeff == zMinCoeff) {
 		return 4;
 	}
@@ -361,7 +366,7 @@ int AABB::reflectionIntersection(glm::vec3 from, glm::vec3 goTo) {
 }
 
 float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
-	glm::vec3 direction = goTo-from;
+	glm::vec3 direction = goTo - from;
 
 	float xMinCoeff = FLT_MAX;
 	float xMaxCoeff = FLT_MAX;
@@ -371,28 +376,28 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 	float zMaxCoeff = FLT_MAX;
 
 	if (direction.x != 0) {
-		xMinCoeff = ((minX - from.x)/direction.x > 0) ? ((minX - from.x)/direction.x) : FLT_MAX;
-		xMaxCoeff = ((maxX - from.x)/direction.x > 0) ? ((maxX - from.x)/direction.x) : FLT_MAX;
+		xMinCoeff = ((minX - from.x) / direction.x > 0) ? ((minX - from.x) / direction.x) : FLT_MAX;
+		xMaxCoeff = ((maxX - from.x) / direction.x > 0) ? ((maxX - from.x) / direction.x) : FLT_MAX;
 	}
 	if (direction.y != 0) {
-		yMinCoeff = ((minY - from.y)/direction.y > 0) ? ((minY - from.y)/direction.y) : FLT_MAX;
-		yMaxCoeff = ((maxY - from.y)/direction.y > 0) ? ((maxY - from.y)/direction.y) : FLT_MAX;
+		yMinCoeff = ((minY - from.y) / direction.y > 0) ? ((minY - from.y) / direction.y) : FLT_MAX;
+		yMaxCoeff = ((maxY - from.y) / direction.y > 0) ? ((maxY - from.y) / direction.y) : FLT_MAX;
 	}
 	if (direction.z != 0) {
-		zMinCoeff = ((minZ - from.z)/direction.z > 0) ? ((minZ - from.z)/direction.z) : FLT_MAX;
-		zMaxCoeff = ((maxZ - from.z)/direction.z > 0) ? ((maxZ - from.z)/direction.z) : FLT_MAX;
+		zMinCoeff = ((minZ - from.z) / direction.z > 0) ? ((minZ - from.z) / direction.z) : FLT_MAX;
+		zMaxCoeff = ((maxZ - from.z) / direction.z > 0) ? ((maxZ - from.z) / direction.z) : FLT_MAX;
 	}
 	float tmpAngle;
 	float coeff = min(min(min(xMinCoeff, xMaxCoeff), min(yMinCoeff, yMaxCoeff)), min(zMinCoeff, zMaxCoeff));
 
 	if (coeff == xMinCoeff || coeff == xMaxCoeff) {
-		tmpAngle = 180.0f*(acos((direction.z*direction.z)/(glm::length(direction)*direction.z)))/(atan(1.0f)*4.0f);
+		tmpAngle = 180.0f*(acos((direction.z*direction.z) / (glm::length(direction)*direction.z))) / (atan(1.0f)*4.0f);
 
 		/*if (coeff == xMinCoeff) {
-			cout << "tmpAngle1: " << tmpAngle << endl;
+		cout << "tmpAngle1: " << tmpAngle << endl;
 		}
 		else {
-			cout << "tmpAngle2: " << tmpAngle << endl;
+		cout << "tmpAngle2: " << tmpAngle << endl;
 		}*/
 
 		return tmpAngle;
@@ -401,12 +406,12 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 		return -1.0f;
 	}
 	else {
-		tmpAngle = 180.0f*(acos((direction.x*direction.x)/(glm::length(direction)*direction.x)))/(atan(1.0f)*4.0f);
+		tmpAngle = 180.0f*(acos((direction.x*direction.x) / (glm::length(direction)*direction.x))) / (atan(1.0f)*4.0f);
 		/*if (coeff == zMinCoeff) {
-			cout << "tmpAngle3: " << tmpAngle << endl;
+		cout << "tmpAngle3: " << tmpAngle << endl;
 		}
 		else {
-			cout << "tmpAngle4: " << tmpAngle << endl;
+		cout << "tmpAngle4: " << tmpAngle << endl;
 		}*/
 		return tmpAngle;
 	}
@@ -415,24 +420,25 @@ float AABB::angleIntersection(glm::vec3 from, glm::vec3 goTo) {
 glm::vec3 AABB::unstuckOffset(AABB player) {
 
 	/*bool tmp(other.maxX > minX && other.minX < maxX
-		&& other.maxY > minY && other.minY < maxY
-		&& other.maxZ > minZ && other.minZ < maxZ);*/
+	&& other.maxY > minY && other.minY < maxY
+	&& other.maxZ > minZ && other.minZ < maxZ);*/
 
 	float threshold = 0.01f;
-	float thresholdfactor = 0.1f;
-	
+	float thresholdfactor = 10.0f;
+	float extra = 0.5f;
+
 	glm::vec3 offset = glm::vec3(0.0f, 0.0f, 0.0f);
 	if (player.minX < minX && minX < player.maxX) {
 		if (player.maxX - minX > threshold) {
-			offset.x -= player.maxX - minX;
+			offset.x -= (player.maxX - minX + extra);
 		}
 		else {
 			offset.x -= thresholdfactor*threshold;
 		}
 	}
-	if (player.minX < maxX && maxX < player.maxX) {
+	else if (player.minX < maxX && maxX < player.maxX) {
 		if (maxX - player.minX > threshold) {
-			offset.x += maxX - player.minX;
+			offset.x += (maxX - player.minX + extra);
 		}
 		else {
 			offset.x += thresholdfactor*threshold;
@@ -440,43 +446,32 @@ glm::vec3 AABB::unstuckOffset(AABB player) {
 	}
 	if (player.minY < minY && minY < player.maxY) {
 		if (player.maxY - minY > threshold) {
-			offset.y -= player.maxY - minY;
+			offset.y -= (player.maxY - minY + extra);
 		}
 		else {
 			offset.x -= thresholdfactor*threshold;
 		}
 	}
-	if (player.minY < maxY && maxY < player.maxY) {
+	else if (player.minY < maxY && maxY < player.maxY) {
 		if (maxY - player.minY > threshold) {
-			offset.y += maxY - player.minY;
+			offset.y += (maxY - player.minY + extra);
 		}
 		else {
 			offset.y += thresholdfactor*threshold;
 		}
 	}
 
-	if (player.minY < minY && minY < player.maxY) {
-		if (player.maxY - minY > threshold) {
-			offset.y -= player.maxY - minY;
-		}
-	}
-	if (player.minY < maxY && maxY < player.maxY) {
-		if (maxY - player.minY > threshold) {
-			offset.y += maxY - player.minY;
-		}
-	}
-
 	if (player.minZ < minZ && minZ < player.maxZ) {
 		if (player.maxZ - minZ > threshold) {
-			offset.z -= player.maxZ - minZ;
+			offset.z -= (player.maxZ - minZ + extra);
 		}
 		else {
 			offset.z -= thresholdfactor*threshold;
 		}
 	}
-	if (player.minZ < maxZ && maxZ < player.maxZ) {
+	else if (player.minZ < maxZ && maxZ < player.maxZ) {
 		if (maxZ - player.minZ > threshold) {
-			offset.z += maxZ - player.minZ;
+			offset.z += (maxZ - player.minZ + extra);
 		}
 		else {
 			offset.z += thresholdfactor*threshold;
@@ -498,37 +493,37 @@ void AABB::draw() {
 
 	glColor4f(1, 0, 0, 1);
 	glBegin(GL_LINE_LOOP);
-		glVertex3f(p0.x, p0.y, p0.z);
-		glVertex3f(p1.x, p1.y, p1.z);
-		glVertex3f(p2.x, p2.y, p2.z);
-		glVertex3f(p3.x, p3.y, p3.z);
+	glVertex3f(p0.x, p0.y, p0.z);
+	glVertex3f(p1.x, p1.y, p1.z);
+	glVertex3f(p2.x, p2.y, p2.z);
+	glVertex3f(p3.x, p3.y, p3.z);
 	glEnd();
 
 	glBegin(GL_LINE_LOOP);
-		glVertex3f(p4.x, p4.y, p4.z);
-		glVertex3f(p5.x, p5.y, p5.z);
-		glVertex3f(p6.x, p6.y, p6.z);
-		glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p4.x, p4.y, p4.z);
+	glVertex3f(p5.x, p5.y, p5.z);
+	glVertex3f(p6.x, p6.y, p6.z);
+	glVertex3f(p7.x, p7.y, p7.z);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(p0.x, p0.y, p0.z);
-		glVertex3f(p5.x, p5.y, p5.z);
-	glEnd();
-	
-	glBegin(GL_LINES);
-		glVertex3f(p1.x, p1.y, p1.z);
-		glVertex3f(p6.x, p6.y, p6.z);
+	glVertex3f(p0.x, p0.y, p0.z);
+	glVertex3f(p5.x, p5.y, p5.z);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(p2.x, p2.y, p2.z);
-		glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p1.x, p1.y, p1.z);
+	glVertex3f(p6.x, p6.y, p6.z);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(p3.x, p3.y, p3.z);
-		glVertex3f(p4.x, p4.y, p4.z);
+	glVertex3f(p2.x, p2.y, p2.z);
+	glVertex3f(p7.x, p7.y, p7.z);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex3f(p3.x, p3.y, p3.z);
+	glVertex3f(p4.x, p4.y, p4.z);
 	glEnd();
 }
 
@@ -639,7 +634,7 @@ bool AABB::cameFromBottom(glm::vec3 from, glm::vec3 goTo, AABB player, int build
 		cout << "collided with new way (from bottom)" << endl;
 		return true;
 	}
-	
+
 	if (!collidesWith(player) && !(from.y < minY && goTo.y > maxY)) {
 		return false;
 	}
@@ -647,7 +642,7 @@ bool AABB::cameFromBottom(glm::vec3 from, glm::vec3 goTo, AABB player, int build
 	bool fromInter = (from.x > minX && from.x < maxX && from.z > minZ && from.z < maxZ);
 	bool goToInter = (goTo.x > minX && goTo.x < maxX && goTo.z > minZ && goTo.z < maxZ);
 
-	
+
 	if (!(fromInter || goToInter)) {
 		return false;
 	}
