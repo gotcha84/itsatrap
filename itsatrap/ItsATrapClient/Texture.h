@@ -17,10 +17,16 @@ using namespace std;
 
 // Add texture names here
 enum Textures {
+	ActiveNode,
+	InactiveNode,
+	BlueNode,
+	RedNode,
 	Skybox,
 	Polynoid,
+	Headless,
 	Lightning,
 	Animus,
+	Base,
 	BRail,
 	Size
 };

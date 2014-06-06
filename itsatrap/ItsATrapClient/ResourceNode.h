@@ -5,6 +5,7 @@
 #include "ConfigSettings.h"
 #include "ObjNode.h"
 #include "ParticleSystem.h"
+#include "Texture.h"
 
 namespace sg {
 	class ResourceNode : public ObjNode {
