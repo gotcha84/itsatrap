@@ -152,7 +152,9 @@ void ObjModel::drawModel() {
 		for (int i = 0; i < m_nIndices[k] / 3; i++) {
 			glBegin(GL_TRIANGLES);
 			for (int j = 0; j < 3; j++) {
-				//glNormal3f(m_normals[k][3 * m_indices[k][3 * i + j]], m_normals[k][3 * m_indices[k][3 * i + j] + 1], m_normals[k][3 * m_indices[k][3 * i + j] + 2]);
+				if (!m_normals.empty()) {
+					glNormal3f(m_normals[k][3 * m_indices[k][3 * i + j]], m_normals[k][3 * m_indices[k][3 * i + j] + 1], m_normals[k][3 * m_indices[k][3 * i + j] + 2]);
+				}
 				glTexCoord2f(m_texcoords[k][2 * m_indices[k][t]], m_texcoords[k][2 * m_indices[k][t] + 1]);
 				glVertex3f(m_vertices[k][3 * m_indices[k][3 * i + j]], m_vertices[k][3 * m_indices[k][3 * i + j] + 1], m_vertices[k][3 * m_indices[k][3 * i + j] + 2]);
 				t++;
