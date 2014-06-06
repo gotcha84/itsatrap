@@ -2,6 +2,7 @@
 #ifndef PARTICLESYSTEM_H
 #define PARTICLESYSTEM_H
 
+#include <GL/glew.h>
 #include <GL/glut.h>
 
 #include <glm/glm.hpp>
@@ -40,7 +41,7 @@ struct Particle
 
 	void reset();
 	void step();
-	void draw();
+	void draw(glm::mat4 parent, glm::mat4 cam);
 };
 
 class ParticleSystem {
@@ -74,7 +75,7 @@ class ParticleSystem {
 		void particlesReset();
 
 		void reset();
-		void draw();
+		void draw(glm::mat4 parent, glm::mat4 cam);
 
 		bool isEnabled();
 		void enable();

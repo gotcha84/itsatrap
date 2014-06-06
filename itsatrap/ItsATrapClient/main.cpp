@@ -1,5 +1,6 @@
 #define FULLSCREEN 0
 
+#include <GL/glew.h>
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -242,6 +243,9 @@ int main(int argc, char *argv[]) {
 	skybox.getModel()->setColor(glm::vec4(1, 1, 1, 1));
 	skybox.getModel()->disableDrawBB();
 	sbXForm.addChild(&skybox);
+
+	sg::ParticleSystemNode ps = sg::ParticleSystemNode(500);
+	client->root->addChild(&ps);
 
 	//client->printPlayers();
 	//client->printSceneGraph();

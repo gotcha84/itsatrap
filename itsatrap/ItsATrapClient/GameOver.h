@@ -2,14 +2,21 @@
 #ifndef GAMEOVER_H
 #define GAMEOVER_H
 
-//Scoreboard.h
+#include <GL/glew.h>
+#include <GL/glut.h>
+
 #include <string>
 #include <utility>
 #include <vector>
+#include <FTGL/ftgl.h>
+#include <fstream>
+#include <algorithm>
+
 #include "MatrixTransform.h"
 #include "MyPlayer.h"
 #include "Texture.h"
-#include <FTGL/ftgl.h>
+
+using namespace std;
 
 class GameOver {
 public:

@@ -1,6 +1,7 @@
 #ifndef _UTILITIES_H_
 #define _UTILITIES_H_
 
+#include <GL/glew.h>
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 

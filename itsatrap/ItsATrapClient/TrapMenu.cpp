@@ -1,9 +1,4 @@
-//TrapMenu.cpp
 #include "TrapMenu.h"
-#include <GL/glut.h>
-#include <fstream>
-#include <algorithm>
-using namespace std;
 
 TrapMenu::TrapMenu() {
 	infoState = 0;

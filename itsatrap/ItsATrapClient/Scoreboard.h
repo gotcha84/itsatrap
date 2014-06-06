@@ -6,12 +6,21 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "MatrixTransform.h"
-#include "MyPlayer.h"
-#include "Texture.h"
+#include <fstream>
+#include <algorithm>
+
 #include <FTGL/ftgl.h>
 #include <FTGL/FTGLPolygonFont.h>
 #include <FTGL/FTGLExtrdFont.h>
+
+#include <GL/glew.h>
+#include <GL/glut.h>
+
+#include "MatrixTransform.h"
+#include "MyPlayer.h"
+#include "Texture.h"
+
+using namespace std;
 
 class Scoreboard {
 public:

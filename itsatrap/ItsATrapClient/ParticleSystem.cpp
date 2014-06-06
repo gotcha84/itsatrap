@@ -96,14 +96,21 @@ void Particle::step() {
 	}
 }
 
-void Particle::draw() {
+void Particle::draw(glm::mat4 parent, glm::mat4 cam) {
 	//glEnable(GL_POINT_SMOOTH);
-	glPointSize(10);
+	//glPointSize(10);
 
 	glColor4f(m_color.r, m_color.g, m_color.b, m_color.a);
-	glBegin(GL_POINTS);
-	glVertex3f(m_pos.x, m_pos.y, m_pos.z);
-	glEnd();
+	//glBegin(GL_POINTS);
+	//glVertex3f(m_pos.x, m_pos.y, m_pos.z);
+	//glEnd();
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+		glLoadMatrixf(glm::value_ptr(parent * glm::inverse(cam)));
+		glTranslatef(m_pos.x, m_pos.y, m_pos.z);
+		glutSolidCube(1);
+	glPopMatrix();
 
 	//glDisable(GL_POINT_SMOOTH);
 }
@@ -176,10 +183,10 @@ void ParticleSystem::reset() {
 	initParticles();
 }
 
-void ParticleSystem::draw() {
+void ParticleSystem::draw(glm::mat4 parent, glm::mat4 cam) {
 	if (m_enabled) {
 		for (int i = 0; i < m_numParticles; i++) {
-			m_particles[i].draw();
+			m_particles[i].draw(parent, cam);
 			m_particles[i].step();
 		}
 	}
