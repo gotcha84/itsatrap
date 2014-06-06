@@ -177,6 +177,8 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	gluPerspective(90.0f, 4.0f / 3.0f, 1.0f, 1000.0f);
+
 	// keyboard input
 	glutKeyboardFunc(window->keyDown);
 	glutKeyboardUpFunc(window->keyUp);

@@ -67,7 +67,7 @@ void Window::reshapeCallback(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	// glFrustum(-10.0, 10.0, -10.0, 10.0, 10, 1000.0); // set perspective projection viewing frustum
-	gluPerspective(45.0f, 3.0f / 3.0f, 1, 1000);
+	gluPerspective(45.0f, ((float)w)/((float)h), 1.0f, 1000.0f);
 	//glTranslatef(0, 0, -20);
 	glMatrixMode(GL_MODELVIEW);
 }
