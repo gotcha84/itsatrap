@@ -115,18 +115,45 @@ namespace sg {
 
 		delete bloodEffect;
 		bloodEffect = nullptr;
+
+		delete m_thisPlayerAttack;
+		m_thisPlayerAttack = nullptr;
+
+		delete m_otherPlayerAttack;
+		m_otherPlayerAttack = nullptr;
 	}
 
 	void Player::initModels() {
+
+		// Determine color
+		glm::vec4 color;
+		if (this->getPlayerID() % 2 == 0)
+			color = glm::vec4(0.75, 0, 0, 1);
+		else
+			color = glm::vec4(0, 0, 0.75, 1);
+
+
 		m_otherPlayer = new ObjModel();
 		m_otherPlayer->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");
 		m_otherPlayer->setTexture(textures->m_texID[Textures::Polynoid]);
-		//m_otherPlayer->loadModel("../Models/Polynoid_Headless.obj", "../Models/");
-		//m_otherPlayer->setTexture(textures->m_texID[Textures::Headless]);
+		m_otherPlayer->setColor(color);
+
 
 		m_thisPlayer = new ObjModel();
 		m_thisPlayer->loadModel("../Models/Headless_Avatar.obj", "../Models/");
 		m_thisPlayer->disableDrawBB();
+		m_thisPlayer->setColor(color);
+
+		m_thisPlayerAttack = new ObjModel();
+		m_thisPlayerAttack->loadModel("../Models/Headless_Attack_01.obj", "../Models/");
+		m_thisPlayerAttack->disableDrawBB();
+		m_thisPlayerAttack->setColor(color);
+
+		m_otherPlayerAttack = new ObjModel();
+		m_otherPlayerAttack->loadModel("../Models/Avatar_Attack_01.obj", "../Models/");
+		m_otherPlayerAttack->disableDrawBB();
+		m_otherPlayerAttack->setColor(color);
+
 	}
 
 	void Player::setColor(glm::vec4 color) {
@@ -152,11 +179,14 @@ namespace sg {
 	glm::mat4 Player::getModelMatrix() {
 		m_translate = this->getPosition();
 		// ANDRE
-
+		
 		int PlayerHeight = 0;
 		ConfigSettings::getConfig()->getValue("PlayerHeight", PlayerHeight);
 		//cout << "camxrot: " << this->getCamera()->getXRotated() << endl;
 		glm::vec3 camcam = this->getCamera()->getCameraCenter();
+		if (getPlayer()->m_knifeDelay > 800) {
+			camcam.y += -2.5f;
+		}
 		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x - 1.0f, /*m_translate.y - 10.0f*/ camcam.y - PlayerHeight, m_translate.z));
 
 		this->getCamera()->calculateAxis();
@@ -332,17 +362,22 @@ namespace sg {
 	void Player::drawAsCurrentPlayer(glm::mat4 mv) {
 		// load updated mv matrix and draw shape for player
 
-		if (this->getPlayerID() % 2 == 0)
-			m_thisPlayer->setColor(glm::vec4(0.75, 0, 0, 1));
-		else
-			m_thisPlayer->setColor(glm::vec4(0, 0, 0.75, 1));
-
 		glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			//m_thisPlayer->drawModel();
+			
+			if (getPlayer()->m_knifeDelay > 800)
+			{
+				m_thisPlayerAttack->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				m_thisPlayerAttack->drawModel();
+			}
+			else
+			{
+				m_thisPlayer->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				m_thisPlayer->drawModel();
+			}
 
 		glPopMatrix();
 	}
@@ -369,18 +404,23 @@ namespace sg {
 	}
 
 	void Player::drawAsOtherPlayer(glm::mat4 mv) {
-		// load updated mv matrix and draw shape for player
-		if (this->getPlayerID() % 2 == 0)
-			m_otherPlayer->setColor(glm::vec4(0.75, 0, 0, 1));
-		else
-			m_otherPlayer->setColor(glm::vec4(0, 0, 0.75, 1));
 
 		glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(glm::value_ptr(mv));
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
-			m_otherPlayer->drawModel();
+
+			if (getPlayer()->m_knifeDelay > 800)
+			{
+				m_otherPlayerAttack->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				m_otherPlayerAttack->drawModel();
+			}
+			else
+			{
+				m_otherPlayer->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				m_otherPlayer->drawModel();
+			}
 
 			
 		glPopMatrix();

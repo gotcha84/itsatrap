@@ -41,6 +41,8 @@ namespace sg {
 
 			ObjModel *m_thisPlayer;
 			ObjModel *m_otherPlayer;
+			ObjModel *m_thisPlayerAttack;
+			ObjModel *m_otherPlayerAttack;
 
 			Player();
 			Player(glm::vec3 pos);
