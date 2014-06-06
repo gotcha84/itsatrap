@@ -1503,8 +1503,8 @@ void DynamicWorld::applyAdjustments() {
 		}*/
 
 
-		/*cout << "player pos: ";
-		p.aabb.print();*/
+		cout << "player pos: ";
+		p.aabb.print();
 
 		// hardcoding cuz idk why this aint working
 		//if (p.currPhysState == PhysicsStates::HoldingEdge) {
