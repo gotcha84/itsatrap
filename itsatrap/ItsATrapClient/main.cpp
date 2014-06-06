@@ -1,4 +1,4 @@
-#define FULLSCREEN 0
+#define FULLSCREEN 1
 //#define FBOWIDTHT 512       // width of fbo
 //#define FBOHEIGHT 512     // hight of fbo
 #define FBOWIDTHT 1600       // width of fbo
@@ -361,7 +361,7 @@ int main(int argc, char *argv[]) {
 	otherPlayerSound = new Sound("../Sound/footstep.wav");
 	sound = new Sound();
 	otherPlayerSound->playMusic(false, false, true);
-	//sound->playMusic();
+	sound->playMusic();
 	otherPlayerSound->setCenterPosition();
 	// hardcode the distance value for now, it will be the input from the server
 	otherPlayerSound->changePosition(-1.0f);
