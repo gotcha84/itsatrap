@@ -30,10 +30,42 @@ enum Textures {
 	Base,
 	Caltrop,
 	BRail,
-	Size,
 	Stunned,
 	Slowed,
-	Flashed
+	Flashed,
+
+	Base_01,
+	Base_02,
+	Base_03,
+	Base_04,
+	Base_05,
+	Base_06,
+	Base_07,
+	Base_08,
+	Base_09,
+	Base_10,
+
+	Base_11,
+	Base_12,
+	Base_13,
+	Base_14,
+	Base_15,
+	Base_16,
+	Base_17,
+	Base_18,
+	Base_19,
+	Base_20,
+
+	Base_21,
+	Base_22,
+	Base_23,
+	Base_24,
+	Base_25,
+	Base_26,
+	Base_27,
+
+	Float,
+	Size
 };
 
 class Texture {

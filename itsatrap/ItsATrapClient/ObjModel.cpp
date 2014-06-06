@@ -74,6 +74,8 @@ void ObjModel::initCommon() {
 	m_cityScale = 0.1f;
 	m_canScale = 5.0f;
 	m_defaultScale = 1.0f;
+
+	m_flipTex = false;
 }
 
 void ObjModel::setVertices(vector<float> arr) {
@@ -152,8 +154,15 @@ void ObjModel::drawModel() {
 		for (int i = 0; i < m_nIndices[k] / 3; i++) {
 			glBegin(GL_TRIANGLES);
 			for (int j = 0; j < 3; j++) {
-				//glNormal3f(m_normals[k][3 * m_indices[k][3 * i + j]], m_normals[k][3 * m_indices[k][3 * i + j] + 1], m_normals[k][3 * m_indices[k][3 * i + j] + 2]);
-				glTexCoord2f(m_texcoords[k][2 * m_indices[k][t]], m_texcoords[k][2 * m_indices[k][t] + 1]);
+				if (!m_normals.empty()) {
+					glNormal3f(m_normals[k][3 * m_indices[k][3 * i + j]], m_normals[k][3 * m_indices[k][3 * i + j] + 1], m_normals[k][3 * m_indices[k][3 * i + j] + 2]);
+				}
+				if (m_flipTex) {
+					glTexCoord2f(m_texcoords[k][2 * m_indices[k][t]], 1.0f - m_texcoords[k][2 * m_indices[k][t] + 1]);
+				}
+				else {
+					glTexCoord2f(m_texcoords[k][2 * m_indices[k][t]], m_texcoords[k][2 * m_indices[k][t] + 1]);
+				}
 				glVertex3f(m_vertices[k][3 * m_indices[k][3 * i + j]], m_vertices[k][3 * m_indices[k][3 * i + j] + 1], m_vertices[k][3 * m_indices[k][3 * i + j] + 2]);
 				t++;
 			}
@@ -272,6 +281,14 @@ void ObjModel::loadModel() {
 
 void ObjModel::setTexture(GLuint tex) {
 	m_texID = tex;
+}
+
+void ObjModel::flipTexture() {
+	m_flipTex = true;
+}
+
+void ObjModel::unflipTexture() {
+	m_flipTex = false;
 }
 
 void ObjModel::calculateBoundingBox() {

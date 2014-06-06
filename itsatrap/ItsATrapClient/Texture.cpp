@@ -36,6 +36,38 @@ void Texture::initTextures() {
 	loadTexture(m_texID[Textures::Stunned], "../Textures/Stunned.ppm");
 	loadTexture(m_texID[Textures::Slowed], "../Textures/Slowed.ppm");
 	loadTexture(m_texID[Textures::Flashed], "../Textures/Flashed.ppm");
+	
+	loadTexture(m_texID[Textures::Base_01], "../Textures/Obelisk3/ppm/Base_01.ppm");
+	loadTexture(m_texID[Textures::Base_02], "../Textures/Obelisk3/ppm/Base_02.ppm");
+	loadTexture(m_texID[Textures::Base_03], "../Textures/Obelisk3/ppm/Base_03.ppm");
+	loadTexture(m_texID[Textures::Base_04], "../Textures/Obelisk3/ppm/Base_04.ppm");
+	loadTexture(m_texID[Textures::Base_05], "../Textures/Obelisk3/ppm/Base_05.ppm");
+	loadTexture(m_texID[Textures::Base_06], "../Textures/Obelisk3/ppm/Base_06.ppm");
+	loadTexture(m_texID[Textures::Base_07], "../Textures/Obelisk3/ppm/Base_07.ppm");
+	loadTexture(m_texID[Textures::Base_08], "../Textures/Obelisk3/ppm/Base_08.ppm");
+	loadTexture(m_texID[Textures::Base_09], "../Textures/Obelisk3/ppm/Base_09.ppm");
+	loadTexture(m_texID[Textures::Base_10], "../Textures/Obelisk3/ppm/Base_10.ppm");
+
+	loadTexture(m_texID[Textures::Base_11], "../Textures/Obelisk3/ppm/Base_11.ppm");
+	loadTexture(m_texID[Textures::Base_12], "../Textures/Obelisk3/ppm/Base_12.ppm");
+	loadTexture(m_texID[Textures::Base_13], "../Textures/Obelisk3/ppm/Base_13.ppm");
+	loadTexture(m_texID[Textures::Base_14], "../Textures/Obelisk3/ppm/Base_14.ppm");
+	loadTexture(m_texID[Textures::Base_15], "../Textures/Obelisk3/ppm/Base_15.ppm");
+	loadTexture(m_texID[Textures::Base_16], "../Textures/Obelisk3/ppm/Base_16.ppm");
+	loadTexture(m_texID[Textures::Base_17], "../Textures/Obelisk3/ppm/Base_17.ppm");
+	loadTexture(m_texID[Textures::Base_18], "../Textures/Obelisk3/ppm/Base_18.ppm");
+	loadTexture(m_texID[Textures::Base_19], "../Textures/Obelisk3/ppm/Base_19.ppm");
+	loadTexture(m_texID[Textures::Base_20], "../Textures/Obelisk3/ppm/Base_20.ppm");
+
+	loadTexture(m_texID[Textures::Base_21], "../Textures/Obelisk3/ppm/Base_21.ppm");
+	loadTexture(m_texID[Textures::Base_22], "../Textures/Obelisk3/ppm/Base_22.ppm");
+	loadTexture(m_texID[Textures::Base_23], "../Textures/Obelisk3/ppm/Base_23.ppm");
+	loadTexture(m_texID[Textures::Base_24], "../Textures/Obelisk3/ppm/Base_24.ppm");
+	loadTexture(m_texID[Textures::Base_25], "../Textures/Obelisk3/ppm/Base_25.ppm");
+	loadTexture(m_texID[Textures::Base_26], "../Textures/Obelisk3/ppm/Base_26.ppm");
+	loadTexture(m_texID[Textures::Base_27], "../Textures/Obelisk3/ppm/Base_27.ppm");
+	
+	loadTexture(m_texID[Textures::Float], "../Textures/Obelisk3/ppm/Float_01.ppm");
 }
 
 void Texture::loadTexture(GLuint id, const char* the_texture) {
