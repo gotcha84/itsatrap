@@ -1,4 +1,8 @@
 #define FULLSCREEN 0
+#define FBOWIDTHT 512       // width of fbo
+#define FBOHEIGHT 512     // hight of fbo
+//#define FBOWIDTHT 1600       // width of fbo
+//#define FBOHEIGHT 1200     // hight of fbo
 
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -18,7 +22,7 @@
 #include "Window.h"
 #include "SceneGraph.h"
 #include "Level.h"
-
+#include "Shader.h"
 // networking
 #include "Client.h"
 #include "enrico.h"
@@ -31,9 +35,70 @@ ClientInstance *client;
 Window *window;
 Sound *sound;
 Sound *otherPlayerSound;
+Shader *shader1;
 
 void initLevel() {
 
+}
+
+void initFBO() {
+	shader1 = new Shader();
+	//window->pass1 = shader1->lightShader("../Shaders/pass1.frag", "../Shaders/pass1.vert");
+	shader1->loadShader("../Shaders/pass2blur.vert", "../Shaders/pass2blur.frag");
+	window->pass1 = shader1->getShader();
+	shader1->loadShader("../Shaders/test3.vert", "../Shaders/test3.frag");
+	window->pass2 = shader1->getShader();
+
+	// pass2 シェーダの uniform 変数の場所を得る
+	window->diffuse = glGetUniformLocation(window->pass2, "diffuse");
+	window->specular = glGetUniformLocation(window->pass2, "specular");
+	window->ambient = glGetUniformLocation(window->pass2, "ambient");
+
+
+	// prepare texture for color buffer
+	glGenTextures(1, &window->cb);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, window->cb);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, FBOWIDTHT, FBOHEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenTextures(1, &window->sb);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, window->cb);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, FBOWIDTHT, FBOHEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// prepare render bufer for depth buffer
+	glGenRenderbuffersEXT(1, &window->rb);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, window->rb);
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, FBOWIDTHT, FBOHEIGHT);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+
+	// create FBO
+	glGenFramebuffersEXT(1, &window->fb);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, window->fb);
+	// merge color buffer as texture into FBO
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, window->cb, 0);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, window->sb, 0);
+	//glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_TEXTURE_2D, window->ab, 0);
+	// merge frame buffer as depth buffer into FBO
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, window->rb);
+	// un-merge FBO
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+	// 背景色
+	//glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+
+	// 光源
+	//glEnable(GL_LIGHT0);
 }
 
 void sendAABBInfo()
@@ -171,6 +236,12 @@ int main(int argc, char *argv[]) {
 	sendAABBInfo();
 
 	client->gameState.setWelcome();
+
+	GLenum err = glewInit();
+	if (err != GLEW_OK) {
+		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+		exit(1);
+	}
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
 	glClearDepth(1.0f);							// Depth Buffer Setup
@@ -324,6 +395,8 @@ int main(int argc, char *argv[]) {
 	// hardcode the distance value for now, it will be the input from the server
 	otherPlayerSound->changePosition(-1.0f);
 
+	initFBO();
+
 	glutMainLoop();
 
 	delete client;
@@ -331,6 +404,9 @@ int main(int argc, char *argv[]) {
 
 	delete window;
 	window = nullptr;
+
+	delete shader1;
+	shader1 = nullptr;
 
 	return 0;
 }
