@@ -58,8 +58,7 @@ void Level::initLevel0() {
 						}
 						resources.push_back(rs);
 						resources.back()->setName("Resource Tower " + resourceCounter);
-						//levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::InactiveNode]);
-						//resources.back()->getModel()->setColor(glm::vec4(1, 1, 1, 1));
+						resources.back()->getModel()->setColor(glm::vec4(1, 1, 1, 1));
 						xForm->addChild(resources.back());
 
 						resources.back()->calculateBoundingBox();
@@ -93,7 +92,13 @@ void Level::initLevel0() {
 							++counter;
 						}
 
-						levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						if (part == "Caltrop") {
+							levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, 1));
+							levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Caltrop]);
+						}
+						else {
+							levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						}
 						xForm->addChild(levelNodes.back().first);
 					}
 					else if (part != "Ramp" && part != "UD") {

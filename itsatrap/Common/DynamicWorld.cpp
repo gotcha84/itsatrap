@@ -1463,6 +1463,7 @@ void DynamicWorld::applyAdjustments() {
 		return;
 		}*/
 
+
 		/*cout << "player pos: ";
 		p.aabb.print();*/
 
