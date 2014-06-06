@@ -470,7 +470,7 @@ int DynamicWorld::checkCollisionsWithAllNonTraps(struct playerObject *e)
 	{
 		if (e->aabb.collidesWith(staticResourceObjects[i].aabb))
 		{
-			printf("Collision: player %d with resource object %d\n", e->id, i);
+			//printf("Collision: player %d with resource object %d\n", e->id, i);
 			return i;
 		}
 	}
@@ -735,7 +735,7 @@ void DynamicWorld::applyCollisions() {
 							p.position.y = staticObjects[i].aabb.minY - YOFFSET; // technically not needed
 							p.velocity.y = 0.0f;
 							p.velocityDiff.y = 0.0f;
-							cout << "Hit ceiling" << i << endl;
+							//cout << "Hit ceiling" << i << endl;
 							if (p.currPhysState != PhysicsStates::None) {
 								StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 								p.currInnerState = innerStates::Ending;
@@ -940,7 +940,7 @@ void DynamicWorld::applyCollisions() {
 void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 {
 	struct playerObject *p = &playerMap[playerId];
-	//cout << "processing move event, curr_state is: " << p->currPhysState << endl;
+	// << "processing move event, curr_state is: " << p->currPhysState << endl;
 	switch (dir)
 	{
 	case FORWARD:
@@ -1099,12 +1099,12 @@ void DynamicWorld::holdingEdgeMoveEvent(int playerId) {
 	glm::vec3 toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
 	// TODO: depend on building face rather than where you looking at
 	if (p->triedForward) {
-		cout << "started pulling up" << endl;
+		//cout << "started pulling up" << endl;
 		StateLogic::startPullingUp(p, p->interactingWithBuildingId);
 		return;
 	}
 	else if (p->triedBackward) {
-		cout << "decided to fall back down" << endl;
+		//cout << "decided to fall back down" << endl;
 		p->currInnerState = innerStates::Ending;
 		//TODO: maybe more, set Holders
 		return;
@@ -1860,7 +1860,7 @@ void DynamicWorld::checkPlayersCollideWithTrap()
 		{
 			if (it->second.timeTillActive <= 0 && it->second.aabb.collidesWith(p->aabb) && it->second.eventCode == 0)
 			{
-				printf("Collision: player %d with trap id %d\n", p->id, it->second.id);
+				//printf("Collision: player %d with trap id %d\n", p->id, it->second.id);
 				playerLock[p->id] = true;
 				bool okToRemove = true;
 				int trapDamage = 10;

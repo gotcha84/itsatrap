@@ -171,8 +171,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			//int id = dynamicWorld.getNumStaticObjects() - 1;
 			//World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
 
-			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
-			tmp.aabb.print();
+			//printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			//tmp.aabb.print();
 		}
 
 		elapsedGameTimeMS = 0;
@@ -193,9 +193,9 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticResourceObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
 			dynamicWorld.addStaticResourceObject(tmp);
-			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
-			tmp.aabb.print();
-			printf("ResourceId: %d\n", tmp.id);
+			//printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
+			//tmp.aabb.print();
+			//printf("ResourceId: %d\n", tmp.id);
 
 			resourceNodeLocations.push_back(tmp.id);
 			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
