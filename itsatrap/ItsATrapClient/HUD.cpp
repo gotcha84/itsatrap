@@ -1,5 +1,8 @@
 #include "HUD.h"
 
+#include "Texture.h"
+extern Texture *textures;
+
 #include <iostream>
 bool healthCheck;
 // default constructor
@@ -10,11 +13,16 @@ HUD::HUD() {
 	m_progressTime = -1;
 	ouchSound = createIrrKlangDevice(); //declare loop, pause, and track
 	deathSound = createIrrKlangDevice(); //declare loop, pause, and track
+
+	test = new sg::Cube();
+	test->setColor(glm::vec4(1, 1, 1, 1));
+	test->setTexture(textures->m_texID[Textures::Polynoid]);
 }
 
 // destructor
 HUD::~HUD() {
-
+	delete test;
+	test = nullptr;
 }
 
 void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime) {
@@ -63,6 +71,11 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, float 
 				}
 				drawFlashbag(flashFade);
 				drawBlood(bloodFade);
+
+				glColor4f(1.0f, 0, 0, 1.0f);
+				glLoadIdentity();
+				glScalef(2,2,2);
+				test->drawCube();
 			}
 			
 		glPopMatrix();
@@ -90,23 +103,23 @@ void HUD::drawHealthBar(int health) {
 	glLoadIdentity();
 
 	// draw health bar (bunch of cubes)
-	for (int i = 0; i<health / 10; i++) {
+	for (int i = 0; i<health; i++) {
 		// make health turn more red/less green with lower
 		glColor4f(1.0f - health / 100.0f, health / 100.0f, 0, 1);
 
 		// transform modelview matrix to new position
 		glLoadIdentity();
-		glTranslatef(-0.9 + 0.05*i, 0.85, 0);
-		glScalef(1, 2.5f, 1);
+		glTranslatef(-0.9 + 0.005*i, 0.85, 0);
+		glScalef(0.1f, 2.5f, 1);
 		glutSolidCube(0.05);
 	}
 
 	// black outline for health bar
-	for (int i = 0; i<10; i++) {
+	for (int i = 0; i<100; i++) {
 		glColor4f(0, 0, 0, 0.5f);
 		glLoadIdentity();
-		glTranslatef(-0.9 + 0.05*i, 0.85, 0);
-		glScalef(1, 2.5f, 1);
+		glTranslatef(-0.9 + 0.005*i, 0.85, 0);
+		glScalef(0.1f, 2.5f, 1);
 		glutSolidCube(0.05);
 	}
 
@@ -191,6 +204,7 @@ void HUD::drawFlashbag(float fade) {
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, 0.0f);
 	glScaled(10.0f, 10.0f, 10.0f);
+
 	glutSolidCube(0.2f);
 }
 

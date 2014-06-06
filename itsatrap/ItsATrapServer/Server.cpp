@@ -377,6 +377,18 @@ void Server::processBuffer()
 					resetChanneling();
 
 					sendNewResourceOwnerUpdate(currentResourceOwner, resourceNodeLocations[currentActiveResourceNodeIndex]);
+
+					for (int i = 0; i < playerCount; i++)
+					{
+						string msg;
+						if (i % 2 == currentResourceOwner % 2)
+							msg = "Your team has captured the obelisk";
+						else
+							msg = "Your enemy has captured the obelisk";
+
+						if (players[i].active)
+							Server::sendInfoMessage(i, msg);
+					}
 				}
 
 				break;
@@ -516,6 +528,9 @@ void Server::disconnectPlayer(int id)
 	p.disconnectedPlayerId = id;
 	dynamicWorld.playerMap.erase(id);
 
+	if (currentResourceOwner == id)
+		currentResourceOwner = -1;
+
 	broadcastMsg((char *)&p, sizeof(p));
 }
 
@@ -537,6 +552,10 @@ void Server::updateResources()
 				//it->second.resources += resourcePerInterval;
 				it->second.resources += resourceHotSpotBonusPerInterval;
 			}
+
+			// Damage
+			if (currentResourceOwner != -1 && currentResourceOwner % 2 != it->second.id % 2)
+				dynamicWorld.playerDamage(&dynamicWorld.playerMap[currentResourceOwner], &it->second, 1, false);
 		}
 	}
 
@@ -551,6 +570,8 @@ void Server::updateResources()
 		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 		currentResourceOwner = -1;
 		resetChanneling();
+
+		broadcastInfoMessages("Active obelisk location has changed");
 	}
 }
 
@@ -609,6 +630,17 @@ void Server::resetChanneling() {
 
 	isChanneling = false;
 	channelingPlayer = -1;
+}
+
+void Server::broadcastInfoMessages(string msg)
+{
+	struct infoMsgPacket p = {};
+	p.eventId = INFO_MESSAGE_EVENT;
+
+	strncpy(p.msg, msg.c_str(), sizeof(p.msg));
+	p.msg[sizeof(p.msg) - 1] = 0;
+
+	Server::broadcastMsg((char *)&p, sizeof(p));
 }
 
 void Server::sendInfoMessage(int destination, string msg)

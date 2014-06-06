@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include "FTGL\ftgl.h"
 
 #include "ConfigSettings.h"
 
@@ -146,9 +145,10 @@ int main(int argc, char *argv[]) {
 	glShadeModel(GL_SMOOTH);                    // set shading to smooth
 
 	// backface culling to render front sides of polygons
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
+	glDisable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+	//glFrontFace(GL_CCW);
 	
 	// Generate material properties:
 	//glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -176,6 +176,8 @@ int main(int argc, char *argv[]) {
 	// enable alpha channel
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	gluPerspective(90.0f, 4.0f / 3.0f, 1.0f, 1000.0f);
 
 	// keyboard input
 	glutKeyboardFunc(window->keyDown);
@@ -227,12 +229,13 @@ int main(int argc, char *argv[]) {
 	nodeXForm.addChild(&node);
 	client->root->addChild(&nodeXForm);*/
 
+
 	// skybox
 	sg::MatrixTransform sbXForm = sg::MatrixTransform();
 	glm::mat4 model = glm::mat4();
-	model = glm::rotate(model, 90.0f, glm::vec3(0, 1, 0));
-	model = glm::rotate(model, -45.0f, glm::vec3(1, 0, 0));
-	model = glm::rotate(model, 25.0f, glm::vec3(0, 0, 1));
+	//model = glm::rotate(model, 90.0f, glm::vec3(0, 1, 0));
+	model = glm::rotate(model, 90.0f, glm::vec3(0, 0, 1));
+	//model = glm::rotate(model, 25.0f, glm::vec3(0, 0, 1));
 	sbXForm.setMatrix(model);
 	client->root->addChild(&sbXForm);
 
@@ -242,6 +245,15 @@ int main(int argc, char *argv[]) {
 	skybox.getModel()->setColor(glm::vec4(1, 1, 1, 1));
 	skybox.getModel()->disableDrawBB();
 	sbXForm.addChild(&skybox);
+
+	sg::MatrixTransform cubeXForm = sg::MatrixTransform();
+	cubeXForm.setMatrix(glm::scale(glm::vec3(10,10,10)));
+	client->root->addChild(&cubeXForm);
+
+	sg::Cube cube = sg::Cube();
+	cube.setColor(glm::vec4(1, 1, 1, 1));
+	cube.setTexture(textures->m_texID[Textures::Polynoid]);
+	cubeXForm.addChild(&cube);
 
 	//client->printPlayers();
 	//client->printSceneGraph();
