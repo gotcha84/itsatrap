@@ -381,6 +381,17 @@ void Server::processBuffer()
 
 				break;
 			}
+			case REQUEST_ACTIVE_NODE_EVENT:
+			{
+				struct knifeHitPkt *requestPkt = (struct knifeHitPkt *)p;
+				//struct knifeHitPkt temp = *requestPkt;
+
+				if (resourceNodeLocations.size() > 0) {
+					sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+				}
+
+				break;
+			}
 			default:
 				printf("[SERVER]: Unknown event at buffer %d, eventId: %d\n", i, p->eventId);
 				break;
@@ -552,6 +563,15 @@ void Server::sendActiveNodeUpdate(int resourceId)
 
 	// Send Message
 	Server::broadcastMsg((char *)&p, sizeof(p));
+}
+
+void Server::sendActiveNodeUpdate(int resourceId, int playerId)
+{
+	struct resourceNodePacket p;
+	p.eventId = HOT_SPOT_UPDATE;
+	p.id = resourceId;
+
+	Server::sendMsg((char *)&p, sizeof(p), &players[playerId].clientAddress);
 }
 
 void Server::sendPermissionToChannel(int playerId, int resourceId)

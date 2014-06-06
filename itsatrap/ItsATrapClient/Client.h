@@ -38,6 +38,7 @@ private:
 	static bool		recall;
 	static int		channelingResourceId;
 	static int		clientSendRate;
+	static bool		hasActiveNode;
 
 	// Functions
 	static int receiveMsg();

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿Build started 6/5/2014 6:29:44 PM.
      1>Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
@@ -52,6 +53,13 @@
          GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
          Physics.cpp
          InputEvents.cpp
+=======
+<<<<<<< HEAD
+﻿Build started 6/5/2014 7:33:51 PM.
+     1>Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glut/include/ /IC:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp
+>>>>>>> 405f3f8501bd4d4b1a4bd8061cda9f07ce9df274
          DynamicWorld.cpp
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
@@ -140,6 +148,7 @@
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1612): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\dynamicworld.cpp(1657): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
          GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+<<<<<<< HEAD
          ConfigSettings.cpp
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\configsettings.h(23): warning C4251: 'ConfigSettings::str_screen_width' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\configsettings.h(24): warning C4251: 'ConfigSettings::str_screen_height' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'ConfigSettings'
@@ -155,6 +164,8 @@
          AABB.cpp
          Generating Code...
      1>c:\users\kevin\documents\github\itsatrap\itsatrap\common\aabb.cpp(265): warning C4715: 'AABB::collidesWithRampInside' : not all control paths return a value
+=======
+>>>>>>> 405f3f8501bd4d4b1a4bd8061cda9f07ce9df274
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\/glut/lib/ /LIBPATH:C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\ freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\AABB.obj
          Debug\ConfigSettings.obj
@@ -171,4 +182,15 @@
 
 Build succeeded.
 
+<<<<<<< HEAD
 Time Elapsed 00:00:06.85
+=======
+Time Elapsed 00:00:02.41
+=======
+﻿Build started 6/5/2014 8:07:04 PM.
+
+Build succeeded.
+
+Time Elapsed 00:00:00.00
+>>>>>>> cc140a4076cbd4a2901b21302f89e72efc2154c7
+>>>>>>> 405f3f8501bd4d4b1a4bd8061cda9f07ce9df274
