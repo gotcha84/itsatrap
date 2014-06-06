@@ -73,17 +73,17 @@ void Texture::initTextures() {
 	loadTexture(m_texID[Textures::Bridge], "../Textures/Obelisk3/ppm/Bridge_01.ppm");
 	loadTexture(m_texID[Textures::Float], "../Textures/Obelisk3/ppm/Float_01.ppm");
 
-	loadTexture(m_texID[Textures::Ext_01], "../Textures/Obelisk3/ppm/Ext_01.ppm");
-	loadTexture(m_texID[Textures::Ext_02], "../Textures/Obelisk3/ppm/Ext_02.ppm");
-	loadTexture(m_texID[Textures::Ext_03], "../Textures/Obelisk3/ppm/Ext_03.ppm");
-	loadTexture(m_texID[Textures::Ext_04], "../Textures/Obelisk3/ppm/Ext_04.ppm");
-	loadTexture(m_texID[Textures::Ext_05], "../Textures/Obelisk3/ppm/Ext_05.ppm");
+	//loadTexture(m_texID[Textures::Ext_01], "../Textures/Obelisk3/ppm/Ext_01.ppm");
+	//loadTexture(m_texID[Textures::Ext_02], "../Textures/Obelisk3/ppm/Ext_02.ppm");
+	//loadTexture(m_texID[Textures::Ext_03], "../Textures/Obelisk3/ppm/Ext_03.ppm");
+	//loadTexture(m_texID[Textures::Ext_04], "../Textures/Obelisk3/ppm/Ext_04.ppm");
+	//loadTexture(m_texID[Textures::Ext_05], "../Textures/Obelisk3/ppm/Ext_05.ppm");
 
-	loadTexture(m_texID[Textures::Wedge_01], "../Textures/Obelisk3/ppm/Wedge_01.ppm");
-	loadTexture(m_texID[Textures::Rail_01], "../Textures/Obelisk3/ppm/Rail_01.ppm");
-	loadTexture(m_texID[Textures::Metal_01], "../Textures/Obelisk3/ppm/Metal_01.ppm");
-	loadTexture(m_texID[Textures::ERail_01], "../Textures/Obelisk3/ppm/ERail_01.ppm");
-	loadTexture(m_texID[Textures::Climbable_01], "../Textures/Obelisk3/ppm/Climbable_01.ppm");
+	//loadTexture(m_texID[Textures::Wedge_01], "../Textures/Obelisk3/ppm/Wedge_01.ppm");
+	//loadTexture(m_texID[Textures::Rail_01], "../Textures/Obelisk3/ppm/Rail_01.ppm");
+	//loadTexture(m_texID[Textures::Metal_01], "../Textures/Obelisk3/ppm/Metal_01.ppm");
+	//loadTexture(m_texID[Textures::ERail_01], "../Textures/Obelisk3/ppm/ERail_01.ppm");
+	//loadTexture(m_texID[Textures::Climbable_01], "../Textures/Obelisk3/ppm/Climbable_01.ppm");
 }
 
 void Texture::loadTexture(GLuint id, const char* the_texture) {
@@ -112,6 +112,7 @@ void Texture::loadTexture(GLuint id, const char* the_texture) {
 
 
 unsigned char* Texture::loadPPM(const char* filename, int& width, int& height) {
+	char dummy[65536];
 	const int BUFSIZE = 128;
 	FILE* fp;
 	unsigned int read;

@@ -177,7 +177,7 @@ void Level::initLevel0() {
 						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
 						xForm->addChild(levelNodes.back().first);
 
-						if (partNum == "01") {
+						/*if (partNum == "01") {
 							levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Ext_01]);
 						}
 						else if (partNum == "02") {
@@ -191,7 +191,7 @@ void Level::initLevel0() {
 						}
 						else if (partNum == "05") {
 							levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Ext_05]);
-						}
+						}*/
 
 					}
 					else if (part == "Bridge") {
@@ -215,7 +215,7 @@ void Level::initLevel0() {
 					else if (part == "Wedge") {
 						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
 						levelNodes.back().first->setName("ObjNode: " + fileName);
-						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Wedge_01]);
+						//levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Wedge_01]);
 						levelNodes.back().first->getModel()->flipTexture();
 						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
 						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
@@ -233,7 +233,7 @@ void Level::initLevel0() {
 					else if (part == "Rail") {
 						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
 						levelNodes.back().first->setName("ObjNode: " + fileName);
-						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Rail_01]);
+						//levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Rail_01]);
 						levelNodes.back().first->getModel()->flipTexture();
 						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
 						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
@@ -242,7 +242,7 @@ void Level::initLevel0() {
 					else if (part == "Metal") {
 						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
 						levelNodes.back().first->setName("ObjNode: " + fileName);
-						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Metal_01]);
+						//levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Metal_01]);
 						levelNodes.back().first->getModel()->flipTexture();
 						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
 						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
@@ -260,7 +260,7 @@ void Level::initLevel0() {
 					else if (part == "ERail") {
 						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
 						levelNodes.back().first->setName("ObjNode: " + fileName);
-						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::ERail_01]);
+						//levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::ERail_01]);
 						levelNodes.back().first->getModel()->flipTexture();
 						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
 						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
@@ -269,7 +269,7 @@ void Level::initLevel0() {
 					else if (part == "Climbable") {
 						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
 						levelNodes.back().first->setName("ObjNode: " + fileName);
-						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Climbable_01]);
+						//levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Climbable_01]);
 						levelNodes.back().first->getModel()->flipTexture();
 						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
 						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
