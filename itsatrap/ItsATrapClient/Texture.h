@@ -18,24 +18,69 @@ using namespace std;
 
 // Add texture names here
 enum Textures {
+	Background,
+	BackgroundComplete,
+
 	ActiveNode,
 	InactiveNode,
 	BlueNode,
 	RedNode,
+	
 	Skybox,
-	PolynoidRed,
-	PolynoidBlue,
-	Headless,
-	Lightning,
-	Animus,
-	Base,
+	RedPolynoid,
+	BluePolynoid,
 	Caltrop,
 	BRail,
+
 	Stunned,
 	Slowed,
 	Flashed,
-	Background,
-	BackgroundComplete,
+
+	Base_01,
+	Base_02,
+	Base_03,
+	Base_04,
+	Base_05,
+	Base_06,
+	Base_07,
+	Base_08,
+	Base_09,
+	Base_10,
+
+	Base_11,
+	Base_12,
+	Base_13,
+	Base_14,
+	Base_15,
+	Base_16,
+	Base_17,
+	Base_18,
+	Base_19,
+	Base_20,
+
+	Base_21,
+	Base_22,
+	Base_23,
+	Base_24,
+	Base_25,
+	Base_26,
+	Base_27,
+	
+	Bridge,
+	Float,
+
+	Ext_01,
+	Ext_02, 
+	Ext_03,
+	Ext_04,
+	Ext_05,
+
+	Wedge_01,
+	Rail_01,
+	Metal_01,
+	ERail_01,
+	Climbable_01,
+
 	Size
 };
 

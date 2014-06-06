@@ -56,7 +56,7 @@ void TrapMenu::trapInfo(int state, float y, float r, float g, float b, int faceS
 
 	switch (state) {
 		case 0:
-			text = "1. Freeze Trap";
+			text = "1. Stun Trap";
 			break;
 		case 1:
 			text = "2. Trampoline Trap";

@@ -108,7 +108,7 @@ namespace sg {
 		glDisable(GL_LIGHTING);
 		m_particles->draw(parent, cam);
 		m_particles2->draw(parent, cam);
-		glEnable(GL_LIGHTING);
+		//glEnable(GL_LIGHTING);
 
 		glPopMatrix();
 	}

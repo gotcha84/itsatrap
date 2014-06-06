@@ -1,5 +1,7 @@
 #include "ClientInstance.h"
 
+GameState ClientInstance::gameState;
+
 ClientInstance::ClientInstance() {
 	cout << "DEFAULT CTOR - DO NOT USE" << endl;
 }

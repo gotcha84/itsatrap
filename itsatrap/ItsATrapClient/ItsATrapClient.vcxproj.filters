@@ -134,6 +134,8 @@
     <ClCompile Include="Sphere.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
+    <ClCompile Include="Trap.cpp">
+	</ClCompile>
     <ClCompile Include="ParticleSystem2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -276,6 +278,30 @@
       <Filter>Shader</Filter>
     </None>
     <None Include="..\Shaders\simple.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shaders\pass1.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shaders\pass1.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shaders\pass2blur.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shaders\pass2blur.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shaders\test3.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shaders\test3.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shaders\light.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shaders\light.vert">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>

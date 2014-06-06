@@ -171,8 +171,8 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			//int id = dynamicWorld.getNumStaticObjects() - 1;
 			//World::updateStructuresMap(dynamicWorld.getStaticObjectBB(id), id);
 
-			printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
-			tmp.aabb.print();
+			//printf("[SERVER]: Added a static object. Now have %d static objects\n", dynamicWorld.getNumStaticObjects());
+			//tmp.aabb.print();
 		}
 
 		elapsedGameTimeMS = 0;
@@ -181,6 +181,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		if (dynamicWorld.getNumStaticObjects() >= MaxBuildings) {
 			cout << "physics ready yo" << endl;
 			physicsReady = true;
+			gameState.setGameReady();
 			sendGameReadyState();
 		}
 	}
@@ -192,9 +193,9 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			struct staticResourceObject tmp;
 			memcpy(&tmp, &staticObjPkt->object, sizeof(struct staticResourceObject));
 			dynamicWorld.addStaticResourceObject(tmp);
-			printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
-			tmp.aabb.print();
-			printf("ResourceId: %d\n", tmp.id);
+			//printf("[SERVER]: Added a static resource object. Now have %d static resource objects\n", dynamicWorld.getNumStaticResourceObjects());
+			//tmp.aabb.print();
+			//printf("ResourceId: %d\n", tmp.id);
 
 			resourceNodeLocations.push_back(tmp.id);
 			sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
@@ -429,6 +430,24 @@ void Server::processBuffer()
 				}
 
 				checkAllPlayersReady();
+				break;
+			}
+			case PLAYER_RESTART_EVENT:
+			{
+				struct refreshPacket *pkt = (struct refreshPacket *)p;
+				playerReady[pkt->playerId] = false;
+
+				for (int i = 0; i < maxPlayers; ++i) {
+					if (playerReady[i]) {
+						return;
+					}
+				}
+				dynamicWorld.respawnAllPlayers();
+				dynamicWorld.resetAllPlayers();
+
+				sendGameReadyState();
+				//gameState.setGameReady();
+				break;
 			}
 			default:
 				printf("[SERVER]: Unknown event at buffer %d, eventId: %d\n", i, p->eventId);
@@ -701,8 +720,12 @@ void Server::checkGameOver()
 	// Check if the game is over or not
 	int gameOverTime;
 	ConfigSettings::getConfig()->getValue("GameDuration", gameOverTime);
-	if (elapsedGameTimeMS >= gameOverTime)
+	if (gameState.getState() == GAMEPLAY && elapsedGameTimeMS >= gameOverTime)
 	{
+		gameState.setGameover();
+		elapsedGameTimeMS = 0;
+		numReadyPlayers = 0;
+
 		// Broadcast Game Over message
 		sendGameOverUpdate();
 	}
@@ -717,6 +740,7 @@ void Server::checkAllPlayersReady()
 			}
 		}
 
+		gameState.setGameplay();
 		sendGameBeginState();
 	}
 }
@@ -726,6 +750,15 @@ void Server::sendGameReadyState() {
 	p.eventId = SERVER_READY_EVENT;
 
 	Server::broadcastMsg((char *)&p, sizeof(p));
+
+	gameState.setGameReady();
+
+	++currentActiveResourceNodeIndex;
+	currentActiveResourceNodeIndex = currentActiveResourceNodeIndex % resourceNodeLocations.size();
+
+	sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+	currentResourceOwner = -1;
+	resetChanneling();
 }
 
 void Server::sendGameBeginState() {
@@ -733,6 +766,7 @@ void Server::sendGameBeginState() {
 	p.eventId = GAME_BEGIN_EVENT;
 
 	elapsedGameTimeMS = 0;
+	timeUntilHotSpotChange = hotSpotChangeInterval;		// Reset timer
 
 	Server::broadcastMsg((char *)&p, sizeof(p));
 }

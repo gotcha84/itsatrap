@@ -127,32 +127,58 @@ namespace sg {
 
 		// Determine color
 		glm::vec4 color;
-		if (this->getPlayerID() % 2 == 0)
-			color = glm::vec4(0.75, 0, 0, 1);
-		else
-			color = glm::vec4(0, 0, 0.75, 1);
-
 		color = glm::vec4(1, 1, 1, 1);
-
+		//if (this->getPlayerID() % 2 == 0)
+			//color = glm::vec4(0.75, 0, 0, 1);
+		//else
+			//color = glm::vec4(0, 0, 0.75, 1);
 
 		m_otherPlayer = new ObjModel();
-		m_otherPlayer->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");
-		m_otherPlayer->setTexture(textures->m_texID[Textures::PolynoidRed]);
+		m_otherPlayer->loadModel("../Models/Avatar/Polynoid.obj", "../Models/Avatar/");
+		m_otherPlayer->flipTexture();
+		if (getPlayerID() % 2 == 0) {
+			m_otherPlayer->setTexture(textures->m_texID[Textures::RedPolynoid]);
+		}
+		else {
+			m_otherPlayer->setTexture(textures->m_texID[Textures::BluePolynoid]);
+		}
+		m_otherPlayer->disableDrawBB();
 		m_otherPlayer->setColor(color);
 
 
 		m_thisPlayer = new ObjModel();
-		m_thisPlayer->loadModel("../Models/Headless_Avatar.obj", "../Models/");
+		m_thisPlayer->loadModel("../Models/Avatar/Polynoid_Headless.obj", "../Models/Avatar/");
+		m_thisPlayer->flipTexture();
+		if (getPlayerID() % 2 == 0) {
+			m_thisPlayer->setTexture(textures->m_texID[Textures::RedPolynoid]);
+		}
+		else {
+			m_thisPlayer->setTexture(textures->m_texID[Textures::BluePolynoid]);
+		}
 		m_thisPlayer->disableDrawBB();
 		m_thisPlayer->setColor(color);
 
 		m_thisPlayerAttack = new ObjModel();
-		m_thisPlayerAttack->loadModel("../Models/Headless_Attack_01.obj", "../Models/");
+		m_thisPlayerAttack->loadModel("../Models/Avatar/Headless_Attack_01.obj", "../Models/Avatar/");
+		m_thisPlayerAttack->flipTexture();
+		if (getPlayerID() % 2 == 0) {
+			m_thisPlayerAttack->setTexture(textures->m_texID[Textures::RedPolynoid]);
+		}
+		else {
+			m_thisPlayerAttack->setTexture(textures->m_texID[Textures::BluePolynoid]);
+		}
 		m_thisPlayerAttack->disableDrawBB();
 		m_thisPlayerAttack->setColor(color);
 
 		m_otherPlayerAttack = new ObjModel();
-		m_otherPlayerAttack->loadModel("../Models/Avatar_Attack_01.obj", "../Models/");
+		m_otherPlayerAttack->loadModel("../Models/Avatar/Avatar_Attack_01.obj", "../Models/Avatar/");
+		m_otherPlayerAttack->flipTexture();
+		if (getPlayerID() % 2 == 0) {
+			m_otherPlayerAttack->setTexture(textures->m_texID[Textures::RedPolynoid]);
+		}
+		else {
+			m_otherPlayerAttack->setTexture(textures->m_texID[Textures::BluePolynoid]);
+		}
 		m_otherPlayerAttack->disableDrawBB();
 		m_otherPlayerAttack->setColor(color);
 
@@ -189,7 +215,7 @@ namespace sg {
 		if (getPlayer()->m_knifeDelay > 800) {
 			camcam.y += -2.5f;
 		}
-		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x - 1.0f, /*m_translate.y - 10.0f*/ camcam.y - PlayerHeight, m_translate.z));
+		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x, /*m_translate.y - 10.0f*/ camcam.y - PlayerHeight, m_translate.z));
 
 		this->getCamera()->calculateAxis();
 		glm::mat4 rotatedX = Utilities::rotateY(this->getCamera()->m_xRotated);
@@ -257,7 +283,9 @@ namespace sg {
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
-		if (m_gameOver) {
+
+		GameStates curr = client->gameState.getState();
+		if (curr == GAMEOVER) {
 			cout << "GAME OVER" << endl;
 			int teamOneScore = 0;
 			int teamTwoScore = 0;
@@ -272,9 +300,9 @@ namespace sg {
 			gameOver->setTeamScore(teamOneScore, teamTwoScore);
 			glDisable(GL_LIGHTING);
 			gameOver->draw();		// TODO: Get Screen to actually show?
-			glEnable(GL_LIGHTING);
-		}else{
-
+			//glEnable(GL_LIGHTING);
+		}
+		else {
 			if (!m_player->m_deathState)
 			{
 				for (int i=0; i<m_nChild; i++) {
@@ -288,7 +316,7 @@ namespace sg {
 
 			// draw player avatar
 			glm::mat4 mv = glm::inverse(this->getCamera()->getCameraMatrix()) * this->getModelMatrix();
-			this->drawAsCurrentPlayer(mv);
+			//this->drawAsCurrentPlayer(mv);
 
 			// draw player hud
 			//TODO: last parameter is the respawn input time. from server to client
@@ -313,7 +341,7 @@ namespace sg {
 				glDisable(GL_LIGHTING);
 				board->setCurrentPlayer(client->root->getPlayerID());
 				board->draw();
-				glEnable(GL_LIGHTING);
+				//glEnable(GL_LIGHTING);
 			}
 			
 			if (client->scrollDown || client->scrollUp) {
@@ -335,7 +363,7 @@ namespace sg {
 				if (client->root->getPlayer()->getHealth() > 0) {
 					glDisable(GL_LIGHTING);
 					trapMenu->draw();
-					glEnable(GL_LIGHTING);
+					//glEnable(GL_LIGHTING);
 				}
 			}else{
 				timer->reset();
@@ -355,7 +383,7 @@ namespace sg {
 
 			m_hud->draw(this->getHealth(), this->getPlayer()->m_resources, m_player->m_timeUntilRespawn, flash, blood, getPlayer()->m_hitCrosshairDuration, getPlayer()->m_recallElapsed, m_player->m_infoMsg.getMessage(), m_elapsedGameTime, getPlayer()->m_slowDuration, getPlayer()->m_stunDuration);
 
-			glEnable(GL_LIGHTING);
+			//glEnable(GL_LIGHTING);
 		}
 
 	}
@@ -371,12 +399,24 @@ namespace sg {
 			
 			if (getPlayer()->m_knifeDelay > 800)
 			{
-				m_thisPlayerAttack->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				//m_thisPlayerAttack->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				if (getPlayerID() % 2 == 0) {
+					m_thisPlayerAttack->setTexture(textures->m_texID[Textures::RedPolynoid]);
+				}
+				else {
+					m_thisPlayerAttack->setTexture(textures->m_texID[Textures::BluePolynoid]);
+				}
 				m_thisPlayerAttack->drawModel();
 			}
 			else
 			{
-				m_thisPlayer->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				//m_thisPlayer->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				if (getPlayerID() % 2 == 0) {
+					m_thisPlayer->setTexture(textures->m_texID[Textures::RedPolynoid]);
+				}
+				else {
+					m_thisPlayer->setTexture(textures->m_texID[Textures::BluePolynoid]);
+				}
 				m_thisPlayer->drawModel();
 			}
 
@@ -414,14 +454,24 @@ namespace sg {
 
 			if (getPlayer()->m_knifeDelay > 800)
 			{
-				//m_otherPlayerAttack->setTexture(this->getPlayerID() % 2 ? textures->m_texID[Textures::PolynoidRed] : textures->m_texID[Textures::PolynoidBlue]);
-				m_otherPlayerAttack->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0.2, 0.8, 1, 1));
+				//m_otherPlayerAttack->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				if (getPlayerID() % 2 == 0) {
+					m_otherPlayerAttack->setTexture(textures->m_texID[Textures::RedPolynoid]);
+				}
+				else {
+					m_otherPlayerAttack->setTexture(textures->m_texID[Textures::BluePolynoid]);
+				}
 				m_otherPlayerAttack->drawModel();
 			}
 			else
 			{
-				//m_otherPlayer->setTexture(this->getPlayerID() % 2 ? textures->m_texID[Textures::PolynoidRed] : textures->m_texID[Textures::PolynoidBlue]);
-				m_otherPlayer->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0.2, 0.8, 1, 1));
+				//m_otherPlayer->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				if (getPlayerID() % 2 == 0) {
+					m_otherPlayer->setTexture(textures->m_texID[Textures::RedPolynoid]);
+				}
+				else {
+					m_otherPlayer->setTexture(textures->m_texID[Textures::BluePolynoid]);
+				}
 				m_otherPlayer->drawModel();
 			}
 

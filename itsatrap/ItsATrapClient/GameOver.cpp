@@ -84,9 +84,9 @@ void GameOver::displayCredits() {
 	glRasterPos2f(-0.1f, 0.2f);
 	font->Render("Group 5");
 	glRasterPos2f(-0.5f, 0.0f);
-	font->Render("Enrico Bern Hardy Tanuwidjaja");
+	font->Render("Enrico T.");
 	glRasterPos2f(-0.5f, -0.2f);
-	font->Render("Anurag Thrush Kalavakunta");
+	font->Render("Anurag K.");
 	glRasterPos2f(-0.5f, -0.4f);
 	font->Render("Kevin Ngo");
 	glRasterPos2f(-0.5f, -0.6f);
@@ -94,7 +94,7 @@ void GameOver::displayCredits() {
 	glRasterPos2f(0.3f, 0.0f);
 	font->Render("Andre So");
 	glRasterPos2f(0.3f, -0.2f);
-	font->Render("Yukitoshi Murase");
+	font->Render("Yuki Murase");
 	glRasterPos2f(0.3f, -0.4f);
 	font->Render("Michael Yao");
 

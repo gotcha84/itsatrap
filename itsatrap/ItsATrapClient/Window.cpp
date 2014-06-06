@@ -1,15 +1,24 @@
+#define USE_SHADER 0
+
+#include <GL/glew.h>
 #include "Window.h"
 #include "ClientInstance.h"
 #include "Client.h"
 #include "ConfigSettings.h"
+#include "Shader.h"
 
 extern ClientInstance *client;
 extern Texture *textures;
 extern sg::Cube *test;
 extern FTGLPixmapFont *font;
 
-int Window::m_width = 512; // set window width in pixels here
-int Window::m_height = 512; // set window height in pixels here
+
+//int Window::m_width = 1600; // set window width in pixels here
+//int Window::m_height = 1200; // set window height in pixels here
+
+int Window::m_width = 1600; // set window width in pixels here
+int Window::m_height = 1200; // set window height in pixels here
+
 
 int Window::m_heightMapXShift = 278;
 int Window::m_heightMapZShift = 463;
@@ -22,6 +31,7 @@ bool *Window::keyEventTriggered = new bool[256];
 bool *Window::specialKeyState = new bool[256];
 bool *Window::specialKeyEventTriggered = new bool[256];
 int Window::modifierKey = 0;
+bool Window::dashed = false;
 
 ISoundEngine *engine;
 ISoundEngine *jumpSound;
@@ -29,6 +39,29 @@ ISoundEngine *knifeSound;
 ISoundEngine *createTrapSound;
 ISound *walk;
 bool jump;
+
+//#define fbOWIDTHT  1600       // width of fbo
+//#define fbOHEIGHT  1200       // hight of fbo
+#define fbOWIDTHT  Window::m_width       // width of fbo
+#define fbOHEIGHT  Window::m_height  // hight of fbo
+
+GLuint Window::fb = 0;           // fbo
+GLuint Window::cb = 0;           // texture for color buffer
+GLuint Window::rb = 0;           // render buffer for depth buffer
+GLuint Window::ab = 0;
+GLuint Window::sb = 0;
+GLuint Window::pass1 = 0;
+GLuint Window::pass2 = 0;
+GLuint Window::diffuse = 0;
+GLuint Window::specular = 0;
+GLuint Window::ambient = 0;
+GLuint tex2;
+
+static const GLenum bufs[] = {
+	GL_COLOR_ATTACHMENT0_EXT, 
+	GL_COLOR_ATTACHMENT1_EXT,
+	/*GL_COLOR_ATTACHMENT2_EXT,*/ 
+};
 
 Window::Window() {
 	for (int i = 0; i < 256; i++) {
@@ -81,7 +114,7 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
 {
-	GameStates currState = Client::gameState.getState();
+	GameStates currState = client->gameState.getState();
 
 	if (currState == WELCOME) {
 		//cout << "WELCOME STATE" << endl;
@@ -102,35 +135,14 @@ void Window::displayCallback(void)
 		client->screen->drawCube();
 		glPopMatrix();
 
-		//glPushMatrix();
-		//glLoadIdentity();
-
-		//	std::string text = "LOADING...";
-		//	glColor4f(20.0f, 20.0f, 20.0f, 20.0f);
-		//	glRasterPos2f(-0.02f, -0.02f);
-		//	for (int i = 0; i<text.length(); i++) {
-		//		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
-		//	}
-		//glPopMatrix();
-
-		//glPushMatrix();
-		//	glLoadIdentity();
-		//	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-		//	font->FaceSize(75);
-		//	cout << "font FACE SIZE : " << font->Error() << endl;
-		//	cout << "FONT CHAR MAP BOOLEAN : " << font->CharMap(ft_encoding_unicode) << endl;
-		//	cout << "font CHAR MAP: " << font->Error() << endl;
-		//	glRasterPos2f(0.0f, 0.0f);
-		//	cout << "font RASTER : " << font->Error() << endl;
-		//	font->Render("Loading...");
-		//	cout << "font RENDER : " << font->Error() << endl;
-		//glPopMatrix();
+		
 
 		glPopMatrix();
 		glPopMatrix();
+
 	}
 
-	if (Client::gameState.getState() == GAMEREADY) {
+	if (currState == GAMEREADY) {
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 			glLoadIdentity();
@@ -151,7 +163,7 @@ void Window::displayCallback(void)
 		glPopMatrix();
 	}
 
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (currState == GAMEPLAY || currState == GAMEOVER) {
 		float oldBuildingId = client->root->getPlayer()->m_onTopOfBuildingId;
 		float oldXRotated = client->root->getCamera()->getXRotated();
 		float oldYRotated = client->root->getCamera()->getYRotated();
@@ -161,6 +173,14 @@ void Window::displayCallback(void)
 		glm::vec3 oldPos = client->root->getPlayer()->getPosition();
 
 		processKeys();
+
+		if (USE_SHADER) {
+			glViewport(0, 0, fbOWIDTHT, fbOHEIGHT);
+
+			glEnable(GL_DEPTH_TEST);
+
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+		}
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 
@@ -195,11 +215,49 @@ void Window::displayCallback(void)
 		m_fpsCounter += 1;
 
 		if (clock() - m_timer > 1000) {
-			//cout << "FPS: " <<  m_fpsCounter/((clock() - m_timer)/1000.0) << '\n';
 			m_timer = clock();
 			m_fpsCounter = 0;
 		}
+		if (USE_SHADER) {
+			glFlush();
+
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+			glDisable(GL_DEPTH_TEST);
+
+
+			glUseProgram(pass1);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, cb);
+
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+
+			glViewport(0, 0, m_width, m_height);
+
+			glEnable(GL_TEXTURE_2D);
+
+			glColor3d(1.0, 1.0, 1.0);
+			glBegin(GL_TRIANGLE_FAN);
+			glTexCoord2d(0.0, 0.0);
+			glVertex2d(-1.0, -1.0);
+			glTexCoord2d(1.0, 0.0);
+			glVertex2d(1.0, -1.0);
+			glTexCoord2d(1.0, 1.0);
+			glVertex2d(1.0, 1.0);
+			glTexCoord2d(0.0, 1.0);
+			glVertex2d(-1.0, 1.0);
+			glEnd();
+
+			glDisable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glUseProgram(0);
+		}
 	}
+	
 
 	glFlush();
 	glutSwapBuffers();
@@ -207,7 +265,7 @@ void Window::displayCallback(void)
 
 void Window::keyDown(unsigned char key, int x, int y)
 {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		keyState[key] = true;
 		if (key >= '1' && key <= '9') {
 			switch (key) {
@@ -223,8 +281,9 @@ void Window::keyDown(unsigned char key, int x, int y)
 void Window::keyUp(unsigned char key, int x, int y) {
 	keyState[key] = false;
 	keyEventTriggered[key] = false;
+	GameStates curr = client->gameState.getState();
 
-	if (Client::gameState.getState() == GAMEREADY) {
+	if (curr == GAMEREADY) {
 		// Enter Key
 		if (key == 13) {
 			cout << "ENTER PRESSED - READY TO PLAY" << endl;
@@ -232,7 +291,17 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		}
 	}
 
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (curr == GAMEOVER) {
+		// Enter Key
+		if (key == 13) {
+			cout << "ENTER PRESSED - BACK TO READY" << endl;
+			Client::sendGameRestartState();
+			client->gameState.setGameReady();
+			client->screen->setTexture(textures->m_texID[Textures::BackgroundComplete]);
+		}
+	}
+
+	if (curr == GAMEPLAY) {
 		jump = true;
 		walk->setIsPaused(true);
 		if (key >= '1' && key <= '9') {
@@ -360,7 +429,7 @@ void Window::keyUp(unsigned char key, int x, int y) {
 }
 
 void Window::specialKeyDown(int key, int x, int y) {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		modifierKey = glutGetModifiers();
 
 		specialKeyState[key] = true;
@@ -368,7 +437,7 @@ void Window::specialKeyDown(int key, int x, int y) {
 }
 
 void Window::specialKeyUp(int key, int x, int y) {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		modifierKey = glutGetModifiers();
 
 		specialKeyState[key] = false;
@@ -377,7 +446,7 @@ void Window::specialKeyUp(int key, int x, int y) {
 }
 
 void Window::processKeys() {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		//client->root->m_player->getPhysics()->m_triedToRun = false;
 		//client->root->m_player->getPhysics()->m_triedForward = false;
 
@@ -414,9 +483,18 @@ void Window::processKeys() {
 		}
 	}
 
-	// dash
-	if (modifierKey == GLUT_ACTIVE_SHIFT) {
+	// teleport
+	/*if (modifierKey == GLUT_ACTIVE_ALT) {
+		client->root->getPlayer()->handleTeleport();
+	}*/
+
+	if (modifierKey != GLUT_ACTIVE_SHIFT) {
+		dashed = false;
+	}
+
+	if (modifierKey == GLUT_ACTIVE_SHIFT && keyState['w'] && !dashed) {
 		Client::sendMoveEvent(DASH);
+		dashed = true;
 	}
 	else {
 		if (keyState['w']) {
@@ -450,12 +528,13 @@ void Window::processKeys() {
 			}
 		}
 
-		if (keyState['w'] ||
-			keyState['s'] ||
-			keyState['a'] ||
-			keyState['d']) {
-			walk->setIsPaused(false);
-		}
+	if (keyState['w'] ||
+		keyState['s'] ||
+		keyState['a'] ||
+		keyState['d']/* ||
+		modifierKey == GLUT_ACTIVE_SHIFT*/) {
+		walk->setIsPaused(false);
+	}
 
 		//if (keyState['u']) {
 		//	client->root->getPlayer()->Unstuck();
@@ -483,7 +562,7 @@ void Window::processKeys() {
 }
 void Window::processMouseKeys(int button, int state, int x, int y)
 {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		switch (state)
 		{
 		case GLUT_DOWN:
@@ -568,7 +647,7 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 }
 
 void Window::processMouseMove(int x, int y) {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		//if (*client->m_xMouse != x) {
 		//	client->root->m_xAngleChange = float((float)x - *client->m_xMouse) / client->root->m_xAngleChangeFactor;
 		if (client->m_xMouse != x) {

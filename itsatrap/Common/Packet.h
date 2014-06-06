@@ -32,6 +32,7 @@
 #define PLAYER_READY_EVENT 28
 #define SERVER_READY_EVENT 29
 #define GAME_BEGIN_EVENT 30
+#define PLAYER_RESTART_EVENT 31
 
 
 // Superclass of all packets
