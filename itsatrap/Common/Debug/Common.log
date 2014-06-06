@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿Build started 6/5/2014 7:33:51 PM.
      1>Project "C:\Users\Kevin\Documents\GitHub\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
@@ -107,3 +108,10 @@
 Build succeeded.
 
 Time Elapsed 00:00:02.41
+=======
+﻿Build started 6/5/2014 8:07:04 PM.
+
+Build succeeded.
+
+Time Elapsed 00:00:00.00
+>>>>>>> cc140a4076cbd4a2901b21302f89e72efc2154c7
