@@ -42,7 +42,7 @@ void handlePlayerUpdate(struct playerObject p)
 	}
 	else {
 		// HEALTH
-		if (client->players[p.id]->m_player->m_health > p.health) {
+		if (client->players[p.id]->m_player->m_health > p.health + 5) {
 			cout << "[CLIENT]: HIT! Player " << p.id << "'s health is now " << p.health << endl;
 			client->players[p.id]->getPlayer()->m_startBlood = true;
 		}
