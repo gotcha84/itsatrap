@@ -10,6 +10,7 @@
 #include "ObjModel.h"
 #include "TrapMenu.h"
 #include "GameOver.h"
+#include "ParticleSystem3.h"
 
 namespace sg {
 	class Player : public Group {
@@ -28,6 +29,7 @@ namespace sg {
 			Stopwatch *timer;
 			int m_elapsedGameTime;
 			bool m_gameOver;
+			ParticleSystem3 *bloodEffect;
 
 			glm::vec4 m_color;
 			glm::vec3 m_translate;

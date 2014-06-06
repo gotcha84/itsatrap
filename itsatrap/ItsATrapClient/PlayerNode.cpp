@@ -36,6 +36,10 @@ namespace sg {
 		m_elapsedGameTime = 0;
 		m_gameOver = false;
 
+		int numBloodParticles = 0;
+		ConfigSettings::getConfig()->getValue("NumBloodParticles", numBloodParticles);
+		bloodEffect = new ParticleSystem3(numBloodParticles, getPlayer()->getPosition());
+
 		initModels();
 	}
 
@@ -65,6 +69,11 @@ namespace sg {
 		m_elapsedGameTime = 0;
 		m_gameOver = false;
 
+		int numBloodParticles = 0;
+		ConfigSettings::getConfig()->getValue("NumBloodParticles", numBloodParticles);
+		bloodEffect = new ParticleSystem3(numBloodParticles, getPlayer()->getPosition());
+
+
 		initModels();
 	}
 
@@ -73,6 +82,10 @@ namespace sg {
 
 		m_elapsedGameTime = 0;
 		m_gameOver = false;
+
+		int numBloodParticles = 0;
+		ConfigSettings::getConfig()->getValue("NumBloodParticles", numBloodParticles);
+		bloodEffect = new ParticleSystem3(numBloodParticles, getPlayer()->getPosition());
 	}
 
 	Player::~Player() {
@@ -99,6 +112,9 @@ namespace sg {
 
 		delete timer;
 		timer = nullptr;
+
+		delete bloodEffect;
+		bloodEffect = nullptr;
 	}
 
 	void Player::initModels() {
@@ -338,6 +354,15 @@ namespace sg {
 		
 		this->drawAsOtherPlayer(mv);
 
+		if (getPlayer()->m_startBlood)
+		{
+			getPlayer()->m_startBlood = false;
+			bloodEffect->particlesReset();
+		}
+
+		bloodEffect->m_origin = getPlayer()->getPosition();
+		bloodEffect->draw(parent, cam);
+
 		if (m_drawBB) {
 			m_otherPlayer->getBoundingBox().draw();
 		}
@@ -356,6 +381,8 @@ namespace sg {
 
 			glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
 			m_otherPlayer->drawModel();
+
+			
 		glPopMatrix();
 	}
 
