@@ -23,11 +23,11 @@ void TrapMenu::draw() {
 		//drawCube(0.8f, -0.3f, 0.0f);
 		//drawCube(0.8f, -0.575f, 0.0f);
 
-			if ((infoState - 1) < 0) trapInfo(6, -0.82f, 1.0f, 0.0f, 0.0f, 75);
-			else trapInfo(infoState - 1, -0.82f, 1.0f, 0.0f, 0.0f, 75);
-			trapInfo(infoState, -0.87f, 1.0f, 1.0f, 0.0f, 100);
-			if ((infoState + 1) > 6) trapInfo(0, -0.92f, 1.0f, 0.0f, 0.0f, 75);
-			else trapInfo(infoState + 1, -0.92f, 1.0f, 0.0f, 0.0f, 75);
+			if ((infoState - 1) < 0) trapInfo(6, -0.65f, 1.0f, 0.0f, 0.0f, 40);
+			else trapInfo(infoState - 1, -0.65f, 1.0f, 0.0f, 0.0f, 40);
+			trapInfo(infoState, -0.8f, 1.0f, 1.0f, 0.0f, 50);
+			if ((infoState + 1) > 6) trapInfo(0, -0.92f, 1.0f, 0.0f, 0.0f, 40);
+			else trapInfo(infoState + 1, -0.92f, 1.0f, 0.0f, 0.0f, 40);
 		
 		drawCube(0.8f, -0.85f, 0.0f);
 		glPopMatrix();
@@ -52,7 +52,7 @@ void TrapMenu::trapInfo(int state, float y, float r, float g, float b, int faceS
 	glColor3f(r, g, b);
 	font->FaceSize(faceSize);
 	font->CharMap(ft_encoding_symbol);
-	glRasterPos2f(0.65f, y);
+	glRasterPos2f(0.4f, y);
 
 	switch (state) {
 		case 0:
@@ -82,7 +82,7 @@ void TrapMenu::trapInfo(int state, float y, float r, float g, float b, int faceS
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
 	}*/
 	font->Render(text.c_str());
-	glRasterPos2f(0.90f, y);
+	glRasterPos2f(0.85f, y);
 	int cost = 0;
 	switch (state) {
 	case 0:
