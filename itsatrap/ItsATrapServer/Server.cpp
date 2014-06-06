@@ -517,6 +517,9 @@ void Server::disconnectPlayer(int id)
 	p.disconnectedPlayerId = id;
 	dynamicWorld.playerMap.erase(id);
 
+	if (currentResourceOwner == id)
+		currentResourceOwner = -1;
+
 	broadcastMsg((char *)&p, sizeof(p));
 }
 

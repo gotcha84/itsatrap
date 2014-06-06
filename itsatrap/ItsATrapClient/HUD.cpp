@@ -90,14 +90,14 @@ void HUD::drawHealthBar(int health) {
 	glLoadIdentity();
 
 	// draw health bar (bunch of cubes)
-	for (int i = 0; i<health / 10; i++) {
+	for (int i = 0; i<health; i++) {
 		// make health turn more red/less green with lower
 		glColor4f(1.0f - health / 100.0f, health / 100.0f, 0, 1);
 
 		// transform modelview matrix to new position
 		glLoadIdentity();
-		glTranslatef(-0.9 + 0.05*i, 0.85, 0);
-		glScalef(1, 2.5f, 1);
+		glTranslatef(-0.9 + 0.005*i, 0.85, 0);
+		glScalef(0.1f, 2.5f, 1);
 		glutSolidCube(0.05);
 	}
 
