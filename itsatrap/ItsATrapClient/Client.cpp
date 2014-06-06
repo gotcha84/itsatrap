@@ -18,7 +18,6 @@ bool				Client::okChannel;
 bool				Client::recall;
 int					Client::clientSendRate;
 bool				Client::hasActiveNode;
-GameState			Client::gameState;
 
 int Client::initializeClient() {
 
@@ -182,17 +181,32 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			}
 			else if (p->eventId == GAME_OVER_EVENT)
 			{
-				Client::gameState.setGameover();
+				client->gameState.setGameover();
+
+				GameStates curr = client->gameState.getState();
+
 				client->root->m_gameOver = true;
 			}
 			else if (p->eventId == SERVER_READY_EVENT)
 			{
-				Client::gameState.setGameReady();
+				client->gameState.setGameReady();
 				client->screen->setTexture(textures->m_texID[Textures::BackgroundComplete]);
+
+				// Reset all values
+				int resources = 0;
+				ConfigSettings::getConfig()->getValue("StartingResources", resources);
+				for (unordered_map<int, sg::Player*>::iterator it = client->players.begin(); it != client->players.end(); it++) {
+					sg::Player *player = it->second;
+					player->getPlayer()->m_numKills = 0;
+					player->getPlayer()->m_numDeaths = 0;
+					player->getPlayer()->m_resources = resources;
+					client->traps.clear();
+				}
+
 			}
 			else if (p->eventId == GAME_BEGIN_EVENT)
 			{
-				Client::gameState.setGameplay();
+				client->gameState.setGameplay();
 			}
 		}
 	}
@@ -479,6 +493,14 @@ void Client::sendAABBInfo(int type, AABB aabb)
 void Client::sendGameReadyState() {
 	struct refreshPacket p;
 	p.eventId = PLAYER_READY_EVENT;
+	p.playerId = getPlayerId();
+
+	sendMsg((char *)&p, sizeof(p));
+}
+
+void Client::sendGameRestartState() {
+	struct refreshPacket p;
+	p.eventId = PLAYER_RESTART_EVENT;
 	p.playerId = getPlayerId();
 
 	sendMsg((char *)&p, sizeof(p));

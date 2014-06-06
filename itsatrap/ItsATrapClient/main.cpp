@@ -170,7 +170,7 @@ int main(int argc, char *argv[]) {
 	Client::sendPlayerUpdate(client->root->getPlayerObjectForNetworking());
 	sendAABBInfo();
 
-	Client::gameState.setWelcome();
+	client->gameState.setWelcome();
 
 	glEnable(GL_DEPTH_TEST);                    // enable depth buffering
 	glClearDepth(1.0f);							// Depth Buffer Setup
@@ -283,7 +283,7 @@ int main(int argc, char *argv[]) {
 	}
 	
 	client->root->m_elapsedGameTime = 0;
-	client->root->m_gameOver = false;
+	//client->root->m_gameOver = false;
 
 	/*sg::ObjNode node = sg::ObjNode();
 	node.m_model->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");

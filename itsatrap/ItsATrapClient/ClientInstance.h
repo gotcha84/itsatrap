@@ -10,11 +10,14 @@
 
 #include "SceneGraph.h"
 #include "Level.h"
+#include "GameState.h"
 
 class ClientInstance {
 	public:
-		unordered_map<int,sg::Player*> players;
-		unordered_map<int,sg::Trap*> traps;
+		static GameState gameState;
+
+		unordered_map<int, sg::Player*> players;
+		unordered_map<int, sg::Trap*> traps;
 		unordered_map<int, sg::Node*> objects;
 		sg::Player *root;
 		//sg::MatrixTransform *hotSpot;

@@ -81,7 +81,7 @@ void Window::reshapeCallback(int w, int h)
 // when glutPostRedisplay() was called.
 void Window::displayCallback(void)
 {
-	GameStates currState = Client::gameState.getState();
+	GameStates currState = client->gameState.getState();
 
 	if (currState == WELCOME) {
 		//cout << "WELCOME STATE" << endl;
@@ -130,7 +130,7 @@ void Window::displayCallback(void)
 		glPopMatrix();
 	}
 
-	if (Client::gameState.getState() == GAMEREADY) {
+	if (currState == GAMEREADY) {
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 			glLoadIdentity();
@@ -151,7 +151,7 @@ void Window::displayCallback(void)
 		glPopMatrix();
 	}
 
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (currState == GAMEPLAY || currState == GAMEOVER) {
 		float oldBuildingId = client->root->getPlayer()->m_onTopOfBuildingId;
 		float oldXRotated = client->root->getCamera()->getXRotated();
 		float oldYRotated = client->root->getCamera()->getYRotated();
@@ -207,7 +207,7 @@ void Window::displayCallback(void)
 
 void Window::keyDown(unsigned char key, int x, int y)
 {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		keyState[key] = true;
 		if (key >= '1' && key <= '9') {
 			switch (key) {
@@ -223,8 +223,9 @@ void Window::keyDown(unsigned char key, int x, int y)
 void Window::keyUp(unsigned char key, int x, int y) {
 	keyState[key] = false;
 	keyEventTriggered[key] = false;
+	GameStates curr = client->gameState.getState();
 
-	if (Client::gameState.getState() == GAMEREADY) {
+	if (curr == GAMEREADY) {
 		// Enter Key
 		if (key == 13) {
 			cout << "ENTER PRESSED - READY TO PLAY" << endl;
@@ -232,7 +233,17 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		}
 	}
 
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (curr == GAMEOVER) {
+		// Enter Key
+		if (key == 13) {
+			cout << "ENTER PRESSED - BACK TO READY" << endl;
+			Client::sendGameRestartState();
+			client->gameState.setGameReady();
+			client->screen->setTexture(textures->m_texID[Textures::BackgroundComplete]);
+		}
+	}
+
+	if (curr == GAMEPLAY) {
 		jump = true;
 		walk->setIsPaused(true);
 		if (key >= '1' && key <= '9') {
@@ -360,7 +371,7 @@ void Window::keyUp(unsigned char key, int x, int y) {
 }
 
 void Window::specialKeyDown(int key, int x, int y) {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		modifierKey = glutGetModifiers();
 
 		specialKeyState[key] = true;
@@ -368,7 +379,7 @@ void Window::specialKeyDown(int key, int x, int y) {
 }
 
 void Window::specialKeyUp(int key, int x, int y) {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		modifierKey = glutGetModifiers();
 
 		specialKeyState[key] = false;
@@ -377,7 +388,7 @@ void Window::specialKeyUp(int key, int x, int y) {
 }
 
 void Window::processKeys() {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		//client->root->m_player->getPhysics()->m_triedToRun = false;
 		//client->root->m_player->getPhysics()->m_triedForward = false;
 
@@ -483,7 +494,7 @@ void Window::processKeys() {
 }
 void Window::processMouseKeys(int button, int state, int x, int y)
 {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		switch (state)
 		{
 		case GLUT_DOWN:
@@ -568,7 +579,7 @@ void Window::processMouseKeys(int button, int state, int x, int y)
 }
 
 void Window::processMouseMove(int x, int y) {
-	if (Client::gameState.getState() == GAMEPLAY) {
+	if (client->gameState.getState() == GAMEPLAY) {
 		//if (*client->m_xMouse != x) {
 		//	client->root->m_xAngleChange = float((float)x - *client->m_xMouse) / client->root->m_xAngleChangeFactor;
 		if (client->m_xMouse != x) {

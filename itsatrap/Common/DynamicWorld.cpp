@@ -2050,3 +2050,32 @@ void DynamicWorld::cancelRecall(struct playerObject *p)
 	p->isRecalling = false;
 	p->recallElapsed = 0;
 }
+
+void DynamicWorld::respawnAllPlayers()
+{
+	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
+	{
+		struct playerObject &p = it->second;
+
+		respawnPlayer(&p);
+	}
+}
+
+void DynamicWorld::resetAllPlayers()
+{
+	int resources = 0;
+	ConfigSettings::getConfig()->getValue("StartingResources", resources);
+
+	for (map<int, struct playerObject>::iterator it = playerMap.begin(); it != playerMap.end(); ++it)
+	{
+		struct playerObject &p = it->second;
+		p.numDeaths = 0;
+		p.numKills = 0;
+		p.resources = resources;
+		
+	}
+
+	for (map<int, struct trapObject>::iterator it = trapMap.begin(); it != trapMap.end(); it++) {
+		it->second.eventCode = EVENT_REMOVE_TRAP;
+	}
+}

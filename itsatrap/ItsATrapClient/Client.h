@@ -61,8 +61,6 @@ private:
 	
 
 public:
-	static GameState gameState;
-
 	// Functions
 	static int initializeClient();
 	static int getPlayerId();
@@ -83,5 +81,6 @@ public:
 	static void sendAABBInfo(int type, AABB aabb);
 
 	static void sendGameReadyState();
+	static void sendGameRestartState();
 };
 #endif

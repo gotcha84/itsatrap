@@ -122,6 +122,9 @@ public:
 
 	void addAABBInfo(int type, AABB aabb);
 	bool handleKnifeEvent(int knifer);
+
+	void respawnAllPlayers();
+	void resetAllPlayers();
 };
 
 #endif

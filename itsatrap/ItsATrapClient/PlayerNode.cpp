@@ -257,7 +257,9 @@ namespace sg {
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
-		if (m_gameOver) {
+
+		GameStates curr = client->gameState.getState();
+		if (curr == GAMEOVER) {
 			cout << "GAME OVER" << endl;
 			int teamOneScore = 0;
 			int teamTwoScore = 0;
@@ -274,7 +276,6 @@ namespace sg {
 			gameOver->draw();		// TODO: Get Screen to actually show?
 			glEnable(GL_LIGHTING);
 		}else{
-
 			if (!m_player->m_deathState)
 			{
 				for (int i=0; i<m_nChild; i++) {
