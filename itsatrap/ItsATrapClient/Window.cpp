@@ -289,6 +289,10 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		delete trap;
 		trap = nullptr;
 	}
+	else if (key == (char)32)
+	{
+		cout << "ENTER IS PRESSED" << endl;
+	}
 	else if (key == 'r') 
 	{
 		//ConfigSettings::getConfig()->reloadSettingsFile();

@@ -207,7 +207,6 @@ namespace sg {
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(this->getPlayer()->getProjectionMatrix()));
-	
 		if (m_gameOver) {
 			cout << "GAME OVER" << endl;
 			int teamOneScore = 0;

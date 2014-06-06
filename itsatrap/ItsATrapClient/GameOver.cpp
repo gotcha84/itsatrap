@@ -31,7 +31,7 @@ void GameOver::draw() {
 	font->Render("Thanks for playing");	
 	displayWin();
 	displayCredits();
-	drawCube(0.0f, 0.0f, 0.0f);
+	drawCube(0.0f, 0.0f, -0.2f);
 
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
