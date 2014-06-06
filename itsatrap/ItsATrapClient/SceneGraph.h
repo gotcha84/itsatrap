@@ -11,7 +11,7 @@
 #include "PlayerNode.h"
 
 // geodes
-#include "Cube.cpp"
+//#include "Cube.cpp"
 #include "Sphere.cpp"
 #include "Cone.cpp"
 #include "Trap.h"

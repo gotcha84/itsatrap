@@ -1,5 +1,8 @@
 #include "HUD.h"
 
+#include "Texture.h"
+extern Texture *textures;
+
 #include <iostream>
 bool healthCheck;
 // default constructor
@@ -10,11 +13,16 @@ HUD::HUD() {
 	m_progressTime = -1;
 	ouchSound = createIrrKlangDevice(); //declare loop, pause, and track
 	deathSound = createIrrKlangDevice(); //declare loop, pause, and track
+
+	test = new sg::Cube();
+	test->setColor(glm::vec4(1, 1, 1, 1));
+	test->setTexture(textures->m_texID[Textures::Polynoid]);
 }
 
 // destructor
 HUD::~HUD() {
-
+	delete test;
+	test = nullptr;
 }
 
 void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime) {
@@ -63,6 +71,11 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, float 
 				}
 				drawFlashbag(flashFade);
 				drawBlood(bloodFade);
+
+				glColor4f(1.0f, 0, 0, 1.0f);
+				glLoadIdentity();
+				glScalef(2,2,2);
+				test->drawCube();
 			}
 			
 		glPopMatrix();
@@ -191,6 +204,7 @@ void HUD::drawFlashbag(float fade) {
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, 0.0f);
 	glScaled(10.0f, 10.0f, 10.0f);
+
 	glutSolidCube(0.2f);
 }
 

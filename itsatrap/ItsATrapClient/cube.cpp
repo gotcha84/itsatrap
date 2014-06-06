@@ -33,6 +33,8 @@ namespace sg {
 			}
 
 			void drawCube() {
+				glColor4f(this->getColor().r, this->getColor().g, this->getColor().b, this->getColor().a);
+
 				if (m_texID != 0) {
 					glEnable(GL_TEXTURE_2D);
 					glBindTexture(GL_TEXTURE_2D, m_texID);

@@ -5,11 +5,13 @@
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-#include "Scoreboard.h"
 #include <FTGL/ftgl.h>
-
 #include <string>
+
+#include "Scoreboard.h"
 #include "Sound.h"
+//#include "SceneGraph.h"
+#include "Cube.cpp"
 
 //#include "Texture.h"
 
@@ -24,6 +26,7 @@ class HUD {
 		ISoundEngine *ouchSound;
 		ISoundEngine *deathSound;
 
+		sg::Cube *test;
 
 		void draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime);
 		
