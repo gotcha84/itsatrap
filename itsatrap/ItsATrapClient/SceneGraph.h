@@ -17,5 +17,6 @@
 #include "ObjNode.h"
 #include "ResourceNode.h"
 #include "Skybox.h"
+#include "ParticleSystemNode.h"
 
 #endif

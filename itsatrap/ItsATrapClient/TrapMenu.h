@@ -2,15 +2,22 @@
 #ifndef TRAPMENU_H
 #define TRAPMENU_H
 
-//Scoreboard.h
+#include <GL/glew.h>
+#include <GL/glut.h>
+
 #include <string>
 #include <utility>
 #include <vector>
+#include <fstream>
+#include <algorithm>
+#include <FTGL/ftgl.h>
+
 #include "MatrixTransform.h"
 #include "MyPlayer.h"
 #include "Texture.h"
-#include <FTGL/ftgl.h>
 #include "Stopwatch.h"
+
+using namespace std;
 
 class TrapMenu {
 public:

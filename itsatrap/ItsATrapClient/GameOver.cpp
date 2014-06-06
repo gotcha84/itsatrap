@@ -1,9 +1,4 @@
-//GameOver.cpp
-#include "GameOver.h"
-#include <GL/glut.h>
-#include <fstream>
-#include <algorithm>
-using namespace std;
+#include "GameOver.h""
 
 GameOver::GameOver() {
 	font = new FTGLPixmapFont("C:/Windows/Fonts/Arial.ttf");

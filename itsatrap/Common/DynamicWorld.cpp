@@ -554,6 +554,9 @@ void DynamicWorld::updateTimings(int timeDiff, int timeElapsed)
 		if (p.hitCrosshair > 0)
 			p.hitCrosshair -= timeDiff;
 
+		if (p.dashDelay > 0)
+			p.dashDelay -= timeDiff;
+
 		if (p.isRecalling)
 		{
 			if (p.stunDuration > 0)
@@ -892,16 +895,32 @@ void DynamicWorld::applyCollisions() {
 					//p.velocityDiff.y = 0.0f;
 					//p.velocity.y = 0.0f;
 					// ANDRE
+					
 					if (collisionId >= 1000) {
-						struct playerObject &q = playerMap[collisionId - 1000];
-						float qmag = glm::length(q.velocity + q.velocityDiff);
-						float pmag = glm::length(p.velocity + p.velocityDiff);
+						// Trying to push person
+						float walkFactor = 0;
+						ConfigSettings::getConfig()->getValue("xWalkFactor", walkFactor);
+						glm::vec3 totalVelo = p.velocity + p.velocityDiff;
+						if (totalVelo.x*totalVelo.x + totalVelo.z*totalVelo.z > 2*walkFactor*walkFactor)
+						{
+							struct playerObject &q = playerMap[collisionId - 1000];
+							float qmag = glm::length(q.velocity + q.velocityDiff);
+							float pmag = glm::length(p.velocity + p.velocityDiff);
 
-						float momentumFactor = 0.5f;
-						p.velocity = momentumFactor*(q.velocity + q.velocityDiff);
-						q.velocity = momentumFactor*(p.velocity + p.velocityDiff);
-						p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-						q.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+							float momentumFactor = 0.5f;
+							glm::vec3 pvelocity = momentumFactor*(q.velocity + q.velocityDiff);
+							glm::vec3 qvelocity = momentumFactor*(p.velocity + p.velocityDiff);
+							p.velocity = pvelocity;
+							q.velocity = qvelocity;
+							p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+							q.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+						}
+						else {
+							// hitting a guy but too slow
+							// goto rest
+							p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
+							p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+						}
 					}
 					else {
 						// goto rest
@@ -936,7 +955,11 @@ void DynamicWorld::processMoveEvent(int playerId, Direction dir)
 		p->triedRight = true;
 		break;
 	case DASH:
-		p->triedDash = true;
+		if (p->dashDelay <= 0)
+		{
+			p->triedDash = true;
+			ConfigSettings::getConfig()->getValue("DashDelay", p->dashDelay);
+		}
 	default:
 		break;
 	}
@@ -1010,7 +1033,7 @@ void DynamicWorld::noneMoveEvent(int playerId)
 	}
 	glm::vec3 toAdd = glm::vec3(0.0f, 0.0f, 0.0f);
 	if (p->triedDash) {
-		p->velocity = 5.0f*zWalkFactor*tmp_camZ;
+		p->velocity = 2.0f*zWalkFactor*tmp_camZ;
 
 	}
 

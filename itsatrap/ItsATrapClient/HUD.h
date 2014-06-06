@@ -2,6 +2,7 @@
 #ifndef HUD_H
 #define HUD_H
 
+#include <GL/glew.h>
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>

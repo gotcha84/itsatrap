@@ -1,14 +1,8 @@
-//Scoreboard.cpp
 #include "Scoreboard.h"
-#include <GL/glut.h>
-#include <fstream>
-#include <algorithm>
-using namespace std;
 
 Scoreboard::Scoreboard() {
 	font = new FTGLPixmapFont("C:/Windows/Fonts/Arial.ttf");
 	fonts = new FTGLExtrdFont("C:/Windows/Fonts/Arial.ttf");
-
 }
 
 Scoreboard::~Scoreboard() {
@@ -17,7 +11,6 @@ Scoreboard::~Scoreboard() {
 }
 
 int Scoreboard::addEntry(Entry const& entry) {
-
 	if (existingPlayer(entry)) {
 		auto loc = entryWorseThan(entry);
 		entries.insert(loc.first, entry);
