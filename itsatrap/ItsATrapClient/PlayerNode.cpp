@@ -105,6 +105,8 @@ namespace sg {
 		m_otherPlayer = new ObjModel();
 		m_otherPlayer->loadModel("../Models/Polynoid_Updated/Polynoid.obj", "../Models/Polynoid_Updated/");
 		m_otherPlayer->setTexture(textures->m_texID[Textures::Polynoid]);
+		//m_otherPlayer->loadModel("../Models/Polynoid_Headless.obj", "../Models/");
+		//m_otherPlayer->setTexture(textures->m_texID[Textures::Headless]);
 
 		m_thisPlayer = new ObjModel();
 		m_thisPlayer->loadModel("../Models/Headless_Avatar.obj", "../Models/");

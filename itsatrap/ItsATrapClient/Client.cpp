@@ -16,6 +16,7 @@ int					Client::channelingResourceId;
 bool				Client::okChannel;
 bool				Client::recall;
 int					Client::clientSendRate;
+bool				Client::hasActiveNode;
 
 int Client::initializeClient() {
 
@@ -88,6 +89,7 @@ int Client::initializeClient() {
 	
 
 	okChannel = false;
+	hasActiveNode = false;
 
 	ConfigSettings::getConfig()->getValue("ClientSendRate", clientSendRate);
 
@@ -152,6 +154,8 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			{
 				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
 				updateActiveResourceNode(packet->id);
+
+				hasActiveNode = true;
 			}
 			else if (p->eventId == CHANNELING_PERMISSION)
 			{
@@ -369,6 +373,14 @@ DWORD WINAPI Client::senderThread(LPVOID)
 			p.cameraChanged = cameraChanged;
 			p.cam = playerCam;
 			p.recall = recall;
+			sendMsg((char *)&p, sizeof(p));
+		}
+
+		if (!hasActiveNode) {
+			struct knifeHitPacket p = {};
+			p.eventId = REQUEST_ACTIVE_NODE_EVENT;
+			p.playerId = getPlayerId();
+
 			sendMsg((char *)&p, sizeof(p));
 		}
 

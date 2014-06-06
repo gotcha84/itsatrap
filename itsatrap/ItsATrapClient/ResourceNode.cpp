@@ -1,7 +1,8 @@
 #include "ResourceNode.h"
 
-namespace sg {
+extern Texture *textures;
 
+namespace sg {
 	ResourceNode::ResourceNode(int id, int numParticles)
 		: ObjNode() {
 		m_particles = new ParticleSystem(numParticles);
@@ -61,26 +62,29 @@ namespace sg {
 			ConfigSettings::getConfig()->getValue("Team1G", g);
 			ConfigSettings::getConfig()->getValue("Team1B", b);
 			ConfigSettings::getConfig()->getValue("Team1A", a);
+			this->getModel()->setTexture(textures->m_texID[Textures::RedNode]);
 		}
 		else {
 			ConfigSettings::getConfig()->getValue("Team2R", r);
 			ConfigSettings::getConfig()->getValue("Team2G", g);
 			ConfigSettings::getConfig()->getValue("Team2B", b);
 			ConfigSettings::getConfig()->getValue("Team2A", a);
+			this->getModel()->setTexture(textures->m_texID[Textures::BlueNode]);
 		}
 
 		enableParticles();
 
-		this->m_model->setColor(glm::vec4(r, g, b, a));
+		this->m_model->setColor(glm::vec4(1, 1, 1, 1));
 		this->m_particles->setColor(glm::vec4(r + 0.2f, g + 0.2f, b + 0.2f, a));
 		this->m_particles2->setColor(glm::vec4(r + 0.2f, g + 0.2f, b + 0.2f, a));
 	}
 
 	void ResourceNode::setInactiveColor()
 	{
-		this->m_model->setColor(glm::vec4(0.2f, 0.2f, 0.2f, 1));
+		this->m_model->setColor(glm::vec4(1.0f, 1.0f, 1.0f, 1));
 		this->m_particles->setColor(glm::vec4(0.7f, 0.7f, 0.7f, 1));
 		this->m_particles2->setColor(glm::vec4(0.9f, 0.9f, 0.9f, 1));
+		this->getModel()->setTexture(textures->m_texID[Textures::InactiveNode]);
 	}
 
 	void ResourceNode::setActiveColor()
@@ -88,6 +92,7 @@ namespace sg {
 		this->m_model->setColor(glm::vec4(1.0f, 1.0f, 1.0f, 1));
 		this->m_particles->setColor(glm::vec4(0.7f, 0.7f, 0.7f, 1));
 		this->m_particles2->setColor(glm::vec4(0.9f, 0.9f, 0.9f, 1));
+		this->getModel()->setTexture(textures->m_texID[Textures::ActiveNode]);
 	}
 
 	void ResourceNode::draw(glm::mat4 parent, glm::mat4 cam) {
