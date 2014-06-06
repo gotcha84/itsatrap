@@ -139,7 +139,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 			player.clientAddress = *source;
 			player.playerId = playerCount;
 			player.active = true;
-			player.timeUntilInactive = 20000;
+			player.timeUntilInactive = 100000;
 			players[playerCount] = player;
 				
 			// Creating response message

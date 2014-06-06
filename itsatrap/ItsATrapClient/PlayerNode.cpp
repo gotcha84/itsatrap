@@ -212,8 +212,8 @@ namespace sg {
 		ConfigSettings::getConfig()->getValue("PlayerHeight", PlayerHeight);
 		//cout << "camxrot: " << this->getCamera()->getXRotated() << endl;
 		glm::vec3 camcam = this->getCamera()->getCameraCenter();
-		if (getPlayer()->m_knifeDelay > 800) {
-			camcam.y += -2.5f;
+		if (true) {
+			camcam.y += -10.0f;
 		}
 		glm::mat4 translationMatrix = glm::translate(glm::vec3(m_translate.x, /*m_translate.y - 10.0f*/ camcam.y - PlayerHeight, m_translate.z));
 
@@ -316,7 +316,7 @@ namespace sg {
 
 			// draw player avatar
 			glm::mat4 mv = glm::inverse(this->getCamera()->getCameraMatrix()) * this->getModelMatrix();
-			//this->drawAsCurrentPlayer(mv);
+			this->drawAsCurrentPlayer(mv);
 
 			// draw player hud
 			//TODO: last parameter is the respawn input time. from server to client
