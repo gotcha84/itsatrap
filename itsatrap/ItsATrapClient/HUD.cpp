@@ -90,24 +90,29 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, float 
 					flashStatus->drawCube();
 				}*/
 
-				// Slow status
-				if (slowDuration > 0)
-				{
-					glLoadIdentity();
-					glTranslatef(0.85f, 0.25f, 0);
-					glScalef(0.2, 0.2, 2);
-					slowStatus->drawCube();
-				}
+				float offset = 0;
 
 				// Stun status
 				if (stunDuration > 0)
 				{
 					glLoadIdentity();
-					glTranslatef(0.85f, 0, 0);
+					glTranslatef(0.85f, 0.25f + offset, 0);
 					glScalef(0.2, 0.2, 2);
-
 					stunStatus->drawCube();
+					offset -= 0.25;
 				}
+
+				// Slow status
+				if (slowDuration > 0)
+				{
+					glLoadIdentity();
+					glTranslatef(0.85f, 0.25f + offset, 0);
+					glScalef(0.2, 0.2, 2);
+					slowStatus->drawCube();
+					offset -= 0.25;
+				}
+
+				
 			}
 			
 		glPopMatrix();
