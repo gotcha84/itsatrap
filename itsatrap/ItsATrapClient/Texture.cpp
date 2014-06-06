@@ -11,7 +11,7 @@ Texture::Texture(){
 
 	glGenTextures(m_numTex, m_texID);
 	if (glGetError()) cout << "[Texture.cpp] ERROR : could not glGenTextures in ctor!";
-	
+
 	initTextures();
 }
 
@@ -22,21 +22,20 @@ Texture::~Texture() {
 
 // After adding enum, add texture file here
 void Texture::initTextures() {
-	loadTexture(m_texID[Textures::Skybox],			"../Textures/skybox.ppm");
-	loadTexture(m_texID[Textures::ActiveNode],		"../Textures/resourceTower_tex_active.ppm");
-	loadTexture(m_texID[Textures::InactiveNode],	"../Textures/resourceTower_tex_Inactive.ppm");
-	loadTexture(m_texID[Textures::BlueNode],		"../Textures/resourceTower_tex_blue.ppm");
-	loadTexture(m_texID[Textures::RedNode],			"../Textures/resourceTower_tex_red.ppm");
-	loadTexture(m_texID[Textures::Polynoid],		"../Textures/Red_Polynoid.ppm");
-	loadTexture(m_texID[Textures::Headless],		"../Textures/Polynoid_Headless_Texture.ppm");
-	loadTexture(m_texID[Textures::Lightning],		"../Textures/lightning.ppm");
-	loadTexture(m_texID[Textures::Animus],			"../Textures/animus.ppm");
-	loadTexture(m_texID[Textures::BRail],			"../Textures/BRail.ppm");
-	loadTexture(m_texID[Textures::Base],			"../Textures/Base_01.ppm");
-	loadTexture(m_texID[Textures::Caltrop],			"../Textures/Caltrop.ppm");
-	loadTexture(m_texID[Textures::Stunned],			"../Textures/Stunned.ppm");
-	loadTexture(m_texID[Textures::Slowed],			"../Textures/Slowed.ppm");
-	loadTexture(m_texID[Textures::Flashed],			"../Textures/Flashed.ppm");
+	loadTexture(m_texID[Textures::Skybox], "../Textures/skybox.ppm");
+	loadTexture(m_texID[Textures::ActiveNode], "../Textures/resourceTower_tex_active.ppm");
+	loadTexture(m_texID[Textures::InactiveNode], "../Textures/resourceTower_tex_Inactive.ppm");
+	loadTexture(m_texID[Textures::BlueNode], "../Textures/resourceTower_tex_blue.ppm");
+	loadTexture(m_texID[Textures::RedNode], "../Textures/resourceTower_tex_red.ppm");
+	loadTexture(m_texID[Textures::Polynoid], "../Textures/Red_Polynoid.ppm");
+	loadTexture(m_texID[Textures::Headless], "../Textures/Polynoid_Headless_Texture.ppm");
+	loadTexture(m_texID[Textures::Lightning], "../Textures/lightning.ppm");
+	loadTexture(m_texID[Textures::Animus], "../Textures/animus.ppm");
+	loadTexture(m_texID[Textures::BRail], "../Textures/BRail.ppm");
+	loadTexture(m_texID[Textures::Base], "../Textures/Base_01.ppm");
+	loadTexture(m_texID[Textures::Stunned], "../Textures/Stunned.ppm");
+	loadTexture(m_texID[Textures::Slowed], "../Textures/Slowed.ppm");
+	loadTexture(m_texID[Textures::Flashed], "../Textures/Flashed.ppm");
 }
 
 void Texture::loadTexture(GLuint id, const char* the_texture) {

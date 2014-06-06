@@ -10,10 +10,7 @@
 
 #include "Scoreboard.h"
 #include "Sound.h"
-//#include "SceneGraph.h"
 #include "Cube.cpp"
-
-//#include "Texture.h"
 
 class HUD {
 public:

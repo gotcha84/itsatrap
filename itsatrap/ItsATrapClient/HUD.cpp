@@ -15,10 +15,13 @@ HUD::HUD() {
 	deathSound = createIrrKlangDevice(); //declare loop, pause, and track
 
 	flashStatus = new sg::Cube();
+	flashStatus->setColor(glm::vec4(1, 1, 1, 1));
 	flashStatus->setTexture(textures->m_texID[Textures::Flashed]);
 	slowStatus = new sg::Cube();
+	slowStatus->setColor(glm::vec4(1, 1, 1, 1));
 	slowStatus->setTexture(textures->m_texID[Textures::Slowed]);
 	stunStatus = new sg::Cube();
+	stunStatus->setColor(glm::vec4(1, 1, 1, 1));
 	stunStatus->setTexture(textures->m_texID[Textures::Stunned]);
 }
 
@@ -35,85 +38,91 @@ HUD::~HUD() {
 void HUD::draw(int health, int resources, int spawnTime, float flashFade, float bloodFade, int hitCrosshairDuration, int recallElapsed, string msg, int gameTime, int slowDuration, int stunDuration) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
-	glLoadIdentity();
-	gluOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-
-	glLoadIdentity();
-	if (health <= 0) {
-		drawDeathTimer(spawnTime);
-
-		if (!deathSound->isCurrentlyPlaying("../Sound/death.wav") && spawnTime <= 2500 && spawnTime >= 2000) {
-			deathSound->play2D("../Sound/death.wav", false, false, true);
-		}
-	}
-	else {
-		if (hitCrosshairDuration > 0) {
-			drawKillSymbol(true);
-			if (!ouchSound->isCurrentlyPlaying("../Sound/ouch.wav"))
-				ouchSound->play2D("../Sound/ouch.wav", false, false, true);
-		}
-		else {
-			drawKillSymbol(false);
-		}
-		drawCrossHair();
-		drawHealthBar(health);
-		drawResource(resources);
-		drawClock(gameTime);
-		drawInfoMessage(msg);
-		if (m_progressTime > -1) {
-			drawProgressBar(m_progressTime);
-		}
-		if (recallElapsed > 0)
-		{
-			int recallChannelTime = 1;
-			ConfigSettings::getConfig()->getValue("RecallChannelTime", recallChannelTime);
-			int time = ((float)recallElapsed / recallChannelTime) * 100;
-			if (time > 100)
-				time = 100;
-			else if (time < 0)
-				time = 0;
-			drawProgressBar(time);
-			if (time > 50)
-				drawFlashbag((time - 50.0f) / 50.0f);
-		}
-		drawFlashbag(flashFade);
-		drawBlood(bloodFade);
-
-		// Flash status
-		/*if (flashFade > 0)
-		{
 		glLoadIdentity();
-		glTranslatef(0.85f, 0.5f, 0);
-		glScalef(0.2, 0.2, 2);
-		flashStatus->drawCube();
-		}*/
-
-		float offset = 0;
-
-		// Stun status
-		if (stunDuration > 0)
-		{
+		gluOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f);
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
 			glLoadIdentity();
-			glTranslatef(0.85f, 0.25f + offset, 2);
-			glScalef(0.2, 0.2, 2);
-			stunStatus->drawCube();
-			offset -= 0.25;
-		}
 
-		// Slow status
-		if (slowDuration > 0)
-		{
-			glLoadIdentity();
-			glTranslatef(0.85f, 0.25f + offset, 2);
-			glScalef(0.2, 0.2, 2);
-			slowStatus->drawCube();
-			offset -= 0.25;
-		}
+			if (health <= 0) {
+				drawDeathTimer(spawnTime);
+
+				if (!deathSound->isCurrentlyPlaying("../Sound/death.wav") && spawnTime <= 2500 && spawnTime >= 2000) {
+					deathSound->play2D("../Sound/death.wav", false, false, true);
+				}
+			}
+			else {
+				if (hitCrosshairDuration > 0) {
+					drawKillSymbol(true);
+					if (!ouchSound->isCurrentlyPlaying("../Sound/ouch.wav"))
+						ouchSound->play2D("../Sound/ouch.wav", false, false, true);
+				}
+				else {
+					drawKillSymbol(false);
+				}
+				drawCrossHair();
+				drawHealthBar(health);
+				drawResource(resources);
+				drawClock(gameTime);
+				drawInfoMessage(msg);
+				if (m_progressTime > -1) {
+					drawProgressBar(m_progressTime);
+				}
+				if (recallElapsed > 0)
+				{
+					int recallChannelTime = 1;
+					ConfigSettings::getConfig()->getValue("RecallChannelTime", recallChannelTime);
+					int time = ((float)recallElapsed / recallChannelTime) * 100;
+					if (time > 100)
+						time = 100;
+					else if (time < 0)
+						time = 0;
+					drawProgressBar(time);
+					if (time > 50)
+						drawFlashbag((time - 50.0f) / 50.0f);
+				}
+				drawFlashbag(flashFade);
+				drawBlood(bloodFade);
+
+				// Flash status
+				/*if (flashFade > 0)
+				{
+				glLoadIdentity();
+				glTranslatef(0.85f, 0.5f, 0);
+				glScalef(0.2, 0.2, 2);
+				flashStatus->drawCube();
+				}*/
+
+				float offset = 0;
+
+				// Stun status
+				if (stunDuration > 0)
+				{
+					glPushMatrix();
+					glLoadIdentity();
+					glTranslatef(0.85f, 0.25f + offset, 2);
+					glScalef(0.2, 0.2, 2);
+					stunStatus->drawCube();
+					glPopMatrix();
+
+					offset -= 0.25;
+				}
+
+				// Slow status
+				if (slowDuration > 0)
+				{
+					glPushMatrix();
+					glLoadIdentity();
+					glTranslatef(0.85f, 0.25f + offset, 2);
+					glScalef(0.2, 0.2, 2);
+					slowStatus->drawCube();
+					glPopMatrix();
+
+					offset -= 0.25;
+				}
 
 
-	}
+			}
 
 	glPopMatrix();
 	glPopMatrix();

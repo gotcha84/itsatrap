@@ -150,9 +150,10 @@ int main(int argc, char *argv[]) {
 	glShadeModel(GL_SMOOTH);                    // set shading to smooth
 
 	// backface culling to render front sides of polygons
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
+	glDisable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+	//glFrontFace(GL_CCW);
 	
 	// Generate material properties:
 	//glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
