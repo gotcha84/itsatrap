@@ -88,7 +88,6 @@ int Server::initialize() {
 	CreateThread(NULL, 0, bufferProcessorThread, NULL, 0, &tmp);
 	packetBufMutex = CreateMutex(NULL, true, NULL);
 
-
 	// GAME MECHANICS
 	ConfigSettings::getConfig()->getValue("ResourcePerInterval", resourcePerInterval);
 	ConfigSettings::getConfig()->getValue("ResourceHotSpotBonusPerInterval", resourceHotSpotBonusPerInterval);
@@ -322,7 +321,10 @@ void Server::processBuffer()
 			case KNIFE_HIT_EVENT:
 			{
 				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
-				dynamicWorld.handleKnifeEvent(knifePkt->playerId);
+				if (dynamicWorld.handleKnifeEvent(knifePkt->playerId)) {
+					resetChanneling();
+				}
+
 				break;
 			}
 			case RESOURCE_HIT_EVENT:
@@ -369,7 +371,6 @@ void Server::processBuffer()
 			case CHANNELING_COMPLETE:
 			{
 				struct resourceHitPacket *hitPkt = (struct resourceHitPacket *)p;
-
 				if (hitPkt->playerId == channelingPlayer
 					&& hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]
 					&& isChanneling) {
@@ -395,11 +396,10 @@ void Server::processBuffer()
 			}
 			case REQUEST_ACTIVE_NODE_EVENT:
 			{
-				struct knifeHitPkt *requestPkt = (struct knifeHitPkt *)p;
-				//struct knifeHitPkt temp = *requestPkt;
+				struct knifeHitPacket *requestPkt = (struct knifeHitPacket *)p;
 
 				if (resourceNodeLocations.size() > 0) {
-					sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
+					sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex], requestPkt->playerId);
 				}
 
 				break;

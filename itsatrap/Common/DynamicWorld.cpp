@@ -572,17 +572,20 @@ void DynamicWorld::updateTimings(int timeDiff, int timeElapsed)
 	}
 }
 
-void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObject *target, int damage, bool displayHit)
+
+bool DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObject *target, int damage, bool displayHit)
 {
 	if (attacker == nullptr || target == nullptr)
-		return;
+		return false;
 
 	playerLock[target->id] = true;
 	playerLock[attacker->id] = true;
 
 	// already dead
 	if (target->deathState)
-		return;
+	{
+		return true;
+	}
 
 	target->health -= damage;
 
@@ -631,6 +634,8 @@ void DynamicWorld::playerDamage(struct playerObject *attacker, struct playerObje
 			addInfoMessage(target->id, "You have been killed by player " + to_string(attacker->id));
 		}
 	}
+
+	return true;
 }
 
 void DynamicWorld::respawnPlayer(struct playerObject *p) {
@@ -1235,8 +1240,8 @@ void DynamicWorld::applyAdjustments() {
 		return;
 		}*/
 
-		cout << "player pos: ";
-		p.aabb.print();
+		//cout << "player pos: ";
+		//p.aabb.print();
 
 		// hardcoding cuz idk why this aint working
 		//if (p.currPhysState == PhysicsStates::HoldingEdge) {
@@ -1709,7 +1714,7 @@ void DynamicWorld::addAABBInfo(int type, AABB aabb)
 	}
 }
 
-void DynamicWorld::handleKnifeEvent(int knifer)
+bool DynamicWorld::handleKnifeEvent(int knifer)
 {
 	playerObject *player = &playerMap[knifer];
 	cancelRecall(player);
@@ -1739,6 +1744,8 @@ void DynamicWorld::handleKnifeEvent(int knifer)
 			}
 		}
 	}
+
+	return false;
 }
 
 void DynamicWorld::addInfoMessage(int destination, string msg)

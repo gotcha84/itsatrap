@@ -27,6 +27,7 @@ enum Textures {
 	Lightning,
 	Animus,
 	Base,
+	Caltrop,
 	BRail,
 	Size,
 	Stunned,
