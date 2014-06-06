@@ -338,7 +338,7 @@ GLuint Shader::lightShader(char* fragFile, char* vertFile){
   glDisable(GL_CULL_FACE);
   
   /* Default setting of light shader */
-  glEnable(GL_LIGHTING);
+  //glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glLightfv(GL_LIGHT0, GL_DIFFUSE, lightcol);
   glLightfv(GL_LIGHT0, GL_SPECULAR, lightcol);

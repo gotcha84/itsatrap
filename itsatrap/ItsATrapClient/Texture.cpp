@@ -22,17 +22,16 @@ Texture::~Texture() {
 
 // After adding enum, add texture file here
 void Texture::initTextures() {
-	loadTexture(m_texID[Textures::Skybox], "../Textures/skybox.ppm");
 	loadTexture(m_texID[Textures::ActiveNode], "../Textures/resourceTower_tex_active.ppm");
 	loadTexture(m_texID[Textures::InactiveNode], "../Textures/resourceTower_tex_Inactive.ppm");
 	loadTexture(m_texID[Textures::BlueNode], "../Textures/resourceTower_tex_blue.ppm");
 	loadTexture(m_texID[Textures::RedNode], "../Textures/resourceTower_tex_red.ppm");
-	loadTexture(m_texID[Textures::Polynoid], "../Textures/Red_Polynoid.ppm");
-	loadTexture(m_texID[Textures::Headless], "../Textures/Polynoid_Headless_Texture.ppm");
-	loadTexture(m_texID[Textures::Lightning], "../Textures/lightning.ppm");
-	loadTexture(m_texID[Textures::Animus], "../Textures/animus.ppm");
+	loadTexture(m_texID[Textures::Skybox], "../Textures/skybox.ppm");
+	loadTexture(m_texID[Textures::RedPolynoid], "../Textures/Avatar/Polynoid_Red.ppm");
+	loadTexture(m_texID[Textures::BluePolynoid], "../Textures/Avatar/Polynoid_Blue.ppm");
+	loadTexture(m_texID[Textures::Caltrop], "../Textures/Obelisk3/ppm/Caltrop.ppm");
 	loadTexture(m_texID[Textures::BRail], "../Textures/BRail.ppm");
-	loadTexture(m_texID[Textures::Base], "../Textures/Base_01.ppm");
+
 	loadTexture(m_texID[Textures::Stunned], "../Textures/Stunned.ppm");
 	loadTexture(m_texID[Textures::Slowed], "../Textures/Slowed.ppm");
 	loadTexture(m_texID[Textures::Flashed], "../Textures/Flashed.ppm");
@@ -66,8 +65,21 @@ void Texture::initTextures() {
 	loadTexture(m_texID[Textures::Base_25], "../Textures/Obelisk3/ppm/Base_25.ppm");
 	loadTexture(m_texID[Textures::Base_26], "../Textures/Obelisk3/ppm/Base_26.ppm");
 	loadTexture(m_texID[Textures::Base_27], "../Textures/Obelisk3/ppm/Base_27.ppm");
-	
+
+	loadTexture(m_texID[Textures::Bridge], "../Textures/Obelisk3/ppm/Bridge_01.ppm");
 	loadTexture(m_texID[Textures::Float], "../Textures/Obelisk3/ppm/Float_01.ppm");
+
+	loadTexture(m_texID[Textures::Ext_01], "../Textures/Obelisk3/ppm/Ext_01.ppm");
+	loadTexture(m_texID[Textures::Ext_02], "../Textures/Obelisk3/ppm/Ext_02.ppm");
+	loadTexture(m_texID[Textures::Ext_03], "../Textures/Obelisk3/ppm/Ext_03.ppm");
+	loadTexture(m_texID[Textures::Ext_04], "../Textures/Obelisk3/ppm/Ext_04.ppm");
+	loadTexture(m_texID[Textures::Ext_05], "../Textures/Obelisk3/ppm/Ext_05.ppm");
+
+	loadTexture(m_texID[Textures::Wedge_01], "../Textures/Obelisk3/ppm/Wedge_01.ppm");
+	loadTexture(m_texID[Textures::Rail_01], "../Textures/Obelisk3/ppm/Rail_01.ppm");
+	loadTexture(m_texID[Textures::Metal_01], "../Textures/Obelisk3/ppm/Metal_01.ppm");
+	loadTexture(m_texID[Textures::ERail_01], "../Textures/Obelisk3/ppm/ERail_01.ppm");
+	loadTexture(m_texID[Textures::Climbable_01], "../Textures/Obelisk3/ppm/Climbable_01.ppm");
 }
 
 void Texture::loadTexture(GLuint id, const char* the_texture) {
@@ -91,6 +103,7 @@ void Texture::loadTexture(GLuint id, const char* the_texture) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 }
 
 

@@ -19,6 +19,7 @@ bool *Window::keyEventTriggered = new bool[256];
 bool *Window::specialKeyState = new bool[256];
 bool *Window::specialKeyEventTriggered = new bool[256];
 int Window::modifierKey = 0;
+bool Window::dashed = false;
 
 ISoundEngine *engine;
 ISoundEngine *jumpSound;
@@ -412,11 +413,13 @@ void Window::processKeys() {
 		client->root->getPlayer()->handleTeleport();
 	}*/
 
-	if (keyState['q']) {
+	if (modifierKey != GLUT_ACTIVE_SHIFT) {
+		dashed = false;
+	}
+
+	if (modifierKey == GLUT_ACTIVE_SHIFT && keyState['w'] && !dashed) {
 		Client::sendMoveEvent(DASH);
-		if (!keyEventTriggered['q']) {
-			keyEventTriggered['q'] = true;
-		}
+		dashed = true;
 	}
 	else {
 		if (keyState['w']) {
@@ -454,8 +457,8 @@ void Window::processKeys() {
 	if (keyState['w'] ||
 		keyState['s'] ||
 		keyState['a'] ||
-		keyState['d'] ||
-		keyState['q']) {
+		keyState['d']/* ||
+		modifierKey == GLUT_ACTIVE_SHIFT*/) {
 		walk->setIsPaused(false);
 	}
 

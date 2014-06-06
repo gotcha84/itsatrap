@@ -140,6 +140,9 @@
     <ClCompile Include="ParticleSystemNode.cpp">
       <Filter>Source Files\SceneGraph</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -239,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="ParticleSystemNode.h">
       <Filter>Header Files\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem3.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

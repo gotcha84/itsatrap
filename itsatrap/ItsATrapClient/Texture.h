@@ -23,13 +23,11 @@ enum Textures {
 	BlueNode,
 	RedNode,
 	Skybox,
-	Polynoid,
-	Headless,
-	Lightning,
-	Animus,
-	Base,
+	RedPolynoid,
+	BluePolynoid,
 	Caltrop,
 	BRail,
+
 	Stunned,
 	Slowed,
 	Flashed,
@@ -63,8 +61,22 @@ enum Textures {
 	Base_25,
 	Base_26,
 	Base_27,
-
+	
+	Bridge,
 	Float,
+
+	Ext_01,
+	Ext_02, 
+	Ext_03,
+	Ext_04,
+	Ext_05,
+
+	Wedge_01,
+	Rail_01,
+	Metal_01,
+	ERail_01,
+	Climbable_01,
+
 	Size
 };
 

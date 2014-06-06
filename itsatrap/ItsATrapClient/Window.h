@@ -30,6 +30,7 @@ class Window {
 		static bool *specialKeyState;
 		static bool *specialKeyEventTriggered;
 		static int modifierKey;
+		static bool dashed;
 
 		Window();
 		~Window();
