@@ -29,6 +29,7 @@ namespace sg {
 
 		trapMenu = new TrapMenu();
 		gameOver = new GameOver();
+		welcomeScreen = new Welcome();
 
 		timer = new Stopwatch();
 		checkMouse = false;
@@ -58,6 +59,7 @@ namespace sg {
 
 		trapMenu = new TrapMenu();
 		gameOver = new GameOver();
+		welcomeScreen = new Welcome();
 
 		timer = new Stopwatch();
 		checkMouse = false;
@@ -99,6 +101,9 @@ namespace sg {
 
 		delete timer;
 		timer = nullptr;
+
+		delete welcomeScreen;
+		welcomeScreen = nullptr;
 	}
 
 	void Player::initModels() {
@@ -268,6 +273,11 @@ namespace sg {
 				glEnable(GL_LIGHTING);
 			}
 			
+			if (!client->enterPressed) {
+				welcomeScreen->draw();
+			}
+
+
 			if (client->scrollDown || client->scrollUp) {
 				timer->start();
 				checkMouse = true;

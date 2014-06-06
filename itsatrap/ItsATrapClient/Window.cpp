@@ -289,9 +289,10 @@ void Window::keyUp(unsigned char key, int x, int y) {
 		delete trap;
 		trap = nullptr;
 	}
-	else if (key == (char)32)
+	else if (key == 13)
 	{
 		cout << "ENTER IS PRESSED" << endl;
+		client->enterPressed = true;
 	}
 	else if (key == 'r') 
 	{

@@ -10,7 +10,7 @@
 #include "ObjModel.h"
 #include "TrapMenu.h"
 #include "GameOver.h"
-
+#include "Welcome.h"
 namespace sg {
 	class Player : public Group {
 		private:
@@ -25,6 +25,7 @@ namespace sg {
 			bool checkMouse;
 			TrapMenu *trapMenu;
 			GameOver *gameOver;
+			Welcome *welcomeScreen;
 			Stopwatch *timer;
 			int m_elapsedGameTime;
 			bool m_gameOver;
