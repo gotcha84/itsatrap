@@ -1,7 +1,7 @@
 #define NUM_TEX 100
 #include "Texture.h"
 
-Texture::Texture(){
+Texture::Texture() {
 	m_numTex = NUM_TEX;
 	m_texID = new GLuint[m_numTex];
 
@@ -22,10 +22,14 @@ Texture::~Texture() {
 
 // After adding enum, add texture file here
 void Texture::initTextures() {
+	loadTexture(m_texID[Textures::Background], "../Textures/background.ppm");
+	loadTexture(m_texID[Textures::BackgroundComplete], "../Textures/background_complete.ppm");
+	
 	loadTexture(m_texID[Textures::ActiveNode], "../Textures/resourceTower_tex_active.ppm");
 	loadTexture(m_texID[Textures::InactiveNode], "../Textures/resourceTower_tex_Inactive.ppm");
 	loadTexture(m_texID[Textures::BlueNode], "../Textures/resourceTower_tex_blue.ppm");
 	loadTexture(m_texID[Textures::RedNode], "../Textures/resourceTower_tex_red.ppm");
+
 	loadTexture(m_texID[Textures::Skybox], "../Textures/skybox.ppm");
 	loadTexture(m_texID[Textures::RedPolynoid], "../Textures/Avatar/Polynoid_Red.ppm");
 	loadTexture(m_texID[Textures::BluePolynoid], "../Textures/Avatar/Polynoid_Blue.ppm");

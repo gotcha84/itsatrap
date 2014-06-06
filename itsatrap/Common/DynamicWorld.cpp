@@ -668,6 +668,7 @@ void DynamicWorld::respawnPlayer(struct playerObject *p) {
 	p->deathState = false;
 	p->currPhysState = PhysicsStates::None;
 	p->currInnerState = innerStates::Off;
+	p->gravityCounter = 0;
 }
 
 void DynamicWorld::computeAABB(struct playerObject *p)
@@ -755,24 +756,24 @@ void DynamicWorld::applyCollisions() {
 
 							int newDirection = Physics::handleReflectionIntersection(oldPos, proposedNewPos, staticObjects[buildingId]);
 
-							// idk why this block never triggers
-							//if (newDirection != -1) {
-							//	if (newDirection == 0 || newDirection == 1) {
-							//		p.velocityDiff.x = 0.0f;
-							//		p.velocityDiff.z *= 0.5f;
-							//	}
-							//	else {
-							//		p.velocityDiff.x *= 0.5f;
-							//		p.velocityDiff.z = 0.0f;
-							//	}
-							//}
+							//idk why this block never triggers
+							if (newDirection != -1) {
+								if (newDirection == 0 || newDirection == 1) {
+									p.velocityDiff.x = 0.0f;
+									p.velocityDiff.z *= 0.5f;
+								}
+								else {
+									p.velocityDiff.x *= 0.5f;
+									p.velocityDiff.z = 0.0f;
+								}
+							}
 
-							//else {
+							else {
 							/*p.velocity.x = -0.5f*(p.velocity.x + p.velocityDiff.x);
 							p.velocity.z = -0.5f*(p.velocity.z + p.velocityDiff.z);*/
 							p.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
-							p.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-							//}
+							p.velocity = glm::vec3(0.0f, p.velocity.y, 0.0f);
+							}
 
 						}
 
@@ -1405,9 +1406,16 @@ void DynamicWorld::applyGravity()
 		float gravityConstant = 0;
 		ConfigSettings::getConfig()->getValue("gravityConstant", gravityConstant);
 		if (p.currPhysState == PhysicsStates::None) {
-			p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
+			if (p.gravityCounter > 0) {
+				p.velocity += glm::vec3(0.0f, 2.0f*gravityConstant, 0.0f);
+			}
+			else {
+				p.velocity += glm::vec3(0.0f, gravityConstant, 0.0f);
+			}
 		}
-
+		else {
+			p.gravityCounter++;
+		}
 		//cout << "falling at: " << glm::to_string(p.position) << endl;
 		//cout << "falling: heightmap at: " << World::m_heightMap[xIndex + World::m_heightMapXShift][zIndex + World::m_heightMapZShift] << ", " << "player at: " << p.position.y + p.velocity.y << endl;
 		//cout << "p.velo+p.velodiff: " << glm::to_string(p.velocity + p.velocityDiff) << endl;
@@ -1463,6 +1471,7 @@ void DynamicWorld::applyGravity()
 				p.velocity.y = 0.0f;
 				p.velocityDiff.y = 0.0f;
 				p.canClimb = true;
+				p.gravityCounter = 0;
 				if (p.currPhysState != PhysicsStates::None) {
 					StateLogic::statesInfo[p.id].End.velocityDiff = glm::vec3(0.0f, 0.0f, 0.0f);
 					p.currInnerState = innerStates::Ending;
@@ -1502,10 +1511,10 @@ void DynamicWorld::applyAdjustments() {
 		return;
 		}*/
 
-
+		/*
 		cout << "player pos: ";
 		p.aabb.print();
-
+		*/
 		// hardcoding cuz idk why this aint working
 		//if (p.currPhysState == PhysicsStates::HoldingEdge) {
 		//	p.velocityDiff.y = 0.0f;

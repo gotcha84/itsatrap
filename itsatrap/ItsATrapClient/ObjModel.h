@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <climits>
 #include <math.h>
-
+#include "Shader.h"
 #include "tiny_obj_loader.h"
 #include "Geode.h"
 #include "Texture.h"
@@ -38,6 +38,9 @@ class ObjModel : public sg::Geode {
 		vector<vector<float>> m_texcoords;
 		vector<int> m_nIndices;
 		vector<int> m_nVertices;
+
+		Shader *shader2 = new Shader;
+		GLuint light;
 			
 		ObjModel();
 		ObjModel(int id);

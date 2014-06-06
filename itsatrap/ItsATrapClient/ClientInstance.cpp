@@ -17,6 +17,7 @@ ClientInstance::ClientInstance(int id) {
 	cout << "DONE PLAYER" << endl;
 	root->setPlayerID(id);
 	root->setObjectID(id);
+	screen = new sg::Cube();
 
 	this->addPlayer(root);
 	objects[id] = root;

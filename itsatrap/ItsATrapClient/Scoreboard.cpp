@@ -102,11 +102,11 @@ void Scoreboard::draw() {
 
 					// setup color
 					if (switchColor) {
-						glColor3f(1.0f, 0.0f, 0.0f);
+						glColor3f(0.22f, 1.0f, 1.0f);
 						switchColor = false;
 					}
 					else{
-						glColor3f(0.0f, 1.0f, 0.0f);
+						glColor3f(1.0f, 0.0f, 0.0f);
 						switchColor = true;
 					}
 

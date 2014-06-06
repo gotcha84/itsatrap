@@ -368,7 +368,6 @@ namespace sg {
 				timer->reset();
 				checkMouse = false;
 			}
-
 			
 			//if (client->scrollUp) cout << "playerNode: scrollUp" << endl;
 			//if (client->scrollDown) cout << "playerNode: scrollDown" << endl;
@@ -400,11 +399,23 @@ namespace sg {
 			if (getPlayer()->m_knifeDelay > 800)
 			{
 				//m_thisPlayerAttack->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				if (getPlayerID() % 2 == 0) {
+					m_thisPlayerAttack->setTexture(textures->m_texID[Textures::RedPolynoid]);
+				}
+				else {
+					m_thisPlayerAttack->setTexture(textures->m_texID[Textures::BluePolynoid]);
+				}
 				m_thisPlayerAttack->drawModel();
 			}
 			else
 			{
 				//m_thisPlayer->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				if (getPlayerID() % 2 == 0) {
+					m_thisPlayer->setTexture(textures->m_texID[Textures::RedPolynoid]);
+				}
+				else {
+					m_thisPlayer->setTexture(textures->m_texID[Textures::BluePolynoid]);
+				}
 				m_thisPlayer->drawModel();
 			}
 
@@ -443,11 +454,23 @@ namespace sg {
 			if (getPlayer()->m_knifeDelay > 800)
 			{
 				//m_otherPlayerAttack->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				if (getPlayerID() % 2 == 0) {
+					m_otherPlayerAttack->setTexture(textures->m_texID[Textures::RedPolynoid]);
+				}
+				else {
+					m_otherPlayerAttack->setTexture(textures->m_texID[Textures::BluePolynoid]);
+				}
 				m_otherPlayerAttack->drawModel();
 			}
 			else
 			{
 				//m_otherPlayer->setColor(this->getPlayerID() % 2 == 0 ? glm::vec4(0.75, 0, 0, 1) : glm::vec4(0, 0, 0.75, 1));
+				if (getPlayerID() % 2 == 0) {
+					m_otherPlayer->setTexture(textures->m_texID[Textures::RedPolynoid]);
+				}
+				else {
+					m_otherPlayer->setTexture(textures->m_texID[Textures::BluePolynoid]);
+				}
 				m_otherPlayer->drawModel();
 			}
 

@@ -120,8 +120,6 @@ void HUD::draw(int health, int resources, int spawnTime, float flashFade, float 
 
 					offset -= 0.25;
 				}
-
-
 			}
 
 	glPopMatrix();
@@ -196,7 +194,7 @@ void HUD::drawInfoMessage(string msg) {
 	glPushMatrix();
 	glLoadIdentity();
 
-	glColor4f(0.9, 0.9, 0.9, 1); // green
+	glColor4f(0.22f, 1.0f, 1.0f, 1.0f); // teal
 	font->FaceSize(30);
 	font->CharMap(ft_encoding_symbol);
 	glRasterPos2f(-0.9f, 0.6f);

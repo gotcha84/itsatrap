@@ -23,11 +23,11 @@ void TrapMenu::draw() {
 		//drawCube(0.8f, -0.3f, 0.0f);
 		//drawCube(0.8f, -0.575f, 0.0f);
 
-			if ((infoState - 1) < 0) trapInfo(6, -0.82f, 1.0f, 0.0f, 0.0f);
-			else trapInfo(infoState - 1, -0.82f, 1.0f, 0.0f, 0.0f);
-			trapInfo(infoState, -0.87f, 1.0f, 1.0f, 0.0f);
-			if ((infoState + 1) > 6) trapInfo(0, -0.92f, 1.0f, 0.0f, 0.0f);
-			else trapInfo(infoState + 1, -0.92f, 1.0f, 0.0f, 0.0f);
+			if ((infoState - 1) < 0) trapInfo(6, -0.65f, 1.0f, 0.0f, 0.0f, 40);
+			else trapInfo(infoState - 1, -0.65f, 1.0f, 0.0f, 0.0f, 40);
+			trapInfo(infoState, -0.8f, 1.0f, 1.0f, 0.0f, 50);
+			if ((infoState + 1) > 6) trapInfo(0, -0.92f, 1.0f, 0.0f, 0.0f, 40);
+			else trapInfo(infoState + 1, -0.92f, 1.0f, 0.0f, 0.0f, 40);
 		
 		drawCube(0.8f, -0.85f, 0.0f);
 		glPopMatrix();
@@ -39,19 +39,20 @@ void TrapMenu::drawCube(float x, float y, float z) {
 	glPushMatrix();
 	glm::mat4 matrix;
 	matrix = glm::translate(matrix, glm::vec3(x, y, z));
-	matrix = glm::scale(matrix, glm::vec3(0.35f, 0.25f, 0.0f));
-	glColor4f(0.0f, 0.0f, 0.0f, 0.4f);
+	//matrix = glm::scale(matrix, glm::vec3(0.35f, 0.25f, 0.0f));
+	matrix = glm::scale(matrix, glm::vec3(0.85f, 0.75f, 0.0f));
+	glColor4f(0.0f, 0.0f, 0.0f, 0.25f);
 	glLoadMatrixf(glm::value_ptr(matrix));
 	glutSolidCube(1);
 	glPopMatrix();
 }
 
-void TrapMenu::trapInfo(int state, float y, float r, float g, float b) {
+void TrapMenu::trapInfo(int state, float y, float r, float g, float b, int faceSize) {
 	std::string text = "";
 	glColor3f(r, g, b);
-	font->FaceSize(25);
+	font->FaceSize(faceSize);
 	font->CharMap(ft_encoding_symbol);
-	glRasterPos2f(0.65f, y);
+	glRasterPos2f(0.4f, y);
 
 	switch (state) {
 		case 0:
@@ -81,7 +82,7 @@ void TrapMenu::trapInfo(int state, float y, float r, float g, float b) {
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
 	}*/
 	font->Render(text.c_str());
-	glRasterPos2f(0.90f, y);
+	glRasterPos2f(0.85f, y);
 	int cost = 0;
 	switch (state) {
 	case 0:

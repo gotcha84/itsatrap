@@ -29,7 +29,7 @@ public:
 	~TrapMenu();
 	void draw();
 	void drawCube(float x, float y, float z);
-	void trapInfo(int state, float y, float r, float g, float b);
+	void trapInfo(int state, float y, float r, float g, float b, int faceSize);
 
 	void setInfoState(int state);
 	int getInfoState();

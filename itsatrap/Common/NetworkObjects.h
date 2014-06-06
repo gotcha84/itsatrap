@@ -154,6 +154,8 @@ struct playerObject {
 	int interactingWithBuildingId;
 	int interactingWithBuildingFace; //-x = 0, +x = 1 etc. will be used for ramps
 	int interactingWithRampId;
+
+	int gravityCounter;
 };
 
 struct trapObject {

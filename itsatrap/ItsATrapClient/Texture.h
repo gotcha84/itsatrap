@@ -18,10 +18,14 @@ using namespace std;
 
 // Add texture names here
 enum Textures {
+	Background,
+	BackgroundComplete,
+
 	ActiveNode,
 	InactiveNode,
 	BlueNode,
 	RedNode,
+	
 	Skybox,
 	RedPolynoid,
 	BluePolynoid,
