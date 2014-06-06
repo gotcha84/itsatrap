@@ -200,6 +200,24 @@ void handleUpdateTrap(struct trapObject t)
 		{
 			sg::Trap *trap = (sg::Trap *) client->objects[t.id];
 			trap->setPosition(t.pos);
+			if (t.buildingId != -1) {
+				cout << "setting color " << endl;
+				trap->m_model1->m_color = t.color;
+				//trap->m_model1->
+
+			}
+			if (!t.landed && !t.hitSide) {
+				trap->rotationAngleX += 5.0f;
+				trap->rotationAngleZ += 5.0f;
+				//glm::mat4 model = trap->getMatrix();
+				/*model = glm::rotate(model, 25.0f, glm::vec3(0, 0, 1));
+				trap->setMatrix(model);*/
+			}
+			if (t.landed) {
+				trap->rotationAngleX = 0.0f;
+				trap->rotationAngleZ = 0.0f;
+			}
+
 		}
 		else
 			handleAddTrap(t);

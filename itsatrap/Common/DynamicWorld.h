@@ -101,6 +101,7 @@ public:
 	void applyAdjustments();
 	void manuallyUncollide();
 	void applyTrapGravity();
+	void fallTrapToGround(struct trapObject *trap);
 
 	void applyMoveEvents();
 	void noneMoveEvent(int playerId);

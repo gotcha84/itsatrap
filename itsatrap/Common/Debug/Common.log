@@ -1,4 +1,4 @@
-﻿Build started 6/6/2014 12:17:41 AM.
+﻿Build started 6/6/2014 12:45:19 AM.
      1>Project "C:\itsatrap\itsatrap\itsatrap\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\itsatrap\itsatrap\itsatrap\/glut/include/ /IC:\itsatrap\itsatrap\itsatrap\/glm/ /ZI /nologo /W3 /WX- /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D COMMON_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt DynamicWorld.cpp
@@ -78,17 +78,17 @@
      1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(233): warning C4018: '<' : signed/unsigned mismatch
      1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(261): warning C4018: '<' : signed/unsigned mismatch
      1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(339): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(434): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(442): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(460): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(475): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(491): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(718): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1059): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1158): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1178): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1635): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1680): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(443): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(451): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(469): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(484): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(500): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(727): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1216): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1397): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1417): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1880): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\itsatrap\itsatrap\itsatrap\common\dynamicworld.cpp(1925): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
          GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\itsatrap\itsatrap\itsatrap\Debug\Common.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\itsatrap\itsatrap\itsatrap\/glut/lib/ /LIBPATH:C:\itsatrap\itsatrap\itsatrap\Debug\ freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\itsatrap\itsatrap\itsatrap\Debug\Common.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\itsatrap\itsatrap\itsatrap\Debug\Common.lib" /MACHINE:X86 /DLL Debug\AABB.obj
@@ -106,4 +106,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.35
+Time Elapsed 00:00:01.85

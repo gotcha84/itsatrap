@@ -343,17 +343,21 @@ void Server::processBuffer()
 							isChanneling = true;
 
 							float knifeRange = 0.0f;
+							float resourceRange = 0.0f;
 							ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
+							ConfigSettings::getConfig()->getValue("ResourceRange", resourceRange);
 
 							glm::vec3 lookAt = player->cameraObject.cameraLookAt;
 							glm::vec3 center = player->cameraObject.cameraCenter;
 							glm::vec3 difVec = lookAt - center;
-							glm::vec3 hitPt = center + (knifeRange * difVec);
+							//glm::vec3 hitPt = center + (knifeRange * difVec);
+							glm::vec3 hitPt = lookAt;
 
 							AABB target = dynamicWorld.getStaticResourceBB(hitPkt->resourceId);
-							if (hitPt.x >= target.minX && hitPt.x <= target.maxX
-								&& hitPt.y >= target.minY && hitPt.y <= target.maxY
-								&& hitPt.z >= target.minZ && hitPt.z <= target.maxZ)
+
+							if (hitPt.x >= (target.minX-resourceRange) && hitPt.x <= (target.maxX+resourceRange)
+								&& hitPt.y >= (target.minY-resourceRange) && hitPt.y <= (target.maxY+(resourceRange * 2))
+								&& hitPt.z >= (target.minZ-resourceRange) && hitPt.z <= (target.maxZ+resourceRange))
 							{
 								// send resourceNodePacket to client, telling them it is ok to channel
 								sendPermissionToChannel(channelingPlayer, resourceNodeLocations[currentActiveResourceNodeIndex]);
@@ -378,18 +382,6 @@ void Server::processBuffer()
 					resetChanneling();
 
 					sendNewResourceOwnerUpdate(currentResourceOwner, resourceNodeLocations[currentActiveResourceNodeIndex]);
-
-					for (int i = 0; i < playerCount; i++)
-					{
-						string msg;
-						if (i % 2 == currentResourceOwner % 2)
-							msg = "Your team has captured the obelisk";
-						else
-							msg = "Your enemy has captured the obelisk";
-
-						if (players[i].active)
-							Server::sendInfoMessage(i, msg);
-					}
 				}
 
 				break;
@@ -528,9 +520,6 @@ void Server::disconnectPlayer(int id)
 	p.disconnectedPlayerId = id;
 	dynamicWorld.playerMap.erase(id);
 
-	if (currentResourceOwner == id)
-		currentResourceOwner = -1;
-
 	broadcastMsg((char *)&p, sizeof(p));
 }
 
@@ -552,10 +541,6 @@ void Server::updateResources()
 				//it->second.resources += resourcePerInterval;
 				it->second.resources += resourceHotSpotBonusPerInterval;
 			}
-
-			// Damage
-			if (currentResourceOwner != -1 && currentResourceOwner % 2 != it->second.id % 2)
-				dynamicWorld.playerDamage(&dynamicWorld.playerMap[currentResourceOwner], &it->second, 1, false);
 		}
 	}
 
@@ -570,8 +555,6 @@ void Server::updateResources()
 		sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 		currentResourceOwner = -1;
 		resetChanneling();
-
-		broadcastInfoMessages("Active obelisk location has changed");
 	}
 }
 
@@ -630,17 +613,6 @@ void Server::resetChanneling() {
 
 	isChanneling = false;
 	channelingPlayer = -1;
-}
-
-void Server::broadcastInfoMessages(string msg)
-{
-	struct infoMsgPacket p = {};
-	p.eventId = INFO_MESSAGE_EVENT;
-
-	strncpy(p.msg, msg.c_str(), sizeof(p.msg));
-	p.msg[sizeof(p.msg) - 1] = 0;
-
-	Server::broadcastMsg((char *)&p, sizeof(p));
 }
 
 void Server::sendInfoMessage(int destination, string msg)

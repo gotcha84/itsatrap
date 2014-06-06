@@ -146,6 +146,7 @@ struct playerObject {
 	bool triedBackward;
 	bool triedLeft;
 	bool triedRight;
+	bool triedDash;
 	PhysicsStates currPhysState;
 	PhysicsStates oldPhysState;
 	innerStates currInnerState;
@@ -156,14 +157,21 @@ struct playerObject {
 };
 
 struct trapObject {
-    int				id;
+	int				id;
 	int				ownerId;
 	int				timeTillActive;
 	int				type;
 	int				eventCode;
 	glm::vec3		pos;
 	float			rotationAngle;
+	float			rotationAngleX;
+	float			rotationAngleZ;
 	AABB			aabb;
+	glm::vec3		velocity;
+	bool			landed;
+	bool			hitSide;
+	int				buildingId;
+	glm::vec4		color;
 };
 
 struct staticObject {
