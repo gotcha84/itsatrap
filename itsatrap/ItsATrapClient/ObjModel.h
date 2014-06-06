@@ -29,6 +29,7 @@ class ObjModel : public sg::Geode {
 		string m_objFilename;
 		string m_mtlFilename;
 
+		bool m_flipTex;
 		GLuint m_texID;
 
 		vector<vector<float>> m_vertices;
@@ -70,6 +71,8 @@ class ObjModel : public sg::Geode {
 		void loadModel();
 		
 		void setTexture(GLuint tex);
+		void flipTexture();
+		void unflipTexture();
 
 		void print();
 		

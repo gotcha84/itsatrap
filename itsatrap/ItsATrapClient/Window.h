@@ -26,11 +26,12 @@ class Window {
 		static int m_fpsCounter;
 		static clock_t m_timer;
 
-		static bool		*keyState;
-		static bool		*keyEventTriggered;
-		static bool		*specialKeyState;
-		static bool		*specialKeyEventTriggered;
-		static int		modifierKey;
+		static bool *keyState;
+		static bool *keyEventTriggered;
+		static bool *specialKeyState;
+		static bool *specialKeyEventTriggered;
+		static int modifierKey;
+		static bool dashed;
 
 		static GLuint cb, rb, fb, ab, sb, pass1, pass2, pass3, diffuse, specular, ambient;
 		Shader shasderPass1, shaderPass2;

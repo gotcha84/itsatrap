@@ -1,8 +1,8 @@
 #define FULLSCREEN 0
-#define FBOWIDTHT 512       // width of fbo
-#define FBOHEIGHT 512     // hight of fbo
-//#define FBOWIDTHT 1600       // width of fbo
-//#define FBOHEIGHT 1200     // hight of fbo
+//#define FBOWIDTHT 512       // width of fbo
+//#define FBOHEIGHT 512     // hight of fbo
+#define FBOWIDTHT 1600       // width of fbo
+#define FBOHEIGHT 1200     // hight of fbo
 
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -157,20 +157,20 @@ int main(int argc, char *argv[]) {
 	GLfloat shininess[] = {100.0};
 	GLfloat spotDirection[] = { 0.0f, -1.0f, 0.0f };
 
-	GLfloat specularLight0[] = { 0.6f, 0.6f, 0.6f, 1.0f };
+	GLfloat specularLight0[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 	GLfloat position0[] = { 0.0f, -1200.0f, -300.0f, 0.0f };  // lightsource position
-	GLfloat ambientLight0[] = { 0.6f, 0.6f, 0.6f, 1.0f };
-	GLfloat diffuseLight0[] = { 0.6f, 0.6f, 0.6f, 1.0f };
+	GLfloat ambientLight0[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+	GLfloat diffuseLight0[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 	
 	GLfloat specularLight1[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GLfloat position1[]  = {-20.0f, -100.0f, -350.0f, 1.0f};  // lightsource position
 	GLfloat ambientLight1[] = { 0.4f, 0.8f, 0.8f, 1.0f };
 	GLfloat diffuseLight1[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	GLfloat specularLight2[] = { 0.6f, 0.6f, 0.6f, 1.0f };
+	GLfloat specularLight2[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 	GLfloat position2[] = { 0.0f, -1200.0f, 300.0f, 0.0f };  // lightsource position
-	GLfloat ambientLight2[] = { 0.6f, 0.6f, 0.6f, 1.0f };
-	GLfloat diffuseLight2[] = { 0.6f, 0.6f, 0.6f, 1.0f };
+	GLfloat ambientLight2[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+	GLfloat diffuseLight2[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 
 	GLfloat specularLight3[] = { 1.0f, 0.2f, 0.2f, 1.0f };
 	GLfloat position3[] = { -350.0f, 1000.0f, -350.0f, 1.0f };  // lightsource position
@@ -269,36 +269,7 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_COLOR_MATERIAL);
 	
 	// Generate light source:
-	//glDisable(GL_LIGHTING);
-	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight0);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight0);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight0);
-	glLightfv(GL_LIGHT0, GL_POSITION, position0);
-	
-	/*
-	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 45.0);
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spotDirection);
-	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 2.0);
-	*/
-	/*
-	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.5);
-	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.5);
-	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.2);
-	*/
-
-	glLightfv(GL_LIGHT2, GL_SPECULAR, specularLight2);
-	glLightfv(GL_LIGHT2, GL_AMBIENT, ambientLight2);
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseLight2);
-	glLightfv(GL_LIGHT2, GL_POSITION, position2);
-
-	glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 1.5);
-	glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.5);
-	glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.2);
-	
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT2);
+	glDisable(GL_LIGHTING);
 	
 	// Install callback functions:
 	glutDisplayFunc(window->displayCallback);
@@ -368,8 +339,8 @@ int main(int argc, char *argv[]) {
 	sg::MatrixTransform sbXForm = sg::MatrixTransform();
 	glm::mat4 model = glm::mat4();
 	model = glm::rotate(model, 90.0f, glm::vec3(0, 0, 1));
-	model = glm::rotate(model, 45.0f, glm::vec3(0, 1, 0));
-	//model = glm::rotate(model, -45.0f, glm::vec3(1, 0, 0));
+	model = glm::rotate(model, 45.0f, glm::vec3(1, 0, 0));
+	model = glm::rotate(model, 30.0f, glm::vec3(0, 1, 0));
 	//model = glm::rotate(model, 25.0f, glm::vec3(0, 0, 1));
 	sbXForm.setMatrix(model);
 	client->root->addChild(&sbXForm);

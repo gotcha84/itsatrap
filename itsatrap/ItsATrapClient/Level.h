@@ -33,11 +33,11 @@
 #define UNIT_40			UNIT_SIZE * 40
 #define UNIT_48			UNIT_SIZE * 48
 
-#define LEVEL_DIR		"..\\Models\\Level"
+#define LEVEL_DIR		"..\\Models\\Obelisk3"
 
 #define BLOCKS			"../Models/Blocks/"
 #define POLYNOIDS		"../Models/Polynoid/"
-#define LEVEL			"../Models/Level/"
+#define LEVEL			"../Models/Obelisk3/"
 #define CLIMBBLOCK		"../Models/Blocks/ClimbBlock.obj"
 #define CROSSBAR		"../Models/Blocks/CrossBar.obj"
 #define LARGERAMP		"../Models/Blocks/LargeRamp.obj"

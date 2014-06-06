@@ -1,3 +1,5 @@
+#define USE_SHADER 0
+
 #include <GL/glew.h>
 #include "Window.h"
 #include "ClientInstance.h"
@@ -14,8 +16,8 @@ extern FTGLPixmapFont *font;
 //int Window::m_width = 1600; // set window width in pixels here
 //int Window::m_height = 1200; // set window height in pixels here
 
-int Window::m_width = 512; // set window width in pixels here
-int Window::m_height = 512; // set window height in pixels here
+int Window::m_width = 1600; // set window width in pixels here
+int Window::m_height = 1200; // set window height in pixels here
 
 
 int Window::m_heightMapXShift = 278;
@@ -29,6 +31,7 @@ bool *Window::keyEventTriggered = new bool[256];
 bool *Window::specialKeyState = new bool[256];
 bool *Window::specialKeyEventTriggered = new bool[256];
 int Window::modifierKey = 0;
+bool Window::dashed = false;
 
 ISoundEngine *engine;
 ISoundEngine *jumpSound;
@@ -39,8 +42,8 @@ bool jump;
 
 //#define fbOWIDTHT  1600       // width of fbo
 //#define fbOHEIGHT  1200       // hight of fbo
-#define fbOWIDTHT  512       // width of fbo
-#define fbOHEIGHT  512       // hight of fbo
+#define fbOWIDTHT  Window::m_width       // width of fbo
+#define fbOHEIGHT  Window::m_height  // hight of fbo
 
 GLuint Window::fb = 0;           // fbo
 GLuint Window::cb = 0;           // texture for color buffer
@@ -171,11 +174,13 @@ void Window::displayCallback(void)
 
 		processKeys();
 
-		glViewport(0, 0, fbOWIDTHT, fbOHEIGHT);
+		if (USE_SHADER) {
+			glViewport(0, 0, fbOWIDTHT, fbOHEIGHT);
 
-		glEnable(GL_DEPTH_TEST);
+			glEnable(GL_DEPTH_TEST);
 
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+		}
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 
@@ -213,42 +218,44 @@ void Window::displayCallback(void)
 			m_timer = clock();
 			m_fpsCounter = 0;
 		}
-		glFlush();
+		if (USE_SHADER) {
+			glFlush();
 
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
-		glDisable(GL_DEPTH_TEST);
+			glDisable(GL_DEPTH_TEST);
 
-		
-		glUseProgram(pass1);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, cb);
-		
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
 
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
+			glUseProgram(pass1);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, cb);
 
-		glViewport(0, 0, m_width, m_height);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
 
-		glEnable(GL_TEXTURE_2D);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
 
-		glColor3d(1.0, 1.0, 1.0);
-		glBegin(GL_TRIANGLE_FAN);
-		glTexCoord2d(0.0, 0.0);
-		glVertex2d(-1.0, -1.0);
-		glTexCoord2d(1.0, 0.0);
-		glVertex2d(1.0, -1.0);
-		glTexCoord2d(1.0, 1.0);
-		glVertex2d(1.0, 1.0);
-		glTexCoord2d(0.0, 1.0);
-		glVertex2d(-1.0, 1.0);
-		glEnd();
+			glViewport(0, 0, m_width, m_height);
 
-		glDisable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glUseProgram(0);
+			glEnable(GL_TEXTURE_2D);
+
+			glColor3d(1.0, 1.0, 1.0);
+			glBegin(GL_TRIANGLE_FAN);
+			glTexCoord2d(0.0, 0.0);
+			glVertex2d(-1.0, -1.0);
+			glTexCoord2d(1.0, 0.0);
+			glVertex2d(1.0, -1.0);
+			glTexCoord2d(1.0, 1.0);
+			glVertex2d(1.0, 1.0);
+			glTexCoord2d(0.0, 1.0);
+			glVertex2d(-1.0, 1.0);
+			glEnd();
+
+			glDisable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glUseProgram(0);
+		}
 	}
 	
 
@@ -476,9 +483,18 @@ void Window::processKeys() {
 		}
 	}
 
-	// dash
-	if (modifierKey == GLUT_ACTIVE_SHIFT) {
+	// teleport
+	/*if (modifierKey == GLUT_ACTIVE_ALT) {
+		client->root->getPlayer()->handleTeleport();
+	}*/
+
+	if (modifierKey != GLUT_ACTIVE_SHIFT) {
+		dashed = false;
+	}
+
+	if (modifierKey == GLUT_ACTIVE_SHIFT && keyState['w'] && !dashed) {
 		Client::sendMoveEvent(DASH);
+		dashed = true;
 	}
 	else {
 		if (keyState['w']) {
@@ -512,12 +528,13 @@ void Window::processKeys() {
 			}
 		}
 
-		if (keyState['w'] ||
-			keyState['s'] ||
-			keyState['a'] ||
-			keyState['d']) {
-			walk->setIsPaused(false);
-		}
+	if (keyState['w'] ||
+		keyState['s'] ||
+		keyState['a'] ||
+		keyState['d']/* ||
+		modifierKey == GLUT_ACTIVE_SHIFT*/) {
+		walk->setIsPaused(false);
+	}
 
 		//if (keyState['u']) {
 		//	client->root->getPlayer()->Unstuck();

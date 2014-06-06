@@ -76,6 +76,8 @@ void ObjModel::initCommon() {
 	m_cityScale = 0.1f;
 	m_canScale = 5.0f;
 	m_defaultScale = 1.0f;
+
+	m_flipTex = false;
 	/*shader2->loadShader("../Shaders/light.vert", "../Shaders/light.frag");
 	light = shader2->getShader();*/
 }
@@ -171,7 +173,12 @@ void ObjModel::drawModel() {
 				if (!m_normals.empty()) {
 					glNormal3f(m_normals[k][3 * m_indices[k][3 * i + j]], m_normals[k][3 * m_indices[k][3 * i + j] + 1], m_normals[k][3 * m_indices[k][3 * i + j] + 2]);
 				}
-				glTexCoord2f(m_texcoords[k][2 * m_indices[k][t]], m_texcoords[k][2 * m_indices[k][t] + 1]);
+				if (m_flipTex) {
+					glTexCoord2f(m_texcoords[k][2 * m_indices[k][t]], 1.0f - m_texcoords[k][2 * m_indices[k][t] + 1]);
+				}
+				else {
+					glTexCoord2f(m_texcoords[k][2 * m_indices[k][t]], m_texcoords[k][2 * m_indices[k][t] + 1]);
+				}
 				glVertex3f(m_vertices[k][3 * m_indices[k][3 * i + j]], m_vertices[k][3 * m_indices[k][3 * i + j] + 1], m_vertices[k][3 * m_indices[k][3 * i + j] + 2]);
 				t++;
 			}
@@ -291,6 +298,14 @@ void ObjModel::loadModel() {
 
 void ObjModel::setTexture(GLuint tex) {
 	m_texID = tex;
+}
+
+void ObjModel::flipTexture() {
+	m_flipTex = true;
+}
+
+void ObjModel::unflipTexture() {
+	m_flipTex = false;
 }
 
 void ObjModel::calculateBoundingBox() {

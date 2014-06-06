@@ -41,6 +41,7 @@ void Level::initLevel0() {
 			string fileName(ent->d_name);
 			if (fileName.size() > 3) {
 				string part(fileName.substr(0, fileName.find_first_of('_')));
+				string partNum(fileName.substr(fileName.find_first_of('_')+1, 2));
 				string extension(fileName.substr(fileName.find_first_of('.')));
 
 				if (extension == ".obj") {
@@ -71,55 +72,218 @@ void Level::initLevel0() {
 
 						++resourceCounter;
 					}
+					else if (part == "Base") {
+						if (partNum != "23") {
+
+							levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), false});
+							levelNodes.back().first->setName("ObjNode: " + fileName);
+							levelNodes.back().first->getModel()->flipTexture();
+							levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+							//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+							xForm->addChild(levelNodes.back().first);
+
+							if (partNum == "01") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_01]);
+							}
+							else if (partNum == "02") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_02]);
+							}
+							else if (partNum == "03") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_03]);
+							}
+							else if (partNum == "04") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_04]);
+							}
+							else if (partNum == "05") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_05]);
+							}
+							else if (partNum == "06") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_06]);
+							}
+							else if (partNum == "07") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_07]);
+							}
+							else if (partNum == "08") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_08]);
+							}
+							else if (partNum == "09") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_09]);
+							}
+							else if (partNum == "10") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_10]);
+							}
+
+							else if (partNum == "11") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_11]);
+							}
+							else if (partNum == "12") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_12]);
+							}
+							else if (partNum == "13") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_13]);
+							}
+							else if (partNum == "14") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_14]);
+							}
+							else if (partNum == "15") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_15]);
+							}
+							else if (partNum == "16") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_16]);
+							}
+							else if (partNum == "17") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_17]);
+							}
+							else if (partNum == "18") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_18]);
+							}
+							else if (partNum == "19") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_19]);
+							}
+							else if (partNum == "20") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_20]);
+							}
+
+							else if (partNum == "21") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_21]);
+							}
+							else if (partNum == "22") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_22]);
+							}
+							else if (partNum == "23") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_23]);
+							}
+							else if (partNum == "24") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_24]);
+							}
+							else if (partNum == "25") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_25]);
+							}
+							else if (partNum == "26") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_26]);
+							}
+							else if (partNum == "27") {
+								levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base_27]);
+							}
+						}
+					}
+					else if (part == "Ext") {
+						string letter(fileName.substr(fileName.find_last_of('_')+1, 1));
+
+						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
+						levelNodes.back().first->getModel()->flipTexture();
+						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						xForm->addChild(levelNodes.back().first);
+
+						if (partNum == "01") {
+							levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Ext_01]);
+						}
+						else if (partNum == "02") {
+							levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Ext_02]);
+						}
+						else if (partNum == "03") {
+							levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Ext_03]);
+						}
+						else if (partNum == "04") {
+							levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Ext_04]);
+						}
+						else if (partNum == "05") {
+							levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Ext_05]);
+						}
+
+					}
+					else if (part == "Bridge") {
+						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
+						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Bridge]);
+						levelNodes.back().first->getModel()->flipTexture();
+						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						xForm->addChild(levelNodes.back().first);
+					}
+					else if (part == "Float") {
+						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
+						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Float]);
+						levelNodes.back().first->getModel()->flipTexture();
+						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						xForm->addChild(levelNodes.back().first);
+					}
+					else if (part == "Wedge") {
+						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
+						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Wedge_01]);
+						levelNodes.back().first->getModel()->flipTexture();
+						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						xForm->addChild(levelNodes.back().first);
+					}
 					else if (part == "BRail" || part == "Brail") {
 						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
 						levelNodes.back().first->setName("ObjNode: " + fileName);
-
-						if (counter % 1000 == 0) {
-							++counter;
-						}
-					
-						// Applying Texture
-						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::BRail]);
 						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::BRail]);
+						levelNodes.back().first->getModel()->flipTexture();
 						xForm->addChild(levelNodes.back().first);
 					}
-					else if (part == "ERail" || part == "Rail" || part == "Caltrop" || part == "Float") {
+					else if (part == "Rail") {
 						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
 						levelNodes.back().first->setName("ObjNode: " + fileName);
-
-						if (counter % 1000 == 0) {
-							++counter;
-						}
-
-						if (part == "Caltrop") {
-							levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, 1));
-							levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Caltrop]);
-						}
-						else {
-							levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
-						}
+						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Rail_01]);
+						levelNodes.back().first->getModel()->flipTexture();
+						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						xForm->addChild(levelNodes.back().first);
+					}
+					else if (part == "Metal") {
+						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
+						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Metal_01]);
+						levelNodes.back().first->getModel()->flipTexture();
+						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						xForm->addChild(levelNodes.back().first);
+					}
+					else if (part == "Caltrop") {
+						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
+						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Caltrop]);
+						levelNodes.back().first->getModel()->flipTexture();
+						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						xForm->addChild(levelNodes.back().first);
+					}
+					else if (part == "ERail") {
+						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
+						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::ERail_01]);
+						levelNodes.back().first->getModel()->flipTexture();
+						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
+						xForm->addChild(levelNodes.back().first);
+					}
+					else if (part == "Climbable") {
+						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), true });
+						levelNodes.back().first->setName("ObjNode: " + fileName);
+						levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Climbable_01]);
+						levelNodes.back().first->getModel()->flipTexture();
+						levelNodes.back().first->getModel()->setColor(glm::vec4(1, 1, 1, alpha));
+						//levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
 						xForm->addChild(levelNodes.back().first);
 					}
 					else if (part != "Ramp" && part != "UD") {
 						levelNodes.push_back({ new sg::ObjNode(LEVEL + fileName, LEVEL), false });
 						levelNodes.back().first->setName("ObjNode: " + fileName);
-
-
-						if (fileName == "Base_01.obj") {
-							levelNodes.back().first->getModel()->setColor(glm::vec4(1,1,1,1));
-							levelNodes.back().first->getModel()->setTexture(textures->m_texID[Textures::Base]);
-						}
-						else {
-							levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
-						}
-
-						if (counter % 1000 == 0) {
-							++counter;
-						}
-
+						levelNodes.back().first->getModel()->setColor(glm::vec4(0.3f + 0.04f*(float)(counter / 100), 0.3f + 0.04f*(float)((counter % 100) / 10), 0.3f + 0.04f*(float)(counter % 10), alpha));
 						xForm->addChild(levelNodes.back().first);
-					} 
+					}
+					if (counter % 1000 == 0) {
+						++counter;
+					}
 				}
 				++counter;
 			}
