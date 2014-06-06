@@ -343,17 +343,21 @@ void Server::processBuffer()
 							isChanneling = true;
 
 							float knifeRange = 0.0f;
+							float resourceRange = 0.0f;
 							ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
+							ConfigSettings::getConfig()->getValue("ResourceRange", resourceRange);
 
 							glm::vec3 lookAt = player->cameraObject.cameraLookAt;
 							glm::vec3 center = player->cameraObject.cameraCenter;
 							glm::vec3 difVec = lookAt - center;
-							glm::vec3 hitPt = center + (knifeRange * difVec);
+							//glm::vec3 hitPt = center + (knifeRange * difVec);
+							glm::vec3 hitPt = lookAt;
 
 							AABB target = dynamicWorld.getStaticResourceBB(hitPkt->resourceId);
-							if (hitPt.x >= target.minX && hitPt.x <= target.maxX
-								&& hitPt.y >= target.minY && hitPt.y <= target.maxY
-								&& hitPt.z >= target.minZ && hitPt.z <= target.maxZ)
+
+							if (hitPt.x >= (target.minX-resourceRange) && hitPt.x <= (target.maxX+resourceRange)
+								&& hitPt.y >= (target.minY-resourceRange) && hitPt.y <= (target.maxY+(resourceRange * 2))
+								&& hitPt.z >= (target.minZ-resourceRange) && hitPt.z <= (target.maxZ+resourceRange))
 							{
 								// send resourceNodePacket to client, telling them it is ok to channel
 								sendPermissionToChannel(channelingPlayer, resourceNodeLocations[currentActiveResourceNodeIndex]);

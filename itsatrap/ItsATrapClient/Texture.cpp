@@ -33,7 +33,7 @@ void Texture::initTextures() {
 	loadTexture(m_texID[Textures::Animus],			"../Textures/animus.ppm");
 	loadTexture(m_texID[Textures::BRail],			"../Textures/BRail.ppm");
 	loadTexture(m_texID[Textures::Base],			"../Textures/Base_01.ppm");
-	loadTexture(m_texID[Textures::Caltrop],			"../Textures/Caltrop.ppm");
+	loadTexture(m_texID[Textures::Caltrop],			"../Textures/Test.ppm");
 }
 
 void Texture::loadTexture(GLuint id, const char* the_texture) {

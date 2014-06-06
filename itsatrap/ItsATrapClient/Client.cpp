@@ -151,7 +151,7 @@ DWORD WINAPI Client::receiverThread(LPVOID param)
 			{
 				struct resourceNodePacket *packet = (struct resourceNodePacket *) p;
 
-				if (client != nullptr && !hasActiveNode) {
+				if (client != nullptr) {
 					updateActiveResourceNode(packet->id);
 					hasActiveNode = true;
 				}

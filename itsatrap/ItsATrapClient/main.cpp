@@ -230,9 +230,10 @@ int main(int argc, char *argv[]) {
 	// skybox
 	sg::MatrixTransform sbXForm = sg::MatrixTransform();
 	glm::mat4 model = glm::mat4();
-	model = glm::rotate(model, 90.0f, glm::vec3(0, 1, 0));
-	model = glm::rotate(model, -45.0f, glm::vec3(1, 0, 0));
-	model = glm::rotate(model, 25.0f, glm::vec3(0, 0, 1));
+	model = glm::rotate(model, 90.0f, glm::vec3(0, 0, 1));
+	model = glm::rotate(model, 45.0f, glm::vec3(0, 1, 0));
+	//model = glm::rotate(model, -45.0f, glm::vec3(1, 0, 0));
+	//model = glm::rotate(model, 25.0f, glm::vec3(0, 0, 1));
 	sbXForm.setMatrix(model);
 	client->root->addChild(&sbXForm);
 
