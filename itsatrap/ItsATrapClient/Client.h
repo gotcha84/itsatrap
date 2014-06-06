@@ -14,6 +14,8 @@
 #include "NetworkObjects.h"
 #include "enrico.h"
 #include "ClientInstance.h"
+#include "GameState.h"
+#include "Texture.h"
 
 /*
  * class Client
@@ -59,6 +61,8 @@ private:
 	
 
 public:
+	static GameState gameState;
+
 	// Functions
 	static int initializeClient();
 	static int getPlayerId();
@@ -77,5 +81,7 @@ public:
 	static void sendJumpEvent();
 	static void sendLookEvent(struct cameraObject cam);
 	static void sendAABBInfo(int type, AABB aabb);
+
+	static void sendGameReadyState();
 };
 #endif

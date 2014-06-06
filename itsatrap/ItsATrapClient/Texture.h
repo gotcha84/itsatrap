@@ -30,10 +30,12 @@ enum Textures {
 	Base,
 	Caltrop,
 	BRail,
-	Size,
 	Stunned,
 	Slowed,
-	Flashed
+	Flashed,
+	Background,
+	BackgroundComplete,
+	Size
 };
 
 class Texture {

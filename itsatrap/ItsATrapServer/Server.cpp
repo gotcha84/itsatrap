@@ -21,6 +21,11 @@ int					Server::hotSpotChangeInterval;
 int					Server::maxServerProcessRate;
 int					Server::elapsedGameTimeMS;
 
+GameState			Server::gameState;
+int					Server::maxPlayers;
+int					Server::numReadyPlayers;
+bool				*Server::playerReady;
+
 vector<int>			Server::resourceNodeLocations;
 int					Server::currentActiveResourceNodeIndex;
 int					Server::currentResourceOwner;
@@ -28,6 +33,7 @@ int					Server::channelingPlayer;
 bool				Server::isChanneling;
 
 bool				Server::physicsReady;
+
 // Private Vars
 HANDLE		packetBufMutex;
 
@@ -68,6 +74,14 @@ int Server::initialize() {
 	// Init variables
 	packetBufferCount = 0;
 	playerCount = 0;
+	numReadyPlayers = 0;
+
+	ConfigSettings::getConfig()->getValue("NumPlayers", maxPlayers);
+	playerReady = new bool[maxPlayers];
+
+	for (int i = 0; i < maxPlayers; ++i) {
+		playerReady[i] = false;
+	}
 
 	// Create UDP socket
 	i_sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -87,6 +101,7 @@ int Server::initialize() {
 	DWORD tmp;
 	CreateThread(NULL, 0, bufferProcessorThread, NULL, 0, &tmp);
 	packetBufMutex = CreateMutex(NULL, true, NULL);
+
 
 	// GAME MECHANICS
 	ConfigSettings::getConfig()->getValue("ResourcePerInterval", resourcePerInterval);
@@ -166,6 +181,7 @@ void Server::processIncomingMsg(char * msg, struct sockaddr_in *source) {
 		if (dynamicWorld.getNumStaticObjects() >= MaxBuildings) {
 			cout << "physics ready yo" << endl;
 			physicsReady = true;
+			sendGameReadyState();
 		}
 	}
 	else if (p->eventId == STATIC_RESOURCE_OBJECT_CREATION_EVENT)
@@ -321,10 +337,7 @@ void Server::processBuffer()
 			case KNIFE_HIT_EVENT:
 			{
 				struct knifeHitPacket *knifePkt = (struct knifeHitPacket *)p;
-				if (dynamicWorld.handleKnifeEvent(knifePkt->playerId)) {
-					resetChanneling();
-				}
-
+				dynamicWorld.handleKnifeEvent(knifePkt->playerId);
 				break;
 			}
 			case RESOURCE_HIT_EVENT:
@@ -343,21 +356,17 @@ void Server::processBuffer()
 							isChanneling = true;
 
 							float knifeRange = 0.0f;
-							float resourceRange = 0.0f;
 							ConfigSettings::getConfig()->getValue("KnifeRange", knifeRange);
-							ConfigSettings::getConfig()->getValue("ResourceRange", resourceRange);
 
 							glm::vec3 lookAt = player->cameraObject.cameraLookAt;
 							glm::vec3 center = player->cameraObject.cameraCenter;
 							glm::vec3 difVec = lookAt - center;
-							//glm::vec3 hitPt = center + (knifeRange * difVec);
-							glm::vec3 hitPt = lookAt;
+							glm::vec3 hitPt = center + (knifeRange * difVec);
 
 							AABB target = dynamicWorld.getStaticResourceBB(hitPkt->resourceId);
-
-							if (hitPt.x >= (target.minX-resourceRange) && hitPt.x <= (target.maxX+resourceRange)
-								&& hitPt.y >= (target.minY-resourceRange) && hitPt.y <= (target.maxY+(resourceRange * 2))
-								&& hitPt.z >= (target.minZ-resourceRange) && hitPt.z <= (target.maxZ+resourceRange))
+							if (hitPt.x >= target.minX && hitPt.x <= target.maxX
+								&& hitPt.y >= target.minY && hitPt.y <= target.maxY
+								&& hitPt.z >= target.minZ && hitPt.z <= target.maxZ)
 							{
 								// send resourceNodePacket to client, telling them it is ok to channel
 								sendPermissionToChannel(channelingPlayer, resourceNodeLocations[currentActiveResourceNodeIndex]);
@@ -375,6 +384,7 @@ void Server::processBuffer()
 			case CHANNELING_COMPLETE:
 			{
 				struct resourceHitPacket *hitPkt = (struct resourceHitPacket *)p;
+
 				if (hitPkt->playerId == channelingPlayer
 					&& hitPkt->resourceId == resourceNodeLocations[currentActiveResourceNodeIndex]
 					&& isChanneling) {
@@ -400,13 +410,25 @@ void Server::processBuffer()
 			}
 			case REQUEST_ACTIVE_NODE_EVENT:
 			{
-				struct knifeHitPacket *requestPkt = (struct knifeHitPacket *)p;
+				struct knifeHitPkt *requestPkt = (struct knifeHitPkt *)p;
+				//struct knifeHitPkt temp = *requestPkt;
 
 				if (resourceNodeLocations.size() > 0) {
-					sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex], requestPkt->playerId);
+					sendActiveNodeUpdate(resourceNodeLocations[currentActiveResourceNodeIndex]);
 				}
 
 				break;
+			}
+			case PLAYER_READY_EVENT:
+			{
+				struct refreshPacket *pkt = (struct refreshPacket *)p;
+				
+				if (!playerReady[pkt->playerId]) {
+					playerReady[pkt->playerId] = true;
+					++numReadyPlayers;
+				}
+
+				checkAllPlayersReady();
 			}
 			default:
 				printf("[SERVER]: Unknown event at buffer %d, eventId: %d\n", i, p->eventId);
@@ -636,6 +658,17 @@ void Server::resetChanneling() {
 	channelingPlayer = -1;
 }
 
+void Server::broadcastInfoMessages(string msg)
+{
+	struct infoMsgPacket p = {};
+	p.eventId = INFO_MESSAGE_EVENT;
+
+	strncpy(p.msg, msg.c_str(), sizeof(p.msg));
+	p.msg[sizeof(p.msg) - 1] = 0;
+
+	Server::broadcastMsg((char *)&p, sizeof(p));
+}
+
 void Server::sendInfoMessage(int destination, string msg)
 {
 	struct infoMsgPacket p = {};
@@ -675,13 +708,31 @@ void Server::checkGameOver()
 	}
 }
 
-void Server::broadcastInfoMessages(string msg)
+void Server::checkAllPlayersReady() 
 {
-	struct infoMsgPacket p = {};
-	p.eventId = INFO_MESSAGE_EVENT;
+	if (numReadyPlayers == maxPlayers) {
+		for (int i = 0; i < maxPlayers; ++i) {
+			if (!playerReady[i]) {
+				return;
+			}
+		}
 
-	strncpy(p.msg, msg.c_str(), sizeof(p.msg));
-	p.msg[sizeof(p.msg) - 1] = 0;
+		sendGameBeginState();
+	}
+}
+
+void Server::sendGameReadyState() {
+	struct packet p = {};
+	p.eventId = SERVER_READY_EVENT;
+
+	Server::broadcastMsg((char *)&p, sizeof(p));
+}
+
+void Server::sendGameBeginState() {
+	struct packet p = {};
+	p.eventId = GAME_BEGIN_EVENT;
+
+	elapsedGameTimeMS = 0;
 
 	Server::broadcastMsg((char *)&p, sizeof(p));
 }

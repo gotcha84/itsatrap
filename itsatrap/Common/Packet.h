@@ -29,6 +29,9 @@
 #define INFO_MESSAGE_EVENT 25
 #define GAME_OVER_EVENT 26
 #define REQUEST_ACTIVE_NODE_EVENT 27
+#define PLAYER_READY_EVENT 28
+#define SERVER_READY_EVENT 29
+#define GAME_BEGIN_EVENT 30
 
 
 // Superclass of all packets

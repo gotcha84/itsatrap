@@ -293,7 +293,6 @@ namespace sg {
 				timer->reset();
 				checkMouse = false;
 			}
-
 			
 			//if (client->scrollUp) cout << "playerNode: scrollUp" << endl;
 			//if (client->scrollDown) cout << "playerNode: scrollDown" << endl;
